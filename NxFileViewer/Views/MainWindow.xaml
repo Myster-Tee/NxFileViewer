@@ -1,0 +1,87 @@
+﻿<Window x:Class="Emignatik.NxFileViewer.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:r="clr-namespace:Emignatik.NxFileViewer.Properties"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:commands="clr-namespace:Emignatik.NxFileViewer.Commands"
+        mc:Ignorable="d"
+        Icon="../Icon.ico"
+        Title="{Binding Path=AppTitle}" 
+        Height="540" 
+        Width="460" 
+        AllowDrop="True" 
+        Drop="MainWindow_OnDrop" 
+        d:DesignHeight="100">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="Open" Executed="OnOpenFileCommand" />
+        <CommandBinding Command="commands:ApplicationCommandsExt.OpenLast" Executed="OnOpenLastFileCommand" />
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Gesture="Ctrl+O" Command="Open" />
+        <KeyBinding Gesture="Ctrl+Shift+O" Command="commands:ApplicationCommandsExt.OpenLast" />
+    </Window.InputBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="{x:Static r:Resources.MenuItem_File}">
+                <MenuItem Header="{x:Static r:Resources.MenuItem_OpenFile}" Command="Open" InputGestureText="Ctrl+O" />
+                <MenuItem Header="{x:Static r:Resources.MenuItem_OpenLastFile}" Command="commands:ApplicationCommandsExt.OpenLast" InputGestureText="Ctrl+Shift+O" />
+            </MenuItem>
+        </Menu>
+
+        <Grid Grid.Row="1" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />    <!-- Content Row -->
+                <RowDefinition Height="Auto" /> <!-- Grid Splitter Row-->
+                <RowDefinition Height="0" />    <!-- Log Row -->
+            </Grid.RowDefinitions>
+
+            <ContentControl Grid.Row="0"
+                            ContentTemplateSelector="{StaticResource FileViewTemplateSelector}" 
+                            Content="{Binding Path=FileViewModel}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+
+            <GridSplitter Grid.Row="1" Background="Gainsboro" ResizeDirection="Rows" HorizontalAlignment="Stretch" Foreground="Gray">
+                <GridSplitter.Template>
+                    <ControlTemplate>
+                        <ControlTemplate.Resources>
+                            <system:Double x:Key="DotSize">4</system:Double>
+                            <Thickness x:Key="Spacing">0,0,2,0</Thickness>
+                        </ControlTemplate.Resources>
+                        <Border HorizontalAlignment="{TemplateBinding HorizontalAlignment}" Background="{TemplateBinding Background}" Padding="0,2">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  >
+                                <Ellipse Width="{StaticResource DotSize}" Height="{StaticResource DotSize}" Fill="{TemplateBinding Foreground}" Margin="{StaticResource Spacing}" />
+                                <Ellipse Width="{StaticResource DotSize}" Height="{StaticResource DotSize}" Fill="{TemplateBinding Foreground}" Margin="{StaticResource Spacing}" />
+                                <Ellipse Width="{StaticResource DotSize}" Height="{StaticResource DotSize}" Fill="{TemplateBinding Foreground}" Margin="{StaticResource Spacing}" />
+                                <Ellipse Width="{StaticResource DotSize}" Height="{StaticResource DotSize}" Fill="{TemplateBinding Foreground}" Margin="{StaticResource Spacing}" />
+                            </StackPanel>
+                        </Border>
+                    </ControlTemplate>
+                </GridSplitter.Template>
+
+            </GridSplitter>
+
+            <RichTextBox Grid.Row="2" IsReadOnly="True" x:Name="RichTextBoxLog" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontFamily="Courier New">
+                <RichTextBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Clear" Click="MenuItemClearLogClick" />
+                    </ContextMenu>
+                </RichTextBox.ContextMenu>
+
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </RichTextBox.Resources>
+            </RichTextBox>
+        </Grid>
+    </Grid>
+</Window>

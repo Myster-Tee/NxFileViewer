@@ -1,0 +1,7 @@
+﻿TODO: Add setting to specify the keys.dat file
+TODO: Auto show log on warning or error
+TODO: Add a status bar
+TODO: feature to auto download keys from URL
+TODO: Threading actions (with progress bar)
+TODO: Save image
+TODO: Load NCA file

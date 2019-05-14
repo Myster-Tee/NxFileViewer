@@ -1,0 +1,88 @@
+﻿<Application x:Class="Emignatik.NxFileViewer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
+             xmlns:nsp="clr-namespace:Emignatik.NxFileViewer.Views.NSP"
+             xmlns:nca="clr-namespace:Emignatik.NxFileViewer.Views.NCA"
+             xmlns:converters="clr-namespace:Emignatik.NxFileViewer.Views.Converters">
+    <Application.Resources>
+        <system:Double x:Key="DefaultSpacing">3</system:Double>
+
+        <views:FileViewTemplateSelector x:Key="FileViewTemplateSelector">
+            <views:FileViewTemplateSelector.NspInfoViewDataTemplate>
+                <DataTemplate>
+                    <nsp:NspInfoView />
+                </DataTemplate>
+            </views:FileViewTemplateSelector.NspInfoViewDataTemplate>
+            <views:FileViewTemplateSelector.NcaInfoViewDataTemplate>
+                <DataTemplate>
+                    <nca:NcaInfoView />
+                </DataTemplate>
+            </views:FileViewTemplateSelector.NcaInfoViewDataTemplate>
+
+        </views:FileViewTemplateSelector>
+
+        <converters:NacpLanguageConverter x:Key="NacpLanguageConverter" />
+
+        <Style TargetType="TextBox" x:Key="ReadOnlyTextBox">
+            <Style.Setters>
+                <Setter Property="IsReadOnly" Value="True" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="AllowDrop" Value="True" />
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="Title1">
+            <Style.Setters>
+                <Setter Property="Foreground" Value="#3C3C3C" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="FontSize" Value="14" />
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="Title2">
+            <Style.Setters>
+                <Setter Property="Margin">
+                    <Setter.Value>
+                        <Thickness Top="{StaticResource DefaultSpacing}" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground" Value="DarkCyan" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="FontSize" Value="12" />
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="Bd" Value="#FF33BBA3"/>
+                                <Setter Property="BorderBrush" TargetName="Bd" Value="#FF33BBA3"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="Bd" Value="#FF33BBA3"/>
+                                <Setter Property="BorderBrush" TargetName="Bd" Value="Gray"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Application.Resources>
+</Application>
