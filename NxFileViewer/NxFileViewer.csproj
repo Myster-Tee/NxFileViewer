@@ -44,14 +44,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -65,7 +60,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Hactool\NcaSection.cs" />
+    <Compile Include="NSP\Models\PfsFile.cs" />
     <Compile Include="NSP\Models\Pfs0NcaFile.cs" />
+    <Compile Include="NSP\Models\PfsNcaFile.cs" />
     <Compile Include="Services\HactoolHelperService.cs" />
     <Compile Include="NSP\Models\Pfs0File.cs" />
     <Compile Include="NSP\Models\LocalizedIcon.cs" />
@@ -207,6 +204,14 @@
   <ItemGroup>
     <Resource Include="Features.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="LibHac.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\LibHac\src\LibHac\LibHac.csproj">
+      <Project>{a283b6a2-9cf4-45a6-b3f0-fc976480e574}</Project>
+      <Name>LibHac</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

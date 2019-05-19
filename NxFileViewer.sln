@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NxFileViewer", "NxFileViewe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NxFileViewer.Test", "NxFileViewer.Test\NxFileViewer.Test.csproj", "{98794B6C-6137-48C5-A8A1-E2488C4865E4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibHac", "..\LibHac\src\LibHac\LibHac.csproj", "{A283B6A2-9CF4-45A6-B3F0-FC976480E574}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{98794B6C-6137-48C5-A8A1-E2488C4865E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98794B6C-6137-48C5-A8A1-E2488C4865E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98794B6C-6137-48C5-A8A1-E2488C4865E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A283B6A2-9CF4-45A6-B3F0-FC976480E574}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A283B6A2-9CF4-45A6-B3F0-FC976480E574}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A283B6A2-9CF4-45A6-B3F0-FC976480E574}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A283B6A2-9CF4-45A6-B3F0-FC976480E574}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
