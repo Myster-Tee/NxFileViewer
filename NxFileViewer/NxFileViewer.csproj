@@ -60,9 +60,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Hactool\NcaSection.cs" />
+    <Compile Include="NSP\Models\CnmtInfo.cs" />
+    <Compile Include="NSP\Models\IconInfo.cs" />
     <Compile Include="NSP\Models\PfsFile.cs" />
-    <Compile Include="NSP\Models\Pfs0NcaFile.cs" />
     <Compile Include="NSP\Models\PfsNcaFile.cs" />
+    <Compile Include="NSP\Models\NacpInfo.cs" />
+    <Compile Include="NSP\Models\TitleInfo.cs" />
     <Compile Include="Services\HactoolHelperService.cs" />
     <Compile Include="NSP\Models\Pfs0File.cs" />
     <Compile Include="NSP\Models\LocalizedIcon.cs" />
@@ -141,7 +144,7 @@
       <DependentUpon>NcaInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NCA\NcaInfoViewModel.cs" />
-    <Compile Include="Views\NSP\Pfs0FileViewModel.cs" />
+    <Compile Include="Views\NSP\PfsFileViewModel.cs" />
     <Compile Include="Views\NSP\NspInfoView.xaml.cs">
       <DependentUpon>NspInfoView.xaml</DependentUpon>
     </Compile>

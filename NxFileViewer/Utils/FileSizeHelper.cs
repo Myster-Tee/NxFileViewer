@@ -91,6 +91,11 @@ namespace Emignatik.NxFileViewer.Utils
             }
         }
 
+        public static string ToFileSize(this long nbBytes, FileSizeUnit unit = FileSizeUnit.BINARY)
+        {
+            return ((ulong) nbBytes).ToFileSize(unit);
+        }
+
 
         public static string ToFileSize(this ulong nbBytes, FileSizeUnit unit = FileSizeUnit.BINARY)
         {

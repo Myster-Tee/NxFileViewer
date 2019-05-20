@@ -11,12 +11,10 @@ using Emignatik.NxFileViewer.NxFormats.CNMT;
 using Emignatik.NxFileViewer.NxFormats.CNMT.Models;
 using Emignatik.NxFileViewer.NxFormats.NACP;
 using Emignatik.NxFileViewer.NxFormats.NACP.Structs;
-using Emignatik.NxFileViewer.NxFormats.NCA;
 using Emignatik.NxFileViewer.NxFormats.NCA.Models;
 using Emignatik.NxFileViewer.NxFormats.NCA.Structs;
 using Emignatik.NxFileViewer.NxFormats.PFS0;
 using Emignatik.NxFileViewer.Properties;
-using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Utils;
 using LibHac;
 using LibHac.Fs;
@@ -46,6 +44,9 @@ namespace Emignatik.NxFileViewer.NSP
 
 
             var keyset = ExternalKeys.ReadKeyFile(Settings.Default.KeysFilePath);
+
+            var nspInfo = new NspInfo();
+
 
             using (var localFile = new LocalFile(nspFilePath, OpenMode.Read))
             {
@@ -115,6 +116,14 @@ namespace Emignatik.NxFileViewer.NSP
                                     {
                                         var cnmt = new Cnmt(cnmtStream);
 
+                                        nspInfo.CnmtInfo = new CnmtInfo
+                                        {
+                                            Type = cnmt.Type,
+                                            TitleId = cnmt.TitleId.ToHex(),
+                                            TitleVersion = cnmt.TitleVersion.Version,
+                                        };
+
+
                                         //TODO: retrieve the commented info
                                         //cnmt.MinimumSystemVersion
                                         //cnmt.MinimumApplicationVersion
@@ -143,43 +152,7 @@ namespace Emignatik.NxFileViewer.NSP
 
                                             var controlFs = ncaControl.OpenFileSystem(ncaControl.Header.ContentIndex, IntegrityCheckLevel.None);
 
-                                            foreach (var controlFileEntry in controlFs.OpenDirectory("/", OpenDirectoryMode.Files).Read())
-                                            {
-                                                var controlFileName = controlFileEntry.Name ?? "";
-                                                if (string.Equals(controlFileName, "control.nacp", StringComparison.InvariantCultureIgnoreCase))
-                                                {
-                                                    using (var nacpFile = controlFs.OpenFile(controlFileEntry.FullPath, OpenMode.Read))
-                                                    {
-                                                        using (var nacpStream = nacpFile.AsStream())
-                                                        {
-                                                            var nacp = new Nacp(nacpStream);
-
-                                                            foreach (var description in nacp.Descriptions)
-                                                            {
-                                                                if (!string.IsNullOrEmpty(description.Title))
-                                                                {
-
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                else if (controlFileName.StartsWith("icon_", StringComparison.InvariantCultureIgnoreCase) && controlFileName.EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase))
-                                                {
-                                                    using (var iconFile = controlFs.OpenFile(controlFileEntry.FullPath, OpenMode.Read))
-                                                    {
-                                                        using (var iconStream = iconFile.AsStream())
-                                                        {
-                                                            var bitmapSource = new BitmapImage();
-                                                            bitmapSource.BeginInit();
-                                                            bitmapSource.StreamSource = iconStream;
-                                                            bitmapSource.CacheOption = BitmapCacheOption.OnLoad;
-                                                            bitmapSource.EndInit();
-                                                            bitmapSource.Freeze();
-                                                        }
-                                                    }
-                                                }
-                                            }
+                                            ExtractControlInfo(controlFs, nspInfo);
 
                                         }
                                     }
@@ -197,156 +170,94 @@ namespace Emignatik.NxFileViewer.NSP
                     }
                 }
 
-            }
-
-
-
-
-            //openFile.AsStream()
-
-
-
-            if (!KeySetProviderService.TryGetKeySet(out var keySet, out var errorMessage))
-                throw new Exception($"Can't load NSP data: {errorMessage}");
-
-            _tempDirMgr.Initialize();
-
-            // Read the files contained in NSP file (PFS0)
-            using (var nspReader = Pfs0Reader.FromFile(nspFilePath))
-            {
-                var fileDefinitions = nspReader.ReadFileDefinitions();
-
-                Pfs0NcaFile ncaMetaFile = null;
-                var files = new List<Pfs0File>();
-                foreach (var fileDefinition in fileDefinitions)
-                {
-                    Pfs0File pfs0File;
-                    var fileName = fileDefinition.FileName ?? "";
-                    if (fileName.EndsWith(".nca", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        using (var ncaReader = new NcaReader(new NcaDecryptionStream(nspReader.GetFileStream(fileDefinition), keySet)))
-                        {
-                            var ncaHeader = ncaReader.ReadHeader();
-
-                            var pfs0NcaFile = new Pfs0NcaFile
-                            {
-                                Definition = fileDefinition,
-                                Header = ncaHeader,
-                            };
-                            pfs0File = pfs0NcaFile;
-
-                            // Find the "*.cnmt.nca" file definition which is the container of the *.cnmt meta file
-                            if (fileName.EndsWith(CNMT_NCA, StringComparison.InvariantCultureIgnoreCase))
-                                ncaMetaFile = pfs0NcaFile;
-                        }
-                    }
-                    else
-                    {
-                        pfs0File = new Pfs0File
-                        {
-                            Definition = fileDefinition,
-                        };
-
-                    }
-
-                    files.Add(pfs0File);
-                }
-
-                // We assume the CNMT file as mandatory, hope it is true (some NSP doesn't contain the *.cnmt.xml file)
-                if (ncaMetaFile == null)
-                    throw new Exception($"No \"*{CNMT_NCA}\" found in NSP.");
-
-                // We assume the CNMT file is always of Meta type 
-                if (ncaMetaFile.Header.ContentType != NcaContentType.META)
-                    throw new Exception($"File \"{ncaMetaFile.Definition.FileName}\" is not of the expected content type \"{NcaContentType.META}\".");
-
-                // We assume the CNMT file always contains a section 0
-                if (ncaMetaFile.Header.GetSectionHeaderByIndex(NcaSectionIndex.SECTION_0) == null)
-                    throw new Exception($"Meta file \"{ncaMetaFile.Definition.FileName}\" doesn't contain the expected section \"{NcaSectionIndex.SECTION_0}\".");
-
-                // Extracts the encrypted "*.cnmt.nca" file
-                nspReader.SaveFileToDir(ncaMetaFile.Definition, _tempDirMgr.TempDirPath, out var cnmtNcaFilePath);
-
-                // Decrypt and extract "section 0" of "*.cnmt.nca" file to dir (should create exactly one *.cnmt files in the target directory)
-                var metaTargetDir = _tempDirMgr.CreateSubDir("Meta_Section_0");
-                _hactoolHelper.NcaDecryptSectionToDir(cnmtNcaFilePath, NcaSection.SECTION_0, metaTargetDir);
-
-                // Search for the decrypted cnmt meta file
-                var cnmtMetaFilePath = FindSingleCnmtFile(metaTargetDir);
-
-                // Load meta file header and get retrieve the id (file name without ext) of the NCA file of "Control" type (NCA containing logos and localized app names)
-                var cnmtHeader = ReadCnmtAndFindNcaControlId(cnmtMetaFilePath, out var ncaControlId);
-
-                //var cnmtAppHeaderStruct = (CnmtAppHeaderStruct) cnmtHeader.ExtendedRawStruct;
-
-                //var firmware = cnmtAppHeaderStruct.MinSystemVersion;
-
-                //var s = ((firmware >> 26) & 0x3F) + "." + ((firmware >> 20) & 0x3F) + "." + ((firmware >> 16) & 0x0F);
-
-                NcaControlContent ncaControlContent = null;
-                if (ncaControlId != null) // ncaControlId can be null in add-ons
-                {
-                    // Search the NCA file in the PFS0
-                    var ncaControlFile = FindNcaById(ncaControlId, files);
-                    if (ncaControlFile == null)
-                        throw new Exception($"NCA Meta file \"{ncaMetaFile.Definition.FileName}\" is referencing the NCA file \"{ncaControlId}\" of type \"{CnmtContentType.Control}\" which couldn't be found in the NSP.");
-
-                    // Load title information and icons
-                    ncaControlContent = LoadNcaControlContent(ncaControlFile, nspReader);
-                }
-
-                var nspInfo = new NspInfo
-                {
-                    Files = files.ToArray(),
-                    CnmtHeader = cnmtHeader,
-                    NcaMetaHeader = ncaMetaFile.Header,
-                    NcaControlContent = ncaControlContent
-                };
-
+                nspInfo.Files = files.ToArray();
                 return nspInfo;
             }
+
+
         }
 
-        /// <summary>
-        /// Load interesting information contained in the NCA file of type <see cref="NcaContentType.CONTROL"/>
-        /// </summary>
-        /// <param name="ncaControlFile"></param>
-        /// <param name="nspReader"></param>
-        /// <returns></returns>
-        private NcaControlContent LoadNcaControlContent(Pfs0NcaFile ncaControlFile, Pfs0Reader nspReader)
+        private static void ExtractControlInfo(IFileSystem controlFs, NspInfo nspInfo)
         {
-            if (ncaControlFile.Header.ContentType != NcaContentType.CONTROL)
-                throw new Exception($"File \"{ncaControlFile.Definition.FileName}\" is not of the expected content type \"{NcaContentType.CONTROL}\".");
 
-            if (ncaControlFile.Header.GetSectionHeaderByIndex(NcaSectionIndex.SECTION_0) == null)
-                throw new Exception($"Control file \"{ncaControlFile.Definition.FileName}\" doesn't contain the expected section \"{NcaSectionIndex.SECTION_0}\".");
+            NacpInfo nacpInfo = null;
+            var icons = new List<IconInfo>();
+            const string ICON_FILE_PREFIX = "icon_";
+            const string ICON_FILE_EXT = ".dat";
 
-            // Extract the encrypted NCA control file
-            nspReader.SaveFileToDir(ncaControlFile.Definition, _tempDirMgr.TempDirPath, out var ncaControlFilePath);
 
-            // Decrypt and extract the content of the NCA control file
-            var controlTargetDir = _tempDirMgr.CreateSubDir("Control_Section_0");
-            _hactoolHelper.NcaDecryptSectionToDir(ncaControlFilePath, NcaSection.SECTION_0, controlTargetDir);
-
-            // Check control.nacp file exists
-            var nacpControlFilePath = Path.Combine(controlTargetDir, "control.nacp");
-            if (!File.Exists(nacpControlFilePath))
+            foreach (var controlFileEntry in controlFs.OpenDirectory("/", OpenDirectoryMode.Files).Read())
             {
-                Logger.LogError($"Expected NACP file \"{nacpControlFilePath}\" not found.");
-                return null;
-            }
-
-            using (var nacpReader = NacpReader.FromFile(nacpControlFilePath))
-            {
-                var ncaControlContent = new NcaControlContent
+                var fileName = controlFileEntry.Name ?? "";
+                if (string.Equals(fileName, "control.nacp", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    NacpContent = nacpReader.ReadContent(),
-                    Icons = ScanIcons(controlTargetDir),
-                };
+                    using (var nacpFile = controlFs.OpenFile(controlFileEntry.FullPath, OpenMode.Read))
+                    {
+                        using (var nacpStream = nacpFile.AsStream())
+                        {
+                            var nacp = new Nacp(nacpStream);
 
-                return ncaControlContent;
+                            var titleInfos = new List<TitleInfo>();
+                            nacpInfo = new NacpInfo
+                            {
+                                DisplayVersion = nacp.DisplayVersion,
+                                Titles = titleInfos,
+                            };
+
+
+                            foreach (var description in nacp.Descriptions)
+                            {
+                                if (!string.IsNullOrEmpty(description.Title))
+                                {
+                                    titleInfos.Add(new TitleInfo
+                                    {
+                                        AppName = description.Title,
+                                        Publisher = description.Developer,
+                                        Language = (NacpLanguage)description.Language,
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (fileName.StartsWith(ICON_FILE_PREFIX, StringComparison.InvariantCultureIgnoreCase) && fileName.EndsWith(ICON_FILE_EXT, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var langName = fileName.Substring(ICON_FILE_PREFIX.Length, fileName.Length - ICON_FILE_PREFIX.Length - ICON_FILE_EXT.Length);
+                    if (!Enum.TryParse(langName, true, out NacpLanguage language))
+                    {
+                        Logger.LogWarning($"Found a *.dat file \"{fileName}\" which doesn't match any of the languages.");
+                        continue;
+                    }
+
+                    var bitmapSource = new BitmapImage();
+
+                    using (var iconFile = controlFs.OpenFile(controlFileEntry.FullPath, OpenMode.Read))
+                    {
+                        using (var iconStream = iconFile.AsStream())
+                        {
+                            bitmapSource.BeginInit();
+                            bitmapSource.StreamSource = iconStream;
+                            bitmapSource.CacheOption = BitmapCacheOption.OnLoad;
+                            bitmapSource.EndInit();
+                            bitmapSource.Freeze();
+                        }
+                    }
+
+                    var iconInfo = new IconInfo
+                    {
+                        Image = bitmapSource,
+                        Language = language,
+                    };
+
+                    icons.Add(iconInfo);
+                }
             }
+
+            nspInfo.NacpInfo = nacpInfo;
+            nspInfo.Icons = icons;
+
         }
+
 
         private static List<LocalizedIcon> ScanIcons(string controlTargetDir)
         {
@@ -379,11 +290,6 @@ namespace Emignatik.NxFileViewer.NSP
             return icons;
         }
 
-        private static Pfs0NcaFile FindNcaById(string ncaControlId, IEnumerable<Pfs0File> files)
-        {
-            var searchedNcaFile = ncaControlId + ".nca";
-            return files.FirstOrDefault(file => file.Definition.FileName == searchedNcaFile) as Pfs0NcaFile;
-        }
 
         private static CnmtHeader ReadCnmtAndFindNcaControlId(string cnmtMetaFilePath, out string ncaControlId)
         {

@@ -67,7 +67,7 @@
         <TabItem Header="{x:Static r:Resources.Structure}">
             <DockPanel>
                 <customControls:GroupView HeaderText="{x:Static r:Resources.Files}" DockPanel.Dock="Top">
-                    <ListBox ItemsSource="{Binding Path=Pfs0Files}" SelectionMode="Extended" SelectedItem="{Binding Path=SelectedPfs0File}" DockPanel.Dock="Top" MinHeight="100">
+                    <ListBox ItemsSource="{Binding Path=PfsFiles}" SelectionMode="Extended" SelectedItem="{Binding Path=SelectedPfsFile}" DockPanel.Dock="Top" MinHeight="100">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Path=FileName}" />

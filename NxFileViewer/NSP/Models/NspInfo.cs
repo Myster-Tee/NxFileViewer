@@ -1,4 +1,5 @@
-﻿using Emignatik.NxFileViewer.NxFormats.CNMT.Models;
+﻿using System.Collections.Generic;
+using Emignatik.NxFileViewer.NxFormats.CNMT.Models;
 using Emignatik.NxFileViewer.NxFormats.NCA.Models;
 using Emignatik.NxFileViewer.NxFormats.NCA.Structs;
 
@@ -13,22 +14,26 @@ namespace Emignatik.NxFileViewer.NSP.Models
         /// <summary>
         /// Gets the header of the metadata file (*.cnmt.nca)
         /// </summary>
-        public CnmtHeader CnmtHeader { get; set; }
+        public CnmtInfo CnmtInfo { get; set; }
 
         /// <summary>
         /// Gets the list of files in NSP
         /// </summary>
-        public Pfs0File[] Files { get; set; }
+        public PfsFile[] Files { get; set; }
 
-        /// <summary>
-        /// Header of the NCA file of <see cref="NcaContentType.META"/> type
-        /// </summary>
-        public NcaHeader NcaMetaHeader { get; set; }
+        public NacpInfo NacpInfo { get; set; }
 
-        /// <summary>
-        /// Can be null if NSP contains no NCA of type <see cref="NcaContentType.CONTROL"/>
-        /// (Which is observed to be normal for Add-ons)
-        /// </summary>
-        public NcaControlContent NcaControlContent { get; set; }
+        public List<IconInfo> Icons { get; set; }
+
+        ///// <summary>
+        ///// Header of the NCA file of <see cref="NcaContentType.META"/> type
+        ///// </summary>
+        //public NcaHeader NcaMetaHeader { get; set; }
+
+        ///// <summary>
+        ///// Can be null if NSP contains no NCA of type <see cref="NcaContentType.CONTROL"/>
+        ///// (Which is observed to be normal for Add-ons)
+        ///// </summary>
+        //public NcaControlContent NcaControlContent { get; set; }
     }
 }

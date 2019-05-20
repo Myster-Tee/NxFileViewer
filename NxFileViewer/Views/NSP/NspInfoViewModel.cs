@@ -1,11 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.NSP.Models;
-using Emignatik.NxFileViewer.NxFormats.NACP.Models;
 using Emignatik.NxFileViewer.NxFormats.PFS0;
 using Emignatik.NxFileViewer.Properties;
 using Emignatik.NxFileViewer.Services;
@@ -17,11 +15,11 @@ namespace Emignatik.NxFileViewer.Views.NSP
     public class NspInfoViewModel : FileViewModelBase
     {
         private readonly NspInfo _nspInfo;
-        private NacpTitle _selectedTitle;
+        private TitleInfo _selectedTitle;
         private string _appName;
         private string _publisher;
         private BitmapImage _icon = null;
-        private Pfs0FileViewModel _selectedPfs0File;
+        private PfsFileViewModel _selectedPfsFile;
         private FileViewModelBase _selectedFileInfo;
 
         public NspInfoViewModel(NspInfo nspInfo)
@@ -33,31 +31,31 @@ namespace Emignatik.NxFileViewer.Views.NSP
 
             var saveSelectedFilesCommand = new RelayCommand(OnSaveSelectedFiles);
             var decryptSelectedFilesHeaderCommand = new RelayCommand(OnDecryptSelectedFilesHeader);
-            Pfs0Files = _nspInfo.Files?.Select(file => new Pfs0FileViewModel(file)
+            PfsFiles = _nspInfo.Files?.Select(file => new PfsFileViewModel(file)
             {
                 SaveSelectedFilesCommand = saveSelectedFilesCommand,
                 DecryptSelectedFilesHeaderCommand = decryptSelectedFilesHeaderCommand,
             }).ToArray();
         }
 
-        public string AppType => _nspInfo.CnmtHeader.Type.ToString();
+        public string AppType => _nspInfo?.CnmtInfo.Type.ToString();
 
-        public string DisplayVersion => _nspInfo.NcaControlContent?.NacpContent.DisplayVersion;
+        public string DisplayVersion => _nspInfo.NacpInfo?.DisplayVersion;
 
-        public string TitleId => _nspInfo.CnmtHeader.TitleId;
+        public string TitleId => _nspInfo?.CnmtInfo.TitleId;
 
-        public uint TitleVersion => _nspInfo.CnmtHeader.TitleVersion;
+        public uint? TitleVersion => _nspInfo?.CnmtInfo.TitleVersion;
 
-        public Pfs0FileViewModel[] Pfs0Files { get; }
+        public PfsFileViewModel[] PfsFiles { get; }
 
-        public Pfs0FileViewModel SelectedPfs0File
+        public PfsFileViewModel SelectedPfsFile
         {
-            get => _selectedPfs0File;
+            get => _selectedPfsFile;
             set
             {
-                _selectedPfs0File = value;
+                _selectedPfsFile = value;
                 NotifyPropertyChanged();
-                UpdateOnSelectedPfs0FileChanged();
+                UpdateOnSelectedPfsFileChanged();
             }
         }
 
@@ -71,16 +69,16 @@ namespace Emignatik.NxFileViewer.Views.NSP
             }
         }
 
-        public NacpTitle[] Titles
+        public TitleInfo[] Titles
         {
             get
             {
-                var ncaControlContent = _nspInfo.NcaControlContent;
-                return ncaControlContent?.NacpContent.Titles;
+                var nacpInfo = _nspInfo.NacpInfo;
+                return nacpInfo?.Titles?.ToArray();
             }
         }
 
-        public NacpTitle SelectedTitle
+        public TitleInfo SelectedTitle
         {
             get => _selectedTitle;
             set
@@ -121,14 +119,15 @@ namespace Emignatik.NxFileViewer.Views.NSP
             }
         }
 
-        private void UpdateOnSelectedPfs0FileChanged()
+        private void UpdateOnSelectedPfsFileChanged()
         {
-            var selectedFile = SelectedPfs0File;
+            var selectedFile = SelectedPfsFile;
 
-            SelectedFileInfo = !(selectedFile?.File is Pfs0NcaFile pfs0NcaFile) ? null : new NcaInfoViewModel(pfs0NcaFile.Header)
-            {
-                Source = $"{TitleId}!{pfs0NcaFile.Definition.FileName}"
-            };
+            //TODO : to fix
+            //SelectedFileInfo = !(selectedFile?.File is Pfs0NcaFile pfs0NcaFile) ? null : new NcaInfoViewModel(pfs0NcaFile.Header)
+            //{
+            //    Source = $"{TitleId}!{pfs0NcaFile.Definition.FileName}"
+            //};
         }
 
         private void UpdateOnSelectedTitleChanged()
@@ -139,38 +138,20 @@ namespace Emignatik.NxFileViewer.Views.NSP
             Icon = GetIconForTitle(selectedTitle);
         }
 
-        private BitmapImage GetIconForTitle(NacpTitle title)
+        private BitmapImage GetIconForTitle(TitleInfo title)
         {
-            var ncaControlContent = _nspInfo.NcaControlContent;
-            if (title == null || ncaControlContent == null)
+            var nacpInfo = _nspInfo.NacpInfo;
+            if (title == null || nacpInfo == null)
                 return null;
 
-            var iconOfSelectedLanguage = ncaControlContent.Icons.FirstOrDefault(iconTmp => iconTmp.Language == title.Language);
+            var iconOfSelectedLanguage = _nspInfo.Icons.FirstOrDefault(iconTmp => iconTmp.Language == title.Language);
 
-            var iconFilePath = iconOfSelectedLanguage?.IconFilePath;
-            if (iconFilePath == null || !File.Exists(iconFilePath))
-                return null;
-
-            try
-            {
-                var bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreImageCache; // Important: to prevent WPF from locking the file
-                bitmapImage.UriSource = new Uri(iconFilePath);
-                bitmapImage.EndInit();
-                return bitmapImage;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError($"Failed to load icon from file \"{iconFilePath}\".", ex);
-                return null;
-            }
+            return iconOfSelectedLanguage?.Image;
         }
 
         private string[] GetSelectedFileNames()
         {
-            return (Pfs0Files ?? new Pfs0FileViewModel[0]).Where(vm => vm.IsSelected).Select(vm => vm.File.Definition?.FileName).ToArray();
+            return (PfsFiles ?? new PfsFileViewModel[0]).Where(vm => vm.IsSelected).Select(vm => vm.FileName).ToArray();
         }
 
         private void OnSaveSelectedFiles()

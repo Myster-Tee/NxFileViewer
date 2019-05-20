@@ -5,11 +5,11 @@ using Emignatik.NxFileViewer.Utils;
 
 namespace Emignatik.NxFileViewer.Views.NSP
 {
-    public class Pfs0FileViewModel : ViewModelBase
+    public class PfsFileViewModel : ViewModelBase
     {
         private bool _isSelected;
 
-        public Pfs0FileViewModel(Pfs0File file)
+        public PfsFileViewModel(PfsFile file)
         {
             File = file ?? throw new ArgumentNullException(nameof(file));
         }
@@ -22,8 +22,8 @@ namespace Emignatik.NxFileViewer.Views.NSP
         {
             get
             {
-                var fileDefinition = File.Definition;
-                return $"{fileDefinition?.FileName}  ({fileDefinition?.FileSize.ToFileSize()})";
+                var fileEntry = File.Entry;
+                return $"{fileEntry?.Name}  ({fileEntry?.Size.ToFileSize()})";
             }
         }
 
@@ -37,6 +37,6 @@ namespace Emignatik.NxFileViewer.Views.NSP
             }
         }
 
-        public Pfs0File File { get; }
+        public PfsFile File { get; }
     }
 }
