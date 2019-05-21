@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Emignatik.NxFileViewer.NxFormats.NACP.Structs
+namespace Emignatik.NxFileViewer.NSP
 {
     /// <summary>
     /// Base on "https://switchbrew.org/wiki/Control.nacp#Title_Entry"

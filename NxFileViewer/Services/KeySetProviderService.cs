@@ -1,59 +1,65 @@
 ﻿using System;
 using System.IO;
-using Emignatik.NxFileViewer.KeysParsing;
 using Emignatik.NxFileViewer.Properties;
 using Emignatik.NxFileViewer.Utils;
+using LibHac;
 
 namespace Emignatik.NxFileViewer.Services
 {
     public static class KeySetProviderService
     {
 
-        private static KeySet _keySet = null;
+        private static Keyset _keyset = null;
 
-
-        public static bool TryGetKeySet(out KeySet keySet, out string errorMessage, bool forceReload = false)
+        public static Keyset GetKeySet(bool forceReload = false)
         {
-            if (_keySet != null && !forceReload)
+            if (_keyset != null && !forceReload)
             {
-                keySet = _keySet;
-                errorMessage = null;
+                return _keyset;
+            }
+            _keyset = LoadKeySet();
+            return _keyset;
+        }
+
+        public static bool TryGetKeySet(out Keyset keyset, bool forceReload = false)
+        {
+            if (_keyset != null && !forceReload)
+            {
+                keyset = _keyset;
                 return true;
             }
             try
             {
-                keySet = LoadKeySet();
-                _keySet = keySet;
-                errorMessage = null;
+                keyset = LoadKeySet();
+                _keyset = keyset;
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
-                keySet = null;
-                errorMessage = ex.Message;
+                keyset = null;
                 return false;
             }
         }
 
-        private static KeySet LoadKeySet()
+        private static Keyset LoadKeySet()
         {
             var keysFilePath = Settings.Default.KeysFilePath;
             if (string.IsNullOrWhiteSpace(keysFilePath))
-                throw new Exception("Keys file path defined in the settings is empty.");
+                throw new Exception(Resources.ErrKeysFilePathUndefined);
 
             var keysFullFilePath = keysFilePath.ToFullPath();
 
             if (!File.Exists(keysFullFilePath))
-                throw new Exception($"Keys file path defined in the settings \"{keysFullFilePath}\" couldn't be found.");
+                throw new Exception(string.Format(Resources.ErrKeysFilePathNotFound, keysFullFilePath));
 
             try
             {
-                _keySet = new KeysParser().ParseKeys(keysFullFilePath);
-                return _keySet;
+                _keyset = ExternalKeys.ReadKeyFile(keysFullFilePath);
+                return _keyset;
             }
             catch (Exception ex)
             {
-                throw new Exception($"Failed to load keys from file \"{keysFullFilePath}\": {ex.Message}.");
+                throw new Exception(string.Format(Resources.ErrKeysLoadingFailed, keysFullFilePath, ex.Message));
             }
         }
     }

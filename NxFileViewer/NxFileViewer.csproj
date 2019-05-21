@@ -59,75 +59,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Hactool\NcaSection.cs" />
     <Compile Include="NSP\Models\CnmtInfo.cs" />
     <Compile Include="NSP\Models\IconInfo.cs" />
     <Compile Include="NSP\Models\PfsFile.cs" />
     <Compile Include="NSP\Models\PfsNcaFile.cs" />
     <Compile Include="NSP\Models\NacpInfo.cs" />
     <Compile Include="NSP\Models\TitleInfo.cs" />
-    <Compile Include="Services\HactoolHelperService.cs" />
     <Compile Include="NSP\Models\LocalizedIcon.cs" />
     <Compile Include="NSP\Models\NspInfo.cs" />
     <Compile Include="NSP\NspInfoLoader.cs" />
-    <Compile Include="NxFormats\CNMT\Models\CnmtContentRecord.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtContentRecordStruct.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtAddonContentHeaderStruct.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtAppHeaderStruct.cs" />
-    <Compile Include="NxFormats\CNMT\Models\CnmtHeader.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtContentType.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtHeaderStruct.cs" />
-    <Compile Include="NxFormats\CNMT\CnmtReader.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtType.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtPatchHeaderStruct.cs" />
-    <Compile Include="Crypto\IXtsAesCryptoTransform.cs" />
-    <Compile Include="Crypto\TransformationMode.cs" />
-    <Compile Include="Hactool\HactoolHelper.cs" />
-    <Compile Include="KeysParsing\KeyParser.cs" />
-    <Compile Include="Crypto\XtsAes.cs" />
-    <Compile Include="Crypto\XtsAesCryptoTransform.cs" />
     <Compile Include="Commands\ApplicationCommandsExt.cs" />
-    <Compile Include="KeysParsing\KeysParser.cs" />
-    <Compile Include="KeysParsing\KeySet.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LogLevel.cs" />
-    <Compile Include="NxFormats\NACP\Models\NacpContent.cs" />
-    <Compile Include="NxFormats\NACP\Structs\NacpStruct.cs" />
-    <Compile Include="NxFormats\NACP\Structs\NacpLanguage.cs" />
-    <Compile Include="NxFormats\NACP\NacpReader.cs" />
-    <Compile Include="NxFormats\NACP\Models\NacpTitle.cs" />
-    <Compile Include="NxFormats\NACP\Structs\NacpLocalCommunicationStruct.cs" />
-    <Compile Include="NxFormats\NACP\Structs\NacpTitleStruct.cs" />
-    <Compile Include="NxFormats\NACP\Structs\NacpVideoCaptureMode.cs" />
-    <Compile Include="NxFormats\NCA\NcaDecryptionStream.cs" />
-    <Compile Include="NxFormats\NCA\NcaReader.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaContentType.cs" />
-    <Compile Include="NxFormats\NCA\Models\NcaHeader.cs" />
-    <Compile Include="NxFormats\NCA\Models\NcaSectionIndex.cs" />
-    <Compile Include="NxFormats\NCA\NcaKeyException.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaFileSystemType.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaHashType.cs" />
-    <Compile Include="NxFormats\NCA\Models\NcaSectionHeader.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaSectionHeaderWithoutSuperBlockStruct.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaSectionTableEntryStruct.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaHeaderStruct.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaType.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaSectionCryptoType.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaSuperBlockRomFsStruct.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaSuperBlockPfs0Struct.cs" />
-    <Compile Include="NxFormats\PFS0\Pfs0Utils.cs" />
+    <Compile Include="NSP\NacpLanguage.cs" />
     <Compile Include="Services\KeySetProviderService.cs" />
     <Compile Include="Utils\FileSizeUnit.cs" />
     <Compile Include="Utils\IoHelper.cs" />
     <Compile Include="Utils\FileSizeHelper.cs" />
     <Compile Include="Utils\PathHelper.cs" />
-    <Compile Include="Utils\SubStream.cs" />
-    <Compile Include="NxFormats\PFS0\Structs\Pfs0HeaderStruct.cs" />
-    <Compile Include="NxFormats\PFS0\Structs\Pfs0FileEntryStruct.cs" />
-    <Compile Include="NxFormats\PFS0\Models\Pfs0FileDefinition.cs" />
     <Compile Include="Utils\ByteArrayExt.cs" />
     <Compile Include="Utils\NumExt.cs" />
-    <Compile Include="Utils\StreamExt.cs" />
     <Compile Include="Utils\TempDirMgr.cs" />
     <Compile Include="Views\Converters\NacpLanguageConverter.cs" />
     <Compile Include="Views\CustomControls\AllowDropTextBox.cs" />
@@ -156,7 +107,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="NxFormats\PFS0\Pfs0Reader.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

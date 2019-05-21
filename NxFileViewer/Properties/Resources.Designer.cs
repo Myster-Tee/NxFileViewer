@@ -106,6 +106,42 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to load file &quot;{0}&quot;..
+        /// </summary>
+        public static string ErrFailedToLoadFile {
+            get {
+                return ResourceManager.GetString("ErrFailedToLoadFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keys file path defined in the settings &quot;{0}&quot; couldn&apos;t be found..
+        /// </summary>
+        public static string ErrKeysFilePathNotFound {
+            get {
+                return ResourceManager.GetString("ErrKeysFilePathNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keys file path defined in the settings is empty..
+        /// </summary>
+        public static string ErrKeysFilePathUndefined {
+            get {
+                return ResourceManager.GetString("ErrKeysFilePathUndefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load keys from file &quot;{0}&quot;: {1}..
+        /// </summary>
+        public static string ErrKeysLoadingFailed {
+            get {
+                return ResourceManager.GetString("ErrKeysLoadingFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Files.
         /// </summary>
         public static string Files {
@@ -120,6 +156,15 @@ namespace Emignatik.NxFileViewer.Properties {
         public static string GeneralInfo {
             get {
                 return ResourceManager.GetString("GeneralInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keys successfully loaded..
+        /// </summary>
+        public static string InfoKeysSuccessfullyLoaded {
+            get {
+                return ResourceManager.GetString("InfoKeysSuccessfullyLoaded", resourceCulture);
             }
         }
         

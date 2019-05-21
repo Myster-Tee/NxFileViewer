@@ -1,39 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
-using Emignatik.NxFileViewer.Hactool;
 using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.NSP.Models;
-using Emignatik.NxFileViewer.NxFormats.CNMT;
-using Emignatik.NxFileViewer.NxFormats.CNMT.Models;
-using Emignatik.NxFileViewer.NxFormats.NACP;
-using Emignatik.NxFileViewer.NxFormats.NACP.Structs;
-using Emignatik.NxFileViewer.NxFormats.NCA.Models;
-using Emignatik.NxFileViewer.NxFormats.NCA.Structs;
-using Emignatik.NxFileViewer.NxFormats.PFS0;
-using Emignatik.NxFileViewer.Properties;
 using Emignatik.NxFileViewer.Utils;
 using LibHac;
 using LibHac.Fs;
 using LibHac.Fs.NcaUtils;
-using CnmtContentType = Emignatik.NxFileViewer.NxFormats.CNMT.Structs.CnmtContentType;
-using NcaSection = Emignatik.NxFileViewer.Hactool.NcaSection;
+
 
 namespace Emignatik.NxFileViewer.NSP
 {
     public class NspInfoLoader
     {
-        private readonly HactoolHelper _hactoolHelper;
         private readonly TempDirMgr _tempDirMgr;
+        private readonly Keyset _keyset;
         private const string CNMT_NCA = ".cnmt.nca";
 
-        public NspInfoLoader(HactoolHelper hactoolHelper, TempDirMgr tempDirMgr)
+        public NspInfoLoader(TempDirMgr tempDirMgr, Keyset keyset)
         {
-            _hactoolHelper = hactoolHelper ?? throw new ArgumentNullException(nameof(hactoolHelper));
             _tempDirMgr = tempDirMgr ?? throw new ArgumentNullException(nameof(tempDirMgr));
+            _keyset = keyset ?? throw new ArgumentNullException(nameof(keyset));
         }
 
         public NspInfo Load(string nspFilePath)
@@ -41,9 +29,6 @@ namespace Emignatik.NxFileViewer.NSP
 
             if (nspFilePath == null)
                 throw new ArgumentNullException(nameof(nspFilePath));
-
-
-            var keyset = ExternalKeys.ReadKeyFile(Settings.Default.KeysFilePath);
 
             var nspInfo = new NspInfo();
 
@@ -65,7 +50,7 @@ namespace Emignatik.NxFileViewer.NSP
                     {
                         using (var openFile = nspPartition.OpenFile(nspFileEntry, OpenMode.Read))
                         {
-                            var nca = new Nca(keyset, new FileStorage(openFile));
+                            var nca = new Nca(_keyset, new FileStorage(openFile));
                             var pfsNcaFile = new PfsNcaFile
                             {
                                 Name = nspFileEntry.Name,
@@ -150,7 +135,7 @@ namespace Emignatik.NxFileViewer.NSP
 
                                         using (var ncaControlFile = nspPartition.OpenFile(ncaControlFileEntry, OpenMode.Read))
                                         {
-                                            var ncaControl = new Nca(keyset, new FileStorage(ncaControlFile));
+                                            var ncaControl = new Nca(_keyset, new FileStorage(ncaControlFile));
 
                                             if (ncaControl.Header.ContentType != ContentType.Control)
                                                 throw new Exception($"NCA \"{ncaControlFileName}\" is not of the expected content type \"{CnmtContentType.Control}\".");
@@ -185,7 +170,6 @@ namespace Emignatik.NxFileViewer.NSP
 
         private static void ExtractControlInfo(IFileSystem controlFs, NspInfo nspInfo)
         {
-
             NacpInfo nacpInfo = null;
             var icons = new List<IconInfo>();
             const string ICON_FILE_PREFIX = "icon_";
@@ -264,65 +248,6 @@ namespace Emignatik.NxFileViewer.NSP
 
         }
 
-
-        private static List<LocalizedIcon> ScanIcons(string controlTargetDir)
-        {
-            const string ICON_FILE_PREFIX = "icon_";
-
-            var icons = new List<LocalizedIcon>();
-            foreach (var datFileInfo in new DirectoryInfo(controlTargetDir).GetFiles("*.dat"))
-            {
-                var fileName = datFileInfo.Name;
-                if (!fileName.StartsWith(ICON_FILE_PREFIX, true, CultureInfo.InvariantCulture))
-                {
-                    Logger.LogWarning($"Found a *.dat file \"{fileName}\" which doesn't seem to be an icon.");
-                    continue;
-                }
-
-                var langName = Path.GetFileNameWithoutExtension(fileName.Substring(ICON_FILE_PREFIX.Length));
-                if (!Enum.TryParse(langName, true, out NacpLanguage language))
-                {
-                    Logger.LogWarning($"Found a *.dat file \"{fileName}\" which doesn't match any of the languages.");
-                    continue;
-                }
-
-                icons.Add(new LocalizedIcon
-                {
-                    IconFilePath = datFileInfo.FullName,
-                    Language = language,
-                });
-            }
-
-            return icons;
-        }
-
-
-        private static CnmtHeader ReadCnmtAndFindNcaControlId(string cnmtMetaFilePath, out string ncaControlId)
-        {
-            using (var cnmtReader = CnmtReader.FromFile(cnmtMetaFilePath))
-            {
-                var cnmtHeader = cnmtReader.Read();
-
-                var controlRecords = cnmtHeader.ContentRecords.Where(cr => cr.Type == CnmtContentType.Control).ToArray();
-                if (controlRecords.Length > 1)
-                    throw new Exception($"More than one record of type \"{CnmtContentType.Control}\" found in meta file \"{cnmtMetaFilePath}\".");
-
-                ncaControlId = controlRecords.Length == 1 ? controlRecords[0].NcaId : null;
-
-                return cnmtHeader;
-            }
-        }
-
-        private static string FindSingleCnmtFile(string dirPath)
-        {
-            var files = Directory.GetFiles(dirPath, "*.cnmt");
-            if (files.Length < 1)
-                throw new FileNotFoundException($"No cnmt file found in directory \"{dirPath}\".");
-
-            if (files.Length > 1)
-                throw new FileNotFoundException($"More than one cnmt file found in directory \"{dirPath}\".");
-            return files[0];
-        }
 
 
     }

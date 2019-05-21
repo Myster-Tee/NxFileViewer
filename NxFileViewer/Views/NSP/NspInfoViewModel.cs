@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.NSP.Models;
-using Emignatik.NxFileViewer.NxFormats.PFS0;
 using Emignatik.NxFileViewer.Properties;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Views.MVVM;
@@ -165,7 +164,8 @@ namespace Emignatik.NxFileViewer.Views.NSP
 
             try
             {
-                Pfs0Utils.SavePfs0Files(Source, selectedFileNames, saveDir);
+                //TODO: finir la fonction de sauvegarde
+                //Pfs0Utils.SavePfs0Files(Source, selectedFileNames, saveDir);
             }
             catch (Exception ex)
             {
@@ -202,28 +202,30 @@ namespace Emignatik.NxFileViewer.Views.NSP
 
         private void OnDecryptSelectedFilesHeader()
         {
-            var selectedFileNames = GetSelectedFileNames();
+            //TODO: finir la fonction de sauvegarde
 
-            if (selectedFileNames.Length <= 0)
-                return;
+            //var selectedFileNames = GetSelectedFileNames();
 
-            if (!KeySetProviderService.TryGetKeySet(out var keySet, out var errorMessage))
-            {
-                Logger.LogError($"Can't decrypt header(s) of selected file(s), keys can't be obtained: {errorMessage}");
-                return;
-            }
+            //if (selectedFileNames.Length <= 0)
+            //    return;
 
-            if (!PromptSaveDir(out var saveDir))
-                return;
+            //if (!KeySetProviderService.TryGetKeySet(out var keySet, out var errorMessage))
+            //{
+            //    Logger.LogError($"Can't decrypt header(s) of selected file(s), keys can't be obtained: {errorMessage}");
+            //    return;
+            //}
 
-            try
-            {
-                Pfs0Utils.DecryptPfs0NcaFilesHeader(Source, selectedFileNames, saveDir, keySet);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError("Failed to decrypt header(s) of selected file(s).", ex);
-            }
+            //if (!PromptSaveDir(out var saveDir))
+            //    return;
+
+            //try
+            //{
+            //    Pfs0Utils.DecryptPfs0NcaFilesHeader(Source, selectedFileNames, saveDir, keySet);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.LogError("Failed to decrypt header(s) of selected file(s).", ex);
+            //}
 
         }
     }

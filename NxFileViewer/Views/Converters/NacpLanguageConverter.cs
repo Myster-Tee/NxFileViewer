@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using Emignatik.NxFileViewer.NxFormats.NACP.Structs;
+using Emignatik.NxFileViewer.NSP;
 using Emignatik.NxFileViewer.Properties;
 
 namespace Emignatik.NxFileViewer.Views.Converters

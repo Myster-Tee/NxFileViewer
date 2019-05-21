@@ -1,6 +1,4 @@
-﻿using Emignatik.NxFileViewer.NxFormats.NACP.Structs;
-
-namespace Emignatik.NxFileViewer.NSP.Models
+﻿namespace Emignatik.NxFileViewer.NSP.Models
 {
     public class LocalizedIcon
     {

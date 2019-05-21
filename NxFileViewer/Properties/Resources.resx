@@ -132,11 +132,26 @@
   <data name="Details" xml:space="preserve">
     <value>Details</value>
   </data>
+  <data name="ErrFailedToLoadFile" xml:space="preserve">
+    <value>Failed to load file "{0}".</value>
+  </data>
+  <data name="ErrKeysFilePathNotFound" xml:space="preserve">
+    <value>Keys file path defined in the settings "{0}" couldn't be found.</value>
+  </data>
+  <data name="ErrKeysFilePathUndefined" xml:space="preserve">
+    <value>Keys file path defined in the settings is empty.</value>
+  </data>
+  <data name="ErrKeysLoadingFailed" xml:space="preserve">
+    <value>Failed to load keys from file "{0}": {1}.</value>
+  </data>
   <data name="Files" xml:space="preserve">
     <value>Files</value>
   </data>
   <data name="GeneralInfo" xml:space="preserve">
     <value>General Info</value>
+  </data>
+  <data name="InfoKeysSuccessfullyLoaded" xml:space="preserve">
+    <value>Keys successfully loaded.</value>
   </data>
   <data name="Lng_AmericanEnglish" xml:space="preserve">
     <value>American</value>

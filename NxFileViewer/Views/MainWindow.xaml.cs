@@ -30,13 +30,14 @@ namespace Emignatik.NxFileViewer.Views
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (KeySetProviderService.TryGetKeySet(out _, out var message))
+            try
             {
-                Logger.LogInfo("Keys successfully loaded.");
+                KeySetProviderService.GetKeySet();
+                Logger.LogInfo(Properties.Resources.InfoKeysSuccessfullyLoaded);
             }
-            else
+            catch (Exception ex)
             {
-                Logger.LogWarning(message);
+                Logger.LogWarning(ex.Message);
             }
         }
 
@@ -70,7 +71,7 @@ namespace Emignatik.NxFileViewer.Views
             {
                 Logger.LogInfo($"===> {Path.GetFileName(filePath)} <===");
 
-                var nspInfoLoader = new NspInfoLoader(HactoolHelperProviderService.Get(), new TempDirMgr(Settings.Default.WorkDir));
+                var nspInfoLoader = new NspInfoLoader(new TempDirMgr(Settings.Default.WorkDir), KeySetProviderService.GetKeySet());
                 var nspInfo = nspInfoLoader.Load(filePath);
 
                 //TODO: split "code behing logic" to separate view model
@@ -81,7 +82,7 @@ namespace Emignatik.NxFileViewer.Views
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to load file \"{filePath}\".", ex);
+                Logger.LogError(string.Format(Properties.Resources.ErrFailedToLoadFile, filePath), ex);
             }
         }
 
