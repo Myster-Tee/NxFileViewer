@@ -10,7 +10,7 @@ namespace Emignatik.NxFileViewer.NSP.Models
         public ContentType ContentType { get; set; }
 
         public string SdkVersion { get; set; }
+
+        public NcaSectionInfo[] DefinedSections { get; set; }
     }
-
-
 }

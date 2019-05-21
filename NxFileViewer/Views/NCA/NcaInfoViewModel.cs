@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Emignatik.NxFileViewer.NSP.Models;
 using Emignatik.NxFileViewer.Utils;
 
@@ -21,11 +22,8 @@ namespace Emignatik.NxFileViewer.Views.NCA
         {
             get
             {
-                //TODO à finir!
-
-                return "";
-                //var definedSectionIndexes = _pfsNcaFile.Header..DefinedSections.Select(sectionHeader => (int)sectionHeader.SectionIndex);
-                //return string.Join(",", definedSectionIndexes);
+                var definedSectionIndexes = _pfsNcaFile.DefinedSections.Select(sectionHeader => $"{sectionHeader.Index}: {sectionHeader.FormatType}");
+                return string.Join(Environment.NewLine, definedSectionIndexes);
             }
         }
 

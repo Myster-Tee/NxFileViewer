@@ -64,6 +64,7 @@
     <Compile Include="NSP\Models\PfsFile.cs" />
     <Compile Include="NSP\Models\PfsNcaFile.cs" />
     <Compile Include="NSP\Models\NacpInfo.cs" />
+    <Compile Include="NSP\Models\NcaSectionInfo.cs" />
     <Compile Include="NSP\Models\TitleInfo.cs" />
     <Compile Include="NSP\Models\LocalizedIcon.cs" />
     <Compile Include="NSP\Models\NspInfo.cs" />

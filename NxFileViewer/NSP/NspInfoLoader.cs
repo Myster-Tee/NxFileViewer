@@ -51,13 +51,29 @@ namespace Emignatik.NxFileViewer.NSP
                         using (var openFile = nspPartition.OpenFile(nspFileEntry, OpenMode.Read))
                         {
                             var nca = new Nca(_keyset, new FileStorage(openFile));
+                            var definedSections = new List<NcaSectionInfo>();
+                            for (var i = 0; i < 4; i++)
+                            {
+                                if(!nca.Header.IsSectionEnabled(i))
+                                    continue;
+
+                                var fsHeader = nca.Header.GetFsHeader(i); 
+
+                                definedSections.Add(new NcaSectionInfo
+                                {
+                                    Index = i,
+                                    FormatType = fsHeader.FormatType,
+                                    EncryptionType = fsHeader.EncryptionType,
+                                });
+                            }
+
                             var pfsNcaFile = new PfsNcaFile
                             {
                                 Name = nspFileEntry.Name,
                                 ContentType = nca.Header.ContentType,
                                 TitleId = nca.Header.TitleId,
-                                SdkVersion = nca.Header.SdkVersion.ToString()
-
+                                SdkVersion = nca.Header.SdkVersion.ToString(),
+                                DefinedSections = definedSections.ToArray(),
                             };
                             pfsFile = pfsNcaFile;
 
