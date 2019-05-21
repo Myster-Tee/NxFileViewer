@@ -14,10 +14,8 @@
         <customControls:AllowDropTextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=Type, Mode=OneWay}" />
         <TextBlock Text="{x:Static r:Resources.SdkVersion}" Style="{StaticResource Title2}"/>
         <customControls:AllowDropTextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=SdkVersion, Mode=OneWay}" />
-        <TextBlock Text="{x:Static r:Resources.NcaCryptoType1}" Style="{StaticResource Title2}"/>
-        <customControls:AllowDropTextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=CryptoType1, Mode=OneWay}" />
-        <TextBlock Text="{x:Static r:Resources.NcaCryptoType2}" Style="{StaticResource Title2}"/>
-        <customControls:AllowDropTextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=CryptoType2, Mode=OneWay}" />
+        <TextBlock Text="{x:Static r:Resources.DistributionType}" Style="{StaticResource Title2}"/>
+        <customControls:AllowDropTextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=DistributionType, Mode=OneWay}" />
         <TextBlock Text="{x:Static r:Resources.NcaDefinedSections}" Style="{StaticResource Title2}"/>
         <customControls:AllowDropTextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=DefinedSections, Mode=OneWay}" AcceptsReturn="True" TextWrapping="NoWrap" />
     </StackPanel>

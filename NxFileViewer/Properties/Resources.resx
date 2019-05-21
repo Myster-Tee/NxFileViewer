@@ -132,6 +132,9 @@
   <data name="Details" xml:space="preserve">
     <value>Details</value>
   </data>
+  <data name="DistributionType" xml:space="preserve">
+    <value>Distribution Type</value>
+  </data>
   <data name="ErrFailedToLoadFile" xml:space="preserve">
     <value>Failed to load file "{0}".</value>
   </data>
@@ -216,14 +219,8 @@
   <data name="NcaContentType" xml:space="preserve">
     <value>Content Type</value>
   </data>
-  <data name="NcaCryptoType1" xml:space="preserve">
-    <value>Crypto Type 1</value>
-  </data>
-  <data name="NcaCryptoType2" xml:space="preserve">
-    <value>Crypto Type 2</value>
-  </data>
   <data name="NcaDefinedSections" xml:space="preserve">
-    <value>Defined sections</value>
+    <value>Defined Sections</value>
   </data>
   <data name="OpenFile_Filter" xml:space="preserve">
     <value>Nintendo Switch file (*.nsp)|*.nsp|All files (*.*)|*.*</value>

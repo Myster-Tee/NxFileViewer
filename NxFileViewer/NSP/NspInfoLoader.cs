@@ -52,12 +52,14 @@ namespace Emignatik.NxFileViewer.NSP
                         {
                             var nca = new Nca(_keyset, new FileStorage(openFile));
                             var definedSections = new List<NcaSectionInfo>();
+
+                            var ncaHeader = nca.Header;
                             for (var i = 0; i < 4; i++)
                             {
-                                if(!nca.Header.IsSectionEnabled(i))
+                                if (!ncaHeader.IsSectionEnabled(i))
                                     continue;
 
-                                var fsHeader = nca.Header.GetFsHeader(i); 
+                                var fsHeader = ncaHeader.GetFsHeader(i);
 
                                 definedSections.Add(new NcaSectionInfo
                                 {
@@ -67,13 +69,16 @@ namespace Emignatik.NxFileViewer.NSP
                                 });
                             }
 
+
+
                             var pfsNcaFile = new PfsNcaFile
                             {
                                 Name = nspFileEntry.Name,
-                                ContentType = nca.Header.ContentType,
-                                TitleId = nca.Header.TitleId,
-                                SdkVersion = nca.Header.SdkVersion.ToString(),
+                                ContentType = ncaHeader.ContentType,
+                                TitleId = ncaHeader.TitleId,
+                                SdkVersion = ncaHeader.SdkVersion.ToString(),
                                 DefinedSections = definedSections.ToArray(),
+                                DistributionType = ncaHeader.DistributionType,
                             };
                             pfsFile = pfsNcaFile;
 
@@ -102,10 +107,10 @@ namespace Emignatik.NxFileViewer.NSP
 
                             if (fileName.EndsWith(CNMT_NCA, StringComparison.InvariantCultureIgnoreCase))
                             {
-                                if (nca.Header.ContentType != ContentType.Meta)
+                                if (ncaHeader.ContentType != ContentType.Meta)
                                     throw new Exception($"\"{fileName}\" is not of the expected type \"{ContentType.Meta}\"");
 
-                                var cnmtFs = nca.OpenFileSystem(nca.Header.ContentIndex, IntegrityCheckLevel.None);
+                                var cnmtFs = nca.OpenFileSystem(ncaHeader.ContentIndex, IntegrityCheckLevel.None);
 
                                 var cnmtFileEntries = cnmtFs.OpenDirectory("/", OpenDirectoryMode.Files).Read().Where(entry => (entry.Name ?? "").EndsWith(".cnmt", StringComparison.InvariantCultureIgnoreCase)).ToArray();
 
@@ -129,38 +134,40 @@ namespace Emignatik.NxFileViewer.NSP
                                             TitleVersion = cnmt.TitleVersion.Version,
                                         };
 
-
                                         //TODO: retrieve the commented info
                                         //cnmt.MinimumSystemVersion
                                         //cnmt.MinimumApplicationVersion
+
                                         var controlEntries = cnmt.ContentEntries.Where(entry => entry.Type == LibHac.CnmtContentType.Control).ToArray();
-                                        if (controlEntries.Length < 1)
-                                            throw new Exception($"No NCA of content type \"{CnmtContentType.Control}\" referenced in CNMT file.");
                                         if (controlEntries.Length > 1)
                                             throw new Exception($"More than one NCA of content type \"{CnmtContentType.Control}\" referenced in CNMT file.");
 
-                                        var ncaControlFileName = ByteArrayExt.ToHexString(controlEntries[0].NcaId) + ".nca";
-
-                                        var ncaControlFileEntries = nspPartition.Files.Where(entry => string.Equals(entry.Name, ncaControlFileName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
-                                        if (ncaControlFileEntries.Length < 1)
-                                            throw new Exception($"NCA \"{ncaControlFileName}\" of content type \"{CnmtContentType.Control}\" couldn't be found.");
-                                        if (ncaControlFileEntries.Length > 1)
-                                            throw new Exception($"NCA \"{ncaControlFileName}\" of content type \"{CnmtContentType.Control}\" found more than once.");
-
-                                        var ncaControlFileEntry = ncaControlFileEntries[0];
-
-                                        using (var ncaControlFile = nspPartition.OpenFile(ncaControlFileEntry, OpenMode.Read))
+                                        if (controlEntries.Length == 1)
                                         {
-                                            var ncaControl = new Nca(_keyset, new FileStorage(ncaControlFile));
+                                            var ncaControlFileName = ByteArrayExt.ToHexString(controlEntries[0].NcaId) + ".nca";
 
-                                            if (ncaControl.Header.ContentType != ContentType.Control)
-                                                throw new Exception($"NCA \"{ncaControlFileName}\" is not of the expected content type \"{CnmtContentType.Control}\".");
+                                            var ncaControlFileEntries = nspPartition.Files.Where(entry => string.Equals(entry.Name, ncaControlFileName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+                                            if (ncaControlFileEntries.Length < 1)
+                                                throw new Exception($"NCA \"{ncaControlFileName}\" of content type \"{CnmtContentType.Control}\" couldn't be found.");
+                                            if (ncaControlFileEntries.Length > 1)
+                                                throw new Exception($"NCA \"{ncaControlFileName}\" of content type \"{CnmtContentType.Control}\" found more than once.");
 
-                                            var controlFs = ncaControl.OpenFileSystem(ncaControl.Header.ContentIndex, IntegrityCheckLevel.None);
+                                            var ncaControlFileEntry = ncaControlFileEntries[0];
 
-                                            ExtractControlInfo(controlFs, nspInfo);
+                                            using (var ncaControlFile = nspPartition.OpenFile(ncaControlFileEntry, OpenMode.Read))
+                                            {
+                                                var ncaControl = new Nca(_keyset, new FileStorage(ncaControlFile));
 
+                                                if (ncaControl.Header.ContentType != ContentType.Control)
+                                                    throw new Exception($"NCA \"{ncaControlFileName}\" is not of the expected content type \"{CnmtContentType.Control}\".");
+
+                                                var controlFs = ncaControl.OpenFileSystem(ncaControl.Header.ContentIndex, IntegrityCheckLevel.None);
+
+                                                ExtractControlInfo(controlFs, nspInfo);
+
+                                            }
                                         }
+
                                     }
                                 }
                                 metaFiles.Add(pfsNcaFile);

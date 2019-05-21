@@ -106,6 +106,15 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Distribution Type.
+        /// </summary>
+        public static string DistributionType {
+            get {
+                return ResourceManager.GetString("DistributionType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to load file &quot;{0}&quot;..
         /// </summary>
         public static string ErrFailedToLoadFile {
@@ -358,25 +367,7 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crypto Type 1.
-        /// </summary>
-        public static string NcaCryptoType1 {
-            get {
-                return ResourceManager.GetString("NcaCryptoType1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Crypto Type 2.
-        /// </summary>
-        public static string NcaCryptoType2 {
-            get {
-                return ResourceManager.GetString("NcaCryptoType2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Defined sections.
+        ///   Looks up a localized string similar to Defined Sections.
         /// </summary>
         public static string NcaDefinedSections {
             get {

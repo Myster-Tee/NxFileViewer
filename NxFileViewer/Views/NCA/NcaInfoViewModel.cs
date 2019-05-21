@@ -2,6 +2,7 @@
 using System.Linq;
 using Emignatik.NxFileViewer.NSP.Models;
 using Emignatik.NxFileViewer.Utils;
+using LibHac.Fs.NcaUtils;
 
 namespace Emignatik.NxFileViewer.Views.NCA
 {
@@ -29,10 +30,7 @@ namespace Emignatik.NxFileViewer.Views.NCA
 
         public string SdkVersion => _pfsNcaFile.SdkVersion;
 
-        //TODO à finir!
-        public string CryptoType1 => ""; //_pfsNcaFile.Header.CryptoType.ToString();
+        public DistributionType DistributionType => _pfsNcaFile.DistributionType;
 
-        //TODO à finir!
-        public string CryptoType2 => ""; //_pfsNcaFile.RawStruct.CryptoType2.ToString();
     }
 }

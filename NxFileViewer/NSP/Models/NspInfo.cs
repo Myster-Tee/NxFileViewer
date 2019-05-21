@@ -18,6 +18,10 @@ namespace Emignatik.NxFileViewer.NSP.Models
         /// </summary>
         public PfsFile[] Files { get; set; }
 
+        /// <summary>
+        /// Gets information contained in control.nacp file
+        /// Maybe null for add-on
+        /// </summary>
         public NacpInfo NacpInfo { get; set; }
 
         public List<IconInfo> Icons { get; set; }
