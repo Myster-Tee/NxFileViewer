@@ -59,6 +59,8 @@ namespace Emignatik.NxFileViewer.NSP
                 foreach (var nspFileEntry in nspPartition.Files)
                 {
                     var fileName = nspFileEntry.Name ?? "";
+
+                    PfsFile pfsFile;
                     if (fileName.EndsWith(".nca", StringComparison.InvariantCultureIgnoreCase))
                     {
                         using (var openFile = nspPartition.OpenFile(nspFileEntry, OpenMode.Read))
@@ -66,10 +68,13 @@ namespace Emignatik.NxFileViewer.NSP
                             var nca = new Nca(keyset, new FileStorage(openFile));
                             var pfsNcaFile = new PfsNcaFile
                             {
-                                Entry = nspFileEntry,
-                                Header = nca.Header
+                                Name = nspFileEntry.Name,
+                                ContentType = nca.Header.ContentType,
+                                TitleId = nca.Header.TitleId,
+                                SdkVersion = nca.Header.SdkVersion.ToString()
+
                             };
-                            files.Add(pfsNcaFile);
+                            pfsFile = pfsNcaFile;
 
                             //TODO: maybe expose Nintendo logo?
                             //if (nca.Header.ContentType == ContentType.Program)
@@ -163,17 +168,18 @@ namespace Emignatik.NxFileViewer.NSP
                     }
                     else
                     {
-                        files.Add(new PfsFile
-                        {
-                            Entry = nspFileEntry
-                        });
+                        pfsFile = new PfsFile();
                     }
+
+                    files.Add(pfsFile);
+                    pfsFile.Name = nspFileEntry.Name;
+                    pfsFile.Size = nspFileEntry.Size;
+
                 }
 
                 nspInfo.Files = files.ToArray();
                 return nspInfo;
             }
-
 
         }
 

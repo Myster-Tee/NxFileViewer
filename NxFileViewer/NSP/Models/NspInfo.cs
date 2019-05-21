@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-using Emignatik.NxFileViewer.NxFormats.CNMT.Models;
-using Emignatik.NxFileViewer.NxFormats.NCA.Models;
-using Emignatik.NxFileViewer.NxFormats.NCA.Structs;
 
 namespace Emignatik.NxFileViewer.NSP.Models
 {
@@ -25,15 +22,6 @@ namespace Emignatik.NxFileViewer.NSP.Models
 
         public List<IconInfo> Icons { get; set; }
 
-        ///// <summary>
-        ///// Header of the NCA file of <see cref="NcaContentType.META"/> type
-        ///// </summary>
-        //public NcaHeader NcaMetaHeader { get; set; }
 
-        ///// <summary>
-        ///// Can be null if NSP contains no NCA of type <see cref="NcaContentType.CONTROL"/>
-        ///// (Which is observed to be normal for Add-ons)
-        ///// </summary>
-        //public NcaControlContent NcaControlContent { get; set; }
     }
 }

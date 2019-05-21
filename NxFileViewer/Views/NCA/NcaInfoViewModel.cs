@@ -1,35 +1,40 @@
 ﻿using System;
-using System.Linq;
-using Emignatik.NxFileViewer.NxFormats.NCA.Models;
+using Emignatik.NxFileViewer.NSP.Models;
+using Emignatik.NxFileViewer.Utils;
 
 namespace Emignatik.NxFileViewer.Views.NCA
 {
     public class NcaInfoViewModel : FileViewModelBase
     {
-        private readonly NcaHeader _ncaHeader;
+        private readonly PfsNcaFile _pfsNcaFile;
 
-        public NcaInfoViewModel(NcaHeader ncaHeader)
+        public NcaInfoViewModel(PfsNcaFile pfsNcaFile)
         {
-            _ncaHeader = ncaHeader ?? throw new ArgumentNullException(nameof(ncaHeader));
+            _pfsNcaFile = pfsNcaFile ?? throw new ArgumentNullException(nameof(pfsNcaFile));
         }
 
-        public string TitleId => _ncaHeader.RawStruct.TitleId;
+        public string TitleId => _pfsNcaFile.TitleId.ToHex();
 
-        public string Type => _ncaHeader.ContentType.ToString();
+        public string Type => _pfsNcaFile.ContentType.ToString();
 
         public string DefinedSections
         {
             get
             {
-                var definedSectionIndexes = _ncaHeader.DefinedSections.Select(sectionHeader => (int)sectionHeader.SectionIndex);
-                return string.Join(",", definedSectionIndexes);
+                //TODO à finir!
+
+                return "";
+                //var definedSectionIndexes = _pfsNcaFile.Header..DefinedSections.Select(sectionHeader => (int)sectionHeader.SectionIndex);
+                //return string.Join(",", definedSectionIndexes);
             }
         }
 
-        public string SdkVersion => _ncaHeader.RawStruct.SdkVersion;
+        public string SdkVersion => _pfsNcaFile.SdkVersion;
 
-        public string CryptoType1 => _ncaHeader.RawStruct.CryptoType.ToString();
+        //TODO à finir!
+        public string CryptoType1 => ""; //_pfsNcaFile.Header.CryptoType.ToString();
 
-        public string CryptoType2 => _ncaHeader.RawStruct.CryptoType2.ToString();
+        //TODO à finir!
+        public string CryptoType2 => ""; //_pfsNcaFile.RawStruct.CryptoType2.ToString();
     }
 }

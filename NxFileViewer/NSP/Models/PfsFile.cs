@@ -1,9 +1,9 @@
-﻿using LibHac.Fs;
-
-namespace Emignatik.NxFileViewer.NSP.Models
+﻿namespace Emignatik.NxFileViewer.NSP.Models
 {
     public class PfsFile
     {
-        public PartitionFileEntry Entry { get; set; }
+        public string Name { get; set; }
+
+        public long Size { get; set; }
     }
 }

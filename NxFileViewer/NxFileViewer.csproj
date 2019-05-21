@@ -67,10 +67,8 @@
     <Compile Include="NSP\Models\NacpInfo.cs" />
     <Compile Include="NSP\Models\TitleInfo.cs" />
     <Compile Include="Services\HactoolHelperService.cs" />
-    <Compile Include="NSP\Models\Pfs0File.cs" />
     <Compile Include="NSP\Models\LocalizedIcon.cs" />
     <Compile Include="NSP\Models\NspInfo.cs" />
-    <Compile Include="NSP\Models\NcaControlContent.cs" />
     <Compile Include="NSP\NspInfoLoader.cs" />
     <Compile Include="NxFormats\CNMT\Models\CnmtContentRecord.cs" />
     <Compile Include="NxFormats\CNMT\Structs\CnmtContentRecordStruct.cs" />
@@ -206,9 +204,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Features.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="LibHac.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\LibHac\src\LibHac\LibHac.csproj">

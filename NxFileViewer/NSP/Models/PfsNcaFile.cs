@@ -4,6 +4,13 @@ namespace Emignatik.NxFileViewer.NSP.Models
 {
     public class PfsNcaFile : PfsFile
     {
-        public NcaHeader Header { get; set; }
+
+        public ulong TitleId { get; set; }
+
+        public ContentType ContentType { get; set; }
+
+        public string SdkVersion { get; set; }
     }
+
+
 }

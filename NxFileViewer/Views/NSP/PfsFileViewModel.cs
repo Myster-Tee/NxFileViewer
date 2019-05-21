@@ -18,14 +18,7 @@ namespace Emignatik.NxFileViewer.Views.NSP
 
         public ICommand DecryptSelectedFilesHeaderCommand { get; internal set; }
 
-        public string FileName
-        {
-            get
-            {
-                var fileEntry = File.Entry;
-                return $"{fileEntry?.Name}  ({fileEntry?.Size.ToFileSize()})";
-            }
-        }
+        public string FileName => $"{File.Name}  ({File.Size.ToFileSize()})";
 
         public bool IsSelected
         {

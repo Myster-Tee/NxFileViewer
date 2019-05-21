@@ -123,11 +123,10 @@ namespace Emignatik.NxFileViewer.Views.NSP
         {
             var selectedFile = SelectedPfsFile;
 
-            //TODO : to fix
-            //SelectedFileInfo = !(selectedFile?.File is Pfs0NcaFile pfs0NcaFile) ? null : new NcaInfoViewModel(pfs0NcaFile.Header)
-            //{
-            //    Source = $"{TitleId}!{pfs0NcaFile.Definition.FileName}"
-            //};
+            SelectedFileInfo = !(selectedFile?.File is PfsNcaFile pfsNcaFile) ? null : new NcaInfoViewModel(pfsNcaFile)
+            {
+                Source = $"{TitleId}!{pfsNcaFile.Name}"
+            };
         }
 
         private void UpdateOnSelectedTitleChanged()
