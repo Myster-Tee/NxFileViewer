@@ -14,13 +14,11 @@ namespace Emignatik.NxFileViewer.NSP
 {
     public class NspInfoLoader
     {
-        private readonly TempDirMgr _tempDirMgr;
         private readonly Keyset _keyset;
         private const string CNMT_NCA = ".cnmt.nca";
 
-        public NspInfoLoader(TempDirMgr tempDirMgr, Keyset keyset)
+        public NspInfoLoader(Keyset keyset)
         {
-            _tempDirMgr = tempDirMgr ?? throw new ArgumentNullException(nameof(tempDirMgr));
             _keyset = keyset ?? throw new ArgumentNullException(nameof(keyset));
         }
 
@@ -51,25 +49,9 @@ namespace Emignatik.NxFileViewer.NSP
                         using (var openFile = nspPartition.OpenFile(nspFileEntry, OpenMode.Read))
                         {
                             var nca = new Nca(_keyset, new FileStorage(openFile));
-                            var definedSections = new List<NcaSectionInfo>();
-
                             var ncaHeader = nca.Header;
-                            for (var i = 0; i < 4; i++)
-                            {
-                                if (!ncaHeader.IsSectionEnabled(i))
-                                    continue;
 
-                                var fsHeader = ncaHeader.GetFsHeader(i);
-
-                                definedSections.Add(new NcaSectionInfo
-                                {
-                                    Index = i,
-                                    FormatType = fsHeader.FormatType,
-                                    EncryptionType = fsHeader.EncryptionType,
-                                });
-                            }
-
-
+                            var definedSections = GetDefinedSectionsInfo(ncaHeader);
 
                             var pfsNcaFile = new PfsNcaFile
                             {
@@ -179,10 +161,10 @@ namespace Emignatik.NxFileViewer.NSP
                         pfsFile = new PfsFile();
                     }
 
-                    files.Add(pfsFile);
                     pfsFile.Name = nspFileEntry.Name;
                     pfsFile.Size = nspFileEntry.Size;
 
+                    files.Add(pfsFile);
                 }
 
                 nspInfo.Files = files.ToArray();
@@ -191,13 +173,41 @@ namespace Emignatik.NxFileViewer.NSP
 
         }
 
+        private static List<NcaSectionInfo> GetDefinedSectionsInfo(NcaHeader ncaHeader)
+        {
+            var definedSections = new List<NcaSectionInfo>();
+
+            for (var i = 0; i < 4; i++)
+            {
+                if (!ncaHeader.IsSectionEnabled(i))
+                    continue;
+
+                var fsHeader = ncaHeader.GetFsHeader(i);
+
+                definedSections.Add(new NcaSectionInfo
+                {
+                    Index = i,
+                    FormatType = fsHeader.FormatType,
+                    EncryptionType = fsHeader.EncryptionType,
+                });
+            }
+
+            return definedSections;
+        }
+
+        /// <summary>
+        /// From the given RomFS section of the NCA of content type "Control", retrieves:
+        /// -> Info from "control.nacp" (like titles, display version, etc.)
+        /// -> Localized title icons
+        /// </summary>
+        /// <param name="controlFs"></param>
+        /// <param name="nspInfo"></param>
         private static void ExtractControlInfo(IFileSystem controlFs, NspInfo nspInfo)
         {
             NacpInfo nacpInfo = null;
             var icons = new List<IconInfo>();
             const string ICON_FILE_PREFIX = "icon_";
             const string ICON_FILE_EXT = ".dat";
-
 
             foreach (var controlFileEntry in controlFs.OpenDirectory("/", OpenDirectoryMode.Files).Read())
             {

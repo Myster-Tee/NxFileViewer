@@ -71,7 +71,7 @@ namespace Emignatik.NxFileViewer.Views
             {
                 Logger.LogInfo($"===> {Path.GetFileName(filePath)} <===");
 
-                var nspInfoLoader = new NspInfoLoader(new TempDirMgr(Settings.Default.WorkDir), KeySetProviderService.GetKeySet());
+                var nspInfoLoader = new NspInfoLoader(KeySetProviderService.GetKeySet());
                 var nspInfo = nspInfoLoader.Load(filePath);
 
                 //TODO: split "code behing logic" to separate view model
