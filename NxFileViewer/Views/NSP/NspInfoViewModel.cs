@@ -5,7 +5,6 @@ using System.Windows.Media.Imaging;
 using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.NSP.Models;
 using Emignatik.NxFileViewer.Properties;
-using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Views.MVVM;
 using Emignatik.NxFileViewer.Views.NCA;
 

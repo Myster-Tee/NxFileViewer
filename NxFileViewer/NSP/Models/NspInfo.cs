@@ -26,6 +26,18 @@ namespace Emignatik.NxFileViewer.NSP.Models
 
         public List<IconInfo> Icons { get; set; }
 
+        //TODO: use this property instead of CnmtInfo (to super SuperNSP)
+        public CnmtInfo[] Cnmts { get; set; }
 
+        public bool IsSuperNsp
+        {
+            get
+            {
+                var cnmts = Cnmts;
+                return cnmts != null && cnmts.Length > 1;
+            }
+        }
+
+        public ControlInfo[] Controls { get; set; }
     }
 }
