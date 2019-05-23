@@ -17,5 +17,11 @@ namespace Emignatik.NxFileViewer.NSP.Models
         public string LinkedNcaControlId { get; set; }
 
         public string FilePath { get; set; }
+
+        /// <summary>
+        /// Gets information contained in control partition (control.nacp file and icons)
+        /// Maybe empty for add-ons
+        /// </summary>
+        public ControlInfo Control { get; set; }
     }
 }

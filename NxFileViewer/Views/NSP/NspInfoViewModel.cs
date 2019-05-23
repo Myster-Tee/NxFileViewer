@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
-using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.NSP.Models;
 using Emignatik.NxFileViewer.Properties;
 using Emignatik.NxFileViewer.Views.MVVM;
 using Emignatik.NxFileViewer.Views.NCA;
+using log4net;
 
 namespace Emignatik.NxFileViewer.Views.NSP
 {
@@ -19,10 +19,13 @@ namespace Emignatik.NxFileViewer.Views.NSP
         private BitmapImage _icon = null;
         private PfsFileViewModel _selectedPfsFile;
         private FileViewModelBase _selectedFileInfo;
+        private readonly ILog _log;
 
         public NspInfoViewModel(NspInfo nspInfo)
         {
             _nspInfo = nspInfo ?? throw new ArgumentNullException(nameof(nspInfo));
+
+            _log = LogManager.GetLogger(this.GetType());
 
             var nacpTitles = Titles;
             SelectedTitle = nacpTitles?.FirstOrDefault();
@@ -36,13 +39,17 @@ namespace Emignatik.NxFileViewer.Views.NSP
             }).ToArray();
         }
 
-        public string AppType => _nspInfo?.CnmtInfo.Type.ToString();
+        //TODO: to be finished
+        public string AppType => "TO FINISH";//_nspInfo?.CnmtInfo.Type.ToString();
 
-        public string DisplayVersion => _nspInfo.NacpInfo?.DisplayVersion;
+        //TODO: to be finished
+        public string DisplayVersion => "TO FINISH"; //_nspInfo.NacpInfo?.DisplayVersion;
 
-        public string TitleId => _nspInfo?.CnmtInfo.TitleId;
+        //TODO: to be finished
+        public string TitleId => "TO FINISH"; //_nspInfo?.CnmtInfo.TitleId;
 
-        public uint? TitleVersion => _nspInfo?.CnmtInfo.TitleVersion;
+        //TODO: to be finished
+        public uint? TitleVersion => null; //_nspInfo?.CnmtInfo.TitleVersion;
 
         public PfsFileViewModel[] PfsFiles { get; }
 
@@ -71,8 +78,11 @@ namespace Emignatik.NxFileViewer.Views.NSP
         {
             get
             {
-                var nacpInfo = _nspInfo.NacpInfo;
-                return nacpInfo?.Titles?.ToArray();
+                //TODO: to be finished
+
+                //var nacpInfo = _nspInfo.NacpInfo;
+                //return nacpInfo?.Titles?.ToArray();
+                return new TitleInfo[0];
             }
         }
 
@@ -137,13 +147,17 @@ namespace Emignatik.NxFileViewer.Views.NSP
 
         private BitmapImage GetIconForTitle(TitleInfo title)
         {
-            var nacpInfo = _nspInfo.NacpInfo;
-            if (title == null || nacpInfo == null)
-                return null;
+            //TODO: to be finished
 
-            var iconOfSelectedLanguage = _nspInfo.Icons.FirstOrDefault(iconTmp => iconTmp.Language == title.Language);
+            //var nacpInfo = _nspInfo.NacpInfo;
+            //if (title == null || nacpInfo == null)
+            //    return null;
 
-            return iconOfSelectedLanguage?.Image;
+            //var iconOfSelectedLanguage = _nspInfo.Icons.FirstOrDefault(iconTmp => iconTmp.Language == title.Language);
+
+            //return iconOfSelectedLanguage?.Image;
+
+            return null;
         }
 
         private string[] GetSelectedFileNames()
@@ -168,7 +182,7 @@ namespace Emignatik.NxFileViewer.Views.NSP
             }
             catch (Exception ex)
             {
-                Logger.LogError("Failed to save selected file(s).", ex);
+                _log.Error("Failed to save selected file(s).", ex);
             }
         }
 

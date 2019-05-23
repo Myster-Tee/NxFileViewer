@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media.Imaging;
-using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.NSP.Models;
 using Emignatik.NxFileViewer.Utils;
 using LibHac;
@@ -26,7 +25,6 @@ namespace Emignatik.NxFileViewer.NSP
 
         public NspInfo Load(string nspFilePath)
         {
-
             if (nspFilePath == null)
                 throw new ArgumentNullException(nameof(nspFilePath));
 
@@ -38,171 +36,50 @@ namespace Emignatik.NxFileViewer.NSP
 
                 var nspPartition = new PartitionFileSystem(fileStorage);
 
-                nspInfo.Files = GetPfsFilesInfo(nspPartition, _keyset, out var openedNcas).ToArray();
+                nspInfo.Files = LoadFiles(nspPartition, _keyset, out var openedNcas).ToArray();
 
-                nspInfo.Cnmts = LoadCnmtsInfo(openedNcas).ToArray();
+                nspInfo.Cnmts = LoadCnmts(openedNcas).ToArray();
 
-                nspInfo.Controls = LoadControlsInfo(nspInfo.Cnmts, openedNcas).ToArray();
-
-
-                var files = new List<PfsFile>();
-                foreach (var nspFileEntry in nspPartition.Files)
-                {
-                    var fileName = nspFileEntry.Name ?? "";
-
-                    PfsFile pfsFile;
-                    if (fileName.EndsWith(".nca", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        using (var openFile = nspPartition.OpenFile(nspFileEntry, OpenMode.Read))
-                        {
-                            var nca = new Nca(_keyset, new FileStorage(openFile));
-                            var ncaHeader = nca.Header;
-
-                            var definedSections = GetDefinedSectionsInfo(ncaHeader);
-
-                            var pfsNcaFile = new PfsNcaFile
-                            {
-                                Name = nspFileEntry.Name,
-                                ContentType = ncaHeader.ContentType,
-                                TitleId = ncaHeader.TitleId,
-                                SdkVersion = ncaHeader.SdkVersion.ToString(),
-                                DefinedSections = definedSections.ToArray(),
-                                DistributionType = ncaHeader.DistributionType,
-                            };
-                            pfsFile = pfsNcaFile;
-
-                            if (fileName.EndsWith(".cnmt.nca", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                if (ncaHeader.ContentType != ContentType.Meta)
-                                    throw new Exception($"\"{fileName}\" is not of the expected type \"{ContentType.Meta}\"");
-
-                                var cnmtFs = nca.OpenFileSystem(ncaHeader.ContentIndex, IntegrityCheckLevel.None);
-
-                                var cnmtFileEntries = cnmtFs.OpenDirectory("/", OpenDirectoryMode.Files).Read().Where(entry => (entry.Name ?? "").EndsWith(".cnmt", StringComparison.InvariantCultureIgnoreCase)).ToArray();
-
-                                if (cnmtFileEntries.Length < 1)
-                                    throw new Exception($"No CNMT file found in NCA \"{fileName}\".");
-                                if (cnmtFileEntries.Length > 1)
-                                    throw new Exception($"More than one CNMT file found in NCA \"{fileName}\".");
-
-                                var cnmtFileEntry = cnmtFileEntries[0];
-
-                                using (var cnmtFile = cnmtFs.OpenFile(cnmtFileEntry.FullPath, OpenMode.Read))
-                                {
-                                    using (var cnmtStream = cnmtFile.AsStream())
-                                    {
-                                        var cnmt = new Cnmt(cnmtStream);
-
-                                        nspInfo.CnmtInfo = new CnmtInfo
-                                        {
-                                            Type = cnmt.Type,
-                                            TitleId = cnmt.TitleId.ToHex(),
-                                            TitleVersion = cnmt.TitleVersion.Version,
-                                        };
-
-                                        //TODO: retrieve the commented info
-                                        //cnmt.MinimumSystemVersion
-                                        //cnmt.MinimumApplicationVersion
-
-                                        var controlEntries = cnmt.ContentEntries.Where(entry => entry.Type == CnmtContentType.Control).ToArray();
-                                        if (controlEntries.Length > 1)
-                                            throw new Exception($"More than one NCA of content type \"{CnmtContentType.Control}\" referenced in CNMT file.");
-
-                                        if (controlEntries.Length == 1)
-                                        {
-                                            var ncaControlFileName = ByteArrayExt.ToHexString(controlEntries[0].NcaId) + ".nca";
-
-                                            var ncaControlFileEntries = nspPartition.Files.Where(entry => string.Equals(entry.Name, ncaControlFileName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
-                                            if (ncaControlFileEntries.Length < 1)
-                                                throw new Exception($"NCA \"{ncaControlFileName}\" of content type \"{CnmtContentType.Control}\" couldn't be found.");
-                                            if (ncaControlFileEntries.Length > 1)
-                                                throw new Exception($"NCA \"{ncaControlFileName}\" of content type \"{CnmtContentType.Control}\" found more than once.");
-
-                                            var ncaControlFileEntry = ncaControlFileEntries[0];
-
-                                            using (var ncaControlFile = nspPartition.OpenFile(ncaControlFileEntry, OpenMode.Read))
-                                            {
-                                                var ncaControl = new Nca(_keyset, new FileStorage(ncaControlFile));
-
-                                                if (ncaControl.Header.ContentType != ContentType.Control)
-                                                    throw new Exception($"NCA \"{ncaControlFileName}\" is not of the expected content type \"{CnmtContentType.Control}\".");
-
-                                                var controlFs = ncaControl.OpenFileSystem(ncaControl.Header.ContentIndex, IntegrityCheckLevel.None);
-
-                                                ExtractControlInfo(controlFs, nspInfo);
-
-                                            }
-                                        }
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        pfsFile = new PfsFile();
-                    }
-
-                    pfsFile.Name = nspFileEntry.Name;
-                    pfsFile.Size = nspFileEntry.Size;
-
-                    files.Add(pfsFile);
-                }
-
-                nspInfo.Files = files.ToArray();
                 return nspInfo;
             }
-
         }
 
-        private List<ControlInfo> LoadControlsInfo(IEnumerable<CnmtInfo> cnmtsInfo, IReadOnlyCollection<OpenedNca> openedNcas)
+        private ControlInfo LoadControlInfo(IEnumerable<OpenedNca> openedNcas, string linkedNcaControlId)
         {
 
-            var controlsInfo = new List<ControlInfo>();
+            if (string.IsNullOrEmpty(linkedNcaControlId))
+                return null;
 
-            foreach (var cnmtInfo in cnmtsInfo)
+            var expectedNcaFileName = linkedNcaControlId + ".nca";
+
+            var matchingOpenedNcas = openedNcas.Where(openedNca => string.Equals(expectedNcaFileName, openedNca.FileName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+            if (matchingOpenedNcas.Length < 1)
             {
-                var linkedNcaControlId = cnmtInfo.LinkedNcaControlId;
-                if (string.IsNullOrEmpty(linkedNcaControlId))
-                    continue;
-
-                var expectedNcaFileName = linkedNcaControlId + ".nca";
-
-                var matchingOpenedNcas = openedNcas.Where(openedNca => string.Equals(expectedNcaFileName, openedNca.FileName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
-                if (matchingOpenedNcas.Length < 1)
-                {
-                    _log?.Error($"CNMT \"{cnmtInfo.FilePath}\" is referencing missing NCA \"{expectedNcaFileName}\" of content type \"{ContentType.Control}\".");
-                    continue;
-                }
-
-                if (matchingOpenedNcas.Length > 1)
-                    _log?.Error($"NCA \"{expectedNcaFileName}\" of content type \"{ContentType.Control}\" was found more than once (found \"{matchingOpenedNcas.Length}\" times), only the first one will be considered.");
-
-                var controlOpenedNca = matchingOpenedNcas[0];
-                var controlNca = controlOpenedNca.Nca;
-                var controlNcaHeader = controlNca.Header;
-                if (controlNcaHeader.ContentType != ContentType.Control)
-                {
-                    _log?.Error($"NCA \"{controlOpenedNca.FileName}\" is not of the expected content type \"{ContentType.Control}\".");
-                    continue;
-                }
-
-                //TODO: to finish
-                var controlFs = controlNca.OpenFileSystem(controlNcaHeader.ContentIndex, IntegrityCheckLevel.None);
-
-                //ExtractControlInfo(controlFs, nspInfo);
-
+                _log?.Error($"Referenced NCA \"{expectedNcaFileName}\" of content type \"{ContentType.Control}\" is missing.");
+                return null;
             }
 
-            return controlsInfo;
+            if (matchingOpenedNcas.Length > 1)
+                _log?.Error($"NCA \"{expectedNcaFileName}\" of content type \"{ContentType.Control}\" was found more than once (found \"{matchingOpenedNcas.Length}\" times), only the first one will be considered.");
+
+            var controlOpenedNca = matchingOpenedNcas[0];
+            var controlNca = controlOpenedNca.Nca;
+            var controlNcaHeader = controlNca.Header;
+            if (controlNcaHeader.ContentType != ContentType.Control)
+            {
+                _log?.Error($"NCA \"{controlOpenedNca.FileName}\" is not of the expected content type \"{ContentType.Control}\".");
+                return null;
+            }
+
+            var controlFs = controlNca.OpenFileSystem(controlNcaHeader.ContentIndex, IntegrityCheckLevel.None);
+            return ExtractControlInfo(controlFs);
         }
 
-        private List<CnmtInfo> LoadCnmtsInfo(IEnumerable<OpenedNca> openedNcas)
+        private List<CnmtInfo> LoadCnmts(IReadOnlyCollection<OpenedNca> openedNcas)
         {
             //TODO: log warnings for meta nca not ending with cnmt.nca?
 
-            var cnmtsInfo = new List<CnmtInfo>();
+            var cnmts = new List<CnmtInfo>();
 
             foreach (var openedNca in openedNcas)
             {
@@ -252,19 +129,20 @@ namespace Emignatik.NxFileViewer.NSP
                             linkedNcaControlId = linkedNcaControlIds.Length == 1 ? linkedNcaControlIds[0] : null;
                         }
 
-                        cnmtsInfo.Add(new CnmtInfo
+                        cnmts.Add(new CnmtInfo
                         {
                             FilePath = cnmtFileEntry.FullPath,
                             Type = cnmt.Type,
                             TitleId = cnmt.TitleId.ToHex(),
                             TitleVersion = cnmt.TitleVersion.Version,
                             LinkedNcaControlId = linkedNcaControlId,
+                            Control = LoadControlInfo(openedNcas, linkedNcaControlId)
                         });
                     }
                 }
             }
 
-            return cnmtsInfo;
+            return cnmts;
         }
 
         //TODO: maybe expose Nintendo logo?
@@ -297,7 +175,7 @@ namespace Emignatik.NxFileViewer.NSP
             public Nca Nca { get; set; }
         }
 
-        private static List<PfsFile> GetPfsFilesInfo(PartitionFileSystem partition, Keyset keyset, out List<OpenedNca> openedNcas)
+        private static List<PfsFile> LoadFiles(PartitionFileSystem partition, Keyset keyset, out List<OpenedNca> openedNcas)
         {
             openedNcas = new List<OpenedNca>();
 
@@ -374,8 +252,7 @@ namespace Emignatik.NxFileViewer.NSP
         /// -> Localized title icons
         /// </summary>
         /// <param name="controlFs"></param>
-        /// <param name="nspInfo"></param>
-        private static void ExtractControlInfo(IFileSystem controlFs, NspInfo nspInfo)
+        private ControlInfo ExtractControlInfo(IFileSystem controlFs)
         {
             NacpInfo nacpInfo = null;
             var icons = new List<IconInfo>();
@@ -400,7 +277,6 @@ namespace Emignatik.NxFileViewer.NSP
                                 Titles = titleInfos,
                             };
 
-
                             foreach (var description in nacp.Descriptions)
                             {
                                 if (!string.IsNullOrEmpty(description.Title))
@@ -421,7 +297,7 @@ namespace Emignatik.NxFileViewer.NSP
                     var langName = fileName.Substring(ICON_FILE_PREFIX.Length, fileName.Length - ICON_FILE_PREFIX.Length - ICON_FILE_EXT.Length);
                     if (!Enum.TryParse(langName, true, out NacpLanguage language))
                     {
-                        Logger.LogWarning($"Found a *.dat file \"{fileName}\" which doesn't match any of the languages.");
+                        _log?.Warn($"Found a *.dat file \"{fileName}\" which doesn't match any of the languages.");
                         continue;
                     }
 
@@ -449,8 +325,11 @@ namespace Emignatik.NxFileViewer.NSP
                 }
             }
 
-            nspInfo.NacpInfo = nacpInfo;
-            nspInfo.Icons = icons;
+            return new ControlInfo
+            {
+                Nacp = nacpInfo,
+                Icons = icons.ToArray()
+            };
 
         }
 

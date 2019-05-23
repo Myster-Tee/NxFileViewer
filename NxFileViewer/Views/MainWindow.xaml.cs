@@ -8,8 +8,10 @@ using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.NSP;
 using Emignatik.NxFileViewer.Properties;
 using Emignatik.NxFileViewer.Services;
-using Emignatik.NxFileViewer.Utils;
 using Emignatik.NxFileViewer.Views.NSP;
+using log4net;
+using log4net.Config;
+using log4net.Core;
 using Microsoft.Win32;
 
 namespace Emignatik.NxFileViewer.Views
@@ -19,13 +21,20 @@ namespace Emignatik.NxFileViewer.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly ILog _log;
+
         public MainWindow()
         {
             InitializeComponent();
 
             Loaded += OnLoaded;
 
-            Logger.Log += OnLog;
+            _log = LogManager.GetLogger(this.GetType());
+
+            var logNotifier = new LogNotifier();
+            BasicConfigurator.Configure(logNotifier);
+            logNotifier.Log += OnLog;
+
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -33,11 +42,11 @@ namespace Emignatik.NxFileViewer.Views
             try
             {
                 KeySetProviderService.GetKeySet();
-                Logger.LogInfo(Properties.Resources.InfoKeysSuccessfullyLoaded);
+                _log.Info(Properties.Resources.InfoKeysSuccessfullyLoaded);
             }
             catch (Exception ex)
             {
-                Logger.LogWarning(ex.Message);
+                _log.Error(ex.Message);
             }
         }
 
@@ -69,7 +78,7 @@ namespace Emignatik.NxFileViewer.Views
 
             try
             {
-                Logger.LogInfo($"===> {Path.GetFileName(filePath)} <===");
+                _log.Info($"===> {Path.GetFileName(filePath)} <===");
 
                 var nspInfoLoader = new NspInfoLoader(KeySetProviderService.GetKeySet());
                 var nspInfo = nspInfoLoader.Load(filePath);
@@ -82,7 +91,7 @@ namespace Emignatik.NxFileViewer.Views
             }
             catch (Exception ex)
             {
-                Logger.LogError(string.Format(Properties.Resources.ErrFailedToLoadFile, filePath), ex);
+                _log.Error(string.Format(Properties.Resources.ErrFailedToLoadFile, filePath), ex);
             }
         }
 
@@ -130,33 +139,28 @@ namespace Emignatik.NxFileViewer.Views
                 return;
             }
 
-            var fullMessage = args.Message;
+            var logEvent = args.LogEvent;
 
-            var exTemp = args.Exception;
-            while (exTemp != null)
-            {
-                fullMessage += " ==> " + exTemp.Message;
-                exTemp = exTemp.InnerException;
-            }
+            // TODO: check if inner required
+            //var exTemp = args.Exception;
+            //while (exTemp != null)
+            //{
+            //    logEvent += " ==> " + exTemp.Message;
+            //    exTemp = exTemp.InnerException;
+            //}
 
             var tr = new TextRange(RichTextBoxLog.Document.ContentEnd, RichTextBoxLog.Document.ContentEnd)
             {
-                Text = fullMessage + Environment.NewLine
+                Text = logEvent + Environment.NewLine
             };
 
             var color = Brushes.Black;
-            switch (args.LogLevel)
-            {
-                case LogLevel.INFO:
-                    color = Brushes.Blue;
-                    break;
-                case LogLevel.WARNING:
-                    color = Brushes.OrangeRed;
-                    break;
-                case LogLevel.ERROR:
-                    color = Brushes.Red;
-                    break;
-            }
+            if (logEvent.Level >= Level.Error)
+                color = Brushes.Red;
+            else if (logEvent.Level >= Level.Warn)
+                color = Brushes.OrangeRed;
+            else
+                color = Brushes.Blue;
 
             tr.ApplyPropertyValue(TextElement.ForegroundProperty, color);
         }
