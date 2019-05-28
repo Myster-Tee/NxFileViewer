@@ -376,11 +376,11 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Meta Info.
+        ///   Looks up a localized string similar to Metadata.
         /// </summary>
-        public static string MetaInfo {
+        public static string Metadata {
             get {
-                return ResourceManager.GetString("MetaInfo", resourceCulture);
+                return ResourceManager.GetString("Metadata", resourceCulture);
             }
         }
         

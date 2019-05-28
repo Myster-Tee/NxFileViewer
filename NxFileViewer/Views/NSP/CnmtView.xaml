@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="300" Background="White">
     <DockPanel Margin="5">
-        <customControls:GroupView HeaderText="{x:Static r:Resources.GeneralInfo}" DockPanel.Dock="Top">
+        <customControls:GroupView HeaderText="{x:Static r:Resources.Metadata}" DockPanel.Dock="Top">
             <StackPanel>
                 <TextBlock Text="{x:Static r:Resources.TitleId}" Style="{StaticResource Title2}"/>
                 <customControls:AllowDropTextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=TitleId, Mode=OneWay}" />

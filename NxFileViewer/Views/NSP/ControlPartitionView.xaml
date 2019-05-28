@@ -8,7 +8,7 @@
              xmlns:models="clr-namespace:Emignatik.NxFileViewer.NSP.Models"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="400" Background="White">
-    <DockPanel Margin="5">
+    <DockPanel Margin="0">
         <customControls:GroupView HeaderText="{x:Static r:Resources.GeneralInfo}" DockPanel.Dock="Top">
             <StackPanel>
                 <TextBlock Text="{x:Static r:Resources.DisplayVersion}" Style="{StaticResource Title2}"/>

@@ -222,8 +222,8 @@
   <data name="MenuItem_OpenLastFile" xml:space="preserve">
     <value>Open last</value>
   </data>
-  <data name="MetaInfo" xml:space="preserve">
-    <value>Meta Info</value>
+  <data name="Metadata" xml:space="preserve">
+    <value>Metadata</value>
   </data>
   <data name="NcaContentType" xml:space="preserve">
     <value>Content Type</value>

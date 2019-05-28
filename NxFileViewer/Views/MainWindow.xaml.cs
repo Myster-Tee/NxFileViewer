@@ -152,7 +152,7 @@ namespace Emignatik.NxFileViewer.Views
 
             var tr = new TextRange(RichTextBoxLog.Document.ContentEnd, RichTextBoxLog.Document.ContentEnd)
             {
-                Text = logEvent + Environment.NewLine
+                Text = logEvent.RenderedMessage + Environment.NewLine
             };
 
             var color = Brushes.Black;
