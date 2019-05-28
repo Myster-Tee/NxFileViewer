@@ -2,7 +2,6 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.NSP;
@@ -12,7 +11,6 @@ using Emignatik.NxFileViewer.Views.NSP;
 using log4net;
 using log4net.Config;
 using log4net.Core;
-using Microsoft.Win32;
 
 namespace Emignatik.NxFileViewer.Views
 {
@@ -50,21 +48,6 @@ namespace Emignatik.NxFileViewer.Views
             }
         }
 
-        private void PromptOpenFile()
-        {
-            var openFileDialog = new OpenFileDialog
-            {
-                FileName = Settings.Default.LastOpenedFile,
-                Filter = Properties.Resources.OpenFile_Filter
-            };
-
-            if (openFileDialog.ShowDialog(Application.Current.MainWindow) != true) return;
-
-            var filePath = openFileDialog.FileName;
-
-            SafeLoadFile(filePath);
-        }
-
         public void SafeLoadFile(string filePath)
         {
             try
@@ -96,19 +79,6 @@ namespace Emignatik.NxFileViewer.Views
             }
         }
 
-        private void OnOpenFileCommand(object sender, ExecutedRoutedEventArgs e)
-        {
-            PromptOpenFile();
-        }
-
-        private void OnOpenLastFileCommand(object sender, ExecutedRoutedEventArgs e)
-        {
-            var lastOpenedFile = Settings.Default.LastOpenedFile;
-            if (lastOpenedFile != null && File.Exists(lastOpenedFile))
-            {
-                SafeLoadFile(lastOpenedFile);
-            }
-        }
 
         private void MainWindow_OnDrop(object sender, DragEventArgs e)
         {

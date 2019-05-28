@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:r="clr-namespace:Emignatik.NxFileViewer.Properties"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
-        xmlns:commands="clr-namespace:Emignatik.NxFileViewer.Commands"
         mc:Ignorable="d"
         Icon="../Icon.ico"
         Title="{Binding Path=AppTitle}" 
@@ -15,14 +14,9 @@
         Drop="MainWindow_OnDrop" 
         d:DesignHeight="100">
 
-    <Window.CommandBindings>
-        <CommandBinding Command="Open" Executed="OnOpenFileCommand" />
-        <CommandBinding Command="commands:ApplicationCommandsExt.OpenLast" Executed="OnOpenLastFileCommand" />
-    </Window.CommandBindings>
-
     <Window.InputBindings>
-        <KeyBinding Gesture="Ctrl+O" Command="Open" />
-        <KeyBinding Gesture="Ctrl+Shift+O" Command="commands:ApplicationCommandsExt.OpenLast" />
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding Path=OpenFileCommand}" />
+        <KeyBinding Gesture="Ctrl+Shift+O" Command="{Binding Path=OpenLastFileCommand}" />
     </Window.InputBindings>
 
     <Grid>
@@ -33,8 +27,8 @@
 
         <Menu Grid.Row="0">
             <MenuItem Header="{x:Static r:Resources.MenuItem_File}">
-                <MenuItem Header="{x:Static r:Resources.MenuItem_OpenFile}" Command="Open" InputGestureText="Ctrl+O" />
-                <MenuItem Header="{x:Static r:Resources.MenuItem_OpenLastFile}" Command="commands:ApplicationCommandsExt.OpenLast" InputGestureText="Ctrl+Shift+O" />
+                <MenuItem Header="{x:Static r:Resources.MenuItem_OpenFile}" Command="{Binding Path=OpenFileCommand}" InputGestureText="Ctrl+O" />
+                <MenuItem Header="{x:Static r:Resources.MenuItem_OpenLastFile}" Command="{Binding Path=OpenLastFileCommand}" InputGestureText="Ctrl+Shift+O" />
             </MenuItem>
         </Menu>
 

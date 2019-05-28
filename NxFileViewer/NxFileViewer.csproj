@@ -62,6 +62,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\OpenFileCommand.cs" />
+    <Compile Include="Commands\OpenLastFileCommand.cs" />
     <Compile Include="Logging\LogNotifier.cs" />
     <Compile Include="NSP\Models\ControlPartitionInfo.cs" />
     <Compile Include="NSP\Models\CnmtInfo.cs" />
@@ -73,9 +75,11 @@
     <Compile Include="NSP\Models\TitleInfo.cs" />
     <Compile Include="NSP\Models\NspInfo.cs" />
     <Compile Include="NSP\NspInfoLoader.cs" />
-    <Compile Include="Commands\ApplicationCommandsExt.cs" />
     <Compile Include="NSP\NacpLanguage.cs" />
     <Compile Include="Services\KeySetProviderService.cs" />
+    <Compile Include="Services\OpenedFile.cs" />
+    <Compile Include="Services\OpenedFileService.cs" />
+    <Compile Include="Services\SupportedFilesOpenerService.cs" />
     <Compile Include="Utils\FileSizeUnit.cs" />
     <Compile Include="Utils\IoHelper.cs" />
     <Compile Include="Utils\FileSizeHelper.cs" />
