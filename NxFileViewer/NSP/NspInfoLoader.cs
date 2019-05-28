@@ -44,7 +44,7 @@ namespace Emignatik.NxFileViewer.NSP
             }
         }
 
-        private ControlInfo LoadControlInfo(IEnumerable<OpenedNca> openedNcas, string linkedNcaControlId)
+        private ControlPartitionInfo LoadControlInfo(IEnumerable<OpenedNca> openedNcas, string linkedNcaControlId)
         {
 
             if (string.IsNullOrEmpty(linkedNcaControlId))
@@ -136,7 +136,7 @@ namespace Emignatik.NxFileViewer.NSP
                             TitleId = cnmt.TitleId.ToHex(),
                             TitleVersion = cnmt.TitleVersion.Version,
                             LinkedNcaControlId = linkedNcaControlId,
-                            Control = LoadControlInfo(openedNcas, linkedNcaControlId)
+                            ControlPartition = LoadControlInfo(openedNcas, linkedNcaControlId)
                         });
                     }
                 }
@@ -247,12 +247,12 @@ namespace Emignatik.NxFileViewer.NSP
         }
 
         /// <summary>
-        /// From the given RomFS section of the NCA of content type "Control", retrieves:
+        /// From the given RomFS section of the NCA of content type "ControlPartition", retrieves:
         /// -> Info from "control.nacp" (like titles, display version, etc.)
         /// -> Localized title icons
         /// </summary>
         /// <param name="controlFs"></param>
-        private ControlInfo ExtractControlInfo(IFileSystem controlFs)
+        private ControlPartitionInfo ExtractControlInfo(IFileSystem controlFs)
         {
             NacpInfo nacpInfo = null;
             var icons = new List<IconInfo>();
@@ -271,11 +271,6 @@ namespace Emignatik.NxFileViewer.NSP
                             var nacp = new Nacp(nacpStream);
 
                             var titleInfos = new List<TitleInfo>();
-                            nacpInfo = new NacpInfo
-                            {
-                                DisplayVersion = nacp.DisplayVersion,
-                                Titles = titleInfos,
-                            };
 
                             foreach (var description in nacp.Descriptions)
                             {
@@ -289,6 +284,12 @@ namespace Emignatik.NxFileViewer.NSP
                                     });
                                 }
                             }
+
+                            nacpInfo = new NacpInfo
+                            {
+                                DisplayVersion = nacp.DisplayVersion,
+                                Titles = titleInfos.ToArray(),
+                            };
                         }
                     }
                 }
@@ -301,23 +302,16 @@ namespace Emignatik.NxFileViewer.NSP
                         continue;
                     }
 
-                    var bitmapSource = new BitmapImage();
-
+                    byte[] bytes;
                     using (var iconFile = controlFs.OpenFile(controlFileEntry.FullPath, OpenMode.Read))
                     {
-                        using (var iconStream = iconFile.AsStream())
-                        {
-                            bitmapSource.BeginInit();
-                            bitmapSource.StreamSource = iconStream;
-                            bitmapSource.CacheOption = BitmapCacheOption.OnLoad;
-                            bitmapSource.EndInit();
-                            bitmapSource.Freeze();
-                        }
+                        bytes = new byte[iconFile.GetSize()];
+                        iconFile.AsStream().Read(bytes, 0, bytes.Length);
                     }
 
                     var iconInfo = new IconInfo
                     {
-                        Image = bitmapSource,
+                        Image = bytes,
                         Language = language,
                     };
 
@@ -325,7 +319,7 @@ namespace Emignatik.NxFileViewer.NSP
                 }
             }
 
-            return new ControlInfo
+            return new ControlPartitionInfo
             {
                 Nacp = nacpInfo,
                 Icons = icons.ToArray()

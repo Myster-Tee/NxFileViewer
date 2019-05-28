@@ -6,6 +6,6 @@ namespace Emignatik.NxFileViewer.NSP.Models
     {
         public string DisplayVersion { get; set; }
 
-        public List<TitleInfo> Titles { get; set; }
+        public TitleInfo[] Titles { get; set; }
     }
 }

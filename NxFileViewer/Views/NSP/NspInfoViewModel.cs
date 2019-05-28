@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Media.Imaging;
 using Emignatik.NxFileViewer.NSP.Models;
 using Emignatik.NxFileViewer.Properties;
 using Emignatik.NxFileViewer.Views.MVVM;
@@ -13,13 +13,11 @@ namespace Emignatik.NxFileViewer.Views.NSP
     public class NspInfoViewModel : FileViewModelBase
     {
         private readonly NspInfo _nspInfo;
-        private TitleInfo _selectedTitle;
-        private string _appName;
-        private string _publisher;
-        private BitmapImage _icon = null;
+
         private PfsFileViewModel _selectedPfsFile;
         private FileViewModelBase _selectedFileInfo;
         private readonly ILog _log;
+        private CnmtViewModel _selectedCnmt;
 
         public NspInfoViewModel(NspInfo nspInfo)
         {
@@ -27,31 +25,35 @@ namespace Emignatik.NxFileViewer.Views.NSP
 
             _log = LogManager.GetLogger(this.GetType());
 
-            var nacpTitles = Titles;
-            SelectedTitle = nacpTitles?.FirstOrDefault();
-
             var saveSelectedFilesCommand = new RelayCommand(OnSaveSelectedFiles);
             var decryptSelectedFilesHeaderCommand = new RelayCommand(OnDecryptSelectedFilesHeader);
             PfsFiles = _nspInfo.Files?.Select(file => new PfsFileViewModel(file)
             {
                 SaveSelectedFilesCommand = saveSelectedFilesCommand,
                 DecryptSelectedFilesHeaderCommand = decryptSelectedFilesHeaderCommand,
+            });
+
+            var cnmts = _nspInfo.Cnmts?.OrderBy(cnmt => cnmt.Type).Select((cnmtInfo, i) => new CnmtViewModel(cnmtInfo)
+            {
+                TabTitle = string.Format(Resources.ContentNum, i + 1)
             }).ToArray();
+            Cnmts = cnmts;
+            SelectedCnmt = cnmts?.FirstOrDefault();
         }
 
-        //TODO: to be finished
-        public string AppType => "TO FINISH";//_nspInfo?.CnmtInfo.Type.ToString();
+        public CnmtViewModel SelectedCnmt
+        {
+            get => _selectedCnmt;
+            set
+            {
+                _selectedCnmt = value;
+                NotifyPropertyChanged();
+            }
+        }
 
-        //TODO: to be finished
-        public string DisplayVersion => "TO FINISH"; //_nspInfo.NacpInfo?.DisplayVersion;
+        public IEnumerable<CnmtViewModel> Cnmts { get; }
 
-        //TODO: to be finished
-        public string TitleId => "TO FINISH"; //_nspInfo?.CnmtInfo.TitleId;
-
-        //TODO: to be finished
-        public uint? TitleVersion => null; //_nspInfo?.CnmtInfo.TitleVersion;
-
-        public PfsFileViewModel[] PfsFiles { get; }
+        public IEnumerable<PfsFileViewModel> PfsFiles { get; }
 
         public PfsFileViewModel SelectedPfsFile
         {
@@ -74,90 +76,14 @@ namespace Emignatik.NxFileViewer.Views.NSP
             }
         }
 
-        public TitleInfo[] Titles
-        {
-            get
-            {
-                //TODO: to be finished
-
-                //var nacpInfo = _nspInfo.NacpInfo;
-                //return nacpInfo?.Titles?.ToArray();
-                return new TitleInfo[0];
-            }
-        }
-
-        public TitleInfo SelectedTitle
-        {
-            get => _selectedTitle;
-            set
-            {
-                _selectedTitle = value;
-                NotifyPropertyChanged();
-                UpdateOnSelectedTitleChanged();
-            }
-        }
-
-        public string AppName
-        {
-            get => _appName;
-            private set
-            {
-                _appName = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public string Publisher
-        {
-            get => _publisher;
-            private set
-            {
-                _publisher = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public BitmapImage Icon
-        {
-            get => _icon;
-            private set
-            {
-                _icon = value;
-                NotifyPropertyChanged();
-            }
-        }
-
         private void UpdateOnSelectedPfsFileChanged()
         {
             var selectedFile = SelectedPfsFile;
 
             SelectedFileInfo = !(selectedFile?.File is PfsNcaFile pfsNcaFile) ? null : new NcaInfoViewModel(pfsNcaFile)
             {
-                Source = $"{TitleId}!{pfsNcaFile.Name}"
+                Source = $"{Source}!{pfsNcaFile.Name}"
             };
-        }
-
-        private void UpdateOnSelectedTitleChanged()
-        {
-            var selectedTitle = SelectedTitle;
-            AppName = selectedTitle != null ? selectedTitle.AppName : "";
-            Publisher = selectedTitle != null ? selectedTitle.Publisher : "";
-            Icon = GetIconForTitle(selectedTitle);
-        }
-
-        private BitmapImage GetIconForTitle(TitleInfo title)
-        {
-            //TODO: to be finished
-
-            //var nacpInfo = _nspInfo.NacpInfo;
-            //if (title == null || nacpInfo == null)
-            //    return null;
-
-            //var iconOfSelectedLanguage = _nspInfo.Icons.FirstOrDefault(iconTmp => iconTmp.Language == title.Language);
-
-            //return iconOfSelectedLanguage?.Image;
-
-            return null;
         }
 
         private string[] GetSelectedFileNames()

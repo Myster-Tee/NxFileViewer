@@ -5,64 +5,33 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:r="clr-namespace:Emignatik.NxFileViewer.Properties"
              xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
-             xmlns:models="clr-namespace:Emignatik.NxFileViewer.NSP.Models"
+             xmlns:nsp="clr-namespace:Emignatik.NxFileViewer.Views.NSP"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400" Background="White">
 
-    <TabControl x:Name="ThisUserControl">
+    <TabControl>
         <TabItem Header="{x:Static r:Resources.Overview}">
-            <DockPanel Margin="5">
-                <customControls:GroupView HeaderText="{x:Static r:Resources.GeneralInfo}" DockPanel.Dock="Top">
-                    <StackPanel>
-                        <TextBlock Text="{x:Static r:Resources.TitleId}" Style="{StaticResource Title2}"/>
-                        <customControls:AllowDropTextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=TitleId, Mode=OneWay}" />
-                        <TextBlock Text="{x:Static r:Resources.AppType}" Style="{StaticResource Title2}"/>
-                        <customControls:AllowDropTextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=AppType, Mode=OneWay}" />
-                        <TextBlock Text="{x:Static r:Resources.TitleVersion}" Style="{StaticResource Title2}"/>
-                        <customControls:AllowDropTextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=TitleVersion, Mode=OneWay}" />
-                        <TextBlock Text="{x:Static r:Resources.Version}" Style="{StaticResource Title2}"/>
-                        <customControls:AllowDropTextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=DisplayVersion, Mode=OneWay}" />
-                    </StackPanel>
-                </customControls:GroupView>
+            <!-- TabControl for each metadata file-->
+            <TabControl ItemsSource="{Binding Path=Cnmts}" SelectedItem="{Binding Path=SelectedCnmt}" x:Name="TOTO" >
+                <TabControl.ItemContainerStyle>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Style.Setters>
+                            <Setter Property="Header" Value="{Binding Path=TabTitle}" />
+                        </Style.Setters>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=TOTO, Path=Items.Count}" Value="1">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TabControl.ItemContainerStyle>
 
-                <customControls:GroupView HeaderText="{x:Static r:Resources.LocalizedInfo}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" MinWidth="100" />
-                            <ColumnDefinition MinWidth="100"/>
-                        </Grid.ColumnDefinitions>
-
-                        <DockPanel Grid.Column="0" Grid.Row="0">
-                            <TextBlock Text="{x:Static r:Resources.AvailableLanguages}" Style="{StaticResource Title2}" DockPanel.Dock="Top" />
-                            <ListView ItemsSource="{Binding Path=Titles}" VerticalAlignment="Stretch" 
-                              SelectedItem="{Binding Path=SelectedTitle}" MinHeight="150" MinWidth="130" SelectionMode="Single">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate DataType="models:TitleInfo">
-                                        <TextBlock Text="{Binding Path=Language, Converter={StaticResource NacpLanguageConverter}}" />
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-
-                        </DockPanel>
-
-                        <DockPanel Grid.Column="1" Grid.Row="0" Margin="5,0,0,0" >
-                            <TextBlock Text="{x:Static r:Resources.AppTitle}" Style="{StaticResource Title2}" DockPanel.Dock="Top"/>
-                            <customControls:AllowDropTextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=AppName, Mode=OneWay}" DockPanel.Dock="Top" />
-                            <TextBlock Text="{x:Static r:Resources.Publisher}" Style="{StaticResource Title2}" DockPanel.Dock="Top"/>
-                            <customControls:AllowDropTextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=Publisher, Mode=OneWay}" DockPanel.Dock="Top" />
-
-                            <Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="1" BorderBrush="Black">
-                                <Border.Margin>
-                                    <Thickness Top="{StaticResource DefaultSpacing}" />
-                                </Border.Margin>
-                                <Image Source="{Binding Path=Icon}" MaxWidth="256" MaxHeight="256"  MinWidth="50" MinHeight="50" />
-                            </Border>
-                        </DockPanel>
-
-                    </Grid>
-                </customControls:GroupView>
-
-            </DockPanel>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <nsp:CnmtView />
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
         </TabItem>
         <TabItem Header="{x:Static r:Resources.Structure}">
             <DockPanel>

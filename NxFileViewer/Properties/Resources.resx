@@ -126,11 +126,17 @@
   <data name="AvailableLanguages" xml:space="preserve">
     <value>Languages</value>
   </data>
+  <data name="ContentNum" xml:space="preserve">
+    <value>Content {0}</value>
+  </data>
   <data name="DecryptSelectedNcaFilesHeader" xml:space="preserve">
     <value>Decrypt NCA header(s)...</value>
   </data>
   <data name="Details" xml:space="preserve">
     <value>Details</value>
+  </data>
+  <data name="DisplayVersion" xml:space="preserve">
+    <value>Display Version</value>
   </data>
   <data name="DistributionType" xml:space="preserve">
     <value>Distribution Type</value>
@@ -216,6 +222,9 @@
   <data name="MenuItem_OpenLastFile" xml:space="preserve">
     <value>Open last</value>
   </data>
+  <data name="MetaInfo" xml:space="preserve">
+    <value>Meta Info</value>
+  </data>
   <data name="NcaContentType" xml:space="preserve">
     <value>Content Type</value>
   </data>
@@ -244,9 +253,6 @@
     <value>Title ID</value>
   </data>
   <data name="TitleVersion" xml:space="preserve">
-    <value>Patch Level</value>
-  </data>
-  <data name="Version" xml:space="preserve">
     <value>Version</value>
   </data>
 </root>

@@ -78,7 +78,8 @@ namespace Emignatik.NxFileViewer.Views
 
             try
             {
-                _log.Info($"===> {Path.GetFileName(filePath)} <===");
+                var fileName = Path.GetFileName(filePath);
+                _log.Info($"===> {fileName} <===");
 
                 var nspInfoLoader = new NspInfoLoader(KeySetProviderService.GetKeySet());
                 var nspInfo = nspInfoLoader.Load(filePath);

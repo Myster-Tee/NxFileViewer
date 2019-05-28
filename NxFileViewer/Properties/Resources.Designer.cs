@@ -88,6 +88,15 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Content {0}.
+        /// </summary>
+        public static string ContentNum {
+            get {
+                return ResourceManager.GetString("ContentNum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decrypt NCA header(s)....
         /// </summary>
         public static string DecryptSelectedNcaFilesHeader {
@@ -102,6 +111,15 @@ namespace Emignatik.NxFileViewer.Properties {
         public static string Details {
             get {
                 return ResourceManager.GetString("Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display Version.
+        /// </summary>
+        public static string DisplayVersion {
+            get {
+                return ResourceManager.GetString("DisplayVersion", resourceCulture);
             }
         }
         
@@ -358,6 +376,15 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Meta Info.
+        /// </summary>
+        public static string MetaInfo {
+            get {
+                return ResourceManager.GetString("MetaInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Content Type.
         /// </summary>
         public static string NcaContentType {
@@ -439,20 +466,11 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Patch Level.
+        ///   Looks up a localized string similar to Version.
         /// </summary>
         public static string TitleVersion {
             get {
                 return ResourceManager.GetString("TitleVersion", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Version.
-        /// </summary>
-        public static string Version {
-            get {
-                return ResourceManager.GetString("Version", resourceCulture);
             }
         }
     }

@@ -3,7 +3,7 @@
 namespace Emignatik.NxFileViewer.NSP
 {
     /// <summary>
-    /// Base on "https://switchbrew.org/wiki/Control.nacp#Title_Entry"
+    /// Base on "https://switchbrew.org/wiki/ControlPartition.nacp#Title_Entry"
     /// </summary>
     [Flags]
     public enum NacpLanguage : uint

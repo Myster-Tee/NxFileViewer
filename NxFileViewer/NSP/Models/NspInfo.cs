@@ -13,7 +13,6 @@ namespace Emignatik.NxFileViewer.NSP.Models
         /// </summary>
         public PfsFile[] Files { get; set; }
 
-        //TODO: use this property instead of CnmtInfo (to super SuperNSP)
         /// <summary>
         /// Gets the header of the metadata file (*.cnmt.nca)
         /// </summary>

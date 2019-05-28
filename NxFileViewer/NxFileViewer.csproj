@@ -63,7 +63,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Logging\LogNotifier.cs" />
-    <Compile Include="NSP\Models\ControlInfo.cs" />
+    <Compile Include="NSP\Models\ControlPartitionInfo.cs" />
     <Compile Include="NSP\Models\CnmtInfo.cs" />
     <Compile Include="NSP\Models\IconInfo.cs" />
     <Compile Include="NSP\Models\PfsFile.cs" />
@@ -71,7 +71,6 @@
     <Compile Include="NSP\Models\NacpInfo.cs" />
     <Compile Include="NSP\Models\NcaSectionInfo.cs" />
     <Compile Include="NSP\Models\TitleInfo.cs" />
-    <Compile Include="NSP\Models\LocalizedIcon.cs" />
     <Compile Include="NSP\Models\NspInfo.cs" />
     <Compile Include="NSP\NspInfoLoader.cs" />
     <Compile Include="Commands\ApplicationCommandsExt.cs" />
@@ -97,6 +96,14 @@
       <DependentUpon>NcaInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NCA\NcaInfoViewModel.cs" />
+    <Compile Include="Views\NSP\CnmtView.xaml.cs">
+      <DependentUpon>CnmtView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NSP\CnmtViewModel.cs" />
+    <Compile Include="Views\NSP\ControlPartitionView.xaml.cs">
+      <DependentUpon>ControlPartitionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NSP\ControlPartitionViewModel.cs" />
     <Compile Include="Views\NSP\PfsFileViewModel.cs" />
     <Compile Include="Views\NSP\NspInfoView.xaml.cs">
       <DependentUpon>NspInfoView.xaml</DependentUpon>
@@ -120,6 +127,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NCA\NcaInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NSP\CnmtView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NSP\ControlPartitionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

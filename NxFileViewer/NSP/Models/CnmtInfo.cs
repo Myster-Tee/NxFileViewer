@@ -11,7 +11,7 @@ namespace Emignatik.NxFileViewer.NSP.Models
         public uint TitleVersion { get; set; }
 
         /// <summary>
-        /// Gets the id of the NCA of content type "Control"
+        /// Gets the id of the NCA of content type "ControlPartition"
         /// Can be null if package contains no such NCA, which is observed for add-ons
         /// </summary>
         public string LinkedNcaControlId { get; set; }
@@ -22,6 +22,6 @@ namespace Emignatik.NxFileViewer.NSP.Models
         /// Gets information contained in control partition (control.nacp file and icons)
         /// Maybe empty for add-ons
         /// </summary>
-        public ControlInfo Control { get; set; }
+        public ControlPartitionInfo ControlPartition { get; set; }
     }
 }

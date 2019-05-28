@@ -1,6 +1,6 @@
 ﻿namespace Emignatik.NxFileViewer.NSP.Models
 {
-    public class ControlInfo
+    public class ControlPartitionInfo
     {
         public  NacpInfo Nacp { get; set; }
 
