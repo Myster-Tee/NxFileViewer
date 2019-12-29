@@ -1,0 +1,3 @@
+[submodule "LibHac"]
+	path = LibHac
+	url = https://github.com/Thealexbarney/LibHac.git

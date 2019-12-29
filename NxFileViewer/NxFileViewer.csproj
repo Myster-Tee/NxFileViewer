@@ -180,11 +180,10 @@
     <Resource Include="Features.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\LibHac\src\LibHac\LibHac.csproj">
-      <Project>{a283b6a2-9cf4-45a6-b3f0-fc976480e574}</Project>
+    <ProjectReference Include="..\LibHac\src\LibHac\LibHac.csproj">
+      <Project>{3769f98b-862e-45ac-8892-164ff53a0cf2}</Project>
       <Name>LibHac</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
