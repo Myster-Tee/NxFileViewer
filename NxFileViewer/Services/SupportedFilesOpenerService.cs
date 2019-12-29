@@ -17,11 +17,6 @@ namespace Emignatik.NxFileViewer.Services
             _log = LogManager.GetLogger(this.GetType());
         }
 
-        public bool IsFileSupported(string filePath)
-        {
-            return true;
-        }
-
         public void OpenFile(string filePath)
         {
             try

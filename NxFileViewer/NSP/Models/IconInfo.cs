@@ -1,6 +1,4 @@
-﻿using System.Windows.Media.Imaging;
-
-namespace Emignatik.NxFileViewer.NSP.Models
+﻿namespace Emignatik.NxFileViewer.NSP.Models
 {
     public class IconInfo
     {

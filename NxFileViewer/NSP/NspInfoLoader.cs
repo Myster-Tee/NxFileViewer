@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media.Imaging;
 using Emignatik.NxFileViewer.NSP.Models;
 using Emignatik.NxFileViewer.Utils;
 using LibHac;
 using LibHac.Fs;
-using LibHac.Fs.NcaUtils;
+using LibHac.FsSystem;
+using LibHac.FsSystem.NcaUtils;
+using LibHac.Ncm;
 using log4net;
 
 
@@ -55,19 +56,19 @@ namespace Emignatik.NxFileViewer.NSP
             var matchingOpenedNcas = openedNcas.Where(openedNca => string.Equals(expectedNcaFileName, openedNca.FileName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
             if (matchingOpenedNcas.Length < 1)
             {
-                _log?.Error($"Referenced NCA \"{expectedNcaFileName}\" of content type \"{ContentType.Control}\" is missing.");
+                _log?.Error($"Referenced NCA \"{expectedNcaFileName}\" of content type \"{NcaContentType.Control}\" is missing.");
                 return null;
             }
 
             if (matchingOpenedNcas.Length > 1)
-                _log?.Error($"NCA \"{expectedNcaFileName}\" of content type \"{ContentType.Control}\" was found more than once (found \"{matchingOpenedNcas.Length}\" times), only the first one will be considered.");
+                _log?.Error($"NCA \"{expectedNcaFileName}\" of content type \"{NcaContentType.Control}\" was found more than once (found \"{matchingOpenedNcas.Length}\" times), only the first one will be considered.");
 
             var controlOpenedNca = matchingOpenedNcas[0];
             var controlNca = controlOpenedNca.Nca;
             var controlNcaHeader = controlNca.Header;
-            if (controlNcaHeader.ContentType != ContentType.Control)
+            if (controlNcaHeader.ContentType != NcaContentType.Control)
             {
-                _log?.Error($"NCA \"{controlOpenedNca.FileName}\" is not of the expected content type \"{ContentType.Control}\".");
+                _log?.Error($"NCA \"{controlOpenedNca.FileName}\" is not of the expected content type \"{NcaContentType.Control}\".");
                 return null;
             }
 
@@ -86,15 +87,15 @@ namespace Emignatik.NxFileViewer.NSP
                 if (!openedNca.FileName.EndsWith(".cnmt.nca", StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
-                if (openedNca.Nca.Header.ContentType != ContentType.Meta)
+                if (openedNca.Nca.Header.ContentType != NcaContentType.Meta)
                 {
-                    _log?.Error($"Invalid NCA file \"{openedNca.FileName}\", content is not of the expected type \"{ContentType.Meta}\" (found \"{openedNca.Nca.Header.ContentType}\").");
+                    _log?.Error($"Invalid NCA file \"{openedNca.FileName}\", content is not of the expected type \"{NcaContentType.Meta}\" (found \"{openedNca.Nca.Header.ContentType}\").");
                     continue;
                 }
 
                 var cnmtFs = openedNca.Nca.OpenFileSystem(openedNca.Nca.Header.ContentIndex, IntegrityCheckLevel.None);
+                var cnmtFileEntries = cnmtFs.EnumerateEntries().Where(entry => (entry.Name ?? "").EndsWith(".cnmt", StringComparison.InvariantCultureIgnoreCase)).ToArray();
 
-                var cnmtFileEntries = cnmtFs.OpenDirectory("/", OpenDirectoryMode.Files).Read().Where(entry => (entry.Name ?? "").EndsWith(".cnmt", StringComparison.InvariantCultureIgnoreCase)).ToArray();
 
                 if (cnmtFileEntries.Length < 1)
                 {
@@ -116,12 +117,12 @@ namespace Emignatik.NxFileViewer.NSP
                     {
                         var cnmt = new Cnmt(cnmtStream);
 
-                        var linkedNcaControlIds = cnmt.ContentEntries.Where(entry => entry.Type == CnmtContentType.Control).Select(entry => ByteArrayExt.ToHexString(entry.NcaId)).ToArray();
+                        var linkedNcaControlIds = cnmt.ContentEntries.Where(entry => entry.Type == ContentType.Control).Select(entry => ByteArrayExt.ToHexString(entry.NcaId)).ToArray();
 
                         string linkedNcaControlId;
                         if (linkedNcaControlIds.Length > 1)
                         {
-                            _log?.Error($"CNMT file \"{cnmtFileEntry.FullPath}\" contained in NCA \"{openedNca.FileName}\" was not expected to reference more than one NCA of content type \"{CnmtContentType.Control}\". Only the first reference will be considered.");
+                            _log?.Error($"CNMT file \"{cnmtFileEntry.FullPath}\" contained in NCA \"{openedNca.FileName}\" was not expected to reference more than one NCA of content type \"{ContentType.Control}\". Only the first reference will be considered.");
                             linkedNcaControlId = linkedNcaControlIds[0];
                         }
                         else
@@ -259,7 +260,7 @@ namespace Emignatik.NxFileViewer.NSP
             const string ICON_FILE_PREFIX = "icon_";
             const string ICON_FILE_EXT = ".dat";
 
-            foreach (var controlFileEntry in controlFs.OpenDirectory("/", OpenDirectoryMode.Files).Read())
+            foreach (var controlFileEntry in controlFs.EnumerateEntries())
             {
                 var fileName = controlFileEntry.Name ?? "";
                 if (string.Equals(fileName, "control.nacp", StringComparison.InvariantCultureIgnoreCase))

@@ -54,7 +54,7 @@ namespace Emignatik.NxFileViewer.Services
 
             try
             {
-                _keyset = ExternalKeys.ReadKeyFile(keysFullFilePath);
+                _keyset = ExternalKeyReader.ReadKeyFile(keysFullFilePath);
                 return _keyset;
             }
             catch (Exception ex)

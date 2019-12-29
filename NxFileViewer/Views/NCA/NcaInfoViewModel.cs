@@ -2,7 +2,7 @@
 using System.Linq;
 using Emignatik.NxFileViewer.NSP.Models;
 using Emignatik.NxFileViewer.Utils;
-using LibHac.Fs.NcaUtils;
+using LibHac.FsSystem.NcaUtils;
 
 namespace Emignatik.NxFileViewer.Views.NCA
 {

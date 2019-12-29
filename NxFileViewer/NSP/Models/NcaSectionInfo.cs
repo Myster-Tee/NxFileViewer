@@ -1,4 +1,4 @@
-﻿using LibHac.Fs.NcaUtils;
+﻿using LibHac.FsSystem.NcaUtils;
 
 namespace Emignatik.NxFileViewer.NSP.Models
 {

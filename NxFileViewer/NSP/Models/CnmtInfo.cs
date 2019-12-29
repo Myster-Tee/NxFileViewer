@@ -1,10 +1,10 @@
-﻿using LibHac;
+﻿using LibHac.Ncm;
 
 namespace Emignatik.NxFileViewer.NSP.Models
 {
     public class CnmtInfo
     {
-        public TitleType Type { get; set; }
+        public ContentMetaType Type { get; set; }
 
         public string TitleId { get; set; }
 

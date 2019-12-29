@@ -1,4 +1,4 @@
-﻿using LibHac.Fs.NcaUtils;
+﻿using LibHac.FsSystem.NcaUtils;
 
 namespace Emignatik.NxFileViewer.NSP.Models
 {
@@ -7,7 +7,7 @@ namespace Emignatik.NxFileViewer.NSP.Models
 
         public ulong TitleId { get; set; }
 
-        public ContentType ContentType { get; set; }
+        public NcaContentType ContentType { get; set; }
 
         public string SdkVersion { get; set; }
 
