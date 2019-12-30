@@ -191,6 +191,14 @@ namespace Emignatik.NxFileViewer.NSP
                     var openFile = partition.OpenFile(nspFileEntry, OpenMode.Read);
 
                     var nca = new Nca(keyset, new FileStorage(openFile));
+
+                    //TODO: use code below to detect if game seems original or not (fast to check)
+                    //var verifyHeaderSignature = nca.VerifyHeaderSignature();
+                    //if (verifyHeaderSignature != Validity.Valid)
+                    //{
+
+                    //}
+
                     openedNcas.Add(new OpenedNca
                     {
                         Nca = nca,
@@ -199,6 +207,18 @@ namespace Emignatik.NxFileViewer.NSP
 
                     var ncaHeader = nca.Header;
                     var definedSections = GetDefinedSectionsInfo(ncaHeader);
+
+                    //foreach (var definedSection in definedSections)
+                    //{
+                    //    // TODO: add feature to check the section (may takes a lot of time according to te nca size)
+                    //    //if (nca.VerifySection(definedSection.Index, null, false) != Validity.Valid)
+                    //    //{
+                    //    //}
+                    //    // TODO: add feature to check the section header (seems to be fast)
+                    //    if (nca.ValidateSectionMasterHash(definedSection.Index) != Validity.Valid)
+                    //    {
+                    //    }
+                    //}
 
                     var pfsNcaFile = new PfsNcaFile
                     {

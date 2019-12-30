@@ -20,7 +20,6 @@
                     <nca:NcaInfoView />
                 </DataTemplate>
             </views:FileViewTemplateSelector.NcaInfoViewDataTemplate>
-
         </views:FileViewTemplateSelector>
 
         <converters:NacpLanguageConverter x:Key="NacpLanguageConverter" />
