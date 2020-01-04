@@ -349,6 +349,15 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close File.
+        /// </summary>
+        public static string MenuItem_CloseFile {
+            get {
+                return ResourceManager.GetString("MenuItem_CloseFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File.
         /// </summary>
         public static string MenuItem_File {

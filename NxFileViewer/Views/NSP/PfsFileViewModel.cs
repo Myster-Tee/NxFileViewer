@@ -1,35 +1,17 @@
 ﻿using System;
-using System.Windows.Input;
 using Emignatik.NxFileViewer.NSP.Models;
 using Emignatik.NxFileViewer.Utils;
 
 namespace Emignatik.NxFileViewer.Views.NSP
 {
-    public class PfsFileViewModel : ViewModelBase
+    public class PfsFileViewModel : FileViewModelBase
     {
-        private bool _isSelected;
+        private readonly PfsFile _pfsFile;
 
         public PfsFileViewModel(PfsFile file)
         {
-            File = file ?? throw new ArgumentNullException(nameof(file));
+            _pfsFile = file ?? throw new ArgumentNullException(nameof(file));
+            FileName = $"{_pfsFile.Name}  ({_pfsFile.Size.ToFileSize()})";
         }
-
-        public ICommand SaveSelectedFilesCommand { get; internal set; }
-
-        public ICommand DecryptSelectedFilesHeaderCommand { get; internal set; }
-
-        public string FileName => $"{File.Name}  ({File.Size.ToFileSize()})";
-
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set
-            {
-                _isSelected = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public PfsFile File { get; }
     }
 }

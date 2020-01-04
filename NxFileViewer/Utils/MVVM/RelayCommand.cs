@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace Emignatik.NxFileViewer.Views.MVVM
+namespace Emignatik.NxFileViewer.Utils.MVVM
 {
     public class RelayCommand : ICommand
     {

@@ -12,14 +12,14 @@
     <TabControl>
         <TabItem Header="{x:Static r:Resources.Overview}">
             <!-- TabControl for each metadata file-->
-            <TabControl ItemsSource="{Binding Path=Cnmts}" SelectedItem="{Binding Path=SelectedCnmt}" x:Name="TOTO" >
+            <TabControl ItemsSource="{Binding Path=Cnmts}" SelectedItem="{Binding Path=SelectedCnmt}" x:Name="MetadataTabItem" >
                 <TabControl.ItemContainerStyle>
                     <Style TargetType="{x:Type TabItem}">
                         <Style.Setters>
                             <Setter Property="Header" Value="{Binding Path=TabTitle}" />
                         </Style.Setters>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=TOTO, Path=Items.Count}" Value="1">
+                            <DataTrigger Binding="{Binding ElementName=MetadataTabItem, Path=Items.Count}" Value="1">
                                 <Setter Property="Visibility" Value="Collapsed"/>
                             </DataTrigger>
                         </Style.Triggers>
@@ -36,14 +36,15 @@
         <TabItem Header="{x:Static r:Resources.Structure}">
             <DockPanel>
                 <customControls:GroupView HeaderText="{x:Static r:Resources.Files}" DockPanel.Dock="Top">
-                    <ListBox ItemsSource="{Binding Path=PfsFiles}" SelectionMode="Extended" SelectedItem="{Binding Path=SelectedPfsFile}" DockPanel.Dock="Top" MinHeight="100">
-                        <ListBox.ItemTemplate>
+                    <TreeView ItemsSource="{Binding Path=Files}" MinHeight="100">
+                        <TreeView.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Path=FileName}" />
                             </DataTemplate>
-                        </ListBox.ItemTemplate>
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        </TreeView.ItemTemplate>
+
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                                 <Setter Property="IsSelected" Value="{Binding Path=IsSelected}" />
                                 <Setter Property="ContextMenu">
                                     <Setter.Value>
@@ -54,11 +55,12 @@
                                     </Setter.Value>
                                 </Setter>
                             </Style>
-                        </ListBox.ItemContainerStyle>
-                    </ListBox>
+                        </TreeView.ItemContainerStyle>
+
+                    </TreeView>
                 </customControls:GroupView>
                 <customControls:GroupView HeaderText="{x:Static r:Resources.Details}" DockPanel.Dock="Top">
-                    <ContentControl ContentTemplateSelector="{StaticResource FileViewTemplateSelector}" Content="{Binding Path=SelectedFileInfo}" />
+                    <ContentControl ContentTemplateSelector="{StaticResource FileViewTemplateSelector}" Content="{Binding Path=SelectedFile}" />
                 </customControls:GroupView>
             </DockPanel>
         </TabItem>

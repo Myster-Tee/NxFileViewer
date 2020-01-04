@@ -17,6 +17,7 @@
     <Window.InputBindings>
         <KeyBinding Gesture="Ctrl+O" Command="{Binding Path=OpenFileCommand}" />
         <KeyBinding Gesture="Ctrl+Shift+O" Command="{Binding Path=OpenLastFileCommand}" />
+        <KeyBinding Gesture="Ctrl+Shift+C" Command="{Binding Path=CloseFileCommand}" />
     </Window.InputBindings>
 
     <Grid>
@@ -29,6 +30,7 @@
             <MenuItem Header="{x:Static r:Resources.MenuItem_File}">
                 <MenuItem Header="{x:Static r:Resources.MenuItem_OpenFile}" Command="{Binding Path=OpenFileCommand}" InputGestureText="Ctrl+O" />
                 <MenuItem Header="{x:Static r:Resources.MenuItem_OpenLastFile}" Command="{Binding Path=OpenLastFileCommand}" InputGestureText="Ctrl+Shift+O" />
+                <MenuItem Header="{x:Static r:Resources.MenuItem_CloseFile}" Command="{Binding Path=CloseFileCommand}" InputGestureText="Ctrl+Shift+C" />
             </MenuItem>
         </Menu>
 

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Windows.Input;
 using Emignatik.NxFileViewer.Properties;
 using Emignatik.NxFileViewer.Services;
 
 namespace Emignatik.NxFileViewer.Commands
 {
-    public class OpenLastFileCommand : ICommand
+    public class OpenLastFileCommand : CommandBase
     {
         private readonly SupportedFilesOpenerService _supportedFilesOpenerService;
 
@@ -15,15 +14,7 @@ namespace Emignatik.NxFileViewer.Commands
             _supportedFilesOpenerService = supportedFilesOpenerService ?? throw new ArgumentNullException(nameof(supportedFilesOpenerService));
         }
 
-        public event EventHandler CanExecuteChanged;
-
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             var lastOpenedFile = Settings.Default.LastOpenedFile;
             if (lastOpenedFile != null && File.Exists(lastOpenedFile))
@@ -32,6 +23,5 @@ namespace Emignatik.NxFileViewer.Commands
             }
 
         }
-
     }
 }

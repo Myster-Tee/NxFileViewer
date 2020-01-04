@@ -68,10 +68,7 @@ namespace Emignatik.NxFileViewer.Views
                 var nspInfo = nspInfoLoader.Load(filePath);
 
                 //TODO: split "code behing logic" to separate view model
-                ((MainWindowViewModel)this.DataContext).FileViewModel = new NspInfoViewModel(nspInfo)
-                {
-                    Source = filePath,
-                };
+                ((MainWindowViewModel)this.DataContext).FileViewModel = new NspInfoViewModel(nspInfo, new FileViewModelFactory());
             }
             catch (Exception ex)
             {

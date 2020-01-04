@@ -27,5 +27,9 @@ namespace Emignatik.NxFileViewer.NSP.Models
             }
         }
 
+        /// <summary>
+        /// Gets or sets the file location
+        /// </summary>
+        public string Location { get; set; }
     }
 }

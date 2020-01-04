@@ -13,6 +13,7 @@ namespace Emignatik.NxFileViewer.Views.NCA
         public NcaInfoViewModel(PfsNcaFile pfsNcaFile)
         {
             _pfsNcaFile = pfsNcaFile ?? throw new ArgumentNullException(nameof(pfsNcaFile));
+            FileName = $"{_pfsNcaFile.Name}  ({_pfsNcaFile.Size.ToFileSize()})";
         }
 
         public string TitleId => _pfsNcaFile.TitleId.ToHex();

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Input;
 using Emignatik.NxFileViewer.Properties;
 using Emignatik.NxFileViewer.Services;
 using Microsoft.Win32;
 
 namespace Emignatik.NxFileViewer.Commands
 {
-    public class OpenFileCommand : ICommand
+    public class OpenFileCommand : CommandBase
     {
         private readonly SupportedFilesOpenerService _supportedFilesOpenerService;
 
@@ -16,14 +15,7 @@ namespace Emignatik.NxFileViewer.Commands
             _supportedFilesOpenerService = supportedFilesOpenerService ?? throw new ArgumentNullException(nameof(supportedFilesOpenerService));
         }
 
-        public event EventHandler CanExecuteChanged;
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             var openFileDialog = new OpenFileDialog
             {
@@ -37,7 +29,6 @@ namespace Emignatik.NxFileViewer.Commands
 
             _supportedFilesOpenerService.OpenFile(filePath);
         }
-
 
     }
 }

@@ -22,7 +22,7 @@ namespace Emignatik.NxFileViewer.Views
             if (item is NcaInfoViewModel)
                 return NcaInfoViewDataTemplate;
 
-            return base.SelectTemplate(item, container);
+            return null;
         }
     }
 }

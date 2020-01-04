@@ -2,7 +2,10 @@
 {
     public class OpenedFile
     {
-        public string Source { get; set; }
+        /// <summary>
+        /// Gives an indication from the location of the file (like file path)
+        /// </summary>
+        public string Location { get; set; }
 
         public object FileData { get; set; }
     }

@@ -39,7 +39,7 @@ namespace Emignatik.NxFileViewer.Services
                 _openedFileService.OpenedFile = new OpenedFile
                 {
                     FileData = nspInfo,
-                    Source = filePath
+                    Location = filePath
                 };
             }
             catch (Exception ex)

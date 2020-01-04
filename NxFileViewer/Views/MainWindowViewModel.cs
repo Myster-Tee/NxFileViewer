@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Input;
@@ -29,11 +30,15 @@ namespace Emignatik.NxFileViewer.Views
             OpenFileCommand = new OpenFileCommand(supportedFilesOpenerService);
 
             OpenLastFileCommand = new OpenLastFileCommand(supportedFilesOpenerService);
+
+            CloseFileCommand = new CloseFileCommand(openedFileService);
         }
 
         public ICommand OpenFileCommand { get; }
 
         public ICommand OpenLastFileCommand { get; }
+
+        public ICommand CloseFileCommand { get; }
 
         /// <summary>
         /// Gets or sets the view model of the file being displayed
@@ -62,12 +67,20 @@ namespace Emignatik.NxFileViewer.Views
         private void OnOpenedFileChanged(object sender, OpenedFileChangedHandlerArgs args)
         {
             var newFile = args.NewFile;
-            if (newFile != null && newFile.FileData is NspInfo nspInfo)
+            if (newFile != null)
             {
-                this.FileViewModel = new NspInfoViewModel(nspInfo)
+                if (newFile.FileData is NspInfo nspInfo)
                 {
-                    Source = newFile.Source,
-                };
+                    this.FileViewModel = new NspInfoViewModel(nspInfo, new FileViewModelFactory());
+                }
+                else
+                {
+                    Debug.Assert(true, "File not supported");
+                }
+            }
+            else
+            {
+                this.FileViewModel = null;
             }
         }
 
@@ -77,7 +90,7 @@ namespace Emignatik.NxFileViewer.Views
 
             var title = $"NX File Info v{_currentAppVersion}";
 
-            var openedFilePath = fileViewModel?.Source;
+            var openedFilePath = fileViewModel?.Location;
             if (!string.IsNullOrEmpty(openedFilePath))
                 title += $" - {Path.GetFileName(openedFilePath)}";
 

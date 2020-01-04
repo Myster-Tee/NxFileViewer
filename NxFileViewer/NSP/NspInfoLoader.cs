@@ -29,7 +29,10 @@ namespace Emignatik.NxFileViewer.NSP
             if (nspFilePath == null)
                 throw new ArgumentNullException(nameof(nspFilePath));
 
-            var nspInfo = new NspInfo();
+            var nspInfo = new NspInfo
+            {
+                Location = nspFilePath
+            };
 
             using (var localFile = new LocalFile(nspFilePath, OpenMode.Read))
             {

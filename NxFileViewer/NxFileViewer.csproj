@@ -63,6 +63,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\CloseFileCommand.cs" />
+    <Compile Include="Commands\CommandBase.cs" />
     <Compile Include="Commands\OpenFileCommand.cs" />
     <Compile Include="Commands\OpenLastFileCommand.cs" />
     <Compile Include="Logging\LogNotifier.cs" />
@@ -97,7 +99,7 @@
     <Compile Include="Views\FileViewModelBase.cs" />
     <Compile Include="Views\FileViewTemplateSelector.cs" />
     <Compile Include="Views\MainWindowViewModel.cs" />
-    <Compile Include="Views\MVVM\RelayCommand.cs" />
+    <Compile Include="Utils\MVVM\RelayCommand.cs" />
     <Compile Include="Views\NCA\NcaInfoView.xaml.cs">
       <DependentUpon>NcaInfoView.xaml</DependentUpon>
     </Compile>
@@ -110,6 +112,7 @@
       <DependentUpon>ControlPartitionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NSP\ControlPartitionViewModel.cs" />
+    <Compile Include="Views\FileViewModelFactory.cs" />
     <Compile Include="Views\NSP\PfsFileViewModel.cs" />
     <Compile Include="Views\NSP\NspInfoView.xaml.cs">
       <DependentUpon>NspInfoView.xaml</DependentUpon>
