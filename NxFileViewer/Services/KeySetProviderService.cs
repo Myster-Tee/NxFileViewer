@@ -7,12 +7,18 @@ using LibHac;
 
 namespace Emignatik.NxFileViewer.Services
 {
-    public static class KeySetProviderService
+    public class KeySetProviderService : IKeySetProviderService
     {
+        private readonly IAppSettings _appSettings;
 
-        private static Keyset _keyset = null;
+        public KeySetProviderService(IAppSettings appSettings)
+        {
+            _appSettings = appSettings;
+        }
 
-        public static Keyset GetKeySet(bool forceReload = false)
+        private Keyset _keyset = null;
+
+        public Keyset GetKeySet(bool forceReload = false)
         {
             if (_keyset != null && !forceReload)
             {
@@ -22,36 +28,16 @@ namespace Emignatik.NxFileViewer.Services
             return _keyset;
         }
 
-        public static bool TryGetKeySet(out Keyset keyset, bool forceReload = false)
+        private Keyset LoadKeySet()
         {
-            if (_keyset != null && !forceReload)
-            {
-                keyset = _keyset;
-                return true;
-            }
-            try
-            {
-                keyset = LoadKeySet();
-                _keyset = keyset;
-                return true;
-            }
-            catch
-            {
-                keyset = null;
-                return false;
-            }
-        }
-
-        private static Keyset LoadKeySet()
-        {
-            var keysFilePath = AppSettings.Default.KeysFilePath;
+            var keysFilePath = _appSettings.KeysFilePath;
             if (string.IsNullOrWhiteSpace(keysFilePath))
                 throw new Exception(Resources.ErrKeysFilePathUndefined);
 
             var keysFullFilePath = keysFilePath.ToFullPath();
 
             if (!File.Exists(keysFullFilePath))
-                throw new Exception(string.Format(Resources.ErrKeysFilePathNotFound, keysFullFilePath));
+                throw new FileNotFoundException(string.Format(Resources.ErrKeysFilePathNotFound, keysFullFilePath));
 
             try
             {

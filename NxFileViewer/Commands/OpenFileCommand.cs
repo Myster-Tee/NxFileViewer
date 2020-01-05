@@ -10,17 +10,19 @@ namespace Emignatik.NxFileViewer.Commands
     public class OpenFileCommand : CommandBase
     {
         private readonly ISupportedFilesOpenerService _supportedFilesOpenerService;
+        private readonly IAppSettings _appSettings;
 
-        public OpenFileCommand(ISupportedFilesOpenerService supportedFilesOpenerService)
+        public OpenFileCommand(ISupportedFilesOpenerService supportedFilesOpenerService, IAppSettings appSettings)
         {
             _supportedFilesOpenerService = supportedFilesOpenerService ?? throw new ArgumentNullException(nameof(supportedFilesOpenerService));
+            _appSettings = appSettings;
         }
 
         public override void Execute(object parameter)
         {
             var openFileDialog = new OpenFileDialog
             {
-                FileName = AppSettings.Default.LastOpenedFile,
+                FileName = _appSettings.LastOpenedFile,
                 Filter = Resources.OpenFile_Filter
             };
 

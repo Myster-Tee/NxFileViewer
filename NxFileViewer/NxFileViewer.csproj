@@ -73,6 +73,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Update="Views\CustomControls\GroupView.xaml">
       <SubType>Designer</SubType>
     </Page>

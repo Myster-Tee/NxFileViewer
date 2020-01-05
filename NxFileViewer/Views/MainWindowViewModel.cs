@@ -19,10 +19,13 @@ namespace Emignatik.NxFileViewer.Views
         private readonly string _currentAppVersion;
         private string _appTitle;
 
-        public MainWindowViewModel(IOpenedFileService openedFileService, ISupportedFilesOpenerService supportedFilesOpenerService, ILoggerFactory loggerFactory)
+        public MainWindowViewModel(IOpenedFileService openedFileService, ISupportedFilesOpenerService supportedFilesOpenerService, ILoggerFactory loggerFactory, OpenFileCommand openFileCommand, OpenLastFileCommand openLastFileCommand, CloseFileCommand closeFileCommand)
         {
             if (openedFileService == null) throw new ArgumentNullException(nameof(openedFileService));
             if (supportedFilesOpenerService == null) throw new ArgumentNullException(nameof(supportedFilesOpenerService));
+            if (openFileCommand == null) throw new ArgumentNullException(nameof(openFileCommand));
+            if (openLastFileCommand == null) throw new ArgumentNullException(nameof(openLastFileCommand));
+            if (closeFileCommand == null) throw new ArgumentNullException(nameof(closeFileCommand));
             _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             _logger = loggerFactory.CreateLogger(this.GetType());
 
@@ -32,24 +35,9 @@ namespace Emignatik.NxFileViewer.Views
 
             openedFileService.OpenedFileChanged += OnOpenedFileChanged;
 
-            OpenFileCommand = new OpenFileCommand(supportedFilesOpenerService);
-
-            OpenLastFileCommand = new OpenLastFileCommand(supportedFilesOpenerService);
-
-            CloseFileCommand = new CloseFileCommand(openedFileService);
-        }
-
-        public void Initialize()
-        {
-            try
-            {
-                KeySetProviderService.GetKeySet();
-                _logger.LogInformation(Properties.Resources.InfoKeysSuccessfullyLoaded);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-            }
+            OpenFileCommand = openFileCommand;
+            OpenLastFileCommand = openLastFileCommand;
+            CloseFileCommand = closeFileCommand;
         }
 
         public ICommand OpenFileCommand { get; }
