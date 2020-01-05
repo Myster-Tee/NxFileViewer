@@ -1,0 +1,10 @@
+﻿TODO: Add setting to specify the keys.dat file
+TODO: Auto show log on warning or error
+TODO: Add a status bar
+TODO: feature to auto download keys from URL
+TODO: Threading actions (with progress bar)
+TODO: Save image
+TODO: Load NCA file
+TODO: Add all logged messages in resources file
+TODO: merge all assemblies to have a single exe
+TODO: add about dialog with credits

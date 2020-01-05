@@ -4,6 +4,89 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <RootNamespace>Emignatik.NxFileViewer</RootNamespace>
+    <StartupObject>Emignatik.NxFileViewer.App</StartupObject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Features.txt" />
+    <None Remove="Icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LibHac\src\LibHac\LibHac.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Features.txt" />
+    <Resource Include="Icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Update="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="App.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CustomControls\GroupView.xaml.cs">
+      <DependentUpon>GroupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainWindow.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\NCA\NcaInfoView.xaml.cs">
+      <DependentUpon>NcaInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\NSP\CnmtView.xaml.cs">
+      <DependentUpon>CnmtView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\NSP\ControlPartitionView.xaml.cs">
+      <DependentUpon>ControlPartitionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\NSP\NspInfoView.xaml.cs">
+      <DependentUpon>NspInfoView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\CustomControls\GroupView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\NCA\NcaInfoView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\NSP\CnmtView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\NSP\ControlPartitionView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\NSP\NspInfoView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
 
 </Project>

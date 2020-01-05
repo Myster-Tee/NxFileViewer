@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="Emignatik.NxFileViewer.Views.NSP.NspInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:r="clr-namespace:Emignatik.NxFileViewer.Properties"
+             xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
+             xmlns:nsp="clr-namespace:Emignatik.NxFileViewer.Views.NSP"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="400" Background="White">
+
+    <TabControl>
+        <TabItem Header="{x:Static r:Resources.Overview}">
+            <!-- TabControl for each metadata file-->
+            <TabControl ItemsSource="{Binding Path=Cnmts}" SelectedItem="{Binding Path=SelectedCnmt}" x:Name="MetadataTabItem" >
+                <TabControl.ItemContainerStyle>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Style.Setters>
+                            <Setter Property="Header" Value="{Binding Path=TabTitle}" />
+                        </Style.Setters>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=MetadataTabItem, Path=Items.Count}" Value="1">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TabControl.ItemContainerStyle>
+
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <nsp:CnmtView />
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+        </TabItem>
+        <TabItem Header="{x:Static r:Resources.Structure}">
+            <DockPanel>
+                <customControls:GroupView HeaderText="{x:Static r:Resources.Files}" DockPanel.Dock="Top">
+                    <TreeView ItemsSource="{Binding Path=Files}" MinHeight="100">
+                        <TreeView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=FileName}" />
+                            </DataTemplate>
+                        </TreeView.ItemTemplate>
+
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                                <Setter Property="IsSelected" Value="{Binding Path=IsSelected}" />
+                                <Setter Property="ContextMenu">
+                                    <Setter.Value>
+                                        <ContextMenu>
+                                            <MenuItem Header="{x:Static r:Resources.SaveSelectedFiles}" Command="{Binding Path=SaveSelectedFilesCommand}" />
+                                            <MenuItem Header="{x:Static r:Resources.DecryptSelectedNcaFilesHeader}" Command="{Binding Path=DecryptSelectedFilesHeaderCommand}" />
+                                        </ContextMenu>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+
+                    </TreeView>
+                </customControls:GroupView>
+                <customControls:GroupView HeaderText="{x:Static r:Resources.Details}" DockPanel.Dock="Top">
+                    <ContentControl ContentTemplateSelector="{StaticResource FileViewTemplateSelector}" Content="{Binding Path=SelectedFile}" />
+                </customControls:GroupView>
+            </DockPanel>
+        </TabItem>
+    </TabControl>
+</UserControl>
