@@ -9,9 +9,9 @@ namespace Emignatik.NxFileViewer.Commands
 {
     public class OpenFileCommand : CommandBase
     {
-        private readonly SupportedFilesOpenerService _supportedFilesOpenerService;
+        private readonly ISupportedFilesOpenerService _supportedFilesOpenerService;
 
-        public OpenFileCommand(SupportedFilesOpenerService supportedFilesOpenerService)
+        public OpenFileCommand(ISupportedFilesOpenerService supportedFilesOpenerService)
         {
             _supportedFilesOpenerService = supportedFilesOpenerService ?? throw new ArgumentNullException(nameof(supportedFilesOpenerService));
         }

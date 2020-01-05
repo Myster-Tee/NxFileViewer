@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Emignatik.NxFileViewer.NSP.Models;
 using Emignatik.NxFileViewer.Properties;
-using log4net;
+using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Views.NSP
 {
@@ -13,15 +13,14 @@ namespace Emignatik.NxFileViewer.Views.NSP
         private readonly NspInfo _nspInfo;
 
         private FileViewModelBase _selectedFileInfo;
-        private readonly ILog _log;
+        private readonly ILogger _logger;
         private CnmtViewModel _selectedCnmt;
 
-        public NspInfoViewModel(NspInfo nspInfo, FileViewModelFactory fileViewModelFactory)
+        public NspInfoViewModel(NspInfo nspInfo, FileViewModelFactory fileViewModelFactory, ILoggerFactory loggerFactory)
         {
             _nspInfo = nspInfo ?? throw new ArgumentNullException(nameof(nspInfo));
+            _logger = loggerFactory.CreateLogger(this.GetType());
             FileName = $"{Path.GetFileName(_nspInfo.Location)}";
-
-            _log = LogManager.GetLogger(this.GetType());
 
             Files = _nspInfo.Files?.Select(file =>
             {

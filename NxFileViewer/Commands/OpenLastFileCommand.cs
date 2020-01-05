@@ -7,9 +7,9 @@ namespace Emignatik.NxFileViewer.Commands
 {
     public class OpenLastFileCommand : CommandBase
     {
-        private readonly SupportedFilesOpenerService _supportedFilesOpenerService;
+        private readonly ISupportedFilesOpenerService _supportedFilesOpenerService;
 
-        public OpenLastFileCommand(SupportedFilesOpenerService supportedFilesOpenerService)
+        public OpenLastFileCommand(ISupportedFilesOpenerService supportedFilesOpenerService)
         {
             _supportedFilesOpenerService = supportedFilesOpenerService ?? throw new ArgumentNullException(nameof(supportedFilesOpenerService));
         }

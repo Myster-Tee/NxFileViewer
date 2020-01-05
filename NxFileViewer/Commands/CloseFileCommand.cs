@@ -5,9 +5,9 @@ namespace Emignatik.NxFileViewer.Commands
 {
     public class CloseFileCommand : CommandBase
     {
-        private readonly OpenedFileService _openedFileService;
+        private readonly IOpenedFileService _openedFileService;
 
-        public CloseFileCommand(OpenedFileService openedFileService)
+        public CloseFileCommand(IOpenedFileService openedFileService)
         {
             _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
             _openedFileService.OpenedFileChanged += OnOpenedFileChanged;

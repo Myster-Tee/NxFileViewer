@@ -7,21 +7,20 @@ using LibHac;
 using LibHac.Fs;
 using LibHac.FsSystem;
 using LibHac.FsSystem.NcaUtils;
-using LibHac.Ncm;
-using log4net;
-
+using Microsoft.Extensions.Logging;
+using ContentType = LibHac.Ncm.ContentType;
 
 namespace Emignatik.NxFileViewer.NSP
 {
     public class NspInfoLoader
     {
         private readonly Keyset _keyset;
-        private readonly ILog _log;
+        private readonly ILogger _logger;
 
-        public NspInfoLoader(Keyset keyset, ILog log = null)
+        public NspInfoLoader(Keyset keyset, ILogger logger = null)
         {
             _keyset = keyset ?? throw new ArgumentNullException(nameof(keyset));
-            _log = log;
+            _logger = logger;
         }
 
         public NspInfo Load(string nspFilePath)
@@ -59,19 +58,19 @@ namespace Emignatik.NxFileViewer.NSP
             var matchingOpenedNcas = openedNcas.Where(openedNca => string.Equals(expectedNcaFileName, openedNca.FileName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
             if (matchingOpenedNcas.Length < 1)
             {
-                _log?.Error($"Referenced NCA \"{expectedNcaFileName}\" of content type \"{NcaContentType.Control}\" is missing.");
+                _logger?.LogError($"Referenced NCA \"{expectedNcaFileName}\" of content type \"{NcaContentType.Control}\" is missing.");
                 return null;
             }
 
             if (matchingOpenedNcas.Length > 1)
-                _log?.Error($"NCA \"{expectedNcaFileName}\" of content type \"{NcaContentType.Control}\" was found more than once (found \"{matchingOpenedNcas.Length}\" times), only the first one will be considered.");
+                _logger?.LogError($"NCA \"{expectedNcaFileName}\" of content type \"{NcaContentType.Control}\" was found more than once (found \"{matchingOpenedNcas.Length}\" times), only the first one will be considered.");
 
             var controlOpenedNca = matchingOpenedNcas[0];
             var controlNca = controlOpenedNca.Nca;
             var controlNcaHeader = controlNca.Header;
             if (controlNcaHeader.ContentType != NcaContentType.Control)
             {
-                _log?.Error($"NCA \"{controlOpenedNca.FileName}\" is not of the expected content type \"{NcaContentType.Control}\".");
+                _logger?.LogError($"NCA \"{controlOpenedNca.FileName}\" is not of the expected content type \"{NcaContentType.Control}\".");
                 return null;
             }
 
@@ -92,7 +91,7 @@ namespace Emignatik.NxFileViewer.NSP
 
                 if (openedNca.Nca.Header.ContentType != NcaContentType.Meta)
                 {
-                    _log?.Error($"Invalid NCA file \"{openedNca.FileName}\", content is not of the expected type \"{NcaContentType.Meta}\" (found \"{openedNca.Nca.Header.ContentType}\").");
+                    _logger?.LogError($"Invalid NCA file \"{openedNca.FileName}\", content is not of the expected type \"{NcaContentType.Meta}\" (found \"{openedNca.Nca.Header.ContentType}\").");
                     continue;
                 }
 
@@ -102,13 +101,13 @@ namespace Emignatik.NxFileViewer.NSP
 
                 if (cnmtFileEntries.Length < 1)
                 {
-                    _log?.Error($"No CNMT file found in NCA \"{openedNca.FileName}\".");
+                    _logger?.LogError($"No CNMT file found in NCA \"{openedNca.FileName}\".");
                     continue;
                 }
 
                 if (cnmtFileEntries.Length > 1)
                 {
-                    _log?.Error($"More than one CNMT file found in NCA \"{openedNca.FileName}\".");
+                    _logger?.LogError($"More than one CNMT file found in NCA \"{openedNca.FileName}\".");
                     continue;
                 }
 
@@ -125,7 +124,7 @@ namespace Emignatik.NxFileViewer.NSP
                         string linkedNcaControlId;
                         if (linkedNcaControlIds.Length > 1)
                         {
-                            _log?.Error($"CNMT file \"{cnmtFileEntry.FullPath}\" contained in NCA \"{openedNca.FileName}\" was not expected to reference more than one NCA of content type \"{ContentType.Control}\". Only the first reference will be considered.");
+                            _logger?.LogError($"CNMT file \"{cnmtFileEntry.FullPath}\" contained in NCA \"{openedNca.FileName}\" was not expected to reference more than one NCA of content type \"{ContentType.Control}\". Only the first reference will be considered.");
                             linkedNcaControlId = linkedNcaControlIds[0];
                         }
                         else
@@ -322,7 +321,7 @@ namespace Emignatik.NxFileViewer.NSP
                     var langName = fileName.Substring(ICON_FILE_PREFIX.Length, fileName.Length - ICON_FILE_PREFIX.Length - ICON_FILE_EXT.Length);
                     if (!Enum.TryParse(langName, true, out NacpLanguage language))
                     {
-                        _log?.Warn($"Found a *.dat file \"{fileName}\" which doesn't match any of the languages.");
+                        _logger?.LogWarning($"Found a *.dat file \"{fileName}\" which doesn't match any of the languages.");
                         continue;
                     }
 

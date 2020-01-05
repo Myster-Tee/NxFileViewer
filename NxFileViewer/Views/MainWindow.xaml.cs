@@ -3,79 +3,19 @@ using System.IO;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
-using Emignatik.NxFileViewer.Logging;
-using Emignatik.NxFileViewer.NSP;
-using Emignatik.NxFileViewer.Services;
-using Emignatik.NxFileViewer.Settings;
-using Emignatik.NxFileViewer.Views.NSP;
-using log4net;
-using log4net.Config;
-using log4net.Core;
+using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, ILoggerProvider
     {
-        private readonly ILog _log;
-
         public MainWindow()
         {
             InitializeComponent();
-
-            Loaded += OnLoaded;
-
-            _log = LogManager.GetLogger(this.GetType());
-
-            var logNotifier = new LogNotifier();
-            BasicConfigurator.Configure(logNotifier);
-            logNotifier.Log += OnLog;
-
         }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                KeySetProviderService.GetKeySet();
-                _log.Info(Properties.Resources.InfoKeysSuccessfullyLoaded);
-            }
-            catch (Exception ex)
-            {
-                _log.Error(ex.Message);
-            }
-        }
-
-        public void SafeLoadFile(string filePath)
-        {
-            try
-            {
-                AppSettings.Default.LastOpenedFile = filePath;
-                AppSettings.Default.Save();
-            }
-            catch
-            {
-            }
-
-            try
-            {
-                var fileName = Path.GetFileName(filePath);
-                _log.Info($"===> {fileName} <===");
-
-                var nspInfoLoader = new NspInfoLoader(KeySetProviderService.GetKeySet());
-                var nspInfo = nspInfoLoader.Load(filePath);
-
-                //TODO: split "code behing logic" to separate view model
-                ((MainWindowViewModel)this.DataContext).FileViewModel = new NspInfoViewModel(nspInfo, new FileViewModelFactory());
-            }
-            catch (Exception ex)
-            {
-                _log.Error(string.Format(Properties.Resources.ErrFailedToLoadFile, filePath), ex);
-            }
-        }
-
 
         private void MainWindow_OnDrop(object sender, DragEventArgs e)
         {
@@ -91,23 +31,22 @@ namespace Emignatik.NxFileViewer.Views
             switch (Path.GetExtension(filePath))
             {
                 case ".nsp":
-                    SafeLoadFile(filePath);
+                    //TODO refaire marcher le drag n drop
+                    //SafeLoadFile(filePath);
                     break;
             }
         }
 
-        private void OnLog(object sender, LogEventHandlerArgs args)
+        private void OnLog<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             if (!Dispatcher.CheckAccess()) // To prevent UI thread InvalidOperationException when log event comes from another thread
             {
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    OnLog(sender, args);
+                    OnLog(logLevel, eventId, state, exception, formatter);
                 }));
                 return;
             }
-
-            var logEvent = args.LogEvent;
 
             // TODO: check if inner required
             //var exTemp = args.Exception;
@@ -119,13 +58,13 @@ namespace Emignatik.NxFileViewer.Views
 
             var tr = new TextRange(RichTextBoxLog.Document.ContentEnd, RichTextBoxLog.Document.ContentEnd)
             {
-                Text = logEvent.RenderedMessage + Environment.NewLine
+                Text = formatter(state, exception) + Environment.NewLine
             };
 
             var color = Brushes.Black;
-            if (logEvent.Level >= Level.Error)
+            if (logLevel >= LogLevel.Error)
                 color = Brushes.Red;
-            else if (logEvent.Level >= Level.Warn)
+            else if (logLevel >= LogLevel.Warning)
                 color = Brushes.OrangeRed;
             else
                 color = Brushes.Blue;
@@ -137,5 +76,41 @@ namespace Emignatik.NxFileViewer.Views
         {
             RichTextBoxLog.Document.Blocks.Clear();
         }
+
+        public void Dispose()
+        {
+        }
+
+        public ILogger CreateLogger(string categoryName)
+        {
+            return new InternalLogger(this);
+        }
+
+        private class InternalLogger : ILogger
+        {
+            private readonly MainWindow _mainWindow;
+
+            public InternalLogger(MainWindow mainWindow)
+            {
+                _mainWindow = mainWindow;
+            }
+
+
+            public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+            {
+                _mainWindow.OnLog(logLevel, eventId, state, exception, formatter);
+            }
+
+            public bool IsEnabled(LogLevel logLevel)
+            {
+                return true;
+            }
+
+            public IDisposable BeginScope<TState>(TState state)
+            {
+                return null;
+            }
+        }
+
     }
 }

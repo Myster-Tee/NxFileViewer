@@ -7,19 +7,24 @@ using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.NSP.Models;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Views.NSP;
+using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Views
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly ILogger _logger;
         private FileViewModelBase _fileViewModel;
         private readonly string _currentAppVersion;
         private string _appTitle;
 
-        public MainWindowViewModel(OpenedFileService openedFileService, SupportedFilesOpenerService supportedFilesOpenerService)
+        public MainWindowViewModel(IOpenedFileService openedFileService, ISupportedFilesOpenerService supportedFilesOpenerService, ILoggerFactory loggerFactory)
         {
             if (openedFileService == null) throw new ArgumentNullException(nameof(openedFileService));
             if (supportedFilesOpenerService == null) throw new ArgumentNullException(nameof(supportedFilesOpenerService));
+            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+            _logger = loggerFactory.CreateLogger(this.GetType());
 
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             _currentAppVersion = $"{version.Major}.{version.Minor}.{version.Revision}";
@@ -32,6 +37,19 @@ namespace Emignatik.NxFileViewer.Views
             OpenLastFileCommand = new OpenLastFileCommand(supportedFilesOpenerService);
 
             CloseFileCommand = new CloseFileCommand(openedFileService);
+        }
+
+        public void Initialize()
+        {
+            try
+            {
+                KeySetProviderService.GetKeySet();
+                _logger.LogInformation(Properties.Resources.InfoKeysSuccessfullyLoaded);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
         }
 
         public ICommand OpenFileCommand { get; }
@@ -71,7 +89,7 @@ namespace Emignatik.NxFileViewer.Views
             {
                 if (newFile.FileData is NspInfo nspInfo)
                 {
-                    this.FileViewModel = new NspInfoViewModel(nspInfo, new FileViewModelFactory());
+                    this.FileViewModel = new NspInfoViewModel(nspInfo, new FileViewModelFactory(), _loggerFactory);
                 }
                 else
                 {

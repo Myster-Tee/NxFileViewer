@@ -2,27 +2,28 @@
 using System.IO;
 using Emignatik.NxFileViewer.NSP;
 using Emignatik.NxFileViewer.Properties;
-using log4net;
+using Emignatik.NxFileViewer.Settings;
+using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Services
 {
-    public class SupportedFilesOpenerService
+    public class SupportedFilesOpenerService : ISupportedFilesOpenerService
     {
-        private readonly OpenedFileService _openedFileService;
-        private readonly ILog _log;
+        private readonly IOpenedFileService _openedFileService;
+        private readonly ILogger _logger;
 
-        public SupportedFilesOpenerService(OpenedFileService openedFileService)
+        public SupportedFilesOpenerService(IOpenedFileService openedFileService, ILoggerFactory loggerFactory)
         {
             _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
-            _log = LogManager.GetLogger(this.GetType());
+            _logger = loggerFactory.CreateLogger(this.GetType());
         }
 
         public void OpenFile(string filePath)
         {
             try
             {
-                Settings.Default.LastOpenedFile = filePath;
-                Settings.Default.Save();
+                AppSettings.Default.LastOpenedFile = filePath;
+                AppSettings.Default.Save();
             }
             catch
             {
@@ -31,7 +32,7 @@ namespace Emignatik.NxFileViewer.Services
             try
             {
                 var fileName = Path.GetFileName(filePath);
-                _log.Info($"===> {fileName} <===");
+                _logger.LogInformation($"===> {fileName} <===");
 
                 var nspInfoLoader = new NspInfoLoader(KeySetProviderService.GetKeySet());
                 var nspInfo = nspInfoLoader.Load(filePath);
@@ -44,7 +45,7 @@ namespace Emignatik.NxFileViewer.Services
             }
             catch (Exception ex)
             {
-                _log.Error(string.Format(Resources.ErrFailedToLoadFile, filePath), ex);
+                _logger.LogError(string.Format(Resources.ErrFailedToLoadFile, filePath), ex);
             }
         }
 

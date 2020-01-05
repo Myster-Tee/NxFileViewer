@@ -1,6 +1,6 @@
 ﻿namespace Emignatik.NxFileViewer.Services
 {
-    public class OpenedFileService
+    public class OpenedFileService : IOpenedFileService
     {
         private OpenedFile _openedFile;
 
@@ -26,18 +26,5 @@
         }
     }
 
-    public delegate void OpenedFileChangedHandler(object sender, OpenedFileChangedHandlerArgs args);
 
-    public class OpenedFileChangedHandlerArgs
-    {
-        public OpenedFileChangedHandlerArgs(OpenedFile oldFile, OpenedFile newFile)
-        {
-            OldFile = oldFile;
-            NewFile = newFile;
-        }
-
-        public OpenedFile OldFile { get; }
-
-        public OpenedFile NewFile { get; }
-    }
 }

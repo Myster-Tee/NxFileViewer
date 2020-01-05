@@ -1,35 +1,45 @@
 ﻿using System.Windows;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Views;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer
 {
 
     public partial class App : Application
     {
-        private OpenedFileService _openedFileService;
-        private SupportedFilesOpenerService _supportedFilesOpenerService;
-
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            _openedFileService = new OpenedFileService();
-            _supportedFilesOpenerService = new SupportedFilesOpenerService(_openedFileService);
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<ISupportedFilesOpenerService, SupportedFilesOpenerService>()
+                .AddSingleton<IOpenedFileService, OpenedFileService>()
+                .AddSingleton<ILoggerFactory, LoggerFactory>()
+                .AddSingleton<MainWindowViewModel>()
+                .BuildServiceProvider();
+
+
+            var mainWindowViewModel = serviceProvider.GetService<MainWindowViewModel>();
+
             var mainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(_openedFileService, _supportedFilesOpenerService)
+                DataContext = mainWindowViewModel
             };
+
+            var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+            loggerFactory.AddProvider(mainWindow);
+
+
             Application.Current.MainWindow = mainWindow;
             mainWindow.Show();
 
             var args = e.Args;
             if (args.Length == 1)
             {
-                mainWindow.SafeLoadFile(args[0]);
+                serviceProvider.GetService<ISupportedFilesOpenerService>().OpenFile(args[0]);
             }
-
-
         }
     }
 }
