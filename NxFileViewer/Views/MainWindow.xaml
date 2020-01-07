@@ -6,7 +6,7 @@
         xmlns:r="clr-namespace:Emignatik.NxFileViewer.Properties"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Icon="../Icon.ico"
+        Icon="../Icons/Icon.ico"
         Title="{Binding Path=AppTitle}" 
         Height="540" 
         Width="460" 

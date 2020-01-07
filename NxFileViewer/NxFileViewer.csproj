@@ -6,12 +6,13 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>Emignatik.NxFileViewer</RootNamespace>
     <StartupObject>Emignatik.NxFileViewer.App</StartupObject>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <ApplicationIcon>Icons\Icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Features.txt" />
     <None Remove="Icon.ico" />
+    <None Remove="Icons\Help.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,7 +25,8 @@
 
   <ItemGroup>
     <Resource Include="Features.txt" />
-    <Resource Include="Icon.ico" />
+    <Resource Include="Icons\Help.png" />
+    <Resource Include="Icons\Icon.ico" />
   </ItemGroup>
 
   <ItemGroup>

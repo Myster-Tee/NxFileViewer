@@ -4,11 +4,49 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:r="clr-namespace:Emignatik.NxFileViewer.Properties"
-        xmlns:local="clr-namespace:Emignatik.NxFileViewer.Views"
         mc:Ignorable="d"
         Title="{x:Static r:Resources.SettingsView_Title}" Height="300" Width="400">
-    <Grid>
-        <TextBlock Style="{StaticResource Title2}">Keys</TextBlock>
-        <TextBox></TextBox>
-    </Grid>
+    <Window.Resources>
+        <Style TargetType="Image" x:Key="HelpIcon">
+            <Setter Property="Margin" Value="5,0" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="Source" Value="../Icons/Help.png" />
+        </Style>
+    </Window.Resources>
+    <StackPanel Margin="5">
+        <TextBlock  Style="{StaticResource Title1}">Keys file paths</TextBlock>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                <TextBlock  Style="{StaticResource Title2}" Text="{x:Static r:Resources.SettingsView_ProdKeys}" />
+                <Image Style="{StaticResource HelpIcon}" ToolTip="{x:Static r:Resources.SettingsView_ProdKeysTooltip}"/>
+            </StackPanel>
+            <TextBox  Grid.Row="1" />
+            <Button  Grid.Row="1" Grid.Column="1" Content="..." />
+            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                <TextBlock Style="{StaticResource Title2}" Text="{x:Static r:Resources.SettingsView_ConsoleKeys}"/>
+                <Image Style="{StaticResource HelpIcon}" ToolTip="{x:Static r:Resources.SettingsView_ConsoleKeysTooltip}"/>
+            </StackPanel>
+            <TextBox Grid.Row="3" />
+            <Button  Grid.Row="3" Grid.Column="1" Content="..." />
+            <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                <TextBlock Style="{StaticResource Title2}" Text="{x:Static r:Resources.SettingsView_TitleKeys}" />
+                <Image Style="{StaticResource HelpIcon}" ToolTip="{x:Static r:Resources.SettingsView_TitleKeysTooltip}" />
+            </StackPanel>
+            <TextBox Grid.Row="5"/>
+            <Button  Grid.Row="5" Grid.Column="1" Content="..." />
+        </Grid>
+
+    </StackPanel>
 </Window>

@@ -493,11 +493,65 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to console.keys.
+        /// </summary>
+        public static string SettingsView_ConsoleKeys {
+            get {
+                return ResourceManager.GetString("SettingsView_ConsoleKeys", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contains console-unique keys..
+        /// </summary>
+        public static string SettingsView_ConsoleKeysTooltip {
+            get {
+                return ResourceManager.GetString("SettingsView_ConsoleKeysTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to prod.keys.
+        /// </summary>
+        public static string SettingsView_ProdKeys {
+            get {
+                return ResourceManager.GetString("SettingsView_ProdKeys", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contains common keys usedy by all Switch devices..
+        /// </summary>
+        public static string SettingsView_ProdKeysTooltip {
+            get {
+                return ResourceManager.GetString("SettingsView_ProdKeysTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string SettingsView_Title {
             get {
                 return ResourceManager.GetString("SettingsView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to title.keys.
+        /// </summary>
+        public static string SettingsView_TitleKeys {
+            get {
+                return ResourceManager.GetString("SettingsView_TitleKeys", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contains game-specific keys..
+        /// </summary>
+        public static string SettingsView_TitleKeysTooltip {
+            get {
+                return ResourceManager.GetString("SettingsView_TitleKeysTooltip", resourceCulture);
             }
         }
         

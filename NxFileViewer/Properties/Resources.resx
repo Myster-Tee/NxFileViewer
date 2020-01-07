@@ -261,8 +261,26 @@
   <data name="SdkVersion" xml:space="preserve">
     <value>SDK Version</value>
   </data>
+  <data name="SettingsView_ConsoleKeys" xml:space="preserve">
+    <value>console.keys</value>
+  </data>
+  <data name="SettingsView_ConsoleKeysTooltip" xml:space="preserve">
+    <value>Contains console-unique keys.</value>
+  </data>
+  <data name="SettingsView_ProdKeys" xml:space="preserve">
+    <value>prod.keys</value>
+  </data>
+  <data name="SettingsView_ProdKeysTooltip" xml:space="preserve">
+    <value>Contains common keys usedy by all Switch devices.</value>
+  </data>
   <data name="SettingsView_Title" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="SettingsView_TitleKeys" xml:space="preserve">
+    <value>title.keys</value>
+  </data>
+  <data name="SettingsView_TitleKeysTooltip" xml:space="preserve">
+    <value>Contains game-specific keys.</value>
   </data>
   <data name="Structure" xml:space="preserve">
     <value>Structure</value>
