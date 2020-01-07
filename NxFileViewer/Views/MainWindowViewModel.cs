@@ -23,7 +23,8 @@ namespace Emignatik.NxFileViewer.Views
             OpenFileCommand openFileCommand,
             OpenLastFileCommand openLastFileCommand,
             CloseFileCommand closeFileCommand,
-            ExitAppCommand exitAppCommand
+            ExitAppCommand exitAppCommand,
+            ShowSettingsViewCommand showSettingsViewCommand
             )
         {
             if (openedFileService == null) throw new ArgumentNullException(nameof(openedFileService));
@@ -32,6 +33,7 @@ namespace Emignatik.NxFileViewer.Views
             if (openLastFileCommand == null) throw new ArgumentNullException(nameof(openLastFileCommand));
             if (closeFileCommand == null) throw new ArgumentNullException(nameof(closeFileCommand));
             if (exitAppCommand == null) throw new ArgumentNullException(nameof(exitAppCommand));
+            if (showSettingsViewCommand == null) throw new ArgumentNullException(nameof(showSettingsViewCommand));
             _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             _logger = loggerFactory.CreateLogger(this.GetType());
 
@@ -45,6 +47,7 @@ namespace Emignatik.NxFileViewer.Views
             OpenLastFileCommand = openLastFileCommand;
             CloseFileCommand = closeFileCommand;
             ExitAppCommand = exitAppCommand;
+            ShowSettingsViewCommand = showSettingsViewCommand;
         }
 
         public ICommand OpenFileCommand { get; }
@@ -54,6 +57,8 @@ namespace Emignatik.NxFileViewer.Views
         public ICommand CloseFileCommand { get; }
 
         public ICommand ExitAppCommand { get; }
+
+        public ICommand ShowSettingsViewCommand { get; }
 
         /// <summary>
         /// Gets or sets the view model of the file being displayed

@@ -29,7 +29,9 @@ namespace Emignatik.NxFileViewer
                 .AddSingleton<OpenLastFileCommand>()
                 .AddSingleton<CloseFileCommand>()
                 .AddSingleton<ExitAppCommand>()
+                .AddSingleton<ShowSettingsViewCommand>()
                 .AddSingleton<MainWindowViewModel>()
+                .AddSingleton<SettingWindowViewModel>()
                 .BuildServiceProvider();
 
             _logger = _serviceProvider.GetService<ILoggerFactory>().CreateLogger(this.GetType());

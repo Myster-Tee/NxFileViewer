@@ -231,6 +231,12 @@
   <data name="MenuItem_OpenLastFile" xml:space="preserve">
     <value>Open last</value>
   </data>
+  <data name="MenuItem_Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="MenuItem_Settings" xml:space="preserve">
+    <value>Settings...</value>
+  </data>
   <data name="Metadata" xml:space="preserve">
     <value>Metadata</value>
   </data>
@@ -254,6 +260,9 @@
   </data>
   <data name="SdkVersion" xml:space="preserve">
     <value>SDK Version</value>
+  </data>
+  <data name="SettingsView_Title" xml:space="preserve">
+    <value>Settings</value>
   </data>
   <data name="Structure" xml:space="preserve">
     <value>Structure</value>

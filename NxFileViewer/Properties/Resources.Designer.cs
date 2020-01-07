@@ -403,6 +403,24 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Options.
+        /// </summary>
+        public static string MenuItem_Options {
+            get {
+                return ResourceManager.GetString("MenuItem_Options", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings....
+        /// </summary>
+        public static string MenuItem_Settings {
+            get {
+                return ResourceManager.GetString("MenuItem_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Metadata.
         /// </summary>
         public static string Metadata {
@@ -471,6 +489,15 @@ namespace Emignatik.NxFileViewer.Properties {
         public static string SdkVersion {
             get {
                 return ResourceManager.GetString("SdkVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string SettingsView_Title {
+            get {
+                return ResourceManager.GetString("SettingsView_Title", resourceCulture);
             }
         }
         

@@ -33,6 +33,9 @@
                 <MenuItem Header="{x:Static r:Resources.MenuItem_CloseFile}" Command="{Binding Path=CloseFileCommand}" InputGestureText="Ctrl+Shift+C" />
                 <MenuItem Header="{x:Static r:Resources.MenuItem_ExitApp}" Command="{Binding Path=ExitAppCommand}" InputGestureText="Alt+F4" />
             </MenuItem>
+            <MenuItem Header="{x:Static r:Resources.MenuItem_Options}">
+                <MenuItem Header="{x:Static r:Resources.MenuItem_Settings}" Command="{Binding Path=ShowSettingsViewCommand}" />
+            </MenuItem>
         </Menu>
 
         <Grid Grid.Row="1" >
