@@ -66,7 +66,7 @@ namespace Emignatik.NxFileViewer.Settings
         {
             try
             {
-                await using var stream = File.OpenWrite(_settingsFileName);
+                await using var stream = File.Create(_settingsFileName);
                 await JsonSerializer.SerializeAsync(stream, _appSettings, new JsonSerializerOptions
                 {
                     WriteIndented = true

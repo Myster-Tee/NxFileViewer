@@ -9,6 +9,7 @@ namespace Emignatik.NxFileViewer.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
+    /// The MainWindow implements <see cref="ILoggerProvider"/> in order to be notified on logging events
     /// </summary>
     public partial class MainWindow : Window, ILoggerProvider
     {
@@ -39,9 +40,10 @@ namespace Emignatik.NxFileViewer.Views
 
         private void OnLog<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            if (!Dispatcher.CheckAccess()) // To prevent UI thread InvalidOperationException when log event comes from another thread
+            var dispatcher = Dispatcher;
+            if (dispatcher != null && !dispatcher.CheckAccess()) // To prevent UI thread InvalidOperationException when log event comes from another thread
             {
-                Dispatcher.BeginInvoke(new Action(() =>
+                dispatcher.BeginInvoke(new Action(() =>
                 {
                     OnLog(logLevel, eventId, state, exception, formatter);
                 }));
@@ -61,7 +63,7 @@ namespace Emignatik.NxFileViewer.Views
                 Text = formatter(state, exception) + Environment.NewLine
             };
 
-            var color = Brushes.Black;
+            SolidColorBrush color;
             if (logLevel >= LogLevel.Error)
                 color = Brushes.Red;
             else if (logLevel >= LogLevel.Warning)
