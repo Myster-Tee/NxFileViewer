@@ -1,35 +1,86 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System;
+using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
+using Emignatik.NxFileViewer.Settings.Model;
+using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Settings
 {
     public class AppSettings : IAppSettings
     {
-        private const string SETTINGS_FILE_PATH = "Settings.json";
+        private readonly ILogger _logger;
+        private AppSettingsModel _appSettings = new AppSettingsModel();
 
+        private static readonly string _settingsFileName;
 
-        public string LastOpenedFile { get; set; }
-
-        public string KeysFilePath { get; set; } = "Keys.dat";
-
-        public void Load()
+        static AppSettings()
         {
-            if (!File.Exists(SETTINGS_FILE_PATH))
-                return;
+            _settingsFileName = $"{AppDomain.CurrentDomain.FriendlyName}.settings.json";
+        }
 
-            using var stream = File.OpenRead(SETTINGS_FILE_PATH);
-            var appSettings = JsonSerializer.DeserializeAsync<AppSettings>(stream).Result;
 
-            foreach (var propertyInfo in typeof(AppSettings).GetProperties(BindingFlags.GetProperty | BindingFlags.SetProperty | BindingFlags.Public | BindingFlags.Instance))
+
+        public AppSettings(ILoggerFactory loggerFactory)
+        {
+            if (loggerFactory == null)
+                throw new ArgumentNullException(nameof(loggerFactory));
+
+            _logger = loggerFactory.CreateLogger(this.GetType());
+        }
+
+
+        public event SettingChangedHandler SettingChanged;
+
+        public string LastOpenedFile
+        {
+            get => _appSettings.LastOpenedFile;
+            set
             {
-                propertyInfo.SetValue(this, propertyInfo.GetValue(appSettings));
+                _appSettings.LastOpenedFile = value;
+                NotifySettingChanged(nameof(LastOpenedFile));
             }
         }
 
-        public void Save()
+        public string KeysFilePath
         {
-            //TODO: implémenter la sauvegarde
+            get => _appSettings.KeysFilePath;
+            set
+            {
+                _appSettings.KeysFilePath = value;
+                NotifySettingChanged(nameof(KeysFilePath));
+            }
+        }
+
+        public void Load()
+        {
+            if (!File.Exists(_settingsFileName))
+                return;
+
+            using var stream = File.OpenRead(_settingsFileName);
+            _appSettings = JsonSerializer.DeserializeAsync<AppSettingsModel>(stream).Result;
+
+        }
+
+        public async Task Save()
+        {
+            try
+            {
+                await using var stream = File.OpenWrite(_settingsFileName);
+                await JsonSerializer.SerializeAsync(stream, _appSettings, new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save settings.");
+            }
+        }
+
+        protected virtual void NotifySettingChanged(string settingName)
+        {
+            SettingChanged?.Invoke(this, new SettingChangedHandlerArgs(settingName));
         }
     }
 }

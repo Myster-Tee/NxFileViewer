@@ -13,17 +13,25 @@ namespace Emignatik.NxFileViewer.Commands
         public OpenLastFileCommand(ISupportedFilesOpenerService supportedFilesOpenerService, IAppSettings appSettings)
         {
             _supportedFilesOpenerService = supportedFilesOpenerService ?? throw new ArgumentNullException(nameof(supportedFilesOpenerService));
-            _appSettings = appSettings;
+            _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+
+            _appSettings.SettingChanged += (sender, args) =>
+            {
+                if (args.SettingName == nameof(IAppSettings.LastOpenedFile))
+                    TriggerCanExecuteChanged();
+            };
+        }
+
+        public override bool CanExecute(object parameter)
+        {
+            var lastOpenedFile = _appSettings.LastOpenedFile;
+            return lastOpenedFile != null && File.Exists(lastOpenedFile);
         }
 
         public override void Execute(object parameter)
         {
             var lastOpenedFile = _appSettings.LastOpenedFile;
-            if (lastOpenedFile != null && File.Exists(lastOpenedFile))
-            {
-                _supportedFilesOpenerService.OpenFile(lastOpenedFile);
-            }
-
+            _supportedFilesOpenerService.OpenFile(lastOpenedFile);
         }
     }
 }

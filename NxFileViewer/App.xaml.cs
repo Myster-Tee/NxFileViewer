@@ -60,10 +60,9 @@ namespace Emignatik.NxFileViewer
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed to load settings: {ex.Message}");
+                _logger.LogError(ex, string.Format(NxFileViewer.Properties.Resources.AppSettingsLoadingFailed, ex.Message));
             }
 
-            //TODO: charger les clés
             try
             {
                 //Tries to load keys at startup (not to wait for a game to be loaded)

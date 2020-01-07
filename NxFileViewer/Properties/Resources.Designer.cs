@@ -61,6 +61,15 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to load settings: {0}.
+        /// </summary>
+        public static string AppSettingsLoadingFailed {
+            get {
+                return ResourceManager.GetString("AppSettingsLoadingFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Title.
         /// </summary>
         public static string AppTitle {
