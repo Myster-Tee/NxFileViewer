@@ -19,13 +19,19 @@ namespace Emignatik.NxFileViewer.Views
         private readonly string _currentAppVersion;
         private string _appTitle;
 
-        public MainWindowViewModel(IOpenedFileService openedFileService, ISupportedFilesOpenerService supportedFilesOpenerService, ILoggerFactory loggerFactory, OpenFileCommand openFileCommand, OpenLastFileCommand openLastFileCommand, CloseFileCommand closeFileCommand)
+        public MainWindowViewModel(IOpenedFileService openedFileService, ISupportedFilesOpenerService supportedFilesOpenerService, ILoggerFactory loggerFactory,
+            OpenFileCommand openFileCommand,
+            OpenLastFileCommand openLastFileCommand,
+            CloseFileCommand closeFileCommand,
+            ExitAppCommand exitAppCommand
+            )
         {
             if (openedFileService == null) throw new ArgumentNullException(nameof(openedFileService));
             if (supportedFilesOpenerService == null) throw new ArgumentNullException(nameof(supportedFilesOpenerService));
             if (openFileCommand == null) throw new ArgumentNullException(nameof(openFileCommand));
             if (openLastFileCommand == null) throw new ArgumentNullException(nameof(openLastFileCommand));
             if (closeFileCommand == null) throw new ArgumentNullException(nameof(closeFileCommand));
+            if (exitAppCommand == null) throw new ArgumentNullException(nameof(exitAppCommand));
             _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             _logger = loggerFactory.CreateLogger(this.GetType());
 
@@ -38,6 +44,7 @@ namespace Emignatik.NxFileViewer.Views
             OpenFileCommand = openFileCommand;
             OpenLastFileCommand = openLastFileCommand;
             CloseFileCommand = closeFileCommand;
+            ExitAppCommand = exitAppCommand;
         }
 
         public ICommand OpenFileCommand { get; }
@@ -45,6 +52,8 @@ namespace Emignatik.NxFileViewer.Views
         public ICommand OpenLastFileCommand { get; }
 
         public ICommand CloseFileCommand { get; }
+
+        public ICommand ExitAppCommand { get; }
 
         /// <summary>
         /// Gets or sets the view model of the file being displayed

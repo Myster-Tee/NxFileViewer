@@ -28,6 +28,7 @@ namespace Emignatik.NxFileViewer
                 .AddSingleton<OpenFileCommand>()
                 .AddSingleton<OpenLastFileCommand>()
                 .AddSingleton<CloseFileCommand>()
+                .AddSingleton<ExitAppCommand>()
                 .AddSingleton<MainWindowViewModel>()
                 .BuildServiceProvider();
 

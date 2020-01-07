@@ -6,6 +6,7 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>Emignatik.NxFileViewer</RootNamespace>
     <StartupObject>Emignatik.NxFileViewer.App</StartupObject>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

@@ -219,6 +219,9 @@
   <data name="MenuItem_CloseFile" xml:space="preserve">
     <value>Close File</value>
   </data>
+  <data name="MenuItem_ExitApp" xml:space="preserve">
+    <value>Exit</value>
+  </data>
   <data name="MenuItem_File" xml:space="preserve">
     <value>File</value>
   </data>
