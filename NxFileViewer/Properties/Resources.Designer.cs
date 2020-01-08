@@ -97,6 +97,42 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select &quot;console&quot; keys file.
+        /// </summary>
+        public static string BrowseKeysFile_ConsoleTitle {
+            get {
+                return ResourceManager.GetString("BrowseKeysFile_ConsoleTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keys files (*.keys)|*.keys|All files (*.*)|*.*.
+        /// </summary>
+        public static string BrowseKeysFile_Filter {
+            get {
+                return ResourceManager.GetString("BrowseKeysFile_Filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select &quot;prod&quot; keys file.
+        /// </summary>
+        public static string BrowseKeysFile_ProdTitle {
+            get {
+                return ResourceManager.GetString("BrowseKeysFile_ProdTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select &quot;title&quot; keys file.
+        /// </summary>
+        public static string BrowseKeysFile_TitleTitle {
+            get {
+                return ResourceManager.GetString("BrowseKeysFile_TitleTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Content {0}.
         /// </summary>
         public static string ContentNum {

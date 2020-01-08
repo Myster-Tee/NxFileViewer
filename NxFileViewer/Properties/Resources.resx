@@ -129,6 +129,18 @@
   <data name="AvailableLanguages" xml:space="preserve">
     <value>Languages</value>
   </data>
+  <data name="BrowseKeysFile_ConsoleTitle" xml:space="preserve">
+    <value>Select "console" keys file</value>
+  </data>
+  <data name="BrowseKeysFile_Filter" xml:space="preserve">
+    <value>Keys files (*.keys)|*.keys|All files (*.*)|*.*</value>
+  </data>
+  <data name="BrowseKeysFile_ProdTitle" xml:space="preserve">
+    <value>Select "prod" keys file</value>
+  </data>
+  <data name="BrowseKeysFile_TitleTitle" xml:space="preserve">
+    <value>Select "title" keys file</value>
+  </data>
   <data name="ContentNum" xml:space="preserve">
     <value>Content {0}</value>
   </data>
