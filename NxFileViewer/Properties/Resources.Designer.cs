@@ -178,7 +178,7 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to load file &quot;{0}&quot;..
+        ///   Looks up a localized string similar to Failed to load file &quot;{0}&quot;: {1}.
         /// </summary>
         public static string ErrFailedToLoadFile {
             get {
@@ -187,29 +187,20 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Keys file path defined in the settings &quot;{0}&quot; couldn&apos;t be found..
-        /// </summary>
-        public static string ErrKeysFilePathNotFound {
-            get {
-                return ResourceManager.GetString("ErrKeysFilePathNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Keys file path defined in the settings is empty..
-        /// </summary>
-        public static string ErrKeysFilePathUndefined {
-            get {
-                return ResourceManager.GetString("ErrKeysFilePathUndefined", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to load keys from file &quot;{0}&quot;: {1}..
+        ///   Looks up a localized string similar to Failed to load keys: {0}..
         /// </summary>
         public static string ErrKeysLoadingFailed {
             get {
                 return ResourceManager.GetString("ErrKeysLoadingFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No prod.keys file found, please check application settings..
+        /// </summary>
+        public static string ErrNoProdKeysFileFound {
+            get {
+                return ResourceManager.GetString("ErrNoProdKeysFileFound", resourceCulture);
             }
         }
         

@@ -7,7 +7,7 @@ using Microsoft.Win32;
 
 namespace Emignatik.NxFileViewer.Views
 {
-    public class SettingWindowViewModel : ViewModelBase
+    public class SettingsWindowViewModel : ViewModelBase
     {
         private readonly IAppSettings _appSettings;
         private string _prodKeysFilePath;
@@ -15,20 +15,22 @@ namespace Emignatik.NxFileViewer.Views
         private string _titleKeysFilePath;
 
 
-        public SettingWindowViewModel(IAppSettings appSettings)
+        public SettingsWindowViewModel(IAppSettings appSettings)
         {
             _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
-            
+
             BrowseProdKeysCommand = new RelayCommand(OnBrowseProdKeys);
             BrowseConsoleKeysCommand = new RelayCommand(OnBrowseConsoleKeys);
             BrowseTitleKeysCommand = new RelayCommand(OnBrowseTitleKeys);
             SaveSettingsCommand = new RelayCommand(OnSaveSettings);
+            CancelSettingsCommand = new RelayCommand(OnCancelSettings);
 
             ProdKeysFilePath = _appSettings.ProdKeysFilePath;
             ConsoleKeysFilePath = _appSettings.ConsoleKeysFilePath;
             TitleKeysFilePath = _appSettings.TitleKeysFilePath;
         }
 
+        public event EventHandler OnQueryCloseView;
 
         public ICommand BrowseProdKeysCommand { get; }
 
@@ -37,6 +39,8 @@ namespace Emignatik.NxFileViewer.Views
         public ICommand BrowseTitleKeysCommand { get; }
 
         public ICommand SaveSettingsCommand { get; }
+
+        public ICommand CancelSettingsCommand { get; }
 
 
         public string ProdKeysFilePath
@@ -123,7 +127,17 @@ namespace Emignatik.NxFileViewer.Views
             _appSettings.TitleKeysFilePath = TitleKeysFilePath;
 
             _appSettings.Save();
+            NotifyQueryCloseView();
         }
 
+        private void OnCancelSettings()
+        {
+            NotifyQueryCloseView();
+        }
+
+        private void NotifyQueryCloseView()
+        {
+            OnQueryCloseView?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

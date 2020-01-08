@@ -49,7 +49,7 @@ namespace Emignatik.NxFileViewer.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(string.Format(Resources.ErrFailedToLoadFile, filePath), ex);
+                _logger.LogError(string.Format(Resources.ErrFailedToLoadFile, filePath, ex.Message), ex);
             }
         }
 

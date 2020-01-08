@@ -6,7 +6,7 @@
         xmlns:r="clr-namespace:Emignatik.NxFileViewer.Properties"
         xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
         mc:Ignorable="d"
-        Title="{x:Static r:Resources.SettingsView_Title}" Height="241" Width="400" d:DataContext="{d:DesignInstance views:SettingWindowViewModel}">
+        Title="{x:Static r:Resources.SettingsView_Title}" Height="241" Width="400" d:DataContext="{d:DesignInstance views:SettingsWindowViewModel}">
     <Window.Resources>
         <Style TargetType="Image" x:Key="HelpIcon">
             <Setter Property="Margin" Value="5,0" />
@@ -24,7 +24,7 @@
     <DockPanel Margin="5" LastChildFill="True" >
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" Height="30" HorizontalAlignment="Center">
             <Button Content="{x:Static r:Resources.SettingsButton_Save}" IsDefault="True" Command="{Binding Path=SaveSettingsCommand}" />
-            <Button Content="{x:Static r:Resources.SettingsButton_Cancel}" IsCancel="True" />
+            <Button Content="{x:Static r:Resources.SettingsButton_Cancel}" IsCancel="True" Command="{Binding Path=CancelSettingsCommand}"/>
         </StackPanel>
         <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
             <TextBlock  Style="{StaticResource Title1}">Keys file paths</TextBlock>

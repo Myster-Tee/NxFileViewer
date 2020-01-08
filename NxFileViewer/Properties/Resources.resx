@@ -157,16 +157,13 @@
     <value>Distribution Type</value>
   </data>
   <data name="ErrFailedToLoadFile" xml:space="preserve">
-    <value>Failed to load file "{0}".</value>
-  </data>
-  <data name="ErrKeysFilePathNotFound" xml:space="preserve">
-    <value>Keys file path defined in the settings "{0}" couldn't be found.</value>
-  </data>
-  <data name="ErrKeysFilePathUndefined" xml:space="preserve">
-    <value>Keys file path defined in the settings is empty.</value>
+    <value>Failed to load file "{0}": {1}</value>
   </data>
   <data name="ErrKeysLoadingFailed" xml:space="preserve">
-    <value>Failed to load keys from file "{0}": {1}.</value>
+    <value>Failed to load keys: {0}.</value>
+  </data>
+  <data name="ErrNoProdKeysFileFound" xml:space="preserve">
+    <value>No prod.keys file found, please check application settings.</value>
   </data>
   <data name="Files" xml:space="preserve">
     <value>Files</value>

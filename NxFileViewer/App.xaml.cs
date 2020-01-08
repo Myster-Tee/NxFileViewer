@@ -31,7 +31,7 @@ namespace Emignatik.NxFileViewer
                 .AddSingleton<ExitAppCommand>()
                 .AddSingleton<ShowSettingsViewCommand>()
                 .AddSingleton<MainWindowViewModel>()
-                .AddSingleton<SettingWindowViewModel>()
+                .AddSingleton<SettingsWindowViewModel>()
                 .BuildServiceProvider();
 
             _logger = _serviceProvider.GetService<ILoggerFactory>().CreateLogger(this.GetType());

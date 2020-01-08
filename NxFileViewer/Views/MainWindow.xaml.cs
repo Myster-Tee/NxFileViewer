@@ -67,7 +67,7 @@ namespace Emignatik.NxFileViewer.Views
             if (logLevel >= LogLevel.Error)
                 color = Brushes.Red;
             else if (logLevel >= LogLevel.Warning)
-                color = Brushes.OrangeRed;
+                color = Brushes.Orange;
             else
                 color = Brushes.Blue;
 
