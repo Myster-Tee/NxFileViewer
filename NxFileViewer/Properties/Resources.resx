@@ -273,6 +273,12 @@
   <data name="SdkVersion" xml:space="preserve">
     <value>SDK Version</value>
   </data>
+  <data name="SettingsButton_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="SettingsButton_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
   <data name="SettingsView_ConsoleKeys" xml:space="preserve">
     <value>console.keys</value>
   </data>

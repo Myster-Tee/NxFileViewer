@@ -10,5 +10,8 @@
 
         public string KeysFilePath { get; set; } = "Keys.dat";
 
+        public string TitleKeysFilePath { get; set; }
+
+        public string ConsoleKeysFilePath { get; set; }
     }
 }

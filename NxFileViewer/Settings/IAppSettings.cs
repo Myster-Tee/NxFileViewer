@@ -9,7 +9,11 @@ namespace Emignatik.NxFileViewer.Settings
 
         string LastOpenedFile { get; set; }
 
-        string KeysFilePath { get; set; }
+        string ProdKeysFilePath { get; set; }
+
+        string ConsoleKeysFilePath { get; set; }
+
+        string TitleKeysFilePath { get; set; }
 
         Task Save();
 

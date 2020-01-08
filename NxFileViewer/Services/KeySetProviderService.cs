@@ -30,7 +30,7 @@ namespace Emignatik.NxFileViewer.Services
 
         private Keyset LoadKeySet()
         {
-            var keysFilePath = _appSettings.KeysFilePath;
+            var keysFilePath = _appSettings.ProdKeysFilePath;
             if (string.IsNullOrWhiteSpace(keysFilePath))
                 throw new Exception(Resources.ErrKeysFilePathUndefined);
 

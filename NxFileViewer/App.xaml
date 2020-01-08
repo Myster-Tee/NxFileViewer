@@ -53,6 +53,11 @@
             </Style.Setters>
         </Style>
 
+        <Style TargetType="Button">
+            <Setter Property="MinWidth" Value="50" />
+            <Setter Property="Margin" Value="2.5,5" />
+        </Style>
+
         <Style TargetType="ListBoxItem">
             <Setter Property="Template">
                 <Setter.Value>

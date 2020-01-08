@@ -529,6 +529,24 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string SettingsButton_Cancel {
+            get {
+                return ResourceManager.GetString("SettingsButton_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string SettingsButton_Save {
+            get {
+                return ResourceManager.GetString("SettingsButton_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to console.keys.
         /// </summary>
         public static string SettingsView_ConsoleKeys {

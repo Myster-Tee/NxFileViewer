@@ -19,8 +19,6 @@ namespace Emignatik.NxFileViewer.Settings
             _settingsFileName = $"{AppDomain.CurrentDomain.FriendlyName}.settings.json";
         }
 
-
-
         public AppSettings(ILoggerFactory loggerFactory)
         {
             if (loggerFactory == null)
@@ -28,7 +26,6 @@ namespace Emignatik.NxFileViewer.Settings
 
             _logger = loggerFactory.CreateLogger(this.GetType());
         }
-
 
         public event SettingChangedHandler SettingChanged;
 
@@ -42,13 +39,33 @@ namespace Emignatik.NxFileViewer.Settings
             }
         }
 
-        public string KeysFilePath
+        public string ProdKeysFilePath
         {
             get => _appSettings.KeysFilePath;
             set
             {
                 _appSettings.KeysFilePath = value;
-                NotifySettingChanged(nameof(KeysFilePath));
+                NotifySettingChanged(nameof(ProdKeysFilePath));
+            }
+        }
+
+        public string ConsoleKeysFilePath
+        {
+            get => _appSettings.ConsoleKeysFilePath;
+            set
+            {
+                _appSettings.ConsoleKeysFilePath = value;
+                NotifySettingChanged(nameof(ConsoleKeysFilePath));
+            }
+        }
+
+        public string TitleKeysFilePath
+        {
+            get => _appSettings.TitleKeysFilePath;
+            set
+            {
+                _appSettings.TitleKeysFilePath = value;
+                NotifySettingChanged(nameof(TitleKeysFilePath));
             }
         }
 
@@ -59,7 +76,6 @@ namespace Emignatik.NxFileViewer.Settings
 
             using var stream = File.OpenRead(_settingsFileName);
             _appSettings = JsonSerializer.DeserializeAsync<AppSettingsModel>(stream).Result;
-
         }
 
         public async Task Save()

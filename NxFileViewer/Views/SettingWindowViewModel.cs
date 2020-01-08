@@ -1,5 +1,7 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using Emignatik.NxFileViewer.Properties;
+using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Microsoft.Win32;
 
@@ -7,16 +9,24 @@ namespace Emignatik.NxFileViewer.Views
 {
     public class SettingWindowViewModel : ViewModelBase
     {
+        private readonly IAppSettings _appSettings;
         private string _prodKeysFilePath;
         private string _consoleKeysFilePath;
         private string _titleKeysFilePath;
 
 
-        public SettingWindowViewModel()
+        public SettingWindowViewModel(IAppSettings appSettings)
         {
+            _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+            
             BrowseProdKeysCommand = new RelayCommand(OnBrowseProdKeys);
             BrowseConsoleKeysCommand = new RelayCommand(OnBrowseConsoleKeys);
             BrowseTitleKeysCommand = new RelayCommand(OnBrowseTitleKeys);
+            SaveSettingsCommand = new RelayCommand(OnSaveSettings);
+
+            ProdKeysFilePath = _appSettings.ProdKeysFilePath;
+            ConsoleKeysFilePath = _appSettings.ConsoleKeysFilePath;
+            TitleKeysFilePath = _appSettings.TitleKeysFilePath;
         }
 
 
@@ -25,6 +35,8 @@ namespace Emignatik.NxFileViewer.Views
         public ICommand BrowseConsoleKeysCommand { get; }
 
         public ICommand BrowseTitleKeysCommand { get; }
+
+        public ICommand SaveSettingsCommand { get; }
 
 
         public string ProdKeysFilePath
@@ -102,6 +114,15 @@ namespace Emignatik.NxFileViewer.Views
             {
                 return false;
             }
+        }
+
+        private void OnSaveSettings()
+        {
+            _appSettings.ProdKeysFilePath = ProdKeysFilePath;
+            _appSettings.ConsoleKeysFilePath = ConsoleKeysFilePath;
+            _appSettings.TitleKeysFilePath = TitleKeysFilePath;
+
+            _appSettings.Save();
         }
 
     }
