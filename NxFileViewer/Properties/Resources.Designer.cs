@@ -232,6 +232,33 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The console.keys file defined in the settings doesn&apos;t exist..
+        /// </summary>
+        public static string InvalidSetting_ConsoleKeysNotFound {
+            get {
+                return ResourceManager.GetString("InvalidSetting_ConsoleKeysNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The prod.keys file defined in the settings doesn&apos;t exist..
+        /// </summary>
+        public static string InvalidSetting_ProdKeysNotFound {
+            get {
+                return ResourceManager.GetString("InvalidSetting_ProdKeysNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The title.keys file defined in the settings doesn&apos;t exist..
+        /// </summary>
+        public static string InvalidSetting_TitleKeysNotFound {
+            get {
+                return ResourceManager.GetString("InvalidSetting_TitleKeysNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to American.
         /// </summary>
         public static string Lng_AmericanEnglish {
@@ -547,7 +574,8 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Contains console-unique keys..
+        ///   Looks up a localized string similar to You can optionally specify a file containing console-unique keys.
+        ///When this field is left empty, the program will automatically search for the file &quot;.switch\console.keys&quot; in your home directory..
         /// </summary>
         public static string SettingsView_ConsoleKeysTooltip {
             get {
@@ -565,7 +593,7 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Contains common keys usedy by all Switch devices..
+        ///   Looks up a localized string similar to Contains common keys usedy by all Switch devices. This file is mandatory to open encrypted game files..
         /// </summary>
         public static string SettingsView_ProdKeysTooltip {
             get {
@@ -592,7 +620,8 @@ namespace Emignatik.NxFileViewer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Contains game-specific keys..
+        ///   Looks up a localized string similar to You can optionally specify a file containing game-specific keys.
+        ///When this field is left empty, the program will automatically search for the file &quot;.switch\title.keys&quot; in your home directory..
         /// </summary>
         public static string SettingsView_TitleKeysTooltip {
             get {

@@ -79,7 +79,7 @@ namespace Emignatik.NxFileViewer.Views
             RichTextBoxLog.Document.Blocks.Clear();
         }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
         }
 

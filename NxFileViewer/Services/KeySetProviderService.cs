@@ -57,17 +57,15 @@ namespace Emignatik.NxFileViewer.Services
 
         private Keyset LoadKeySet()
         {
-
             var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            // TODO: charger les autres clés
-            //string homeTitleKeyFile = Path.Combine(homeDirectoryPath, ".switch", "title.keys");
-            //string homeConsoleKeyFile = Path.Combine(homeDirectoryPath, ".switch", "console.keys");
 
             _lastLoadedProdKeysFilePath = FindProdKeysFile(homeDir);
+            _lastLoadedConsoleKeysFilePath = FindConsoleKeysFile(homeDir);
+            _lastLoadedTitleKeysFilePath = FindTitleKeysFile(homeDir);
 
             try
             {
-                _keyset = ExternalKeyReader.ReadKeyFile(_lastLoadedProdKeysFilePath);
+                _keyset = ExternalKeyReader.ReadKeyFile(_lastLoadedProdKeysFilePath, _lastLoadedTitleKeysFilePath, _lastLoadedConsoleKeysFilePath);
                 return _keyset;
             }
             catch (Exception ex)
@@ -78,21 +76,55 @@ namespace Emignatik.NxFileViewer.Services
 
         private string FindProdKeysFile(string homeDir)
         {
-            var prodKeysFilePathFromSettings = _appSettings.ProdKeysFilePath;
-            var ispPathDefinedInSettings = !string.IsNullOrWhiteSpace(prodKeysFilePathFromSettings);
-            prodKeysFilePathFromSettings = ispPathDefinedInSettings ? prodKeysFilePathFromSettings.ToFullPath() : prodKeysFilePathFromSettings;
+            var keysFilePathFromSettings = _appSettings.ProdKeysFilePath;
 
-            if (ispPathDefinedInSettings && File.Exists(prodKeysFilePathFromSettings))
-                return prodKeysFilePathFromSettings;
+            if (!string.IsNullOrWhiteSpace(keysFilePathFromSettings))
+            {
+                keysFilePathFromSettings = keysFilePathFromSettings.ToFullPath();
+                if (File.Exists(keysFilePathFromSettings))
+                    return keysFilePathFromSettings;
+                _logger.LogWarning(Resources.InvalidSetting_ProdKeysNotFound);
+            }
 
-            if (ispPathDefinedInSettings)
-                _logger.LogWarning("The prod.keys file defined in the settings doesn't exist.");
-
-            var prodKeysFilePathFromHomeDir = Path.Combine(homeDir, ".switch", "prod.keys");
-            if (!File.Exists(prodKeysFilePathFromHomeDir))
+            var keysFilePathFromHomeDir = Path.Combine(homeDir, ".switch", "prod.keys").ToFullPath();
+            if (!File.Exists(keysFilePathFromHomeDir))
                 throw new FileNotFoundException(Resources.ErrNoProdKeysFileFound);
 
-            return prodKeysFilePathFromHomeDir;
+            return keysFilePathFromHomeDir;
+        }
+
+        private string FindConsoleKeysFile(string homeDir)
+        {
+            var keysFilePathFromSettings = _appSettings.ConsoleKeysFilePath;
+
+            if (!string.IsNullOrWhiteSpace(keysFilePathFromSettings))
+            {
+                keysFilePathFromSettings = keysFilePathFromSettings.ToFullPath();
+                if (File.Exists(keysFilePathFromSettings))
+                    return keysFilePathFromSettings;
+                _logger.LogWarning(Resources.InvalidSetting_ConsoleKeysNotFound);
+            }
+
+            var keysFilePathFromHomeDir = Path.Combine(homeDir, ".switch", "console.keys").ToFullPath();
+
+            return File.Exists(keysFilePathFromHomeDir) ? keysFilePathFromHomeDir : null;
+        }
+
+        private string FindTitleKeysFile(string homeDir)
+        {
+            var keysFilePathFromSettings = _appSettings.TitleKeysFilePath;
+
+            if (!string.IsNullOrWhiteSpace(keysFilePathFromSettings))
+            {
+                keysFilePathFromSettings = keysFilePathFromSettings.ToFullPath();
+                if (File.Exists(keysFilePathFromSettings))
+                    return keysFilePathFromSettings;
+                _logger.LogWarning(Resources.InvalidSetting_TitleKeysNotFound);
+            }
+
+            var keysFilePathFromHomeDir = Path.Combine(homeDir, ".switch", "title.keys").ToFullPath();
+
+            return File.Exists(keysFilePathFromHomeDir) ? keysFilePathFromHomeDir : null;
         }
     }
 }
