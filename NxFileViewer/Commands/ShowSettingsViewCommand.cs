@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Windows;
+using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Emignatik.NxFileViewer.Views;
 
 namespace Emignatik.NxFileViewer.Commands
 {
-    public class ShowSettingsViewCommand : CommandBase
+    public class ShowSettingsViewCommand : CommandBase, IShowSettingsViewCommand
     {
         private readonly SettingsWindowViewModel _settingsWindowViewModel;
-        private SettingsWindow _settingsWindow;
+        private SettingsWindow? _settingsWindow;
 
         public ShowSettingsViewCommand(SettingsWindowViewModel settingsWindowViewModel)
         {
@@ -16,12 +17,12 @@ namespace Emignatik.NxFileViewer.Commands
             _settingsWindowViewModel.OnQueryCloseView += OnQueryCloseView;
         }
 
-        private void OnQueryCloseView(object sender, EventArgs e)
+        private void OnQueryCloseView(object? sender, EventArgs e)
         {
             _settingsWindow?.Close();
         }
 
-        public override void Execute(object parameter)
+        public override void Execute(object? parameter)
         {
             if (_settingsWindow != null)
             {
@@ -39,7 +40,7 @@ namespace Emignatik.NxFileViewer.Commands
             _settingsWindow.Closed += OnSettingsWindowClosed;
         }
 
-        private void OnSettingsWindowClosed(object sender, EventArgs e)
+        private void OnSettingsWindowClosed(object? sender, EventArgs e)
         {
             _settingsWindow = null;
             TriggerCanExecuteChanged();

@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="Emignatik.NxFileViewer.Views.FileOverviewView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
+             xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
+             mc:Ignorable="d" 
+             Style="{StaticResource UserControlStyle}"
+             d:DesignHeight="450" d:DesignWidth="400" d:DataContext="{d:DesignInstance views:FileOverviewViewModel}">
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Grid.Column="0" Visibility="{Binding Path=ContentSelectorVisibility}">
+            <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.AvailableContents}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition  Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox Grid.Column="0" ItemsSource="{Binding Path=CnmtContainers}" DisplayMemberPath="DisplayName" SelectedItem="{Binding Path=SelectedCnmtContainer}" HorizontalAlignment="Left" MinWidth="50" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Margin="3,0,0,0" Text="{Binding Path=SpecialFileInfo, FallbackValue=Super NSP}" VerticalAlignment="Center"/>
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <views:CnmtContainerView Grid.Row="1" Grid.Column="0" DataContext="{Binding Path=SelectedCnmtContainer}" />
+    </Grid>
+
+</UserControl>

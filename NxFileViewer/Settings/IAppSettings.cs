@@ -1,11 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using Emignatik.NxFileViewer.Settings.Model;
+using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Settings
 {
     public interface IAppSettings
     {
-
         event SettingChangedHandler SettingChanged;
+
+        string LastSaveDir { get; set; }
 
         string LastOpenedFile { get; set; }
 
@@ -15,9 +17,11 @@ namespace Emignatik.NxFileViewer.Settings
 
         string TitleKeysFilePath { get; set; }
 
-        Task Save();
+        LogLevel LogLevel { get; set; }
 
-        void Load();
+        string? ProdKeysDownloadUrl { get; }
+
+        void Update(AppSettingsModel newSettings);
     }
 
     public delegate void SettingChangedHandler(object sender, SettingChangedHandlerArgs args);

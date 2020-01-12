@@ -1,7 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using Emignatik.NxFileViewer.Settings.Model;
 using Microsoft.Extensions.Logging;
 
@@ -9,92 +8,89 @@ namespace Emignatik.NxFileViewer.Settings
 {
     public class AppSettings : IAppSettings
     {
-        private readonly ILogger _logger;
-        private AppSettingsModel _appSettings = new AppSettingsModel();
+        private AppSettingsModel _appSettingsModel = new AppSettingsModel();
 
-        private static readonly string _settingsFileName;
+        public event SettingChangedHandler? SettingChanged;
 
-        static AppSettings()
+        public string LastSaveDir
         {
-            _settingsFileName = $"{AppDomain.CurrentDomain.FriendlyName}.settings.json";
+            get => _appSettingsModel.LastSaveDir;
+            set
+            {
+                _appSettingsModel.LastSaveDir = value;
+                NotifySettingChanged();
+            }
         }
-
-        public AppSettings(ILoggerFactory loggerFactory)
-        {
-            if (loggerFactory == null)
-                throw new ArgumentNullException(nameof(loggerFactory));
-
-            _logger = loggerFactory.CreateLogger(this.GetType());
-        }
-
-        public event SettingChangedHandler SettingChanged;
 
         public string LastOpenedFile
         {
-            get => _appSettings.LastOpenedFile;
+            get => _appSettingsModel.LastOpenedFile;
             set
             {
-                _appSettings.LastOpenedFile = value;
-                NotifySettingChanged(nameof(LastOpenedFile));
+                _appSettingsModel.LastOpenedFile = value;
+                NotifySettingChanged();
             }
         }
 
         public string ProdKeysFilePath
         {
-            get => _appSettings.KeysFilePath;
+            get => _appSettingsModel.KeysFilePath;
             set
             {
-                _appSettings.KeysFilePath = value;
-                NotifySettingChanged(nameof(ProdKeysFilePath));
+                _appSettingsModel.KeysFilePath = value;
+                NotifySettingChanged();
             }
         }
 
         public string ConsoleKeysFilePath
         {
-            get => _appSettings.ConsoleKeysFilePath;
+            get => _appSettingsModel.ConsoleKeysFilePath;
             set
             {
-                _appSettings.ConsoleKeysFilePath = value;
-                NotifySettingChanged(nameof(ConsoleKeysFilePath));
+                _appSettingsModel.ConsoleKeysFilePath = value;
+                NotifySettingChanged();
             }
         }
 
         public string TitleKeysFilePath
         {
-            get => _appSettings.TitleKeysFilePath;
+            get => _appSettingsModel.TitleKeysFilePath;
             set
             {
-                _appSettings.TitleKeysFilePath = value;
-                NotifySettingChanged(nameof(TitleKeysFilePath));
+                _appSettingsModel.TitleKeysFilePath = value;
+                NotifySettingChanged();
             }
         }
 
-        public void Load()
+        public LogLevel LogLevel
         {
-            if (!File.Exists(_settingsFileName))
-                return;
-
-            using var stream = File.OpenRead(_settingsFileName);
-            _appSettings = JsonSerializer.DeserializeAsync<AppSettingsModel>(stream).Result;
+            get => _appSettingsModel.LogLevel;
+            set
+            {
+                _appSettingsModel.LogLevel = value;
+                NotifySettingChanged();
+            }
         }
 
-        public async Task Save()
+        public string? ProdKeysDownloadUrl => _appSettingsModel.ProdKeysDownloadUrl;
+
+        public void Update(AppSettingsModel newSettings)
         {
-            try
+            _appSettingsModel = newSettings ?? throw new ArgumentNullException(nameof(newSettings));
+
+            NotifyAllPropertiesChanged();
+        }
+
+        private void NotifyAllPropertiesChanged()
+        {
+            var properties = typeof(IAppSettings).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var property in properties)
             {
-                await using var stream = File.Create(_settingsFileName);
-                await JsonSerializer.SerializeAsync(stream, _appSettings, new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to save settings.");
+                NotifySettingChanged(property.Name);
             }
         }
 
-        protected virtual void NotifySettingChanged(string settingName)
+        protected virtual void NotifySettingChanged([CallerMemberName] string settingName = null!)
         {
             SettingChanged?.Invoke(this, new SettingChangedHandlerArgs(settingName));
         }

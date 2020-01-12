@@ -1,9 +1,10 @@
 ﻿using System;
 using Emignatik.NxFileViewer.Services;
+using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 
 namespace Emignatik.NxFileViewer.Commands
 {
-    public class CloseFileCommand : CommandBase
+    public class CloseFileCommand : CommandBase, ICloseFileCommand
     {
         private readonly IOpenedFileService _openedFileService;
 
@@ -13,17 +14,17 @@ namespace Emignatik.NxFileViewer.Commands
             _openedFileService.OpenedFileChanged += OnOpenedFileChanged;
         }
 
-        private void OnOpenedFileChanged(object sender, OpenedFileChangedHandlerArgs args)
+        private void OnOpenedFileChanged(object? sender, OpenedFileChangedHandlerArgs args)
         {
             TriggerCanExecuteChanged();
         }
 
-        public override bool CanExecute(object parameter)
+        public override bool CanExecute(object? parameter)
         {
             return _openedFileService.OpenedFile != null;
         }
 
-        public override void Execute(object parameter)
+        public override void Execute(object? parameter)
         {
             _openedFileService.OpenedFile = null;
             GC.Collect();

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Windows;
 using Emignatik.NxFileViewer.Commands;
+using Emignatik.NxFileViewer.FileLoading;
+using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Views;
@@ -9,73 +12,85 @@ using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer
 {
-
+    /// <summary>
+    /// Interaction logic for App.xaml
+    /// </summary>
     public partial class App : Application
     {
-        private ServiceProvider _serviceProvider;
-        private ILogger _logger;
+        private IServiceProvider _serviceProvider;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             _serviceProvider = new ServiceCollection()
-                .AddSingleton<ISupportedFilesOpenerService, SupportedFilesOpenerService>()
-                .AddSingleton<IOpenedFileService, OpenedFileService>()
                 .AddSingleton<IKeySetProviderService, KeySetProviderService>()
                 .AddSingleton<ILoggerFactory, LoggerFactory>()
                 .AddSingleton<IAppSettings, AppSettings>()
-                .AddSingleton<OpenFileCommand>()
-                .AddSingleton<OpenLastFileCommand>()
-                .AddSingleton<CloseFileCommand>()
-                .AddSingleton<ExitAppCommand>()
-                .AddSingleton<ShowSettingsViewCommand>()
-                .AddSingleton<MainWindowViewModel>()
+                .AddSingleton<IOpenFileCommand, OpenFileCommand>()
+                .AddSingleton<IExitAppCommand, ExitAppCommand>()
+                .AddSingleton<IOpenLastFileCommand, OpenLastFileCommand>()
+                .AddSingleton<ICloseFileCommand, CloseFileCommand>()
+                .AddSingleton<IShowSettingsViewCommand, ShowSettingsViewCommand>()
+                .AddSingleton<IFileOpenerService, FileOpenerService>()
+                .AddSingleton<IOpenedFileService, OpenedFileService>()
+                .AddSingleton<IFileTypeAnalyzer, FileTypeAnalyzer>()
                 .AddSingleton<SettingsWindowViewModel>()
+                .AddSingleton<MainWindowViewModel>()
+                .AddSingleton<IAppSettingsManager, AppSettingsManager>()
+                .AddSingleton<IFileItemLoader, FileItemLoader>()
+                .AddSingleton<IFileOverviewLoader, FileOverviewLoader>()
+                .AddSingleton<IChildItemsBuilder, ChildItemsBuilder>()
+
+                .AddTransient<ISaveTitleImageCommand, SaveTitleImageCommand>()
+                .AddTransient<ICopyTitleImageCommand, CopyTitleImageCommand>()
+                .AddTransient<ISaveItemToFileCommand, SaveItemToFileCommand>()
+                .AddTransient<IFileDownloaderService, FileDownloaderService>()
+
+                .AddLogging(builder => builder.AddAppLoggerProvider())
+
                 .BuildServiceProvider();
 
-            _logger = _serviceProvider.GetService<ILoggerFactory>().CreateLogger(this.GetType());
+            _serviceProvider.GetRequiredService<IAppSettingsManager>().Load();
 
             var mainWindow = new MainWindow
             {
-                DataContext = _serviceProvider.GetService<MainWindowViewModel>()
+                DataContext = _serviceProvider.GetRequiredService<MainWindowViewModel>()
             };
             mainWindow.Loaded += OnMainWindowLoaded;
-
-            var loggerFactory = _serviceProvider.GetService<ILoggerFactory>();
-            loggerFactory.AddProvider(mainWindow);
-
             Application.Current.MainWindow = mainWindow;
             mainWindow.Show();
 
-            var args = e.Args;
-            if (args.Length == 1)
+        }
+
+        private async void OnMainWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            var logger = _serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(GetType());
+            var keySetProviderService = _serviceProvider.GetRequiredService<IKeySetProviderService>();
+            var appSettings = _serviceProvider.GetRequiredService<IAppSettings>();
+            var fileDownloaderService = _serviceProvider.GetRequiredService<IFileDownloaderService>();
+            var prodKeysDownloadUrl = appSettings.ProdKeysDownloadUrl;
+            try
             {
-                _serviceProvider.GetService<ISupportedFilesOpenerService>().OpenFile(args[0]);
+                if (!keySetProviderService.ProdKeysFileFound && !string.IsNullOrWhiteSpace(prodKeysDownloadUrl))
+                {
+                    logger.LogInformation(string.Format(LocalizationManager.Instance.Current.Keys.DownloadingProdKeysFromUrl, prodKeysDownloadUrl));
+                    await fileDownloaderService.DownloadFileAsync(prodKeysDownloadUrl, keySetProviderService.AppDirProdKeysFilePath);
+                    logger.LogInformation(LocalizationManager.Instance.Current.Keys.ProdKeysSuccessfullyDownloaded);
+                    keySetProviderService.UnloadCurrentKeySet(); // To force reloading with the downloaded keys file
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.FailedToDownloadProdKeysFromUrl, prodKeysDownloadUrl, ex.Message));
             }
         }
 
-        private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
+        protected override void OnExit(ExitEventArgs e)
         {
-            try
-            {
-                _serviceProvider.GetService<IAppSettings>().Load();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, string.Format(NxFileViewer.Properties.Resources.AppSettingsLoadingFailed, ex.Message));
-            }
-
-            try
-            {
-                //Tries to load keys at startup (not to wait for a game to be loaded)
-                _serviceProvider.GetService<IKeySetProviderService>().GetKeySet();
-                _logger.LogInformation(NxFileViewer.Properties.Resources.InfoKeysSuccessfullyLoaded);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-            }
+            base.OnExit(e);
+            _serviceProvider.GetRequiredService<IAppSettingsManager>().Save();
         }
     }
+
 }

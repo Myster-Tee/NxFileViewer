@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Emignatik.NxFileViewer.Views.ObjectPropertyViewer.PropertiesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:objectPropertyViewer="clr-namespace:Emignatik.NxFileViewer.Views.ObjectPropertyViewer"
+             mc:Ignorable="d" 
+             Style="{StaticResource UserControlStyle}"
+             d:DesignHeight="400" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <objectPropertyViewer:PropertyValueDataTemplateSelector x:Key="PropertyValueDataTemplateSelector">
+            <objectPropertyViewer:PropertyValueDataTemplateSelector.StringTemplate>
+                <DataTemplate>
+                    <TextBox IsReadOnly="True" Text="{Binding Mode=OneWay}" BorderThickness="0" />
+                </DataTemplate>
+            </objectPropertyViewer:PropertyValueDataTemplateSelector.StringTemplate>
+
+            <objectPropertyViewer:PropertyValueDataTemplateSelector.BoolTemplate>
+                <DataTemplate>
+                    <CheckBox IsChecked="{Binding Mode=OneWay}"/>
+                </DataTemplate>
+            </objectPropertyViewer:PropertyValueDataTemplateSelector.BoolTemplate>
+
+        </objectPropertyViewer:PropertyValueDataTemplateSelector>
+    </UserControl.Resources>
+
+    <DataGrid x:Name="PropertiesDataGrid" HeadersVisibility="All" IsReadOnly="True" ItemsSource="{Binding}" AutoGenerateColumns="False" ColumnHeaderHeight="10" >
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="" Binding="{Binding Path=(objectPropertyViewer:PropertyData.Name)}" Width="Auto" />
+            <DataGridTemplateColumn Header="" Width="*">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate DataType="objectPropertyViewer:PropertyData">
+                        <ContentControl ContentTemplateSelector="{StaticResource PropertyValueDataTemplateSelector}" Content="{Binding Path=Value}"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+    </DataGrid>
+</UserControl>

@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Windows.Input;
-using Emignatik.NxFileViewer.Properties;
+using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM;
+using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Win32;
 
 namespace Emignatik.NxFileViewer.Views
 {
     public class SettingsWindowViewModel : ViewModelBase
     {
+        private readonly IAppSettingsManager _appSettingsManager;
         private readonly IAppSettings _appSettings;
         private string _prodKeysFilePath;
         private string _consoleKeysFilePath;
         private string _titleKeysFilePath;
 
 
-        public SettingsWindowViewModel(IAppSettings appSettings)
+        public SettingsWindowViewModel(IAppSettingsManager appSettingsManager)
         {
-            _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+            _appSettingsManager = appSettingsManager ?? throw new ArgumentNullException(nameof(appSettingsManager));
+            _appSettings = appSettingsManager.Settings;
 
             BrowseProdKeysCommand = new RelayCommand(OnBrowseProdKeys);
             BrowseConsoleKeysCommand = new RelayCommand(OnBrowseConsoleKeys);
@@ -30,7 +33,7 @@ namespace Emignatik.NxFileViewer.Views
             TitleKeysFilePath = _appSettings.TitleKeysFilePath;
         }
 
-        public event EventHandler OnQueryCloseView;
+        public event EventHandler? OnQueryCloseView;
 
         public ICommand BrowseProdKeysCommand { get; }
 
@@ -75,7 +78,7 @@ namespace Emignatik.NxFileViewer.Views
 
         private void OnBrowseProdKeys()
         {
-            if (BrowseKeysFilePath(ProdKeysFilePath, Resources.BrowseKeysFile_ProdTitle, out var selectedFilePath))
+            if (BrowseKeysFilePath(ProdKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ProdTitle, out var selectedFilePath))
             {
                 ProdKeysFilePath = selectedFilePath;
             }
@@ -83,7 +86,7 @@ namespace Emignatik.NxFileViewer.Views
 
         private void OnBrowseConsoleKeys()
         {
-            if (BrowseKeysFilePath(ConsoleKeysFilePath, Resources.BrowseKeysFile_ConsoleTitle, out var selectedFilePath))
+            if (BrowseKeysFilePath(ConsoleKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ConsoleTitle, out var selectedFilePath))
             {
                 ConsoleKeysFilePath = selectedFilePath;
             }
@@ -91,13 +94,13 @@ namespace Emignatik.NxFileViewer.Views
 
         private void OnBrowseTitleKeys()
         {
-            if (BrowseKeysFilePath(TitleKeysFilePath, Resources.BrowseKeysFile_TitleTitle, out var selectedFilePath))
+            if (BrowseKeysFilePath(TitleKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_TitleTitle, out var selectedFilePath))
             {
                 TitleKeysFilePath = selectedFilePath;
             }
         }
 
-        private bool BrowseKeysFilePath(string initialFilePath, string title, out string selectedFilePath)
+        private static bool BrowseKeysFilePath(string initialFilePath, string title, out string? selectedFilePath)
         {
             selectedFilePath = null;
 
@@ -105,7 +108,7 @@ namespace Emignatik.NxFileViewer.Views
             {
                 Title = title,
                 FileName = initialFilePath,
-                Filter = Resources.BrowseKeysFile_Filter,
+                Filter = LocalizationManager.Instance.Current.Keys.BrowseKeysFile_Filter,
             };
 
             var result = openFileDialog.ShowDialog();
@@ -126,7 +129,7 @@ namespace Emignatik.NxFileViewer.Views
             _appSettings.ConsoleKeysFilePath = ConsoleKeysFilePath;
             _appSettings.TitleKeysFilePath = TitleKeysFilePath;
 
-            _appSettings.Save();
+            _appSettingsManager.Save();
             NotifyQueryCloseView();
         }
 

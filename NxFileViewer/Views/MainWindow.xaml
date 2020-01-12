@@ -3,16 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:r="clr-namespace:Emignatik.NxFileViewer.Properties"
-        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
+        xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
+        xmlns:dragAndDrop="clr-namespace:Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions.DragAndDrop"
         mc:Ignorable="d"
-        Icon="../Icons/Icon.ico"
-        Title="{Binding Path=AppTitle}" 
-        Height="540" 
-        Width="460" 
-        AllowDrop="True" 
-        Drop="MainWindow_OnDrop" 
-        d:DesignHeight="100">
+        AllowDrop="True"
+        Style="{StaticResource WindowStyle}"
+        Title="{Binding Path=Title}" Height="600" Width="450" d:DataContext="{d:DesignInstance views:MainWindowViewModel}"
+        dragAndDrop:DropFilesBehaviorExtension.IsEnabled="True">
 
     <Window.InputBindings>
         <KeyBinding Gesture="Ctrl+O" Command="{Binding Path=OpenFileCommand}" />
@@ -27,61 +25,66 @@
         </Grid.RowDefinitions>
 
         <Menu Grid.Row="0">
-            <MenuItem Header="{x:Static r:Resources.MenuItem_File}">
-                <MenuItem Header="{x:Static r:Resources.MenuItem_OpenFile}" Command="{Binding Path=OpenFileCommand}" InputGestureText="Ctrl+O" />
-                <MenuItem Header="{x:Static r:Resources.MenuItem_OpenLastFile}" Command="{Binding Path=OpenLastFileCommand}" InputGestureText="Ctrl+Shift+O" />
-                <MenuItem Header="{x:Static r:Resources.MenuItem_CloseFile}" Command="{Binding Path=CloseFileCommand}" InputGestureText="Ctrl+Shift+C" />
-                <MenuItem Header="{x:Static r:Resources.MenuItem_ExitApp}" Command="{Binding Path=ExitAppCommand}" InputGestureText="Alt+F4" />
+            <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemFile}">
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemOpen}" 
+                          Command="{Binding Path=OpenFileCommand}" InputGestureText="Ctrl+O" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemOpenLast}"
+                          Command="{Binding Path=OpenLastFileCommand}" InputGestureText="Ctrl+Shift+O" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemClose}" Command="{Binding Path=CloseFileCommand}" InputGestureText="Ctrl+Shift+C" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemExit}" Command="{Binding Path=ExitAppCommand}" InputGestureText="Alt+F4" />
             </MenuItem>
-            <MenuItem Header="{x:Static r:Resources.MenuItem_Options}">
-                <MenuItem Header="{x:Static r:Resources.MenuItem_Settings}" Command="{Binding Path=ShowSettingsViewCommand}" />
+            <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemOptions}">
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemSettings}" Command="{Binding Path=ShowSettingsViewCommand}" />
             </MenuItem>
         </Menu>
 
         <Grid Grid.Row="1" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />    <!-- Content Row -->
-                <RowDefinition Height="Auto" /> <!-- Grid Splitter Row-->
-                <RowDefinition Height="0" />    <!-- Log Row -->
+                <!-- Content Row -->
+                <RowDefinition Height="*" />
+                <!-- Grid Splitter Row-->
+                <RowDefinition Height="Auto" />
+                <!-- Log Row -->
+                <RowDefinition Height="0" />
             </Grid.RowDefinitions>
 
-            <ContentControl Grid.Row="0"
-                            ContentTemplateSelector="{StaticResource FileViewTemplateSelector}" 
-                            Content="{Binding Path=FileViewModel}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <TextBlock Style="{StaticResource WatermarkText}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DragMeAFile}" />
+            <ContentControl Grid.Row="0" Content="{Binding Path=OpenedFile, Mode=TwoWay}"
+                            ContentTemplateSelector="{StaticResource OpenedFileDataTemplateSelector}" />
 
-            <GridSplitter Grid.Row="1" Background="Gainsboro" ResizeDirection="Rows" HorizontalAlignment="Stretch" Foreground="Gray">
-                <GridSplitter.Template>
-                    <ControlTemplate>
-                        <ControlTemplate.Resources>
-                            <system:Double x:Key="DotSize">4</system:Double>
-                            <Thickness x:Key="Spacing">0,0,2,0</Thickness>
-                        </ControlTemplate.Resources>
-                        <Border HorizontalAlignment="{TemplateBinding HorizontalAlignment}" Background="{TemplateBinding Background}" Padding="0,2">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  >
-                                <Ellipse Width="{StaticResource DotSize}" Height="{StaticResource DotSize}" Fill="{TemplateBinding Foreground}" Margin="{StaticResource Spacing}" />
-                                <Ellipse Width="{StaticResource DotSize}" Height="{StaticResource DotSize}" Fill="{TemplateBinding Foreground}" Margin="{StaticResource Spacing}" />
-                                <Ellipse Width="{StaticResource DotSize}" Height="{StaticResource DotSize}" Fill="{TemplateBinding Foreground}" Margin="{StaticResource Spacing}" />
-                                <Ellipse Width="{StaticResource DotSize}" Height="{StaticResource DotSize}" Fill="{TemplateBinding Foreground}" Margin="{StaticResource Spacing}" />
-                            </StackPanel>
-                        </Border>
-                    </ControlTemplate>
-                </GridSplitter.Template>
-
+            <GridSplitter Grid.Row="1" ResizeDirection="Rows">
+                <GridSplitter.Style>
+                    <Style TargetType="GridSplitter" BasedOn="{StaticResource HorizontalGridSplitterStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ErrorAnimationEnabled}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard FillBehavior="Stop">
+                                            <ColorAnimation  
+                                                To="Red"
+                                                Storyboard.TargetProperty="(GridSplitter.Foreground).(SolidColorBrush.Color)"
+                                                AutoReverse="True" 
+                                                Duration="0:0:0.3"
+                                                RepeatBehavior="Forever" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard FillBehavior="Stop">
+                                            <ColorAnimation  
+                                                Storyboard.TargetProperty="(GridSplitter.Foreground).(SolidColorBrush.Color)"
+                                                Duration="0:0:0.3" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </GridSplitter.Style>
             </GridSplitter>
 
-            <RichTextBox Grid.Row="2" IsReadOnly="True" x:Name="RichTextBoxLog" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontFamily="Courier New">
-                <RichTextBox.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Clear" Click="MenuItemClearLogClick" />
-                    </ContextMenu>
-                </RichTextBox.ContextMenu>
-
-                <RichTextBox.Resources>
-                    <Style TargetType="{x:Type Paragraph}">
-                        <Setter Property="Margin" Value="0"/>
-                    </Style>
-                </RichTextBox.Resources>
-            </RichTextBox>
+            <views:LoggingView Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LogSource="{Binding LogSource, Mode=OneWay}" />
         </Grid>
     </Grid>
 </Window>

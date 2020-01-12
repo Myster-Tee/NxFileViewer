@@ -2,21 +2,43 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>Emignatik.NxFileViewer</RootNamespace>
-    <StartupObject>Emignatik.NxFileViewer.App</StartupObject>
-    <ApplicationIcon>Icons\Icon.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
+    <ApplicationIcon>Styling\Icons\Icon.ico</ApplicationIcon>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <PackageId>NxFileViewer</PackageId>
+    <Company>NxFileViewer</Company>
+    <Product>NxFileViewer</Product>
+    <Authors>NxFileViewer</Authors>
+    <Version>2.0.0</Version>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageIcon>Icon.ico</PackageIcon>
+    <Description>Browse content of Nintendo Switch contents</Description>
+    <RepositoryUrl>https://github.com/Myster-Tee/NxFileViewer</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Features.txt" />
-    <None Remove="Icon.ico" />
-    <None Remove="Icons\Help.png" />
+    <None Remove="Styling\Icons\FileDirectoryEntryItem.png" />
+    <None Remove="Styling\Icons\FolderDirectoryEntryItem.png" />
+    <None Remove="Styling\Icons\Icon.ico" />
+    <None Remove="Styling\Icons\NspItem.png" />
+    <None Remove="Styling\Icons\PartitionFileEntryItem.png" />
+    <None Remove="Styling\Icons\SectionItem.png" />
+    <None Remove="Styling\Icons\XciItem.png" />
+    <None Remove="Styling\Icons\XciPartitionItem.png" />
+    <None Include="Styling\Icons\Icon.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,75 +46,33 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Features.txt" />
-    <Resource Include="Icons\Help.png" />
-    <Resource Include="Icons\Icon.ico" />
+    <Resource Include="Styling\Icons\FileDirectoryEntryItem.png" />
+    <Resource Include="Styling\Icons\FolderDirectoryEntryItem.png" />
+    <Resource Include="Styling\Icons\Icon.ico" />
+    <Resource Include="Styling\Icons\NspItem.png" />
+    <Resource Include="Styling\Icons\PartitionFileEntryItem.png" />
+    <Resource Include="Styling\Icons\XciPartitionItem.png" />
+    <Resource Include="Styling\Icons\SectionItem.png" />
+    <Resource Include="Styling\Icons\XciItem.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <ApplicationDefinition Update="App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </ApplicationDefinition>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="App.xaml.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Views\CustomControls\GroupView.xaml.cs">
-      <DependentUpon>GroupView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\MainWindow.xaml.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\NCA\NcaInfoView.xaml.cs">
-      <DependentUpon>NcaInfoView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\NSP\CnmtView.xaml.cs">
-      <DependentUpon>CnmtView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\NSP\ControlPartitionView.xaml.cs">
-      <DependentUpon>ControlPartitionView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\NSP\NspInfoView.xaml.cs">
-      <DependentUpon>NspInfoView.xaml</DependentUpon>
+    <Compile Update="Views\FileOverviewView.xaml.cs">
+      <DependentUpon>FileOverviewView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\CustomControls\GroupView.xaml">
+    <Page Update="Styling\TextBlockStyle.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\MainWindow.xaml">
+    <Page Update="Views\FileOverviewView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\NCA\NcaInfoView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\NSP\CnmtView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\NSP\ControlPartitionView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\NSP\NspInfoView.xaml">
-      <SubType>Designer</SubType>
+    <Page Update="Views\SettingsWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
   </ItemGroup>
 
