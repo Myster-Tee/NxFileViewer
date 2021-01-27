@@ -1,7 +1,4 @@
-﻿TODO: Add setting to specify the keys.dat file
-TODO: Auto show log on warning or error
-TODO: Add a status bar
-TODO: feature to auto download keys from URL
-TODO: Threading actions (with progress bar)
-TODO: Save image
-TODO: Load NCA file
+﻿TODO: ajouter une fonction de contrôle de l'authenticité
+TODO: ajout d'une fenêtre about dialog with credits
+TODO: ajout setting pour définir le niveau de log
+TODO: choisir la langue dans les settings

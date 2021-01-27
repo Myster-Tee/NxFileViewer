@@ -1,88 +1,77 @@
 ﻿<Application x:Class="Emignatik.NxFileViewer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
-             xmlns:nsp="clr-namespace:Emignatik.NxFileViewer.Views.NSP"
-             xmlns:nca="clr-namespace:Emignatik.NxFileViewer.Views.NCA"
-             xmlns:converters="clr-namespace:Emignatik.NxFileViewer.Views.Converters">
+             xmlns:converters="clr-namespace:Emignatik.NxFileViewer.Views.Converters"
+             xmlns:ts="clr-namespace:Emignatik.NxFileViewer.Views.TemplateSelectors"
+             xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views">
     <Application.Resources>
-        <system:Double x:Key="DefaultSpacing">3</system:Double>
+        <ResourceDictionary>
+            <!-- OpenedFileDataTemplateSelector -->
+            <ts:OpenedFileDataTemplateSelector x:Key="OpenedFileDataTemplateSelector">
+                <ts:OpenedFileDataTemplateSelector.OpenedFileTemplate>
+                    <DataTemplate>
+                        <views:OpenedFileView />
+                    </DataTemplate>
+                </ts:OpenedFileDataTemplateSelector.OpenedFileTemplate>
+            </ts:OpenedFileDataTemplateSelector>
 
-        <views:FileViewTemplateSelector x:Key="FileViewTemplateSelector">
-            <views:FileViewTemplateSelector.NspInfoViewDataTemplate>
-                <DataTemplate>
-                    <nsp:NspInfoView />
-                </DataTemplate>
-            </views:FileViewTemplateSelector.NspInfoViewDataTemplate>
-            <views:FileViewTemplateSelector.NcaInfoViewDataTemplate>
-                <DataTemplate>
-                    <nca:NcaInfoView />
-                </DataTemplate>
-            </views:FileViewTemplateSelector.NcaInfoViewDataTemplate>
+            <!-- ItemIconDataTemplateSelector -->
+            <ts:ItemIconDataTemplateSelector x:Key="ItemIconDataTemplateSelector">
+                <ts:ItemIconDataTemplateSelector.XciItemIconDataTemplate>
+                    <DataTemplate>
+                        <Image Source="Styling/Icons/XciItem.png" />
+                    </DataTemplate>
+                </ts:ItemIconDataTemplateSelector.XciItemIconDataTemplate>
 
-        </views:FileViewTemplateSelector>
+                <ts:ItemIconDataTemplateSelector.NspItemIconDataTemplate>
+                    <DataTemplate>
+                        <Image Source="Styling/Icons/NspItem.png" />
+                    </DataTemplate>
+                </ts:ItemIconDataTemplateSelector.NspItemIconDataTemplate>
 
-        <converters:NacpLanguageConverter x:Key="NacpLanguageConverter" />
+                <ts:ItemIconDataTemplateSelector.SectionItemIconDataTemplate>
+                    <DataTemplate>
+                        <Image Source="Styling/Icons/SectionItem.png" />
+                    </DataTemplate>
+                </ts:ItemIconDataTemplateSelector.SectionItemIconDataTemplate>
 
-        <Style TargetType="TextBox" x:Key="ReadOnlyTextBox">
-            <Style.Setters>
-                <Setter Property="IsReadOnly" Value="True" />
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="AllowDrop" Value="True" />
-            </Style.Setters>
-        </Style>
+                <ts:ItemIconDataTemplateSelector.XciPartitionItemIconDataTemplate>
+                    <DataTemplate>
+                        <Image Source="Styling/Icons/XciPartitionItem.png" />
+                    </DataTemplate>
+                </ts:ItemIconDataTemplateSelector.XciPartitionItemIconDataTemplate>
 
-        <Style TargetType="TextBlock" x:Key="Title1">
-            <Style.Setters>
-                <Setter Property="Foreground" Value="#3C3C3C" />
-                <Setter Property="FontWeight" Value="Bold" />
-                <Setter Property="FontSize" Value="14" />
-            </Style.Setters>
-        </Style>
+                <ts:ItemIconDataTemplateSelector.PartitionFileEntryItemIconDataTemplate>
+                    <DataTemplate>
+                        <Image Source="Styling/Icons/PartitionFileEntryItem.png" />
+                    </DataTemplate>
+                </ts:ItemIconDataTemplateSelector.PartitionFileEntryItemIconDataTemplate>
 
-        <Style TargetType="TextBlock" x:Key="Title2">
-            <Style.Setters>
-                <Setter Property="Margin">
-                    <Setter.Value>
-                        <Thickness Top="{StaticResource DefaultSpacing}" />
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="Foreground" Value="DarkCyan" />
-                <Setter Property="FontWeight" Value="Bold" />
-                <Setter Property="FontSize" Value="12" />
-            </Style.Setters>
-        </Style>
+                <ts:ItemIconDataTemplateSelector.FolderDirectoryEntryItemIconDataTemplate>
+                    <DataTemplate>
+                        <Image Source="Styling/Icons/FolderDirectoryEntryItem.png" />
+                    </DataTemplate>
+                </ts:ItemIconDataTemplateSelector.FolderDirectoryEntryItemIconDataTemplate>        
+                
+                <ts:ItemIconDataTemplateSelector.FileDirectoryEntryItemIconDataTemplate>
+                    <DataTemplate>
+                        <Image Source="Styling/Icons/FileDirectoryEntryItem.png" />
+                    </DataTemplate>
+                </ts:ItemIconDataTemplateSelector.FileDirectoryEntryItemIconDataTemplate>
+            </ts:ItemIconDataTemplateSelector>
 
-        <Style TargetType="ListBoxItem">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
-                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsSelected" Value="True"/>
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Background" TargetName="Bd" Value="#FF33BBA3"/>
-                                <Setter Property="BorderBrush" TargetName="Bd" Value="#FF33BBA3"/>
-                            </MultiTrigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsMouseOver" Value="True"/>
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Background" TargetName="Bd" Value="#FF33BBA3"/>
-                                <Setter Property="BorderBrush" TargetName="Bd" Value="Gray"/>
-                            </MultiTrigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+            <converters:NacpLanguageConverter x:Key="NacpLanguageConverter" />
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styling/TextBoxStyle.xaml" />
+                <ResourceDictionary Source="Styling/TextBlockStyle.xaml" />
+                <ResourceDictionary Source="Styling/LabelStyle.xaml" />
+                <ResourceDictionary Source="Styling/GroupBoxStyle.xaml" />
+                <ResourceDictionary Source="Styling/UserControlStyle.xaml" />
+                <ResourceDictionary Source="Styling/WindowStyle.xaml" />
+                <ResourceDictionary Source="Styling/GridSplitter.xaml" />
+                <ResourceDictionary Source="Styling/ButtonStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

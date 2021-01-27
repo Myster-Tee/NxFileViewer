@@ -1,212 +1,79 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{511625D7-D6DF-4CB7-ADD1-DDE606D57FCE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
     <RootNamespace>Emignatik.NxFileViewer</RootNamespace>
-    <AssemblyName>NxFileViewer</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
+    <Nullable>enable</Nullable>
+    <ApplicationIcon>Styling\Icons\Icon.ico</ApplicationIcon>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <PackageId>NxFileViewer</PackageId>
+    <Company>NxFileViewer</Company>
+    <Product>NxFileViewer</Product>
+    <Authors>NxFileViewer</Authors>
+    <Version>2.0.0</Version>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageIcon>Icon.ico</PackageIcon>
+    <Description>Browse content of Nintendo Switch contents</Description>
+    <RepositoryUrl>https://github.com/Myster-Tee/NxFileViewer</RepositoryUrl>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Hactool\NcaSection.cs" />
-    <Compile Include="NSP\Models\Pfs0NcaFile.cs" />
-    <Compile Include="Services\HactoolHelperService.cs" />
-    <Compile Include="NSP\Models\Pfs0File.cs" />
-    <Compile Include="NSP\Models\LocalizedIcon.cs" />
-    <Compile Include="NSP\Models\NspInfo.cs" />
-    <Compile Include="NSP\Models\NcaControlContent.cs" />
-    <Compile Include="NSP\NspInfoLoader.cs" />
-    <Compile Include="NxFormats\CNMT\Models\CnmtContentRecord.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtContentRecordStruct.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtAddonContentHeaderStruct.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtAppHeaderStruct.cs" />
-    <Compile Include="NxFormats\CNMT\Models\CnmtHeader.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtContentType.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtHeaderStruct.cs" />
-    <Compile Include="NxFormats\CNMT\CnmtReader.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtType.cs" />
-    <Compile Include="NxFormats\CNMT\Structs\CnmtPatchHeaderStruct.cs" />
-    <Compile Include="Crypto\IXtsAesCryptoTransform.cs" />
-    <Compile Include="Crypto\TransformationMode.cs" />
-    <Compile Include="Hactool\HactoolHelper.cs" />
-    <Compile Include="KeysParsing\KeyParser.cs" />
-    <Compile Include="Crypto\XtsAes.cs" />
-    <Compile Include="Crypto\XtsAesCryptoTransform.cs" />
-    <Compile Include="Commands\ApplicationCommandsExt.cs" />
-    <Compile Include="KeysParsing\KeysParser.cs" />
-    <Compile Include="KeysParsing\KeySet.cs" />
-    <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Logging\LogLevel.cs" />
-    <Compile Include="NxFormats\NACP\Models\NacpContent.cs" />
-    <Compile Include="NxFormats\NACP\Structs\NacpStruct.cs" />
-    <Compile Include="NxFormats\NACP\Structs\NacpLanguage.cs" />
-    <Compile Include="NxFormats\NACP\NacpReader.cs" />
-    <Compile Include="NxFormats\NACP\Models\NacpTitle.cs" />
-    <Compile Include="NxFormats\NACP\Structs\NacpLocalCommunicationStruct.cs" />
-    <Compile Include="NxFormats\NACP\Structs\NacpTitleStruct.cs" />
-    <Compile Include="NxFormats\NACP\Structs\NacpVideoCaptureMode.cs" />
-    <Compile Include="NxFormats\NCA\NcaDecryptionStream.cs" />
-    <Compile Include="NxFormats\NCA\NcaReader.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaContentType.cs" />
-    <Compile Include="NxFormats\NCA\Models\NcaHeader.cs" />
-    <Compile Include="NxFormats\NCA\Models\NcaSectionIndex.cs" />
-    <Compile Include="NxFormats\NCA\NcaKeyException.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaFileSystemType.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaHashType.cs" />
-    <Compile Include="NxFormats\NCA\Models\NcaSectionHeader.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaSectionHeaderWithoutSuperBlockStruct.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaSectionTableEntryStruct.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaHeaderStruct.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaType.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaSectionCryptoType.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaSuperBlockRomFsStruct.cs" />
-    <Compile Include="NxFormats\NCA\Structs\NcaSuperBlockPfs0Struct.cs" />
-    <Compile Include="NxFormats\PFS0\Pfs0Utils.cs" />
-    <Compile Include="Services\KeySetProviderService.cs" />
-    <Compile Include="Utils\FileSizeUnit.cs" />
-    <Compile Include="Utils\IoHelper.cs" />
-    <Compile Include="Utils\FileSizeHelper.cs" />
-    <Compile Include="Utils\PathHelper.cs" />
-    <Compile Include="Utils\SubStream.cs" />
-    <Compile Include="NxFormats\PFS0\Structs\Pfs0HeaderStruct.cs" />
-    <Compile Include="NxFormats\PFS0\Structs\Pfs0FileEntryStruct.cs" />
-    <Compile Include="NxFormats\PFS0\Models\Pfs0FileDefinition.cs" />
-    <Compile Include="Utils\ByteArrayExt.cs" />
-    <Compile Include="Utils\NumExt.cs" />
-    <Compile Include="Utils\StreamExt.cs" />
-    <Compile Include="Utils\TempDirMgr.cs" />
-    <Compile Include="Views\Converters\NacpLanguageConverter.cs" />
-    <Compile Include="Views\CustomControls\AllowDropTextBox.cs" />
-    <Compile Include="Views\CustomControls\GroupView.xaml.cs">
-      <DependentUpon>GroupView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\FileViewModelBase.cs" />
-    <Compile Include="Views\FileViewTemplateSelector.cs" />
-    <Compile Include="Views\MainWindowViewModel.cs" />
-    <Compile Include="Views\MVVM\RelayCommand.cs" />
-    <Compile Include="Views\NCA\NcaInfoView.xaml.cs">
-      <DependentUpon>NcaInfoView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\NCA\NcaInfoViewModel.cs" />
-    <Compile Include="Views\NSP\Pfs0FileViewModel.cs" />
-    <Compile Include="Views\NSP\NspInfoView.xaml.cs">
-      <DependentUpon>NspInfoView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\NSP\NspInfoViewModel.cs" />
-    <Compile Include="Views\ViewModelBase.cs" />
-    <Page Include="Views\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="NxFormats\PFS0\Pfs0Reader.cs" />
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Views\CustomControls\GroupView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\NCA\NcaInfoView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\NSP\NspInfoView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <None Include="app.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    <None Remove="Styling\Icons\FileDirectoryEntryItem.png" />
+    <None Remove="Styling\Icons\FolderDirectoryEntryItem.png" />
+    <None Remove="Styling\Icons\Icon.ico" />
+    <None Remove="Styling\Icons\NspItem.png" />
+    <None Remove="Styling\Icons\PartitionFileEntryItem.png" />
+    <None Remove="Styling\Icons\SectionItem.png" />
+    <None Remove="Styling\Icons\XciItem.png" />
+    <None Remove="Styling\Icons\XciPartitionItem.png" />
+    <None Include="Styling\Icons\Icon.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
+
   <ItemGroup>
-    <Resource Include="Icon.ico" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Resource Include="Features.txt" />
+    <ProjectReference Include="..\LibHac\src\LibHac\LibHac.csproj" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <ItemGroup>
+    <Resource Include="Styling\Icons\FileDirectoryEntryItem.png" />
+    <Resource Include="Styling\Icons\FolderDirectoryEntryItem.png" />
+    <Resource Include="Styling\Icons\Icon.ico" />
+    <Resource Include="Styling\Icons\NspItem.png" />
+    <Resource Include="Styling\Icons\PartitionFileEntryItem.png" />
+    <Resource Include="Styling\Icons\XciPartitionItem.png" />
+    <Resource Include="Styling\Icons\SectionItem.png" />
+    <Resource Include="Styling\Icons\XciItem.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\FileOverviewView.xaml.cs">
+      <DependentUpon>FileOverviewView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Styling\TextBlockStyle.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\FileOverviewView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SettingsWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
 </Project>

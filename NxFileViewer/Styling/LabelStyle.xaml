@@ -1,0 +1,20 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="HelpIcon" TargetType="Label">
+        <Setter Property="Margin" Value="5,0,0,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid Width="16" Height="16">
+                        <Ellipse HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="#6E5AB3" />
+                        <TextBlock FontSize="12" FontWeight="Bold"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center">?</TextBlock>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
