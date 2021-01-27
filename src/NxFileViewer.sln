@@ -9,7 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NxFileViewer", "NxFileViewe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CD40D499-FF64-434D-BEA9-4393195FFD33}"
 	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots", "{B31909B9-EDA7-464A-B808-EDF829939B71}"
+	ProjectSection(SolutionItems) = preProject
+		..\screenshots\Content.png = ..\screenshots\Content.png
+		..\screenshots\Overview.png = ..\screenshots\Overview.png
 	EndProjectSection
 EndProject
 Global
@@ -29,6 +36,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B31909B9-EDA7-464A-B808-EDF829939B71} = {CD40D499-FF64-434D-BEA9-4393195FFD33}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A68F93E6-AF26-42D5-80A2-9B27D9737C59}
