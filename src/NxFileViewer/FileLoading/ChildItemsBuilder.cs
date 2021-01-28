@@ -132,7 +132,7 @@ namespace Emignatik.NxFileViewer.FileLoading
                 {
                     try
                     {
-                        if (!nca.CanOpenSection(sectionIndex))
+                        if (!nca.Header.IsSectionEnabled(sectionIndex))
                             continue;
                     }
                     catch (Exception ex)
