@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:objectPropertyViewer="clr-namespace:Emignatik.NxFileViewer.Views.ObjectPropertyViewer"
+             xmlns:propertyViews="clr-namespace:Emignatik.NxFileViewer.Views.ObjectPropertyViewer.PropertyViews"
              mc:Ignorable="d" 
              Style="{StaticResource UserControlStyle}"
              d:DesignHeight="400" d:DesignWidth="300">
@@ -12,13 +13,13 @@
         <objectPropertyViewer:PropertyValueDataTemplateSelector x:Key="PropertyValueDataTemplateSelector">
             <objectPropertyViewer:PropertyValueDataTemplateSelector.StringTemplate>
                 <DataTemplate>
-                    <TextBox IsReadOnly="True" Text="{Binding Mode=OneWay}" BorderThickness="0" />
+                    <propertyViews:StringPropertyView />
                 </DataTemplate>
             </objectPropertyViewer:PropertyValueDataTemplateSelector.StringTemplate>
 
             <objectPropertyViewer:PropertyValueDataTemplateSelector.BoolTemplate>
                 <DataTemplate>
-                    <CheckBox IsChecked="{Binding Mode=OneWay}"/>
+                    <propertyViews:BoolPropertyView />
                 </DataTemplate>
             </objectPropertyViewer:PropertyValueDataTemplateSelector.BoolTemplate>
 

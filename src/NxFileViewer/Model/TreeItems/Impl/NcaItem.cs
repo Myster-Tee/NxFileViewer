@@ -41,10 +41,13 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         public string KeyGeneration => Nca.Header.KeyGeneration.ToString();
 
         [PropertiesView]
-        public int ContentIndex => Nca.Header.ContentIndex;      
-        
+        public int ContentIndex => Nca.Header.ContentIndex;
+
         [PropertiesView]
         public string FormatVersion => Nca.Header.FormatVersion.ToString();
+
+        [PropertiesView]
+        public bool IsEncrypted => Nca.Header.IsEncrypted;
 
         public Nca Nca { get; }
 
@@ -62,7 +65,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public PartitionFileEntry PartitionFileEntry { get; }
 
-        public string Id { get; } 
+        public string Id { get; }
 
         protected override IEnumerable<IItem> LoadChildItems()
         {
