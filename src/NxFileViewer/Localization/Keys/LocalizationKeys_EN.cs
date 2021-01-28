@@ -117,7 +117,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string LoadingError_FailedToLoadNcaFile => "Failed to load NCA file: {0}";
         public string LoadingError_FailedToLoadPartitionFileSystemContent => "Failed to load partition file system content: {0}";
         public string LoadingError_FailedToCheckIfSectionCanBeOpened => "Failed to check if section can be opened: {0}";
-        public string LoadingError_FailedToOpenFileSystem => "Failed to open file system: {0}";
+        public string LoadingError_FailedToOpenNcaFileSystem => "Failed to open NCA file system: {0}";
         public string LoadingError_FailedToLoadSectionContent => "Failed to load section content: {0}";
         public string LoadingError_FailedToGetFileSystemDirectoryEntries => "Failed to get file system directory entries: {0}";
         public string LoadingError_FailedToOpenNacpFile => "Failed to open NACP file: {0}";
@@ -132,6 +132,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string LoadingError_NacpFileMissing => "NCAP file «{0}» not found!";
         public string LoadingError_IconMissing => "Expected icon file «{0}» missing.";
         public string LoadingError_XciSecurePartitionNotFound => "XCI secure partition not found!";
+        public string LoadingError_FailedToGetNcaFsHeader => "Failed to get NCA File System Header of section «{0}»: {1}";
 
         public string KeysFileUsed => "«{0}» file used: {1}";
         public string NoneKeysFile => "[none]";

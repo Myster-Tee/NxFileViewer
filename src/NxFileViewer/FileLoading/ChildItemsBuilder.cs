@@ -141,6 +141,17 @@ namespace Emignatik.NxFileViewer.FileLoading
                         continue;
                     }
 
+                    NcaFsHeader ncaFsHeader;
+                    try
+                    {
+                        ncaFsHeader = nca.GetFsHeader(sectionIndex);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToGetNcaFsHeader, sectionIndex, ex.Message));
+                        continue;
+                    }
+
                     IFileSystem fileSystem;
                     try
                     {
@@ -148,10 +159,12 @@ namespace Emignatik.NxFileViewer.FileLoading
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenFileSystem, ex.Message));
+                        _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenNcaFileSystem, ex.Message));
                         continue;
                     }
-                    children.Add(new SectionItem(sectionIndex, fileSystem, parentItem, this));
+
+
+                    children.Add(new SectionItem(sectionIndex, ncaFsHeader, fileSystem, parentItem, this));
                 }
             }
             catch (Exception ex)

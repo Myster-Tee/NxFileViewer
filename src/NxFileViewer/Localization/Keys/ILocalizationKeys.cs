@@ -1,4 +1,5 @@
-﻿using Emignatik.NxFileViewer.Utils.MVVM.Localization;
+﻿using System;
+using Emignatik.NxFileViewer.Utils.MVVM.Localization;
 
 namespace Emignatik.NxFileViewer.Localization.Keys
 {
@@ -94,7 +95,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string LoadingError_FailedToLoadNcaFile { get; }
         string LoadingError_FailedToLoadPartitionFileSystemContent { get; }
         string LoadingError_FailedToCheckIfSectionCanBeOpened { get; }
-        string LoadingError_FailedToOpenFileSystem { get; }
+        string LoadingError_FailedToOpenNcaFileSystem { get; }
         string LoadingError_FailedToLoadSectionContent { get; }
         string LoadingError_FailedToGetFileSystemDirectoryEntries { get; }
         string LoadingError_FailedToOpenNacpFile { get; }
@@ -109,6 +110,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string LoadingError_NacpFileMissing { get; }
         string LoadingError_IconMissing { get; }
         string LoadingError_XciSecurePartitionNotFound { get; }
+        string LoadingError_FailedToGetNcaFsHeader { get; }
 
         string KeysFileUsed { get; }
         string NoneKeysFile { get; }
