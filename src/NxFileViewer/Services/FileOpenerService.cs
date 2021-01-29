@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Emignatik.NxFileViewer.FileLoading;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model;
@@ -40,29 +41,34 @@ namespace Emignatik.NxFileViewer.Services
             {
                 _appSettings.LastOpenedFile = filePath;
 
-                IItem item;
+                IItem rootItem;
                 FileOverview fileOverview;
                 switch (_fileTypeAnalyzer.GetFileType(filePath))
                 {
                     case FileType.UNKNOWN:
                         _logger.LogError(string.Format(LocalizationManager.Instance.Current.Keys.ErrFileNotSupported, filePath));
                         return;
+
                     case FileType.XCI:
                         var xciItem = _fileItemLoader.LoadXci(filePath);
                         fileOverview = _fileOverviewLoader.Load(xciItem);
-                        item = xciItem;
+                        rootItem = xciItem;
 
                         break;
                     case FileType.NSP:
                         var nspItem = _fileItemLoader.LoadNsp(filePath);
                         fileOverview = _fileOverviewLoader.Load(nspItem);
-                        item = nspItem;
+                        rootItem = nspItem;
                         break;
+
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
 
-                _openedFileService.OpenedFile = new OpenedFile(filePath, item, fileOverview);
+                if (_appSettings.StructureLoadingMode == StructureLoadingMode.Full)
+                    ForceLoadAllChildren(rootItem);
+
+                _openedFileService.OpenedFile = new OpenedFile(filePath, rootItem, fileOverview);
             }
             catch (Exception ex)
             {
@@ -70,6 +76,20 @@ namespace Emignatik.NxFileViewer.Services
             }
         }
 
-
+        private static void ForceLoadAllChildren(IItem rootItem)
+        {
+            try
+            {
+                rootItem.LoadChildItems(true);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError($"{nameof(IItem)}.{nameof(rootItem.LoadChildItems)} exception: {ex.Message}");
+            }
+            foreach (var childItem in rootItem.ChildItems)
+            {
+                ForceLoadAllChildren(childItem);
+            }
+        }
     }
 }
