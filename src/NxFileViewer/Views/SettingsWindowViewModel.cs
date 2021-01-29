@@ -5,6 +5,7 @@ using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
+using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 
 namespace Emignatik.NxFileViewer.Views
@@ -17,6 +18,7 @@ namespace Emignatik.NxFileViewer.Views
         private string _consoleKeysFilePath;
         private string _titleKeysFilePath;
         private StructureLoadingMode _selectedStructureLoadingMode;
+        private LogLevel _selectedLogLevel;
 
 
         public SettingsWindowViewModel(IAppSettingsManager appSettingsManager)
@@ -34,6 +36,7 @@ namespace Emignatik.NxFileViewer.Views
             ConsoleKeysFilePath = _appSettings.ConsoleKeysFilePath;
             TitleKeysFilePath = _appSettings.TitleKeysFilePath;
             SelectedStructureLoadingMode = _appSettings.StructureLoadingMode;
+            SelectedLogLevel = _appSettings.LogLevel;
         }
 
         public event EventHandler? OnQueryCloseView;
@@ -91,6 +94,18 @@ namespace Emignatik.NxFileViewer.Views
             }
         }
 
+        public IEnumerable<LogLevel> LogLevels => Enum.GetValues<LogLevel>();
+
+        public LogLevel SelectedLogLevel
+        {
+            get => _selectedLogLevel;
+            set
+            {
+                _selectedLogLevel = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         private void OnBrowseProdKeys()
         {
             if (BrowseKeysFilePath(ProdKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ProdTitle, out var selectedFilePath))
@@ -144,6 +159,7 @@ namespace Emignatik.NxFileViewer.Views
             _appSettings.ConsoleKeysFilePath = ConsoleKeysFilePath;
             _appSettings.TitleKeysFilePath = TitleKeysFilePath;
             _appSettings.StructureLoadingMode = SelectedStructureLoadingMode;
+            _appSettings.LogLevel = SelectedLogLevel;
 
             _appSettingsManager.Save();
             NotifyQueryCloseView();

@@ -78,6 +78,9 @@ namespace Emignatik.NxFileViewer.Localization.Keys
                                                        "    3. the «%UserProfile%\\.switch» directory";
 
         public string SettingsView_GroupBoxKeys => "Keys";
+        public string SettingsView_LogLevel => "Log level";
+        public string SettingsView_LogLevelToolTip => "The log level specifies the minimum level to log.";
+
         public string SettingsView_StructureLoadingMode => "Structure loading mode";
         public string SettingsView_StructureLoadingModeToolTip => "Lazy: child items will be loaded on expand" + Environment.NewLine +
                                                                   "Full: child items will be loaded immediately";

@@ -64,13 +64,26 @@
         </GroupBox>
 
         <GroupBox Grid.Row="1" Header="Misc.">
-            <StackPanel>
-                <StackPanel  Orientation="Horizontal">
-                    <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_StructureLoadingMode}" />
-                    <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_StructureLoadingModeToolTip}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <StackPanel  Orientation="Horizontal">
+                        <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_StructureLoadingMode}" />
+                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_StructureLoadingModeToolTip}"/>
+                    </StackPanel>
+                    <ComboBox ItemsSource="{Binding Path=StructureLoadingModes}" SelectedItem="{Binding Path=SelectedStructureLoadingMode}" Width="100" HorizontalAlignment="Left" />
                 </StackPanel>
-                <ComboBox ItemsSource="{Binding Path=StructureLoadingModes}" SelectedItem="{Binding Path=SelectedStructureLoadingMode}" Width="100" HorizontalAlignment="Left" />
-            </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <StackPanel  Orientation="Horizontal">
+                        <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_LogLevel}" />
+                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_LogLevelToolTip}"/>
+                    </StackPanel>
+                    <ComboBox ItemsSource="{Binding Path=LogLevels}" SelectedItem="{Binding Path=SelectedLogLevel}" Width="100" HorizontalAlignment="Left" />
+                </StackPanel>
+            </Grid>
         </GroupBox>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" DockPanel.Dock="Bottom" Height="30" HorizontalAlignment="Center" Margin="0,10">
