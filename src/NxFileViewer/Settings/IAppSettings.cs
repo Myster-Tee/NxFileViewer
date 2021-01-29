@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using Emignatik.NxFileViewer.Settings.Model;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Settings
@@ -21,7 +20,5 @@ namespace Emignatik.NxFileViewer.Settings
         string? ProdKeysDownloadUrl { get; }
 
         StructureLoadingMode StructureLoadingMode { get; set; }
-
-        void Update(AppSettingsModel newSettings);
     }
 }

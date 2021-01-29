@@ -1,5 +1,4 @@
-﻿using System;
-using Emignatik.NxFileViewer.Utils.MVVM.Localization;
+﻿using Emignatik.NxFileViewer.Utils.MVVM.Localization;
 
 namespace Emignatik.NxFileViewer.Localization.Keys
 {
@@ -50,12 +49,15 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string SettingsButton_Save { get; }
         string SettingsButton_Cancel { get; }
         string SettingsView_ProdKeys { get; }
-        string SettingsView_ProdKeysTooltip { get; }
+        string SettingsView_ProdKeysToolTip { get; }
         string SettingsView_ConsoleKeys { get; }
-        string SettingsView_ConsoleKeysTooltip { get; }
+        string SettingsView_ConsoleKeysToolTip { get; }
         string SettingsView_TitleKeys { get; }
-        string SettingsView_TitleKeysTooltip { get; }
+        string SettingsView_TitleKeysToolTip { get; }
         string SettingsView_GroupBoxKeys { get; }
+        string SettingsView_StructureLoadingMode { get; }
+        string SettingsView_StructureLoadingModeToolTip { get; }
+
         string BrowseKeysFile_ProdTitle { get; }
         string BrowseKeysFile_ConsoleTitle { get; }
         string BrowseKeysFile_TitleTitle { get; }

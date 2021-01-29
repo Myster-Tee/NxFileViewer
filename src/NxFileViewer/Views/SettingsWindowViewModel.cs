@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Settings;
@@ -15,6 +16,7 @@ namespace Emignatik.NxFileViewer.Views
         private string _prodKeysFilePath;
         private string _consoleKeysFilePath;
         private string _titleKeysFilePath;
+        private StructureLoadingMode _selectedStructureLoadingMode;
 
 
         public SettingsWindowViewModel(IAppSettingsManager appSettingsManager)
@@ -31,6 +33,7 @@ namespace Emignatik.NxFileViewer.Views
             ProdKeysFilePath = _appSettings.ProdKeysFilePath;
             ConsoleKeysFilePath = _appSettings.ConsoleKeysFilePath;
             TitleKeysFilePath = _appSettings.TitleKeysFilePath;
+            SelectedStructureLoadingMode = _appSettings.StructureLoadingMode;
         }
 
         public event EventHandler? OnQueryCloseView;
@@ -73,6 +76,18 @@ namespace Emignatik.NxFileViewer.Views
             {
                 _titleKeysFilePath = value;
                 NotifyPropertyChanged(nameof(TitleKeysFilePath));
+            }
+        }
+
+        public IEnumerable<StructureLoadingMode> StructureLoadingModes => Enum.GetValues<StructureLoadingMode>();
+
+        public StructureLoadingMode SelectedStructureLoadingMode
+        {
+            get => _selectedStructureLoadingMode;
+            set
+            {
+                _selectedStructureLoadingMode = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -128,6 +143,7 @@ namespace Emignatik.NxFileViewer.Views
             _appSettings.ProdKeysFilePath = ProdKeysFilePath;
             _appSettings.ConsoleKeysFilePath = ConsoleKeysFilePath;
             _appSettings.TitleKeysFilePath = TitleKeysFilePath;
+            _appSettings.StructureLoadingMode = SelectedStructureLoadingMode;
 
             _appSettingsManager.Save();
             NotifyQueryCloseView();

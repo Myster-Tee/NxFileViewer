@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Text.Json.Serialization;
+using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Settings.Model
 {
@@ -17,11 +18,12 @@ namespace Emignatik.NxFileViewer.Settings.Model
 
         public string LastSaveDir { get; set; } = "";
 
-        // TODO: sauvegarder a partir du nom
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public LogLevel LogLevel { get; set; } = LogLevel.Information;
 
         public string? ProdKeysDownloadUrl { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public StructureLoadingMode StructureLoadingMode { get; set; }
     }
 }

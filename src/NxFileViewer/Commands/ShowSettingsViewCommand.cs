@@ -2,19 +2,18 @@
 using System.Windows;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Emignatik.NxFileViewer.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Emignatik.NxFileViewer.Commands
 {
     public class ShowSettingsViewCommand : CommandBase, IShowSettingsViewCommand
     {
-        private readonly SettingsWindowViewModel _settingsWindowViewModel;
+        private readonly IServiceProvider _serviceProvider;
         private SettingsWindow? _settingsWindow;
 
-        public ShowSettingsViewCommand(SettingsWindowViewModel settingsWindowViewModel)
+        public ShowSettingsViewCommand(IServiceProvider serviceProvider)
         {
-            _settingsWindowViewModel = settingsWindowViewModel ?? throw new ArgumentNullException(nameof(settingsWindowViewModel));
-
-            _settingsWindowViewModel.OnQueryCloseView += OnQueryCloseView;
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         private void OnQueryCloseView(object? sender, EventArgs e)
@@ -30,13 +29,16 @@ namespace Emignatik.NxFileViewer.Commands
                 return;
             }
 
+            var settingsWindowViewModel = _serviceProvider.GetRequiredService<SettingsWindowViewModel>();
+
             _settingsWindow = new SettingsWindow
             {
                 Owner = Application.Current.MainWindow,
-                DataContext = _settingsWindowViewModel
+                DataContext = settingsWindowViewModel
             };
-            _settingsWindow.Show();
+            settingsWindowViewModel.OnQueryCloseView += OnQueryCloseView;
 
+            _settingsWindow.Show();
             _settingsWindow.Closed += OnSettingsWindowClosed;
         }
 

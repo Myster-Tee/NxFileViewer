@@ -32,7 +32,7 @@ namespace Emignatik.NxFileViewer.FileLoading
 
             try
             {
-                foreach (XciPartitionType xciPartitionType in Enum.GetValues(typeof(XciPartitionType)))
+                foreach (var xciPartitionType in Enum.GetValues<XciPartitionType>())
                 {
                     try
                     {

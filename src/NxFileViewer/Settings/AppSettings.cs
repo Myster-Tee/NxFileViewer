@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Settings
 {
-    public class AppSettings : IAppSettings
+    public class AppSettingsWrapper : IAppSettingsWrapper<AppSettingsModel>
     {
         private AppSettingsModel _appSettingsModel = new AppSettingsModel();
 
@@ -85,9 +85,11 @@ namespace Emignatik.NxFileViewer.Settings
             }
         }
 
-        public void Update(AppSettingsModel newSettings)
+        public AppSettingsModel WrappedModel => _appSettingsModel;
+
+        public void Update(AppSettingsModel newModel)
         {
-            _appSettingsModel = newSettings ?? throw new ArgumentNullException(nameof(newSettings));
+            _appSettingsModel = newModel ?? throw new ArgumentNullException(nameof(newModel));
 
             NotifyAllPropertiesChanged();
         }

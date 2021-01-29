@@ -57,27 +57,30 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string SettingsButton_Cancel => "Cancel";
 
         public string SettingsView_ProdKeys => KeySetProviderService.DefaultProdKeysFileName;
-        public string SettingsView_ProdKeysTooltip => "This file contains common keys used by all Switch devices. This file is required for opening encrypted title files." + Environment.NewLine +
+        public string SettingsView_ProdKeysToolTip => "This file contains common keys used by all Switch devices. This file is required for opening encrypted title files." + Environment.NewLine +
                                                       "The program will search this file in the following order:" + Environment.NewLine +
                                                       "    1. the path defined by this setting" + Environment.NewLine +
                                                       "    2. the current program's directory" + Environment.NewLine +
                                                       "    3. the «%UserProfile%\\.switch» directory";
 
         public string SettingsView_ConsoleKeys => KeySetProviderService.DefaultConsoleKeysFileName;
-        public string SettingsView_ConsoleKeysTooltip => "You can optionally specify a file containing console-unique keys." + Environment.NewLine +
+        public string SettingsView_ConsoleKeysToolTip => "You can optionally specify a file containing console-unique keys." + Environment.NewLine +
                                                          "The program will search this file in the following locations:" + Environment.NewLine +
                                                          "    1. the path defined by this setting" + Environment.NewLine +
                                                          "    2. the current program's directory" + Environment.NewLine +
                                                          "    3. the «%UserProfile%\\.switch» directory";
 
         public string SettingsView_TitleKeys => KeySetProviderService.DefaultTitleKeysFileName;
-        public string SettingsView_TitleKeysTooltip => "You can optionally specify a file containing game-specific keys." + Environment.NewLine +
+        public string SettingsView_TitleKeysToolTip => "You can optionally specify a file containing game-specific keys." + Environment.NewLine +
                                                        "The program will search this file in the following locations:" + Environment.NewLine +
                                                        "    1. the path defined by this setting" + Environment.NewLine +
                                                        "    2. the current program's directory" + Environment.NewLine +
                                                        "    3. the «%UserProfile%\\.switch» directory";
 
         public string SettingsView_GroupBoxKeys => "Keys";
+        public string SettingsView_StructureLoadingMode => "Structure loading mode";
+        public string SettingsView_StructureLoadingModeToolTip => "Lazy: child items will be loaded on expand" + Environment.NewLine +
+                                                                  "Full: child items will be loaded immediately";
 
         public string BrowseKeysFile_ProdTitle => "Select \"prod\" keys file";
         public string BrowseKeysFile_ConsoleTitle => "Select \"console\" keys file";
