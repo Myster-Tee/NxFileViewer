@@ -13,8 +13,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         private readonly IChildItemsBuilder _childItemsBuilder;
         private IReadOnlyList<DirectoryEntryItem>? _dirEntries;
 
-        public SectionItem(int sectionIndex, NcaFsHeader ncaFsHeader, IFileSystem fileSystem, NcaItem parentNcaItem,
-            IChildItemsBuilder childItemsBuilder)
+        public SectionItem(int sectionIndex, NcaFsHeader ncaFsHeader, IFileSystem fileSystem, NcaItem parentNcaItem, IChildItemsBuilder childItemsBuilder)
         {
             _ncaFsHeader = ncaFsHeader;
             _childItemsBuilder = childItemsBuilder ?? throw new ArgumentNullException(nameof(childItemsBuilder));
@@ -37,16 +36,16 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         public int SectionIndex { get; }
 
         [PropertiesView]
-        public string EncryptionType => _ncaFsHeader.EncryptionType.ToString();
+        public NcaEncryptionType EncryptionType => _ncaFsHeader.EncryptionType;
 
         [PropertiesView]
-        public string FormatType => _ncaFsHeader.FormatType.ToString();
+        public NcaFormatType FormatType => _ncaFsHeader.FormatType;
 
         [PropertiesView]
-        public string HashType => _ncaFsHeader.HashType.ToString();
+        public NcaHashType HashType => _ncaFsHeader.HashType;
 
         [PropertiesView]
-        public string Version => _ncaFsHeader.Version.ToString();
+        public short Version => _ncaFsHeader.Version;
 
         public IFileSystem FileSystem { get; }
 

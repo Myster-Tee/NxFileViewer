@@ -5,6 +5,7 @@ using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 using LibHac;
 using LibHac.Fs;
 using LibHac.FsSystem.NcaUtils;
+using LibHac.Ncm;
 
 namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 {
@@ -23,7 +24,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         public string UnderlyingType => nameof(Cnmt);
 
         [PropertiesView]
-        public string ContentType => Cnmt.Type.ToString();
+        public ContentMetaType ContentType => Cnmt.Type;
 
         [PropertiesView]
         public string TitleId => Cnmt.TitleId.ToStrId();
@@ -35,16 +36,16 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         public string PatchTitleId => Cnmt.PatchTitleId.ToStrId();
 
         [PropertiesView]
-        public string? TitleVersion => Cnmt.TitleVersion?.Version.ToString();
+        public uint? TitleVersion => Cnmt.TitleVersion?.Version;
 
         [PropertiesView]
         public int? PatchLevel { get; }
 
         [PropertiesView]
-        public string? MinimumApplicationVersion => Cnmt.MinimumApplicationVersion?.ToString();
+        public TitleVersion? MinimumApplicationVersion => Cnmt.MinimumApplicationVersion;
 
         [PropertiesView]
-        public string? MinimumSystemVersion => Cnmt.MinimumSystemVersion?.ToString();
+        public TitleVersion? MinimumSystemVersion => Cnmt.MinimumSystemVersion;
 
         private static int? GetPatchLevel(TitleVersion? titleVersion)
         {

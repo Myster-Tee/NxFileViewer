@@ -42,7 +42,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         public sealed override string ObjectType => nameof(DirectoryEntry);
 
         [PropertiesView]
-        public string DirectoryEntryType => DirectoryEntry.Type.ToString();
+        public DirectoryEntryType DirectoryEntryType => DirectoryEntry.Type;
 
         [PropertiesView]
         public string Name { get; }

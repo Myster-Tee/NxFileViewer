@@ -261,7 +261,7 @@ namespace Emignatik.NxFileViewer.FileLoading
 
             try
             {
-                if (parentItem.DirectoryEntry.Type == DirectoryEntryType.File)
+                if (parentItem.DirectoryEntryType == DirectoryEntryType.File)
                     return children;
 
                 var currentPath = parentItem.Path;

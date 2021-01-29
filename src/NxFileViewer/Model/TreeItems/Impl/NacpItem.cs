@@ -37,7 +37,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         public string BcatPassphrase => Nacp.BcatPassphrase;
 
         [PropertiesView]
-        public string ParentalControlFlag => Nacp.ParentalControlFlag.ToString();
+        public uint ParentalControlFlag => Nacp.ParentalControlFlag;
 
     }
 }

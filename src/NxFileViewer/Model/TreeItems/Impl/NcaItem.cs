@@ -23,38 +23,35 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
             ParentPartitionFileSystemItem = parentPartitionFileSystemItem ?? throw new ArgumentNullException(nameof(parentPartitionFileSystemItem));
 
             Id = PartitionFileEntry.Name.Split('.')[0];
-            NcaType = Nca.Header.ContentType.ToString();
-            SdkVersion = Nca.Header.SdkVersion.ToString();
-            DistributionType = Nca.Header.DistributionType.ToString();
-            KeyGeneration = Nca.Header.KeyGeneration.ToString();
-            ContentIndex = Nca.Header.ContentIndex;
         }
+
+        public string Id { get; }
+
+        public Nca Nca { get; }
 
         [PropertiesView]
         public string UnderlyingType => nameof(Nca);
 
         [PropertiesView]
-        public string NcaType { get; }
+        public NcaContentType NcaType => Nca.Header.ContentType;
 
         [PropertiesView]
-        public string SdkVersion { get; }
+        public TitleVersion SdkVersion => Nca.Header.SdkVersion;
 
         [PropertiesView]
-        public string DistributionType { get; }
+        public DistributionType DistributionType => Nca.Header.DistributionType;
 
         [PropertiesView]
-        public string KeyGeneration { get; }
+        public byte KeyGeneration => Nca.Header.KeyGeneration;
 
         [PropertiesView]
-        public int ContentIndex { get; }
+        public int ContentIndex => Nca.Header.ContentIndex;
 
         [PropertiesView]
-        public string FormatVersion => Nca.Header.FormatVersion.ToString();
+        public NcaVersion FormatVersion => Nca.Header.FormatVersion;
 
         [PropertiesView]
         public bool IsEncrypted => Nca.Header.IsEncrypted;
-
-        public Nca Nca { get; }
 
         public NcaContentType ContentType => Nca.Header.ContentType;
 
@@ -70,7 +67,6 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public PartitionFileEntry PartitionFileEntry { get; }
 
-        public string Id { get; }
 
         public override IReadOnlyList<IItem> LoadChildItems(bool force)
         {

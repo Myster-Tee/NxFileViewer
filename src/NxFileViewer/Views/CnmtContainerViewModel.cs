@@ -58,12 +58,12 @@ namespace Emignatik.NxFileViewer.Views
         /// <summary>
         /// The type of container (Addon, Patch, Application, etc.)
         /// </summary>
-        public string Type => _cnmtContainer.CnmtItem.ContentType;
+        public string Type => _cnmtContainer.CnmtItem.ContentType.ToString();
 
         /// <summary>
         /// Corresponds to the technical patch level
         /// </summary>
-        public string? TitleVersion => _cnmtContainer.CnmtItem.TitleVersion;
+        public string? TitleVersion => _cnmtContainer.CnmtItem.TitleVersion?.ToString();
 
         /// <summary>
         /// Get the patch level
@@ -82,7 +82,7 @@ namespace Emignatik.NxFileViewer.Views
         /// <summary>
         /// The minimum system version
         /// </summary>
-        public string? MinimumSystemVersion => _cnmtContainer.CnmtItem.MinimumSystemVersion;
+        public string? MinimumSystemVersion => _cnmtContainer.CnmtItem.MinimumSystemVersion?.ToString();
 
         /// <summary>
         /// End user displayed version

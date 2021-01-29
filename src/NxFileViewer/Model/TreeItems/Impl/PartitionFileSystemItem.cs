@@ -21,7 +21,10 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         public sealed override string ObjectType => nameof(PartitionFileSystem);
 
         [PropertiesView]
-        public string PartitionType => PartitionFileSystem.Header.Type.ToString();
+        public PartitionFileSystemType PartitionType => PartitionFileSystem.Header.Type;
+
+        [PropertiesView]
+        public int NumFiles => PartitionFileSystem.Header.NumFiles;
 
         public abstract Keyset KeySet { get; }
 
