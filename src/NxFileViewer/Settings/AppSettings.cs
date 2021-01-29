@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Emignatik.NxFileViewer.Settings.Model;
@@ -6,59 +7,59 @@ using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Settings
 {
-    public class AppSettings : IAppSettings
+    public class AppSettingsWrapper : IAppSettingsWrapper<AppSettingsModel>
     {
         private AppSettingsModel _appSettingsModel = new AppSettingsModel();
 
-        public event SettingChangedHandler? SettingChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public string LastSaveDir
         {
-            get => _appSettingsModel.LastSaveDir;
+            get => _appSettingsModel.LastSaveDir ?? "";
             set
             {
                 _appSettingsModel.LastSaveDir = value;
-                NotifySettingChanged();
+                NotifyPropertyChanged();
             }
         }
 
         public string LastOpenedFile
         {
-            get => _appSettingsModel.LastOpenedFile;
+            get => _appSettingsModel.LastOpenedFile ?? "";
             set
             {
                 _appSettingsModel.LastOpenedFile = value;
-                NotifySettingChanged();
+                NotifyPropertyChanged();
             }
         }
 
         public string ProdKeysFilePath
         {
-            get => _appSettingsModel.KeysFilePath;
+            get => _appSettingsModel.KeysFilePath ?? "";
             set
             {
                 _appSettingsModel.KeysFilePath = value;
-                NotifySettingChanged();
+                NotifyPropertyChanged();
             }
         }
 
         public string ConsoleKeysFilePath
         {
-            get => _appSettingsModel.ConsoleKeysFilePath;
+            get => _appSettingsModel.ConsoleKeysFilePath ?? "";
             set
             {
                 _appSettingsModel.ConsoleKeysFilePath = value;
-                NotifySettingChanged();
+                NotifyPropertyChanged();
             }
         }
 
         public string TitleKeysFilePath
         {
-            get => _appSettingsModel.TitleKeysFilePath;
+            get => _appSettingsModel.TitleKeysFilePath ?? "";
             set
             {
                 _appSettingsModel.TitleKeysFilePath = value;
-                NotifySettingChanged();
+                NotifyPropertyChanged();
             }
         }
 
@@ -68,15 +69,35 @@ namespace Emignatik.NxFileViewer.Settings
             set
             {
                 _appSettingsModel.LogLevel = value;
-                NotifySettingChanged();
+                NotifyPropertyChanged();
             }
         }
 
-        public string? ProdKeysDownloadUrl => _appSettingsModel.ProdKeysDownloadUrl;
-
-        public void Update(AppSettingsModel newSettings)
+        public string ProdKeysDownloadUrl
         {
-            _appSettingsModel = newSettings ?? throw new ArgumentNullException(nameof(newSettings));
+            get => _appSettingsModel.ProdKeysDownloadUrl ?? "";
+            set
+            {
+                _appSettingsModel.ProdKeysDownloadUrl = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public StructureLoadingMode StructureLoadingMode
+        {
+            get => _appSettingsModel.StructureLoadingMode;
+            set
+            {
+                _appSettingsModel.StructureLoadingMode = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public AppSettingsModel WrappedModel => _appSettingsModel;
+
+        public void Update(AppSettingsModel newModel)
+        {
+            _appSettingsModel = newModel ?? throw new ArgumentNullException(nameof(newModel));
 
             NotifyAllPropertiesChanged();
         }
@@ -86,13 +107,14 @@ namespace Emignatik.NxFileViewer.Settings
             var properties = typeof(IAppSettings).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var property in properties)
             {
-                NotifySettingChanged(property.Name);
+                NotifyPropertyChanged(property.Name);
             }
         }
 
-        protected virtual void NotifySettingChanged([CallerMemberName] string settingName = null!)
+        protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null!)
         {
-            SettingChanged?.Invoke(this, new SettingChangedHandlerArgs(settingName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
     }
 }

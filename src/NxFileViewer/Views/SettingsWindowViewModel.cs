@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
+using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 
 namespace Emignatik.NxFileViewer.Views
@@ -15,6 +17,9 @@ namespace Emignatik.NxFileViewer.Views
         private string _prodKeysFilePath;
         private string _consoleKeysFilePath;
         private string _titleKeysFilePath;
+        private StructureLoadingMode _selectedStructureLoadingMode;
+        private LogLevel _selectedLogLevel;
+        private string _prodKeysDownloadUrl;
 
 
         public SettingsWindowViewModel(IAppSettingsManager appSettingsManager)
@@ -31,6 +36,9 @@ namespace Emignatik.NxFileViewer.Views
             ProdKeysFilePath = _appSettings.ProdKeysFilePath;
             ConsoleKeysFilePath = _appSettings.ConsoleKeysFilePath;
             TitleKeysFilePath = _appSettings.TitleKeysFilePath;
+            SelectedStructureLoadingMode = _appSettings.StructureLoadingMode;
+            SelectedLogLevel = _appSettings.LogLevel;
+            ProdKeysDownloadUrl = _appSettings.ProdKeysDownloadUrl;
         }
 
         public event EventHandler? OnQueryCloseView;
@@ -73,6 +81,40 @@ namespace Emignatik.NxFileViewer.Views
             {
                 _titleKeysFilePath = value;
                 NotifyPropertyChanged(nameof(TitleKeysFilePath));
+            }
+        }
+
+        public IEnumerable<StructureLoadingMode> StructureLoadingModes => Enum.GetValues<StructureLoadingMode>();
+
+        public StructureLoadingMode SelectedStructureLoadingMode
+        {
+            get => _selectedStructureLoadingMode;
+            set
+            {
+                _selectedStructureLoadingMode = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public IEnumerable<LogLevel> LogLevels => Enum.GetValues<LogLevel>();
+
+        public LogLevel SelectedLogLevel
+        {
+            get => _selectedLogLevel;
+            set
+            {
+                _selectedLogLevel = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string ProdKeysDownloadUrl
+        {
+            get => _prodKeysDownloadUrl;
+            set
+            {
+                _prodKeysDownloadUrl = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -128,6 +170,9 @@ namespace Emignatik.NxFileViewer.Views
             _appSettings.ProdKeysFilePath = ProdKeysFilePath;
             _appSettings.ConsoleKeysFilePath = ConsoleKeysFilePath;
             _appSettings.TitleKeysFilePath = TitleKeysFilePath;
+            _appSettings.StructureLoadingMode = SelectedStructureLoadingMode;
+            _appSettings.LogLevel = SelectedLogLevel;
+            _appSettings.ProdKeysDownloadUrl = ProdKeysDownloadUrl;
 
             _appSettingsManager.Save();
             NotifyQueryCloseView();

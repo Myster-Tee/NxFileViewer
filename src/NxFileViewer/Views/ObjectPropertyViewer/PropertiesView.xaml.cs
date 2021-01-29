@@ -41,15 +41,25 @@ namespace Emignatik.NxFileViewer.Views.ObjectPropertyViewer
                 {
 
                     var name = propertiesViewAttribute.Name ?? propertyInfo.Name;
-                    if (propertiesViewAttribute.IsNameLocalized)
+                    var nameLocalizationKey = propertiesViewAttribute.NameLocalizationKey;
+                    if (nameLocalizationKey != null)
                     {
-                        if (LocalizationManager.Instance.Current.Keys.TryGetValue(name, out var localizedName))
+                        if (LocalizationManager.Instance.Current.Keys.TryGetValue(nameLocalizationKey, out var localizedName))
                             name = localizedName;
+                    }
+
+                    var description = propertiesViewAttribute.Description;
+                    var descriptionLocalizationKey = propertiesViewAttribute.DescriptionLocalizationKey;
+                    if (descriptionLocalizationKey != null)
+                    {
+                        if (LocalizationManager.Instance.Current.Keys.TryGetValue(descriptionLocalizationKey, out var localizedDescription))
+                            description = localizedDescription;
                     }
 
                     properties.Add(new PropertyData
                     {
                         Name = name,
+                        Description = description,
                         Value = propertyInfo.GetValue(newDataContext)
                     });
                 }

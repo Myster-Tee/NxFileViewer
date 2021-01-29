@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Emignatik.NxFileViewer.FileLoading;
 using Emignatik.NxFileViewer.Utils;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
@@ -15,7 +14,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     public class DirectoryEntryItem : ItemBase
     {
         private readonly IChildItemsBuilder _childItemsBuilder;
-        private List<DirectoryEntryItem>? _subDirEntries;
+        private IReadOnlyList<DirectoryEntryItem>? _subDirEntries;
 
         public DirectoryEntryItem(SectionItem containerSectionItem, DirectoryEntry directoryEntry, string name, string path, DirectoryEntryItem parentDirectoryEntryItem, IChildItemsBuilder childItemsBuilder)
             : this(containerSectionItem, directoryEntry, name, path, (IItem)parentDirectoryEntryItem, childItemsBuilder)
@@ -43,7 +42,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         public sealed override string ObjectType => nameof(DirectoryEntry);
 
         [PropertiesView]
-        public string DirectoryEntryType => DirectoryEntry.Type.ToString();
+        public DirectoryEntryType DirectoryEntryType => DirectoryEntry.Type;
 
         [PropertiesView]
         public string Name { get; }
@@ -76,7 +75,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         /// <summary>
         /// Get the child directory entries (can be either a file or a directory)
         /// </summary>
-        public IReadOnlyList<DirectoryEntryItem> ChildDirectoryEntryItems => GetChildDirectoryEntryItems();
+        public IReadOnlyList<DirectoryEntryItem> ChildDirectoryEntryItems => GetChildDirectoryEntryItems(force: false);
 
         /// <summary>
         /// Get the section which contains this <see cref="DirectoryEntryItem"/> in its descendants
@@ -88,14 +87,16 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         /// </summary>
         public DirectoryEntry DirectoryEntry { get; }
 
-        protected override IEnumerable<IItem> LoadChildItems()
+        public override IReadOnlyList<IItem> LoadChildItems(bool force)
         {
-            return GetChildDirectoryEntryItems();
+            return GetChildDirectoryEntryItems(force);
         }
 
-        private List<DirectoryEntryItem> GetChildDirectoryEntryItems()
+        private IReadOnlyList<DirectoryEntryItem> GetChildDirectoryEntryItems(bool force)
         {
-            return _subDirEntries ??= _childItemsBuilder.Build(this).ToList();
+            if (_subDirEntries == null || force)
+                _subDirEntries = _childItemsBuilder.Build(this);
+            return _subDirEntries;
         }
 
         public override string ToString()

@@ -7,7 +7,8 @@
         xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
         mc:Ignorable="d"
         Style="{StaticResource WindowStyle}"
-        Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsWindowTitle}" Height="241" Width="400" d:DataContext="{d:DesignInstance views:SettingsWindowViewModel}">
+        Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsWindowTitle}" MinWidth="400" d:DataContext="{d:DesignInstance views:SettingsWindowViewModel}"
+        SizeToContent="WidthAndHeight">
     <Window.Resources>
         <Style x:Key="OkCancelButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="MinWidth" Value="50" />
@@ -16,7 +17,9 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -34,32 +37,64 @@
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                         <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ProdKeys}" />
-                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ProdKeysTooltip}"/>
+                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ProdKeysToolTip}"/>
                     </StackPanel>
                     <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding Path=ProdKeysFilePath}" />
                     <Button Grid.Row="1" Grid.Column="1" Content="..." Command="{Binding Path=BrowseProdKeysCommand}" Style="{StaticResource BrowseButton}"/>
 
                     <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-                        <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ConsoleKeys}"/>
-                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ConsoleKeysTooltip}"/>
+                        <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ProdKeysDownloadUrl}" />
+                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ProdKeysDownloadUrlToolTip}"/>
                     </StackPanel>
-                    <TextBox Grid.Row="3" Grid.Column="0" Text="{Binding Path=ConsoleKeysFilePath}"/>
-                    <Button Grid.Row="3" Grid.Column="1" Content="..." Command="{Binding Path=BrowseConsoleKeysCommand}" Style="{StaticResource BrowseButton}"/>
+                    <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=ProdKeysDownloadUrl}" />
 
                     <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-                        <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_TitleKeys}" />
-                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_TitleKeysTooltip}"/>
+                        <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ConsoleKeys}"/>
+                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ConsoleKeysToolTip}"/>
                     </StackPanel>
-                    <TextBox Grid.Row="5" Grid.Column="0" Text="{Binding Path=TitleKeysFilePath, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Grid.Row="5" Grid.Column="1" Content="..." Command="{Binding Path=BrowseTitleKeysCommand}" Style="{StaticResource BrowseButton}"/>
+                    <TextBox Grid.Row="5" Grid.Column="0" Text="{Binding Path=ConsoleKeysFilePath}"/>
+                    <Button Grid.Row="5" Grid.Column="1" Content="..." Command="{Binding Path=BrowseConsoleKeysCommand}" Style="{StaticResource BrowseButton}"/>
+
+                    <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_TitleKeys}" />
+                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_TitleKeysToolTip}"/>
+                    </StackPanel>
+                    <TextBox Grid.Row="7" Grid.Column="0" Text="{Binding Path=TitleKeysFilePath, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Grid.Row="7" Grid.Column="1" Content="..." Command="{Binding Path=BrowseTitleKeysCommand}" Style="{StaticResource BrowseButton}"/>
 
                 </Grid>
             </StackPanel>
         </GroupBox>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" DockPanel.Dock="Bottom" Height="30" HorizontalAlignment="Center" Margin="0,10">
+
+        <GroupBox Grid.Row="1" Header="Misc.">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <StackPanel  Orientation="Horizontal">
+                        <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_StructureLoadingMode}" />
+                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_StructureLoadingModeToolTip}"/>
+                    </StackPanel>
+                    <ComboBox ItemsSource="{Binding Path=StructureLoadingModes}" SelectedItem="{Binding Path=SelectedStructureLoadingMode}" Width="100" HorizontalAlignment="Left" />
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <StackPanel  Orientation="Horizontal">
+                        <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_LogLevel}" />
+                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_LogLevelToolTip}"/>
+                    </StackPanel>
+                    <ComboBox ItemsSource="{Binding Path=LogLevels}" SelectedItem="{Binding Path=SelectedLogLevel}" Width="100" HorizontalAlignment="Left" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" DockPanel.Dock="Bottom" Height="30" HorizontalAlignment="Center" Margin="0,10">
             <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsButton_Save}" IsDefault="True" Command="{Binding Path=SaveSettingsCommand}" Margin="0,0,5,0" Style="{StaticResource OkCancelButton}" />
             <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsButton_Cancel}" IsCancel="True" Command="{Binding Path=CancelSettingsCommand}" Style="{StaticResource OkCancelButton}"/>
         </StackPanel>

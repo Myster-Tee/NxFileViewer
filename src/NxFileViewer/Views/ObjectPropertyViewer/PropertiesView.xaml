@@ -28,7 +28,14 @@
 
     <DataGrid x:Name="PropertiesDataGrid" HeadersVisibility="All" IsReadOnly="True" ItemsSource="{Binding}" AutoGenerateColumns="False" ColumnHeaderHeight="10" >
         <DataGrid.Columns>
-            <DataGridTextColumn Header="" Binding="{Binding Path=(objectPropertyViewer:PropertyData.Name)}" Width="Auto" />
+            <DataGridTemplateColumn Header="" Width="Auto">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate DataType="objectPropertyViewer:PropertyData">
+                        <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Description}" />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
             <DataGridTemplateColumn Header="" Width="*">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate DataType="objectPropertyViewer:PropertyData">

@@ -12,19 +12,20 @@ namespace Emignatik.NxFileViewer.Settings
         private static readonly string SettingsFileName;
 
         private readonly ILogger _logger;
+        private readonly IAppSettingsWrapper<AppSettingsModel> _appSettingsWrapper;
 
         static AppSettingsManager()
         {
             SettingsFileName = $"{AppDomain.CurrentDomain.FriendlyName}.settings.json";
         }
 
-        public AppSettingsManager(IAppSettings appSettings, ILoggerFactory loggerFactory)
+        public AppSettingsManager(ILoggerFactory loggerFactory, IAppSettingsWrapper<AppSettingsModel> appSettingsWrapper)
         {
-            Settings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+            _appSettingsWrapper = appSettingsWrapper ?? throw new ArgumentNullException(nameof(appSettingsWrapper));
         }
 
-        public IAppSettings Settings { get; }
+        public IAppSettings Settings => _appSettingsWrapper;
 
         public void Load()
         {
@@ -33,14 +34,13 @@ namespace Emignatik.NxFileViewer.Settings
                 if (!File.Exists(SettingsFileName))
                     return;
 
-                using var stream = File.OpenRead(SettingsFileName);
-                var appSettings = JsonSerializer.DeserializeAsync<AppSettingsModel>(stream).Result;
-
-                Settings.Update(appSettings);
+                var bytes = File.ReadAllBytes(SettingsFileName);
+                var appSettings = JsonSerializer.Deserialize<AppSettingsModel>(new ReadOnlySpan<byte>(bytes)) ?? new AppSettingsModel();
+                _appSettingsWrapper.Update(appSettings);
             }
             catch (Exception ex)
             {
-                _logger.LogError(string.Format(LocalizationManager.Instance.Current.Keys.SettingsLoadingError,ex.Message));
+                _logger.LogError(string.Format(LocalizationManager.Instance.Current.Keys.SettingsLoadingError, ex.Message));
             }
         }
 
@@ -49,7 +49,7 @@ namespace Emignatik.NxFileViewer.Settings
             try
             {
                 using var stream = File.Create(SettingsFileName);
-                JsonSerializer.Serialize(new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }), Settings);
+                JsonSerializer.Serialize(new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }), _appSettingsWrapper.WrappedModel);
             }
             catch (Exception ex)
             {

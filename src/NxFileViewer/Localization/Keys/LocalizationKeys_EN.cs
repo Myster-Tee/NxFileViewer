@@ -57,27 +57,37 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string SettingsButton_Cancel => "Cancel";
 
         public string SettingsView_ProdKeys => KeySetProviderService.DefaultProdKeysFileName;
-        public string SettingsView_ProdKeysTooltip => "This file contains common keys used by all Switch devices. This file is required for opening encrypted title files." + Environment.NewLine +
+        public string SettingsView_ProdKeysToolTip => "This file contains common keys used by all Switch devices. This file is required for opening encrypted title files." + Environment.NewLine +
                                                       "The program will search this file in the following order:" + Environment.NewLine +
                                                       "    1. the path defined by this setting" + Environment.NewLine +
                                                       "    2. the current program's directory" + Environment.NewLine +
                                                       "    3. the «%UserProfile%\\.switch» directory";
 
         public string SettingsView_ConsoleKeys => KeySetProviderService.DefaultConsoleKeysFileName;
-        public string SettingsView_ConsoleKeysTooltip => "You can optionally specify a file containing console-unique keys." + Environment.NewLine +
+        public string SettingsView_ConsoleKeysToolTip => "You can optionally specify a file containing console-unique keys." + Environment.NewLine +
                                                          "The program will search this file in the following locations:" + Environment.NewLine +
                                                          "    1. the path defined by this setting" + Environment.NewLine +
                                                          "    2. the current program's directory" + Environment.NewLine +
                                                          "    3. the «%UserProfile%\\.switch» directory";
 
         public string SettingsView_TitleKeys => KeySetProviderService.DefaultTitleKeysFileName;
-        public string SettingsView_TitleKeysTooltip => "You can optionally specify a file containing game-specific keys." + Environment.NewLine +
+        public string SettingsView_TitleKeysToolTip => "You can optionally specify a file containing game-specific keys." + Environment.NewLine +
                                                        "The program will search this file in the following locations:" + Environment.NewLine +
                                                        "    1. the path defined by this setting" + Environment.NewLine +
                                                        "    2. the current program's directory" + Environment.NewLine +
                                                        "    3. the «%UserProfile%\\.switch» directory";
 
         public string SettingsView_GroupBoxKeys => "Keys";
+        public string SettingsView_LogLevel => "Log level";
+        public string SettingsView_LogLevelToolTip => "The log level specifies the minimum level to log.";
+        public string SettingsView_ProdKeysDownloadUrl => $"{KeySetProviderService.DefaultProdKeysFileName} download URL";
+        public string SettingsView_ProdKeysDownloadUrlToolTip => $"At startup, the program can automatically download «{KeySetProviderService.DefaultProdKeysFileName}» file when none is found on the system." + Environment.NewLine +
+                                                                  "The keys file will be downloaded to the current application's directory.";
+
+        public string SettingsView_StructureLoadingMode => "Structure loading mode";
+        public string SettingsView_StructureLoadingModeToolTip => "Lazy: the content will be loaded gradually as the elements are expanded in the structure tree view." + Environment.NewLine +
+                                                                  "Full: the full content tree will be loaded immediately." + Environment.NewLine +
+                                                                  "Setting «Lazy» might loads a bit faster, but setting «Full» may reveals some useful errors.";
 
         public string BrowseKeysFile_ProdTitle => "Select \"prod\" keys file";
         public string BrowseKeysFile_ConsoleTitle => "Select \"console\" keys file";
@@ -133,6 +143,8 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string LoadingError_IconMissing => "Expected icon file «{0}» missing.";
         public string LoadingError_XciSecurePartitionNotFound => "XCI secure partition not found!";
         public string LoadingError_FailedToGetNcaFsHeader => "Failed to get NCA File System Header of section «{0}»: {1}";
+        public string LoadingError_FailedToOpenMainFile => "Failed to open Main file: {0}";
+        public string LoadingError_FailedToLoadMainFile => "Failed to load Main file: {0}";
 
         public string KeysFileUsed => "«{0}» file used: {1}";
         public string NoneKeysFile => "[none]";
@@ -140,5 +152,8 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string FailedToDownloadProdKeysFromUrl => $"Failed to download «{KeySetProviderService.DefaultProdKeysFileName}» from URL «{{0}}»: {{1}}";
         public string DownloadingProdKeysFromUrl => $"Downloading «{KeySetProviderService.DefaultProdKeysFileName}» from URL «{{0}}»...";
         public string ProdKeysSuccessfullyDownloaded => $"«{KeySetProviderService.DefaultProdKeysFileName}» successfully downloaded.";
+        public string ToolTip_PatchLevel => "Patch level {0}";
+        public string Log_OpeningFile => "=====> {0} <=====";
+        public string MainModuleIdTooltip => "Also known as build ID (or BID).";
     }
 }

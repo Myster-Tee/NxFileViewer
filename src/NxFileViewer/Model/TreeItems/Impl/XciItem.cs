@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Emignatik.NxFileViewer.FileLoading;
 using LibHac;
 using LibHac.Fs.Fsa;
@@ -11,7 +10,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     {
         private readonly IFile _file;
         private readonly IChildItemsBuilder _childItemsBuilder;
-        private List<XciPartitionItem>? _xciPartitionItems;
+        private IReadOnlyList<XciPartitionItem>? _xciPartitionItems;
 
         public XciItem(Xci xci, string name, IFile file, Keyset keySet, IChildItemsBuilder childItemsBuilder)
         {
@@ -32,18 +31,20 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public Xci Xci { get; }
 
-        public IReadOnlyList<XciPartitionItem> Partitions => GetPartitions();
+        public IReadOnlyList<XciPartitionItem> Partitions => GetPartitions(force: false);
 
         public Keyset KeySet { get; }
 
-        protected override IEnumerable<IItem> LoadChildItems()
+        public override IReadOnlyList<IItem> LoadChildItems(bool force)
         {
-            return GetPartitions();
+            return GetPartitions(force);
         }
 
-        private IReadOnlyList<XciPartitionItem> GetPartitions()
+        private IReadOnlyList<XciPartitionItem> GetPartitions(bool force)
         {
-            return _xciPartitionItems ??= _childItemsBuilder.Build(this).ToList();
+            if (_xciPartitionItems == null || force)
+                _xciPartitionItems = _childItemsBuilder.Build(this);
+            return _xciPartitionItems;
         }
 
         public override void Dispose()

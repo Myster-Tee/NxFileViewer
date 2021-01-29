@@ -13,6 +13,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     public class PartitionFileEntryItem : ItemBase
     {
         private readonly IFile _file;
+        private IReadOnlyList<IItem>? _childItems;
 
         public PartitionFileEntryItem(PartitionFileEntry partitionFileEntry, IFile file, PartitionFileSystemItem parentPartitionFileSystemItem, IChildItemsBuilder childItemsBuilder)
         {
@@ -36,9 +37,16 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public override IItem ParentItem => ParentPartitionFileSystemItem;
 
-        protected override IEnumerable<IItem> LoadChildItems()
+        public override IReadOnlyList<IItem> LoadChildItems(bool force)
         {
-            return ChildItemsBuilder.Build(this);
+            return GetChildItems(force);
+        }
+
+        private IReadOnlyList<IItem> GetChildItems(bool force)
+        {
+            if (_childItems == null || force)
+                _childItems = ChildItemsBuilder.Build(this);
+            return _childItems;
         }
 
         public override void Dispose()

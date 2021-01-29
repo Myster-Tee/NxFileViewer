@@ -118,7 +118,10 @@ namespace Emignatik.NxFileViewer.FileLoading
                         var ncaItem = FindNcaItem(cnmtItem.ContainerSectionItem.ParentNcaItem.ParentPartitionFileSystemItem, ncaId);
                         if (ncaItem == null)
                         {
-                            _logger.LogError(string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_NcaFileMissing, ncaId, cnmtContentEntry.Type));
+                            if (cnmtContentEntry.Type == ContentType.DeltaFragment)
+                                _logger.LogWarning(string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_NcaFileMissing, ncaId, cnmtContentEntry.Type));
+                            else
+                                _logger.LogError(string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_NcaFileMissing, ncaId, cnmtContentEntry.Type));
                             continue;
                         }
 

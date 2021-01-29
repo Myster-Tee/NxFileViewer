@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using Emignatik.NxFileViewer.Commands;
+using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model.Overview;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,17 +58,31 @@ namespace Emignatik.NxFileViewer.Views
         /// <summary>
         /// The type of container (Addon, Patch, Application, etc.)
         /// </summary>
-        public string Type => _cnmtContainer.CnmtItem.ContentType;
+        public string Type => _cnmtContainer.CnmtItem.ContentType.ToString();
 
         /// <summary>
         /// Corresponds to the technical patch level
         /// </summary>
-        public string? TitleVersion => _cnmtContainer.CnmtItem.TitleVersion;
+        public string? TitleVersion => _cnmtContainer.CnmtItem.TitleVersion?.ToString();
+
+        /// <summary>
+        /// Get the patch level
+        /// </summary>
+        public string? PatchLevel
+        {
+            get
+            {
+                var patchLevel = _cnmtContainer.CnmtItem.PatchLevel;
+                if (patchLevel != null)
+                    return string.Format(LocalizationManager.Instance.Current.Keys.ToolTip_PatchLevel, patchLevel);
+                return null;
+            }
+        }
 
         /// <summary>
         /// The minimum system version
         /// </summary>
-        public string? MinimumSystemVersion => _cnmtContainer.CnmtItem.MinimumSystemVersion;
+        public string? MinimumSystemVersion => _cnmtContainer.CnmtItem.MinimumSystemVersion?.ToString();
 
         /// <summary>
         /// End user displayed version

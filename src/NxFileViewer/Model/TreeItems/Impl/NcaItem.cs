@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Emignatik.NxFileViewer.FileLoading;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 using LibHac.Fs.Fsa;
@@ -14,7 +13,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     /// </summary>
     public class NcaItem : PartitionFileEntryItem
     {
-        private List<SectionItem>? _sections;
+        private IReadOnlyList<SectionItem>? _sections;
 
         public NcaItem(Nca nca, PartitionFileEntry partitionFileEntry, IFile openFile, PartitionFileSystemItem parentPartitionFileSystemItem, IChildItemsBuilder childItemsBuilder)
             : base(partitionFileEntry, openFile, parentPartitionFileSystemItem, childItemsBuilder)
@@ -22,34 +21,37 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
             PartitionFileEntry = partitionFileEntry ?? throw new ArgumentNullException(nameof(partitionFileEntry));
             Nca = nca ?? throw new ArgumentNullException(nameof(nca));
             ParentPartitionFileSystemItem = parentPartitionFileSystemItem ?? throw new ArgumentNullException(nameof(parentPartitionFileSystemItem));
+
             Id = PartitionFileEntry.Name.Split('.')[0];
         }
+
+        public string Id { get; }
+
+        public Nca Nca { get; }
 
         [PropertiesView]
         public string UnderlyingType => nameof(Nca);
 
         [PropertiesView]
-        public string NcaType => Nca.Header.ContentType.ToString();
+        public NcaContentType NcaType => Nca.Header.ContentType;
 
         [PropertiesView]
-        public string SdkVersion => Nca.Header.SdkVersion.ToString();
+        public TitleVersion SdkVersion => Nca.Header.SdkVersion;
 
         [PropertiesView]
-        public string DistributionType => Nca.Header.DistributionType.ToString();
+        public DistributionType DistributionType => Nca.Header.DistributionType;
 
         [PropertiesView]
-        public string KeyGeneration => Nca.Header.KeyGeneration.ToString();
+        public byte KeyGeneration => Nca.Header.KeyGeneration;
 
         [PropertiesView]
         public int ContentIndex => Nca.Header.ContentIndex;
 
         [PropertiesView]
-        public string FormatVersion => Nca.Header.FormatVersion.ToString();
+        public NcaVersion FormatVersion => Nca.Header.FormatVersion;
 
         [PropertiesView]
         public bool IsEncrypted => Nca.Header.IsEncrypted;
-
-        public Nca Nca { get; }
 
         public NcaContentType ContentType => Nca.Header.ContentType;
 
@@ -61,20 +63,21 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public override IItem ParentItem => ParentPartitionFileSystemItem;
 
-        public IReadOnlyList<SectionItem> Sections => GetSections();
+        public IReadOnlyList<SectionItem> Sections => GetSections(force: false);
 
         public PartitionFileEntry PartitionFileEntry { get; }
 
-        public string Id { get; }
 
-        protected override IEnumerable<IItem> LoadChildItems()
+        public override IReadOnlyList<IItem> LoadChildItems(bool force)
         {
-            return GetSections();
+            return GetSections(force);
         }
 
-        private IReadOnlyList<SectionItem> GetSections()
+        private IReadOnlyList<SectionItem> GetSections(bool force)
         {
-            return _sections ??= ChildItemsBuilder.Build(this).ToList();
+            if (_sections == null || force)
+                _sections = ChildItemsBuilder.Build(this);
+            return _sections;
         }
     }
 }

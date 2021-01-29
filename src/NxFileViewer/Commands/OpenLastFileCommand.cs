@@ -16,9 +16,9 @@ namespace Emignatik.NxFileViewer.Commands
             _fileOpenerService = fileOpenerService ?? throw new ArgumentNullException(nameof(fileOpenerService));
             _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
 
-            _appSettings.SettingChanged += (sender, args) =>
+            _appSettings.PropertyChanged += (sender, args) =>
             {
-                if (args.SettingName == nameof(IAppSettings.LastOpenedFile))
+                if (args.PropertyName == nameof(IAppSettings.LastOpenedFile))
                     TriggerCanExecuteChanged();
             };
         }

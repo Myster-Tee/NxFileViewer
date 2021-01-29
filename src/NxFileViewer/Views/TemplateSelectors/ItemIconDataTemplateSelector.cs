@@ -41,9 +41,9 @@ namespace Emignatik.NxFileViewer.Views.TemplateSelectors
 
             if (item is DirectoryEntryItem directoryEntryItem)
             {
-                if (directoryEntryItem.DirectoryEntry.Type == DirectoryEntryType.Directory)
+                if (directoryEntryItem.DirectoryEntryType == DirectoryEntryType.Directory)
                     return FolderDirectoryEntryItemIconDataTemplate;
-                if (directoryEntryItem.DirectoryEntry.Type == DirectoryEntryType.File)
+                if (directoryEntryItem.DirectoryEntryType == DirectoryEntryType.File)
                     return FileDirectoryEntryItemIconDataTemplate;
             }
 

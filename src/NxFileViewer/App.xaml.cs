@@ -6,6 +6,7 @@ using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Settings;
+using Emignatik.NxFileViewer.Settings.Model;
 using Emignatik.NxFileViewer.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -26,7 +27,6 @@ namespace Emignatik.NxFileViewer
             _serviceProvider = new ServiceCollection()
                 .AddSingleton<IKeySetProviderService, KeySetProviderService>()
                 .AddSingleton<ILoggerFactory, LoggerFactory>()
-                .AddSingleton<IAppSettings, AppSettings>()
                 .AddSingleton<IOpenFileCommand, OpenFileCommand>()
                 .AddSingleton<IExitAppCommand, ExitAppCommand>()
                 .AddSingleton<IOpenLastFileCommand, OpenLastFileCommand>()
@@ -35,13 +35,15 @@ namespace Emignatik.NxFileViewer
                 .AddSingleton<IFileOpenerService, FileOpenerService>()
                 .AddSingleton<IOpenedFileService, OpenedFileService>()
                 .AddSingleton<IFileTypeAnalyzer, FileTypeAnalyzer>()
-                .AddSingleton<SettingsWindowViewModel>()
                 .AddSingleton<MainWindowViewModel>()
+                .AddSingleton<IAppSettingsWrapper<AppSettingsModel>, AppSettingsWrapper>()
+                .AddSingleton<IAppSettings>(provider => provider.GetRequiredService<IAppSettingsWrapper<AppSettingsModel>>())
                 .AddSingleton<IAppSettingsManager, AppSettingsManager>()
                 .AddSingleton<IFileItemLoader, FileItemLoader>()
                 .AddSingleton<IFileOverviewLoader, FileOverviewLoader>()
                 .AddSingleton<IChildItemsBuilder, ChildItemsBuilder>()
 
+                .AddTransient<SettingsWindowViewModel>() // Important to let transient so that real actual settings are displayed when settings view is shown
                 .AddTransient<ISaveTitleImageCommand, SaveTitleImageCommand>()
                 .AddTransient<ICopyTitleImageCommand, CopyTitleImageCommand>()
                 .AddTransient<ISaveItemToFileCommand, SaveItemToFileCommand>()

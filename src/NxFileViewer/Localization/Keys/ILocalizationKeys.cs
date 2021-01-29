@@ -1,5 +1,4 @@
-﻿using System;
-using Emignatik.NxFileViewer.Utils.MVVM.Localization;
+﻿using Emignatik.NxFileViewer.Utils.MVVM.Localization;
 
 namespace Emignatik.NxFileViewer.Localization.Keys
 {
@@ -50,12 +49,17 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string SettingsButton_Save { get; }
         string SettingsButton_Cancel { get; }
         string SettingsView_ProdKeys { get; }
-        string SettingsView_ProdKeysTooltip { get; }
+        string SettingsView_ProdKeysToolTip { get; }
         string SettingsView_ConsoleKeys { get; }
-        string SettingsView_ConsoleKeysTooltip { get; }
+        string SettingsView_ConsoleKeysToolTip { get; }
         string SettingsView_TitleKeys { get; }
-        string SettingsView_TitleKeysTooltip { get; }
+        string SettingsView_TitleKeysToolTip { get; }
         string SettingsView_GroupBoxKeys { get; }
+        string SettingsView_LogLevel { get; }
+        string SettingsView_LogLevelToolTip { get; }
+        string SettingsView_ProdKeysDownloadUrl { get; }
+        string SettingsView_ProdKeysDownloadUrlToolTip { get; }
+
         string BrowseKeysFile_ProdTitle { get; }
         string BrowseKeysFile_ConsoleTitle { get; }
         string BrowseKeysFile_TitleTitle { get; }
@@ -111,11 +115,16 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string LoadingError_IconMissing { get; }
         string LoadingError_XciSecurePartitionNotFound { get; }
         string LoadingError_FailedToGetNcaFsHeader { get; }
+        string LoadingError_FailedToOpenMainFile { get; }
+        string LoadingError_FailedToLoadMainFile { get; }
 
         string KeysFileUsed { get; }
         string NoneKeysFile { get; }
         string FailedToDownloadProdKeysFromUrl { get; }
         string DownloadingProdKeysFromUrl { get; }
         string ProdKeysSuccessfullyDownloaded { get; }
+        string ToolTip_PatchLevel { get; }
+        string Log_OpeningFile { get; }
+        string MainModuleIdTooltip { get; }
     }
 }
