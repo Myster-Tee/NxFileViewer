@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Emignatik.NxFileViewer.Settings.Model;
@@ -10,7 +11,7 @@ namespace Emignatik.NxFileViewer.Settings
     {
         private AppSettingsModel _appSettingsModel = new AppSettingsModel();
 
-        public event SettingChangedHandler? SettingChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public string LastSaveDir
         {
@@ -18,7 +19,7 @@ namespace Emignatik.NxFileViewer.Settings
             set
             {
                 _appSettingsModel.LastSaveDir = value;
-                NotifySettingChanged();
+                NotifyPropertyChanged();
             }
         }
 
@@ -28,7 +29,7 @@ namespace Emignatik.NxFileViewer.Settings
             set
             {
                 _appSettingsModel.LastOpenedFile = value;
-                NotifySettingChanged();
+                NotifyPropertyChanged();
             }
         }
 
@@ -38,7 +39,7 @@ namespace Emignatik.NxFileViewer.Settings
             set
             {
                 _appSettingsModel.KeysFilePath = value;
-                NotifySettingChanged();
+                NotifyPropertyChanged();
             }
         }
 
@@ -48,7 +49,7 @@ namespace Emignatik.NxFileViewer.Settings
             set
             {
                 _appSettingsModel.ConsoleKeysFilePath = value;
-                NotifySettingChanged();
+                NotifyPropertyChanged();
             }
         }
 
@@ -58,7 +59,7 @@ namespace Emignatik.NxFileViewer.Settings
             set
             {
                 _appSettingsModel.TitleKeysFilePath = value;
-                NotifySettingChanged();
+                NotifyPropertyChanged();
             }
         }
 
@@ -68,11 +69,21 @@ namespace Emignatik.NxFileViewer.Settings
             set
             {
                 _appSettingsModel.LogLevel = value;
-                NotifySettingChanged();
+                NotifyPropertyChanged();
             }
         }
 
         public string? ProdKeysDownloadUrl => _appSettingsModel.ProdKeysDownloadUrl;
+
+        public StructureLoadingMode StructureLoadingMode
+        {
+            get => _appSettingsModel.StructureLoadingMode;
+            set
+            {
+                _appSettingsModel.StructureLoadingMode = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public void Update(AppSettingsModel newSettings)
         {
@@ -86,13 +97,14 @@ namespace Emignatik.NxFileViewer.Settings
             var properties = typeof(IAppSettings).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var property in properties)
             {
-                NotifySettingChanged(property.Name);
+                NotifyPropertyChanged(property.Name);
             }
         }
 
-        protected virtual void NotifySettingChanged([CallerMemberName] string settingName = null!)
+        protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null!)
         {
-            SettingChanged?.Invoke(this, new SettingChangedHandlerArgs(settingName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
     }
 }

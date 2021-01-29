@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Settings;
@@ -31,7 +32,7 @@ namespace Emignatik.NxFileViewer.Services
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
             _logger = loggerFactory.CreateLogger(this.GetType());
 
-            appSettings.SettingChanged += OnAppSettingChanged;
+            appSettings.PropertyChanged += OnSettingChanged;
         }
 
         public string AppDirProdKeysFilePath { get; }
@@ -49,11 +50,11 @@ namespace Emignatik.NxFileViewer.Services
             return _keySet;
         }
 
-        private void OnAppSettingChanged(object sender, SettingChangedHandlerArgs args)
+        private void OnSettingChanged(object? sender, PropertyChangedEventArgs args)
         {
-            if (args.SettingName == nameof(IAppSettings.ProdKeysFilePath)
-                || args.SettingName == nameof(IAppSettings.ConsoleKeysFilePath)
-                || args.SettingName == nameof(IAppSettings.TitleKeysFilePath))
+            if (args.PropertyName == nameof(IAppSettings.ProdKeysFilePath)
+                || args.PropertyName == nameof(IAppSettings.ConsoleKeysFilePath)
+                || args.PropertyName == nameof(IAppSettings.TitleKeysFilePath))
             {
                 UnloadCurrentKeySet();
             }

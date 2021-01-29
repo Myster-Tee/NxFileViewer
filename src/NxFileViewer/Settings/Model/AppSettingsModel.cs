@@ -17,8 +17,11 @@ namespace Emignatik.NxFileViewer.Settings.Model
 
         public string LastSaveDir { get; set; } = "";
 
+        // TODO: sauvegarder a partir du nom
         public LogLevel LogLevel { get; set; } = LogLevel.Information;
 
         public string? ProdKeysDownloadUrl { get; set; }
+
+        public StructureLoadingMode StructureLoadingMode { get; set; }
     }
 }

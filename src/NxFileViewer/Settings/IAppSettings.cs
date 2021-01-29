@@ -1,12 +1,11 @@
-﻿using Emignatik.NxFileViewer.Settings.Model;
+﻿using System.ComponentModel;
+using Emignatik.NxFileViewer.Settings.Model;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Settings
 {
-    public interface IAppSettings
+    public interface IAppSettings: INotifyPropertyChanged
     {
-        event SettingChangedHandler SettingChanged;
-
         string LastSaveDir { get; set; }
 
         string LastOpenedFile { get; set; }
@@ -21,18 +20,8 @@ namespace Emignatik.NxFileViewer.Settings
 
         string? ProdKeysDownloadUrl { get; }
 
+        StructureLoadingMode StructureLoadingMode { get; set; }
+
         void Update(AppSettingsModel newSettings);
-    }
-
-    public delegate void SettingChangedHandler(object sender, SettingChangedHandlerArgs args);
-
-    public class SettingChangedHandlerArgs
-    {
-        public SettingChangedHandlerArgs(string settingName)
-        {
-            SettingName = settingName;
-        }
-
-        public string SettingName { get; }
     }
 }
