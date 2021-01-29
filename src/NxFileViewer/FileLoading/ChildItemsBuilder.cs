@@ -9,6 +9,7 @@ using LibHac.Fs;
 using LibHac.Fs.Fsa;
 using LibHac.FsSystem;
 using LibHac.FsSystem.NcaUtils;
+using LibHac.Loader;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.FileLoading
@@ -190,6 +191,7 @@ namespace Emignatik.NxFileViewer.FileLoading
                     var entryName = StringUtils.Utf8ZToString(directoryEntry.Name);
                     var entryPath = PathTools.Combine(rootPath, entryName);
 
+                    // NACP File
                     if (parentItem.ParentNcaItem.ContentType == NcaContentType.Control && string.Equals(entryName, NacpItem.NacpFileName, StringComparison.OrdinalIgnoreCase) && directoryEntry.Type == DirectoryEntryType.File)
                     {
                         IFile nacpFile;
@@ -216,6 +218,7 @@ namespace Emignatik.NxFileViewer.FileLoading
 
                         children.Add(new NacpItem(nacp, parentItem, directoryEntry, entryName, entryPath, this));
                     }
+                    // CNMT File
                     else if (parentItem.ParentNcaItem.ContentType == NcaContentType.Meta && entryName.EndsWith(".cnmt", StringComparison.OrdinalIgnoreCase) && directoryEntry.Type == DirectoryEntryType.File)
                     {
                         IFile cnmtFile;
@@ -240,6 +243,35 @@ namespace Emignatik.NxFileViewer.FileLoading
                             continue;
                         }
                         children.Add(new CnmtItem(cnmt, parentItem, directoryEntry, entryName, entryPath, this));
+                    }
+                    // MAIN file
+                    else if (parentItem.ParentNcaItem.ContentType == NcaContentType.Program && string.Equals(entryName, "main", StringComparison.OrdinalIgnoreCase) && directoryEntry.Type == DirectoryEntryType.File)
+                    {
+                        IFile nsoFile;
+                        try
+                        {
+                            parentItem.FileSystem.OpenFile(out nsoFile, new U8Span(entryPath), OpenMode.Read).ThrowIfFailure();
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenMainFile, ex.Message));
+                            continue;
+                        }
+
+                        NsoHeader? nsoHeader;
+                        try
+                        {
+                            var nsoReader = new NsoReader();
+                            nsoReader.Initialize(nsoFile).ThrowIfFailure();
+                            nsoHeader = nsoReader.Header;
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadMainFile, ex.Message));
+                            continue;
+                        }
+
+                        children.Add(new MainItem(nsoHeader.Value, parentItem, directoryEntry, entryName, entryPath, this));
                     }
                     else
                     {

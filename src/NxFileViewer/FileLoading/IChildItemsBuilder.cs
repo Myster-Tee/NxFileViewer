@@ -12,7 +12,7 @@ namespace Emignatik.NxFileViewer.FileLoading
 
         IReadOnlyList<SectionItem> Build(NcaItem parentItem);
 
-        IReadOnlyList<DirectoryEntryItem> Build(SectionItem parentItem);
+        IReadOnlyList<DirectoryEntryItem> Build(SectionItem section);
 
         IReadOnlyList<DirectoryEntryItem> Build(DirectoryEntryItem parentItem);
 

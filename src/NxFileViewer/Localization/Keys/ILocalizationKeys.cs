@@ -115,6 +115,8 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string LoadingError_IconMissing { get; }
         string LoadingError_XciSecurePartitionNotFound { get; }
         string LoadingError_FailedToGetNcaFsHeader { get; }
+        string LoadingError_FailedToOpenMainFile { get; }
+        string LoadingError_FailedToLoadMainFile { get; }
 
         string KeysFileUsed { get; }
         string NoneKeysFile { get; }
@@ -123,5 +125,6 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string ProdKeysSuccessfullyDownloaded { get; }
         string ToolTip_PatchLevel { get; }
         string Log_OpeningFile { get; }
+        string MainModuleIdTooltip { get; }
     }
 }

@@ -143,6 +143,8 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string LoadingError_IconMissing => "Expected icon file «{0}» missing.";
         public string LoadingError_XciSecurePartitionNotFound => "XCI secure partition not found!";
         public string LoadingError_FailedToGetNcaFsHeader => "Failed to get NCA File System Header of section «{0}»: {1}";
+        public string LoadingError_FailedToOpenMainFile => "Failed to open Main file: {0}";
+        public string LoadingError_FailedToLoadMainFile => "Failed to load Main file: {0}";
 
         public string KeysFileUsed => "«{0}» file used: {1}";
         public string NoneKeysFile => "[none]";
@@ -152,5 +154,6 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string ProdKeysSuccessfullyDownloaded => $"«{KeySetProviderService.DefaultProdKeysFileName}» successfully downloaded.";
         public string ToolTip_PatchLevel => "Patch level {0}";
         public string Log_OpeningFile => "=====> {0} <=====";
+        public string MainModuleIdTooltip => "Also known as build ID (or BID).";
     }
 }
