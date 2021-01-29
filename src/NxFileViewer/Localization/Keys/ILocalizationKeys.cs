@@ -57,6 +57,8 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string SettingsView_GroupBoxKeys { get; }
         string SettingsView_LogLevel { get; }
         string SettingsView_LogLevelToolTip { get; }
+        string SettingsView_ProdKeysDownloadUrl { get; }
+        string SettingsView_ProdKeysDownloadUrlToolTip { get; }
 
         string BrowseKeysFile_ProdTitle { get; }
         string BrowseKeysFile_ConsoleTitle { get; }

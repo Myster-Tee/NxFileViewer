@@ -15,7 +15,7 @@ namespace Emignatik.NxFileViewer.Settings
 
         public string LastSaveDir
         {
-            get => _appSettingsModel.LastSaveDir;
+            get => _appSettingsModel.LastSaveDir ?? "";
             set
             {
                 _appSettingsModel.LastSaveDir = value;
@@ -25,7 +25,7 @@ namespace Emignatik.NxFileViewer.Settings
 
         public string LastOpenedFile
         {
-            get => _appSettingsModel.LastOpenedFile;
+            get => _appSettingsModel.LastOpenedFile ?? "";
             set
             {
                 _appSettingsModel.LastOpenedFile = value;
@@ -35,7 +35,7 @@ namespace Emignatik.NxFileViewer.Settings
 
         public string ProdKeysFilePath
         {
-            get => _appSettingsModel.KeysFilePath;
+            get => _appSettingsModel.KeysFilePath ?? "";
             set
             {
                 _appSettingsModel.KeysFilePath = value;
@@ -45,7 +45,7 @@ namespace Emignatik.NxFileViewer.Settings
 
         public string ConsoleKeysFilePath
         {
-            get => _appSettingsModel.ConsoleKeysFilePath;
+            get => _appSettingsModel.ConsoleKeysFilePath ?? "";
             set
             {
                 _appSettingsModel.ConsoleKeysFilePath = value;
@@ -55,7 +55,7 @@ namespace Emignatik.NxFileViewer.Settings
 
         public string TitleKeysFilePath
         {
-            get => _appSettingsModel.TitleKeysFilePath;
+            get => _appSettingsModel.TitleKeysFilePath ?? "";
             set
             {
                 _appSettingsModel.TitleKeysFilePath = value;
@@ -73,7 +73,15 @@ namespace Emignatik.NxFileViewer.Settings
             }
         }
 
-        public string? ProdKeysDownloadUrl => _appSettingsModel.ProdKeysDownloadUrl;
+        public string ProdKeysDownloadUrl
+        {
+            get => _appSettingsModel.ProdKeysDownloadUrl ?? "";
+            set
+            {
+                _appSettingsModel.ProdKeysDownloadUrl = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public StructureLoadingMode StructureLoadingMode
         {

@@ -80,10 +80,14 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string SettingsView_GroupBoxKeys => "Keys";
         public string SettingsView_LogLevel => "Log level";
         public string SettingsView_LogLevelToolTip => "The log level specifies the minimum level to log.";
+        public string SettingsView_ProdKeysDownloadUrl => $"{KeySetProviderService.DefaultProdKeysFileName} download URL";
+        public string SettingsView_ProdKeysDownloadUrlToolTip => $"At startup, the program can automatically download «{KeySetProviderService.DefaultProdKeysFileName}» file when none is found on the system." + Environment.NewLine +
+                                                                  "The keys file will be downloaded to the current application's directory.";
 
         public string SettingsView_StructureLoadingMode => "Structure loading mode";
-        public string SettingsView_StructureLoadingModeToolTip => "Lazy: child items will be loaded on expand" + Environment.NewLine +
-                                                                  "Full: child items will be loaded immediately";
+        public string SettingsView_StructureLoadingModeToolTip => "Lazy: the content will be loaded gradually as the elements are expanded in the structure tree view." + Environment.NewLine +
+                                                                  "Full: the full content tree will be loaded immediately." + Environment.NewLine +
+                                                                  "Setting «Lazy» might loads a bit faster, but setting «Full» may reveals some useful errors.";
 
         public string BrowseKeysFile_ProdTitle => "Select \"prod\" keys file";
         public string BrowseKeysFile_ConsoleTitle => "Select \"console\" keys file";
