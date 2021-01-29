@@ -39,6 +39,7 @@ namespace Emignatik.NxFileViewer.Services
         {
             try
             {
+                _logger.LogInformation(string.Format(LocalizationManager.Instance.Current.Keys.Log_OpeningFile, filePath));
                 _appSettings.LastOpenedFile = filePath;
 
                 IItem rootItem;

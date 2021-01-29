@@ -120,5 +120,6 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string DownloadingProdKeysFromUrl { get; }
         string ProdKeysSuccessfullyDownloaded { get; }
         string ToolTip_PatchLevel { get; }
+        string Log_OpeningFile { get; }
     }
 }
