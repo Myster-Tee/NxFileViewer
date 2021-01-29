@@ -1,3 +1,4 @@
 ﻿TODO: ajouter une fonction de contrôle de l'authenticité
 TODO: ajout d'une fenêtre about dialog with credits
 TODO: choisir la langue dans les settings
+TODO: feature de nommage automatique de fichiers
