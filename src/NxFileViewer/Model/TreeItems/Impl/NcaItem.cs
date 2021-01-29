@@ -21,26 +21,32 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
             PartitionFileEntry = partitionFileEntry ?? throw new ArgumentNullException(nameof(partitionFileEntry));
             Nca = nca ?? throw new ArgumentNullException(nameof(nca));
             ParentPartitionFileSystemItem = parentPartitionFileSystemItem ?? throw new ArgumentNullException(nameof(parentPartitionFileSystemItem));
+
             Id = PartitionFileEntry.Name.Split('.')[0];
+            NcaType = Nca.Header.ContentType.ToString();
+            SdkVersion = Nca.Header.SdkVersion.ToString();
+            DistributionType = Nca.Header.DistributionType.ToString();
+            KeyGeneration = Nca.Header.KeyGeneration.ToString();
+            ContentIndex = Nca.Header.ContentIndex;
         }
 
         [PropertiesView]
         public string UnderlyingType => nameof(Nca);
 
         [PropertiesView]
-        public string NcaType => Nca.Header.ContentType.ToString();
+        public string NcaType { get; }
 
         [PropertiesView]
-        public string SdkVersion => Nca.Header.SdkVersion.ToString();
+        public string SdkVersion { get; }
 
         [PropertiesView]
-        public string DistributionType => Nca.Header.DistributionType.ToString();
+        public string DistributionType { get; }
 
         [PropertiesView]
-        public string KeyGeneration => Nca.Header.KeyGeneration.ToString();
+        public string KeyGeneration { get; }
 
         [PropertiesView]
-        public int ContentIndex => Nca.Header.ContentIndex;
+        public int ContentIndex { get; }
 
         [PropertiesView]
         public string FormatVersion => Nca.Header.FormatVersion.ToString();

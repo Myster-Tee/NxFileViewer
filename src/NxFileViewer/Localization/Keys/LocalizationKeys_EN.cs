@@ -143,5 +143,6 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string FailedToDownloadProdKeysFromUrl => $"Failed to download «{KeySetProviderService.DefaultProdKeysFileName}» from URL «{{0}}»: {{1}}";
         public string DownloadingProdKeysFromUrl => $"Downloading «{KeySetProviderService.DefaultProdKeysFileName}» from URL «{{0}}»...";
         public string ProdKeysSuccessfullyDownloaded => $"«{KeySetProviderService.DefaultProdKeysFileName}» successfully downloaded.";
+        public string ToolTip_PatchLevel => "Patch level {0}";
     }
 }

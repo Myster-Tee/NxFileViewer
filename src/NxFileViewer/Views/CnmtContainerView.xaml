@@ -23,7 +23,7 @@
                 </StackPanel>
                 <StackPanel>
                     <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.TitleVersion}" Style="{StaticResource Title2}"/>
-                    <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=TitleVersion, Mode=OneWay}" />
+                    <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=TitleVersion, Mode=OneWay}" ToolTip="{Binding Path=PatchLevel, Mode=OneWay}" />
                 </StackPanel>   
                 <StackPanel>
                     <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MinimumSystemVersion}" Style="{StaticResource Title2}"/>
