@@ -25,7 +25,7 @@ namespace Emignatik.NxFileViewer.FileLoading
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         }
 
-        public IEnumerable<XciPartitionItem> Build(XciItem parentItem)
+        public IReadOnlyList<XciPartitionItem> Build(XciItem parentItem)
         {
             var children = new List<XciPartitionItem>();
             var xci = parentItem.Xci;
@@ -66,7 +66,7 @@ namespace Emignatik.NxFileViewer.FileLoading
             return children;
         }
 
-        public PartitionChildByTypes Build(PartitionFileSystemItem parentItem)
+        public IPartitionChildByTypes Build(PartitionFileSystemItem parentItem)
         {
             var partitionChildByTypes = new PartitionChildByTypes();
 
@@ -101,16 +101,16 @@ namespace Emignatik.NxFileViewer.FileLoading
                             continue;
                         }
                         var ncaItem = new NcaItem(nca, partitionFileEntry, file, parentItem, this);
-                        partitionChildByTypes.NcaItems.Add(ncaItem);
+                        partitionChildByTypes.NcaItemsInternal.Add(ncaItem);
                         child = ncaItem;
                     }
                     else
                     {
                         var partitionFileEntryItem = new PartitionFileEntryItem(partitionFileEntry, file, parentItem, this);
-                        partitionChildByTypes.PartitionFileEntryItems.Add(partitionFileEntryItem);
+                        partitionChildByTypes.PartitionFileEntryItemsInternal.Add(partitionFileEntryItem);
                         child = partitionFileEntryItem;
                     }
-                    partitionChildByTypes.AllChildItems.Add(child);
+                    partitionChildByTypes.AllChildItemsInternal.Add(child);
                 }
             }
             catch (Exception ex)
@@ -121,7 +121,7 @@ namespace Emignatik.NxFileViewer.FileLoading
             return partitionChildByTypes;
         }
 
-        public IEnumerable<SectionItem> Build(NcaItem parentItem)
+        public IReadOnlyList<SectionItem> Build(NcaItem parentItem)
         {
             var children = new List<SectionItem>();
 
@@ -175,7 +175,7 @@ namespace Emignatik.NxFileViewer.FileLoading
             return children;
         }
 
-        public IEnumerable<DirectoryEntryItem> Build(SectionItem parentItem)
+        public IReadOnlyList<DirectoryEntryItem> Build(SectionItem parentItem)
         {
             var children = new List<DirectoryEntryItem>();
 
@@ -255,7 +255,7 @@ namespace Emignatik.NxFileViewer.FileLoading
             return children;
         }
 
-        public IEnumerable<DirectoryEntryItem> Build(DirectoryEntryItem parentItem)
+        public IReadOnlyList<DirectoryEntryItem> Build(DirectoryEntryItem parentItem)
         {
             var children = new List<DirectoryEntryItem>();
 
@@ -283,9 +283,9 @@ namespace Emignatik.NxFileViewer.FileLoading
             return children;
         }
 
-        public IEnumerable<IItem> Build(PartitionFileEntryItem partitionFileEntryItem)
+        public IReadOnlyList<IItem> Build(PartitionFileEntryItem partitionFileEntryItem)
         {
-            yield break;
+            return new List<IItem>();
         }
 
         private DirectoryEntry[] SafeGetDirectoryEntries(IFileSystem fileSystem, string currentPath)

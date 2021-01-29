@@ -10,7 +10,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     public abstract class PartitionFileSystemItem : ItemBase
     {
         private readonly IChildItemsBuilder _childItemsBuilder;
-        private PartitionChildByTypes? _partitionChildByTypes;
+        private IPartitionChildByTypes? _partitionChildByTypes;
 
         public PartitionFileSystemItem(PartitionFileSystem partitionFileSystem, IChildItemsBuilder childItemsBuilder)
         {
@@ -30,21 +30,23 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         /// <summary>
         /// Get child items of type <see cref="NcaItem"/>
         /// </summary>
-        public IReadOnlyList<NcaItem> NcaItems => GetChildItemsByTypes().NcaItems;
+        public IReadOnlyList<NcaItem> NcaItems => GetChildItemsByTypes(force: false).NcaItems;
 
         /// <summary>
         /// Get child items of type <see cref="PartitionFileEntryItem"/>
         /// </summary>
-        public IReadOnlyList<PartitionFileEntryItem> PartitionFileEntryItems => GetChildItemsByTypes().PartitionFileEntryItems;
+        public IReadOnlyList<PartitionFileEntryItem> PartitionFileEntryItems => GetChildItemsByTypes(force: false).PartitionFileEntryItems;
 
-        protected sealed override IEnumerable<IItem> LoadChildItems()
+        public sealed override IReadOnlyList<IItem> LoadChildItems(bool force)
         {
-            return GetChildItemsByTypes().AllChildItems;
+            return GetChildItemsByTypes(force).AllChildItems;
         }
 
-        private PartitionChildByTypes GetChildItemsByTypes()
+        private IPartitionChildByTypes GetChildItemsByTypes(bool force)
         {
-            return _partitionChildByTypes ??= _childItemsBuilder.Build(this);
+            if (_partitionChildByTypes == null || force)
+                _partitionChildByTypes = _childItemsBuilder.Build(this);
+            return _partitionChildByTypes;
         }
     }
 }

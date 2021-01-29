@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Emignatik.NxFileViewer.Model.TreeItems;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 
@@ -7,23 +6,23 @@ namespace Emignatik.NxFileViewer.FileLoading
 {
     public interface IChildItemsBuilder
     {
-        IEnumerable<XciPartitionItem> Build(XciItem parentItem);
+        IReadOnlyList<XciPartitionItem> Build(XciItem parentItem);
 
-        PartitionChildByTypes Build(PartitionFileSystemItem parentItem);
+        IPartitionChildByTypes Build(PartitionFileSystemItem parentItem);
 
-        IEnumerable<SectionItem> Build(NcaItem parentItem);
+        IReadOnlyList<SectionItem> Build(NcaItem parentItem);
 
-        IEnumerable<DirectoryEntryItem> Build(SectionItem parentItem);
+        IReadOnlyList<DirectoryEntryItem> Build(SectionItem parentItem);
 
-        IEnumerable<DirectoryEntryItem> Build(DirectoryEntryItem parentItem);
+        IReadOnlyList<DirectoryEntryItem> Build(DirectoryEntryItem parentItem);
 
-        IEnumerable<IItem> Build(PartitionFileEntryItem partitionFileEntryItem);
+        IReadOnlyList<IItem> Build(PartitionFileEntryItem partitionFileEntryItem);
     }
 
-    public class PartitionChildByTypes
+    public interface IPartitionChildByTypes
     {
-        public List<IItem> AllChildItems { get; } = new List<IItem>();
-        public List<NcaItem> NcaItems { get; } = new List<NcaItem>();
-        public List<PartitionFileEntryItem> PartitionFileEntryItems { get; } = new List<PartitionFileEntryItem>();
+        public IReadOnlyList<IItem> AllChildItems { get; }
+        public IReadOnlyList<NcaItem> NcaItems { get; }
+        public IReadOnlyList<PartitionFileEntryItem> PartitionFileEntryItems { get; }
     }
 }

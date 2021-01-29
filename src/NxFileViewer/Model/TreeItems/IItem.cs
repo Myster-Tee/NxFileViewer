@@ -29,5 +29,13 @@ namespace Emignatik.NxFileViewer.Model.TreeItems
         /// </summary>
         IReadOnlyList<IItem> ChildItems { get; }
 
+        /// <summary>
+        /// Load the child items.
+        /// When force is false, returns the last loaded cached items.
+        /// When force is true, discard cached items and forces child items loading.
+        /// </summary>
+        /// <param name="force"></param>
+        /// <returns></returns>
+        IReadOnlyList<IItem> LoadChildItems(bool force);
     }
 }

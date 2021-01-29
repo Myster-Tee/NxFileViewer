@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Emignatik.NxFileViewer.FileLoading;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 using LibHac.Fs.Fsa;
@@ -12,7 +11,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     {
         private readonly NcaFsHeader _ncaFsHeader;
         private readonly IChildItemsBuilder _childItemsBuilder;
-        private List<DirectoryEntryItem>? _dirEntries;
+        private IReadOnlyList<DirectoryEntryItem>? _dirEntries;
 
         public SectionItem(int sectionIndex, NcaFsHeader ncaFsHeader, IFileSystem fileSystem, NcaItem parentNcaItem,
             IChildItemsBuilder childItemsBuilder)
@@ -32,33 +31,35 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public override IItem ParentItem => ParentNcaItem;
 
-        public IReadOnlyList<DirectoryEntryItem> ChildDirectoryEntryItems => GetChildDirectoryEntryItems();
+        public IReadOnlyList<DirectoryEntryItem> ChildDirectoryEntryItems => GetChildDirectoryEntryItems(force: false);
 
         [PropertiesView]
         public int SectionIndex { get; }
 
-        [PropertiesView] 
+        [PropertiesView]
         public string EncryptionType => _ncaFsHeader.EncryptionType.ToString();
 
-        [PropertiesView] 
-        public string FormatType => _ncaFsHeader.FormatType.ToString();    
-        
-        [PropertiesView] 
-        public string HashType => _ncaFsHeader.HashType.ToString();   
-        
-        [PropertiesView] 
+        [PropertiesView]
+        public string FormatType => _ncaFsHeader.FormatType.ToString();
+
+        [PropertiesView]
+        public string HashType => _ncaFsHeader.HashType.ToString();
+
+        [PropertiesView]
         public string Version => _ncaFsHeader.Version.ToString();
 
         public IFileSystem FileSystem { get; }
 
-        protected override IEnumerable<IItem> LoadChildItems()
+        public override IReadOnlyList<IItem> LoadChildItems(bool force)
         {
-            return GetChildDirectoryEntryItems();
+            return GetChildDirectoryEntryItems(force);
         }
 
-        private List<DirectoryEntryItem> GetChildDirectoryEntryItems()
+        private IReadOnlyList<DirectoryEntryItem> GetChildDirectoryEntryItems(bool force)
         {
-            return _dirEntries ??= _childItemsBuilder.Build(this).ToList();
+            if (_dirEntries == null || force)
+                _dirEntries = _childItemsBuilder.Build(this);
+            return _dirEntries;
         }
     }
 }

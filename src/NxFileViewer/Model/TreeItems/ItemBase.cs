@@ -6,21 +6,17 @@ namespace Emignatik.NxFileViewer.Model.TreeItems
 {
     public abstract class ItemBase : IItem
     {
-        private IReadOnlyList<IItem>? _childItems;
-
         [PropertiesView("Type")]
         public abstract string ObjectType { get; }
 
         public abstract string DisplayName { get; }
 
-        public IReadOnlyList<IItem> ChildItems
-        {
-            get { return _childItems ??= LoadChildItems().ToArray(); }
-        }
+        public IReadOnlyList<IItem> ChildItems => LoadChildItems(force: false).ToArray();
 
         public abstract IItem? ParentItem { get; }
 
-        protected abstract IEnumerable<IItem> LoadChildItems();
+
+        public abstract IReadOnlyList<IItem> LoadChildItems(bool force);
 
         public override string ToString()
         {
