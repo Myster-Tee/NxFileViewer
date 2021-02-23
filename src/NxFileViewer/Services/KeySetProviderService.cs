@@ -76,9 +76,9 @@ namespace Emignatik.NxFileViewer.Services
 
             try
             {
-                _logger.LogInformation(string.Format(LocalizationManager.Instance.Current.Keys.KeysFileUsed, DefaultProdKeysFileName, _prodKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
-                _logger.LogInformation(string.Format(LocalizationManager.Instance.Current.Keys.KeysFileUsed, DefaultConsoleKeysFileName, _consoleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
-                _logger.LogInformation(string.Format(LocalizationManager.Instance.Current.Keys.KeysFileUsed, DefaultTitleKeysFileName, _titleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
+                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(DefaultProdKeysFileName, _prodKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
+                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(DefaultConsoleKeysFileName, _consoleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
+                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(DefaultTitleKeysFileName, _titleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
 
                 var keySet = new Keyset();
                 // DEBT: ReadKeyFile accepts the first path to be null, should notify libhac owner?
@@ -87,7 +87,7 @@ namespace Emignatik.NxFileViewer.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(LocalizationManager.Instance.Current.Keys.ErrKeysLoadingFailed, ex.Message));
+                throw new Exception(LocalizationManager.Instance.Current.Keys.ErrKeysLoadingFailed.SafeFormat(ex.Message));
             }
         }
 
@@ -121,7 +121,7 @@ namespace Emignatik.NxFileViewer.Services
                 var keysFilePathTemp = keysFilePathRawFromSettings.ToFullPath();
                 if (File.Exists(keysFilePathTemp))
                     return keysFilePathTemp;
-                _logger.LogWarning(string.Format(LocalizationManager.Instance.Current.Keys.InvalidSetting_KeysFileNotFound, keysFilePathRawFromSettings));
+                _logger.LogWarning(LocalizationManager.Instance.Current.Keys.InvalidSetting_KeysFileNotFound.SafeFormat(keysFilePathRawFromSettings));
             }
 
             // 2. Try to load from the current app dir

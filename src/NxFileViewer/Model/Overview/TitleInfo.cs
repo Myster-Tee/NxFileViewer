@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Media.Imaging;
 using LibHac;
 
 namespace Emignatik.NxFileViewer.Model.Overview
@@ -17,9 +16,9 @@ namespace Emignatik.NxFileViewer.Model.Overview
 
         public string Publisher => _description.Developer;
 
-        public NacpLanguage Language => (NacpLanguage) _description.Language;
+        public NacpLanguage Language => (NacpLanguage)_description.Language;
 
-        public BitmapImage? Icon { get; set; }
+        public byte[]? Icon { get; set; }
 
         public override string ToString()
         {

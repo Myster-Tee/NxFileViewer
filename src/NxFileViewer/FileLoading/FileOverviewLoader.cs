@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Windows.Media.Imaging;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model.Overview;
+using Emignatik.NxFileViewer.Model.TreeItems;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Utils;
 using LibHac;
 using LibHac.Common;
 using LibHac.Fs;
 using LibHac.FsSystem;
-using LibHac.FsSystem.NcaUtils;
 using Microsoft.Extensions.Logging;
 using ContentType = LibHac.Ncm.ContentType;
 
@@ -54,7 +52,9 @@ namespace Emignatik.NxFileViewer.FileLoading
 
                 if (securePartitionItem == null)
                 {
-                    _logger.LogError(LocalizationManager.Instance.Current.Keys.LoadingError_XciSecurePartitionNotFound);
+                    var message = LocalizationManager.Instance.Current.Keys.LoadingError_XciSecurePartitionNotFound;
+                    xciItem.Errors.Add(message);
+                    _logger.LogError(message);
                     return fileOverview;
                 }
 
@@ -102,10 +102,14 @@ namespace Emignatik.NxFileViewer.FileLoading
             {
 
                 // Find all Cnmt (kind of manifest containing contents information such a base title, a patch, etc.)
-                var cnmtItems = FindAllCnmtItems(partitionItem).ToArray();
+                var cnmtItems = partitionItem.FindAllCnmtItems().ToArray();
 
                 if (cnmtItems.Length <= 0)
-                    _logger.LogError(LocalizationManager.Instance.Current.Keys.LoadingError_NoCnmtFound);
+                {
+                    var message = LocalizationManager.Instance.Current.Keys.LoadingError_NoCnmtFound;
+                    partitionItem.Errors.Add(message);
+                    _logger.LogError(message);
+                }
 
                 foreach (var cnmtItem in cnmtItems)
                 {
@@ -115,22 +119,29 @@ namespace Emignatik.NxFileViewer.FileLoading
                     {
                         var ncaId = cnmtContentEntry.NcaId.ToStrId();
 
-                        var ncaItem = FindNcaItem(cnmtItem.ContainerSectionItem.ParentNcaItem.ParentPartitionFileSystemItem, ncaId);
+                        var parentPartitionFileSystemItem = cnmtItem.ContainerSectionItem.ParentNcaItem.ParentPartitionFileSystemItem;
+                        var ncaItem = parentPartitionFileSystemItem.FindNcaItem(ncaId);
                         if (ncaItem == null)
                         {
                             if (cnmtContentEntry.Type == ContentType.DeltaFragment)
-                                _logger.LogWarning(string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_NcaFileMissing, ncaId, cnmtContentEntry.Type));
+                                _logger.LogWarning(LocalizationManager.Instance.Current.Keys.LoadingError_NcaFileMissing.SafeFormat(ncaId, cnmtContentEntry.Type));
                             else
-                                _logger.LogError(string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_NcaFileMissing, ncaId, cnmtContentEntry.Type));
+                            {
+                                var message = LocalizationManager.Instance.Current.Keys.LoadingError_NcaFileMissing.SafeFormat(ncaId, cnmtContentEntry.Type);
+                                parentPartitionFileSystemItem.Errors.Add(message);
+                                _logger.LogError(message);
+                            }
                             continue;
                         }
 
                         if (cnmtContentEntry.Type == ContentType.Control)
                         {
-                            var nacpItem = FindNacpItem(ncaItem);
+                            var nacpItem = ncaItem.FindNacpItem();
                             if (nacpItem == null)
                             {
-                                _logger.LogError(string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_NacpFileMissing, NacpItem.NacpFileName));
+                                var message = LocalizationManager.Instance.Current.Keys.LoadingError_NacpFileMissing.SafeFormat(NacpItem.NacpFileName);
+                                ncaItem.Errors.Add(message);
+                                _logger.LogError(message);
                             }
                             else
                             {
@@ -142,23 +153,6 @@ namespace Emignatik.NxFileViewer.FileLoading
                     yield return cnmtContainer;
                 }
 
-            }
-
-            private static IEnumerable<CnmtItem> FindAllCnmtItems(PartitionFileSystemItem partitionItem)
-            {
-                foreach (var ncaItem in partitionItem.NcaItems)
-                {
-                    if (ncaItem.ContentType != NcaContentType.Meta)
-                        continue;
-                    foreach (var sectionItem in ncaItem.Sections)
-                    {
-                        foreach (var child in sectionItem.ChildItems)
-                        {
-                            if (child is CnmtItem cnmtItem)
-                                yield return cnmtItem;
-                        }
-                    }
-                }
             }
 
             private NacpContainer LoadContentDetails(NacpItem nacpItem)
@@ -181,62 +175,37 @@ namespace Emignatik.NxFileViewer.FileLoading
                 return contentDetails;
             }
 
-            private BitmapImage? LoadExpectedIcon(SectionItem sectionItem, NacpLanguage nacpLanguage)
+            private byte[]? LoadExpectedIcon(SectionItem sectionItem, NacpLanguage nacpLanguage)
             {
+                var languageName = nacpLanguage.ToString();
+
+                var expectedFileName = $"icon_{languageName}.dat";
+
+                var iconItem = sectionItem.ChildDirectoryEntryItems.FirstOrDefault(item => string.Equals(item.Name, expectedFileName, StringComparison.OrdinalIgnoreCase));
+                if (iconItem == null)
+                {
+                    var message = LocalizationManager.Instance.Current.Keys.LoadingError_IconMissing.SafeFormat(expectedFileName);
+                    sectionItem.Errors.Add(message);
+                    _logger.LogError(message);
+                    return null;
+                }
+
                 try
                 {
-                    var languageName = nacpLanguage.ToString();
-
-                    var expectedFileName = $"icon_{languageName}.dat";
-
-                    var iconItem = sectionItem.ChildDirectoryEntryItems.FirstOrDefault(item => string.Equals(item.Name, expectedFileName, StringComparison.OrdinalIgnoreCase));
-                    if (iconItem == null)
-                    {
-                        _logger.LogError(string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_IconMissing, expectedFileName));
-                        return null;
-                    }
-
                     sectionItem.FileSystem.OpenFile(out var file, new U8Span(iconItem.Path), OpenMode.Read).ThrowIfFailure();
 
-                    var memoryStream = new MemoryStream(); // NOTE: Do not dispose this memory stream because WPF default loading is lazy
-                    file.AsStream().CopyTo(memoryStream);
-                    memoryStream.Position = 0;
-
-                    using (file)
-                    {
-
-                        var bitmapImage = new BitmapImage();
-                        bitmapImage.BeginInit();
-                        bitmapImage.StreamSource = memoryStream;
-                        bitmapImage.EndInit();
-                        return bitmapImage;
-                    }
+                    file.GetSize(out var fileSize).ThrowIfFailure();
+                    var bytes = new byte[fileSize];
+                    file.AsStream().Read(bytes);
+                    return bytes;
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadIcon, ex.Message));
+                    var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadIcon.SafeFormat(ex.Message);
+                    iconItem.Errors.Add(message);
+                    _logger.LogError(ex, message);
                     return null;
                 }
-            }
-
-            private static NcaItem? FindNcaItem(PartitionFileSystemItem partitionItem, string ncaId)
-            {
-                var expectedFileName = ncaId;
-                return partitionItem.NcaItems.FirstOrDefault(ncaItem => string.Equals(ncaItem.Id, expectedFileName, StringComparison.OrdinalIgnoreCase));
-            }
-
-            private static NacpItem? FindNacpItem(NcaItem ncaItem)
-            {
-                foreach (var sectionItem in ncaItem.Sections)
-                {
-                    foreach (var dirEntry in sectionItem.ChildDirectoryEntryItems)
-                    {
-                        if (dirEntry is NacpItem nacpItem)
-                            return nacpItem;
-                    }
-                }
-
-                return null;
             }
 
         }

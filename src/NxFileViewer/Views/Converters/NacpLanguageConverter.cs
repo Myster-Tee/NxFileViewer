@@ -1,62 +1,41 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows.Data;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model.Overview;
+using Emignatik.NxFileViewer.Utils.MVVM.Converters;
 
 namespace Emignatik.NxFileViewer.Views.Converters
 {
-    public class NacpLanguageConverter : IValueConverter
+    public class NacpLanguageConverter : ValueConverterBase<string, NacpLanguage>
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        protected override string? ConvertForView(NacpLanguage value, object parameter, CultureInfo culture)
         {
-            
-
-            if (!(value is NacpLanguage language))
-                return LocalizationManager.Instance.Current.Keys.Lng_Unknown;
-
-            switch (language)
+            return value switch
             {
-                case NacpLanguage.AmericanEnglish:
-                    return LocalizationManager.Instance.Current.Keys.Lng_AmericanEnglish;
-                case NacpLanguage.BritishEnglish:
-                    return LocalizationManager.Instance.Current.Keys.Lng_BritishEnglish;
-                case NacpLanguage.Japanese:
-                    return LocalizationManager.Instance.Current.Keys.Lng_Japanese;
-                case NacpLanguage.French:
-                    return LocalizationManager.Instance.Current.Keys.Lng_French;
-                case NacpLanguage.German:
-                    return LocalizationManager.Instance.Current.Keys.Lng_German;
-                case NacpLanguage.LatinAmericanSpanish:
-                    return LocalizationManager.Instance.Current.Keys.Lng_LatinAmericanSpanish;
-                case NacpLanguage.Spanish:
-                    return LocalizationManager.Instance.Current.Keys.Lng_Spanish;
-                case NacpLanguage.Italian:
-                    return LocalizationManager.Instance.Current.Keys.Lng_Italian;
-                case NacpLanguage.Dutch:
-                    return LocalizationManager.Instance.Current.Keys.Lng_Dutch;
-                case NacpLanguage.CanadianFrench:
-                    return LocalizationManager.Instance.Current.Keys.Lng_CanadianFrench;
-                case NacpLanguage.Portuguese:
-                    return LocalizationManager.Instance.Current.Keys.Lng_Portuguese;
-                case NacpLanguage.Russian:
-                    return LocalizationManager.Instance.Current.Keys.Lng_Russian;
-                case NacpLanguage.Korean:
-                    return LocalizationManager.Instance.Current.Keys.Lng_Korean;
-                case NacpLanguage.TraditionalChinese:
-                    return LocalizationManager.Instance.Current.Keys.Lng_TraditionalChinese;
-                case NacpLanguage.SimplifiedChinese:
-                    return LocalizationManager.Instance.Current.Keys.Lng_SimplifiedChinese;
-                case NacpLanguage.Unknown:
-                    return LocalizationManager.Instance.Current.Keys.Lng_Unknown;
-                default:
-                    return LocalizationManager.Instance.Current.Keys.Lng_Unknown;
-            }
+                NacpLanguage.AmericanEnglish => LocalizationManager.Instance.Current.Keys.Lng_AmericanEnglish,
+                NacpLanguage.BritishEnglish => LocalizationManager.Instance.Current.Keys.Lng_BritishEnglish,
+                NacpLanguage.Japanese => LocalizationManager.Instance.Current.Keys.Lng_Japanese,
+                NacpLanguage.French => LocalizationManager.Instance.Current.Keys.Lng_French,
+                NacpLanguage.German => LocalizationManager.Instance.Current.Keys.Lng_German,
+                NacpLanguage.LatinAmericanSpanish => LocalizationManager.Instance.Current.Keys.Lng_LatinAmericanSpanish,
+                NacpLanguage.Spanish => LocalizationManager.Instance.Current.Keys.Lng_Spanish,
+                NacpLanguage.Italian => LocalizationManager.Instance.Current.Keys.Lng_Italian,
+                NacpLanguage.Dutch => LocalizationManager.Instance.Current.Keys.Lng_Dutch,
+                NacpLanguage.CanadianFrench => LocalizationManager.Instance.Current.Keys.Lng_CanadianFrench,
+                NacpLanguage.Portuguese => LocalizationManager.Instance.Current.Keys.Lng_Portuguese,
+                NacpLanguage.Russian => LocalizationManager.Instance.Current.Keys.Lng_Russian,
+                NacpLanguage.Korean => LocalizationManager.Instance.Current.Keys.Lng_Korean,
+                NacpLanguage.TraditionalChinese => LocalizationManager.Instance.Current.Keys.Lng_TraditionalChinese,
+                NacpLanguage.SimplifiedChinese => LocalizationManager.Instance.Current.Keys.Lng_SimplifiedChinese,
+                NacpLanguage.Unknown => LocalizationManager.Instance.Current.Keys.Lng_Unknown,
+                _ => LocalizationManager.Instance.Current.Keys.Lng_Unknown
+            };
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        protected override NacpLanguage ConvertForViewModel(string? value, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
+
 }

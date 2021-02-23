@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
+using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Settings;
@@ -21,9 +23,26 @@ namespace Emignatik.NxFileViewer.Commands
 
         public override void Execute(object? parameter)
         {
+            var lastOpenedFile = _appSettings.LastOpenedFile;
+
+            var initialDirectory = string.Empty;
+
+            if (!string.IsNullOrEmpty(lastOpenedFile))
+            {
+                try
+                {
+                    initialDirectory = Path.GetDirectoryName(lastOpenedFile);
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+
             var openFileDialog = new OpenFileDialog
             {
-                FileName = _appSettings.LastOpenedFile,
+                InitialDirectory = initialDirectory,
+                FileName = lastOpenedFile,
                 Filter = LocalizationManager.Instance.Current.Keys.OpenFile_Filter
             };
 
@@ -31,8 +50,11 @@ namespace Emignatik.NxFileViewer.Commands
 
             var filePath = openFileDialog.FileName;
 
-            _fileOpenerService.OpenFile(filePath);
+            _fileOpenerService.SafeOpenFile(filePath);
         }
+    }
 
+    public interface IOpenFileCommand : ICommand
+    {
     }
 }

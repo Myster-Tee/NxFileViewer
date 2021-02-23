@@ -7,16 +7,16 @@
     <RootNamespace>Emignatik.NxFileViewer</RootNamespace>
     <Nullable>enable</Nullable>
     <ApplicationIcon>Styling\Icons\Icon.ico</ApplicationIcon>
-    <AssemblyVersion>2.1.0.0</AssemblyVersion>
-    <FileVersion>2.1.0.0</FileVersion>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
+    <FileVersion>2.2.0.0</FileVersion>
     <PackageId>NxFileViewer</PackageId>
     <Company>NxFileViewer</Company>
     <Product>NxFileViewer</Product>
     <Authors>NxFileViewer</Authors>
-    <Version>2.1.0</Version>
+    <Version>2.2.0</Version>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageIcon>Icon.ico</PackageIcon>
-    <Description>Browse content of Nintendo Switch contents</Description>
+    <Description>Browse content of Nintendo Switch files</Description>
     <RepositoryUrl>https://github.com/Myster-Tee/NxFileViewer</RepositoryUrl>
   </PropertyGroup>
 
@@ -36,9 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>

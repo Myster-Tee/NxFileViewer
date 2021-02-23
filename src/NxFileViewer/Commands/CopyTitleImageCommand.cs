@@ -1,45 +1,58 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Model.Overview;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Commands
 {
-    public class CopyTitleImageCommand : CommandBase, ICopyTitleImageCommand
+    public class CopyImageCommand : CommandBase, ICopyImageCommand
     {
         private readonly ILogger _logger;
+        private BitmapSource? _titleImage;
 
-        public CopyTitleImageCommand(ILoggerFactory loggerFactory)
+        public CopyImageCommand(ILoggerFactory loggerFactory)
         {
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         }
 
-        public TitleInfo? Title { get; set; }
+        public BitmapSource? Image
+        {
+            private get => _titleImage;
+            set
+            {
+                _titleImage = value;
+                TriggerCanExecuteChanged();
+            }
+        }
 
         public override void Execute(object? parameter)
         {
             try
             {
-                var title = Title;
+                var titleImage = Image;
 
-                var icon = title?.Icon;
-                if (title == null || icon == null)
+                if (titleImage == null)
                     return;
-
-                Clipboard.SetImage(icon);
+                Clipboard.SetImage(titleImage);
             }
             catch (Exception ex)
             {
-                _logger.LogError(string.Format(LocalizationManager.Instance.Current.Keys.CopyTitleImageError, ex.Message));
+                _logger.LogError(LocalizationManager.Instance.Current.Keys.CopyTitleImageError.SafeFormat(ex.Message));
             }
         }
 
         public override bool CanExecute(object? parameter)
         {
-            var selectedTitle = Title;
-            return selectedTitle?.Icon != null;
+            var titleImage = Image;
+            return titleImage != null;
         }
+    }
+
+    public interface ICopyImageCommand : ICommand
+    {
+        BitmapSource? Image { set; }
     }
 }

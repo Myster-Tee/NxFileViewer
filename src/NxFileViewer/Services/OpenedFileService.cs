@@ -1,19 +1,29 @@
-﻿using Emignatik.NxFileViewer.Model;
+﻿using System.Windows;
+using Emignatik.NxFileViewer.Model;
 
 namespace Emignatik.NxFileViewer.Services
 {
 
     public class OpenedFileService : IOpenedFileService
     {
-        private OpenedFile? _openedFile;
+        private NxFile? _openedFile;
 
         public event OpenedFileChangedHandler? OpenedFileChanged;
 
-        public OpenedFile? OpenedFile
+        public NxFile? OpenedFile
         {
             get => _openedFile;
             set
             {
+                if (!Application.Current.Dispatcher.CheckAccess())
+                {
+                    Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        this.OpenedFile = value;
+                    });
+                    return;
+                }
+
                 if (_openedFile == value)
                     return;
 
@@ -25,7 +35,7 @@ namespace Emignatik.NxFileViewer.Services
             }
         }
 
-        private void NotifyOpenedFileChanged(OpenedFile? oldFile, OpenedFile? newFile)
+        private void NotifyOpenedFileChanged(NxFile? oldFile, NxFile? newFile)
         {
             OpenedFileChanged?.Invoke(this, new OpenedFileChangedHandlerArgs(oldFile, newFile));
         }

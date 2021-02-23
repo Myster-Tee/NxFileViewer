@@ -4,6 +4,8 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using Emignatik.NxFileViewer.Logging;
+using Emignatik.NxFileViewer.Styling.Theme;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Views
@@ -16,6 +18,8 @@ namespace Emignatik.NxFileViewer.Views
 
         public static readonly DependencyProperty LogSourceProperty = DependencyProperty.Register(
             "LogSource", typeof(ILogSource), typeof(LoggingView), new PropertyMetadata(default(ILogSource), OnChanged));
+
+        private readonly IBrushesProvider _brushesProvider;
 
         private static void OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -37,6 +41,7 @@ namespace Emignatik.NxFileViewer.Views
         public LoggingView()
         {
             InitializeComponent();
+            _brushesProvider = App.ServiceProvider.GetRequiredService<IBrushesProvider>();
         }
 
         private void OnLog(LogLevel logLevel, string message)
@@ -56,15 +61,14 @@ namespace Emignatik.NxFileViewer.Views
                 Text = message + Environment.NewLine
             };
 
-            SolidColorBrush color;
+            Brush brush;
             if (logLevel >= LogLevel.Error)
-                color = Brushes.Red;
+                brush = _brushesProvider.FontBrushError;
             else if (logLevel >= LogLevel.Warning)
-                color = Brushes.Orange;
+                brush = _brushesProvider.FontBrushWarning;
             else
-                color = Brushes.Blue;
-
-            tr.ApplyPropertyValue(TextElement.ForegroundProperty, color);
+                brush = _brushesProvider.FontBrushDefault;
+            tr.ApplyPropertyValue(TextElement.ForegroundProperty, brush);
         }
 
         private void MenuItemClearLogClick(object sender, RoutedEventArgs e)

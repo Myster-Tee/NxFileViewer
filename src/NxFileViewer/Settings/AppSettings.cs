@@ -83,16 +83,6 @@ namespace Emignatik.NxFileViewer.Settings
             }
         }
 
-        public StructureLoadingMode StructureLoadingMode
-        {
-            get => _appSettingsModel.StructureLoadingMode;
-            set
-            {
-                _appSettingsModel.StructureLoadingMode = value;
-                NotifyPropertyChanged();
-            }
-        }
-
         public AppSettingsModel WrappedModel => _appSettingsModel;
 
         public void Update(AppSettingsModel newModel)

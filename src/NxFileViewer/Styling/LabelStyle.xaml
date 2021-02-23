@@ -3,15 +3,47 @@
 
     <Style x:Key="HelpIcon" TargetType="Label">
         <Setter Property="Margin" Value="5,0,0,0" />
+        <Setter Property="Background" Value="{DynamicResource HelpIcon.Static.Background}" />
+        <Setter Property="Foreground" Value="{DynamicResource HelpIcon.Static.Foreground}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
                     <Grid Width="16" Height="16">
-                        <Ellipse HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="#6E5AB3" />
+                        <Ellipse x:Name="Ellipse" 
+                                 Opacity="0.7"
+                                 HorizontalAlignment="Stretch" 
+                                 VerticalAlignment="Stretch" 
+                                 Fill="{TemplateBinding Background}" />
+
                         <TextBlock FontSize="12" FontWeight="Bold"
-                                   Foreground="White"
+                                   Foreground="{TemplateBinding Foreground}"
                                    HorizontalAlignment="Center" VerticalAlignment="Center">?</TextBlock>
                     </Grid>
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                                Storyboard.TargetName="Ellipse"
+                                                Storyboard.TargetProperty="Opacity" 
+                                                To="1" Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard FillBehavior="Stop">
+                                        <DoubleAnimation 
+                                                Storyboard.TargetName="Ellipse"
+                                                Storyboard.TargetProperty="Opacity" 
+                                                Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

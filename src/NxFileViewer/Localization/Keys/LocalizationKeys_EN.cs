@@ -23,14 +23,18 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string MenuItemOpenLast => "Open _last";
         public string MenuItemClose => "_Close";
         public string MenuItemExit => "E_xit";
+        public string MenuItemTools => "_Tools";
+        public string MenuItem_VerifyNcasHash => "Verify _hashes";
+        public string MenuItem_VerifyNcasHeaderSignature => "Verify _signatures";
         public string MenuItemOptions => "_Options";
         public string MenuItemSettings => "_Settings";
 
-        public string AvailableContents => "Contents";
+        public string MultiContentPackage => "Multi-content Package";
         public string GeneralInfo => "General Info";
         public string TitleId => "Title ID";
         public string DisplayVersion => "Display Version";
         public string Presentation => "Presentation";
+        public string ToolTip_AvailableLanguages => "Title, Publisher and Icon may change according to the selected language.";
         public string AvailableLanguages => "Languages";
         public string AppTitle => "Title";
         public string Publisher => "Publisher";
@@ -84,11 +88,6 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string SettingsView_ProdKeysDownloadUrlToolTip => $"At startup, the program can automatically download «{KeySetProviderService.DefaultProdKeysFileName}» file when none is found on the system." + Environment.NewLine +
                                                                   "The keys file will be downloaded to the current application's directory.";
 
-        public string SettingsView_StructureLoadingMode => "Structure loading mode";
-        public string SettingsView_StructureLoadingModeToolTip => "Lazy: the content will be loaded gradually as the elements are expanded in the structure tree view." + Environment.NewLine +
-                                                                  "Full: the full content tree will be loaded immediately." + Environment.NewLine +
-                                                                  "Setting «Lazy» might loads a bit faster, but setting «Full» may reveals some useful errors.";
-
         public string BrowseKeysFile_ProdTitle => "Select \"prod\" keys file";
         public string BrowseKeysFile_ConsoleTitle => "Select \"console\" keys file";
         public string BrowseKeysFile_TitleTitle => "Select \"title\" keys file";
@@ -104,18 +103,22 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string ContextMenu_SaveImage => "Save...";
         public string CopyTitleImageError => "Failed to copy title image: {0}";
         public string SaveTitleImageError => "Failed to save title image: {0}";
-        public string SaveFileDialog_SaveImageTitle => "Save image";
-        public string SaveFileDialog_JpegImageFilter => "Image";
+
+        public string SaveDialog_Title => "Save as";
+        public string SaveDialog_ImageFilter => "Image";
+        public string SaveDialog_AnyFileFilter => "File";
+        public string SaveFile_Error => "Failed to save file: {0}";
+
         public string ContextMenuCopyImage => "Copy";
 
         public string TabOverview => "Overview";
         public string TabContent => "Content";
         public string GroupBoxStructure => "Structure";
         public string GroupBoxProperties => "Properties";
-        public string ContextMenu_SaveFile => "Save...";
-        public string SaveFileDialog_SaveFileTitle => "Save file";
-        public string SaveFileDialog_AnyFileFilter => "File";
-        public string SaveFileTitleError => "Failed to save file: {0}";
+
+        public string ContextMenu_SaveItemFile => "Save...";
+        public string ContextMenu_ShowItemErrors => "Show errors...";
+
         public string SettingsLoadingError => "Failed to load settings: {0}";
         public string SettingsSavingError => "Failed to save settings: {0}";
 
@@ -127,7 +130,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string LoadingError_FailedToLoadNcaFile => "Failed to load NCA file: {0}";
         public string LoadingError_FailedToLoadPartitionFileSystemContent => "Failed to load partition file system content: {0}";
         public string LoadingError_FailedToCheckIfSectionCanBeOpened => "Failed to check if section can be opened: {0}";
-        public string LoadingError_FailedToOpenNcaFileSystem => "Failed to open NCA file system: {0}";
+        public string LoadingError_FailedToOpenNcaSection => "Failed to open NCA section «{0}»: {1}";
         public string LoadingError_FailedToLoadSectionContent => "Failed to load section content: {0}";
         public string LoadingError_FailedToGetFileSystemDirectoryEntries => "Failed to get file system directory entries: {0}";
         public string LoadingError_FailedToOpenNacpFile => "Failed to open NACP file: {0}";
@@ -155,5 +158,38 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string ToolTip_PatchLevel => "Patch level {0}";
         public string Log_OpeningFile => "=====> {0} <=====";
         public string MainModuleIdTooltip => "Also known as build ID (or BID).";
+        public string ATaskIsAlreadyRunning => "A task is already running...";
+
+        public string Integrity => "Integrity";
+        public string AvailableContents => "Contents:";
+        public string MultiContentPackageToolTip => "Current package contains multiple contents («{0}» detected).";
+
+        public string Title_NcasHeaderSignature => "Signature:";
+        public string ToolTip_NcasHeaderSignature => "Verifies the signature of each NCA header.";
+        public string Title_NcasHash => "Hash:";
+        public string ToolTip_NcasHash => "Verifies the hash of each NCA." + Environment.NewLine +
+                                          "A valid hash ensures that a file has not been corrupted.";
+        public string NcaHeaderSignatureValid_Log => "Header signature of NCA «{0}» is valid.";
+        public string NcaHeaderSignatureInvalid => "NCA header signature failed with status «{0}».";
+        public string NcaHeaderSignatureInvalid_Log => "Header signature of NCA «{0}» failed with status «{1}».";
+        public string NcaHashValid_Log => "Hash of NCA «{0}» is valid.";
+        public string NcaHashInvalid => "NCA hash failed with status «{0}».";
+        public string NcaHashInvalid_Log => "Hash of NCA «{0}» failed with status «{1}».";
+        public string NcasHashError_Log => "Failed to verify NCA's hashes: {0}";
+        public string NcasHeaderSignatureError_Log => "Failed to verify NCA's headers signature: {0}";
+
+        public string CancelAction => "Cancel";
+        public string Ready => "Ready.";
+        public string LoadingFile_PleaseWait => "Loading, please wait...";
+
+        public string NcasValidity_NoNca => "No NCA";
+        public string NcasValidity_Unchecked => "Unchecked";
+        public string NcasValidity_InProgress => "In progress";
+        public string NcasValidity_Invalid => "Invalid";
+        public string NcasValidity_Valid => "Valid";
+        public string NcasValidity_Error => "Error";
+        public string NcasValidity_Unknown => "Unknown";
+
+        public string Status_SavingFile => "Saving file «{0}»...";
     }
 }

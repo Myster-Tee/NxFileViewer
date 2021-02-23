@@ -40,7 +40,7 @@ namespace Emignatik.NxFileViewer.FileLoading
             var fileExtension = Path.GetExtension(filePath);
             if (!string.Equals(fileExtension, expectedExt1, StringComparison.OrdinalIgnoreCase) &&
                 !string.Equals(fileExtension, expectedExt2, StringComparison.OrdinalIgnoreCase))
-                _logger.LogWarning(string.Format(LocalizationManager.Instance.Current.Keys.SuspiciousFileExtension, fileExtension, expectedExt1, expectedExt2));
+                _logger.LogWarning(LocalizationManager.Instance.Current.Keys.SuspiciousFileExtension.SafeFormat(fileExtension, expectedExt1, expectedExt2));
         }
     }
 }

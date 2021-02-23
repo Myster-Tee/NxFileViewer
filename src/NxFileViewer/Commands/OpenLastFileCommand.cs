@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows.Input;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
@@ -32,7 +33,11 @@ namespace Emignatik.NxFileViewer.Commands
         public override void Execute(object? parameter)
         {
             var lastOpenedFile = _appSettings.LastOpenedFile;
-            _fileOpenerService.OpenFile(lastOpenedFile);
+            _fileOpenerService.SafeOpenFile(lastOpenedFile);
         }
+    }
+
+    public interface IOpenLastFileCommand : ICommand
+    {
     }
 }

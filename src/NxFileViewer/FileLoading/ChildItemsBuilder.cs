@@ -19,15 +19,23 @@ namespace Emignatik.NxFileViewer.FileLoading
     /// </summary>
     public class ChildItemsBuilder : IChildItemsBuilder
     {
+        private const string CHILD_LOADING_CATEGORY = "CHILD_LOADING_CATEGORY";
+
+        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger _logger;
 
-        public ChildItemsBuilder(ILoggerFactory loggerFactory)
+        public ChildItemsBuilder(ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         }
 
         public IReadOnlyList<XciPartitionItem> Build(XciItem parentItem)
         {
+            if (parentItem == null)
+                throw new ArgumentNullException(nameof(parentItem));
+            OnBeforeLoadChildren(parentItem);
+
             var children = new List<XciPartitionItem>();
             var xci = parentItem.Xci;
 
@@ -42,7 +50,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToCheckIfXciPartitionExists, ex.Message));
+                        var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToCheckIfXciPartitionExists.SafeFormat(ex.Message);
+                        parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                        _logger.LogError(ex, message);
                         continue;
                     }
 
@@ -53,7 +63,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenXciPartition, ex.Message));
+                        var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenXciPartition.SafeFormat(ex.Message);
+                        parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                        _logger.LogError(ex, message);
                         continue;
                     }
                     children.Add(new XciPartitionItem(xciPartition, xciPartitionType, parentItem, this));
@@ -61,7 +73,9 @@ namespace Emignatik.NxFileViewer.FileLoading
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadXciContent, ex.Message));
+                var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadXciContent.SafeFormat(ex.Message);
+                parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                _logger.LogError(ex, message);
             }
 
             return children;
@@ -69,6 +83,10 @@ namespace Emignatik.NxFileViewer.FileLoading
 
         public IPartitionChildByTypes Build(PartitionFileSystemItem parentItem)
         {
+            if (parentItem == null)
+                throw new ArgumentNullException(nameof(parentItem));
+            OnBeforeLoadChildren(parentItem);
+
             var partitionChildByTypes = new PartitionChildByTypes();
 
             try
@@ -83,7 +101,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenPartitionFile, ex.Message));
+                        var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenPartitionFile.SafeFormat(ex.Message);
+                        parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                        _logger.LogError(ex, message);
                         continue;
                     }
 
@@ -98,7 +118,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadNcaFile, ex.Message));
+                            var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadNcaFile.SafeFormat(ex.Message);
+                            parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                            _logger.LogError(ex, message);
                             continue;
                         }
                         var ncaItem = new NcaItem(nca, partitionFileEntry, file, parentItem, this);
@@ -116,7 +138,9 @@ namespace Emignatik.NxFileViewer.FileLoading
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadPartitionFileSystemContent, ex.Message));
+                var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadPartitionFileSystemContent.SafeFormat(ex.Message);
+                parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                _logger.LogError(ex, message);
             }
 
             return partitionChildByTypes;
@@ -124,6 +148,10 @@ namespace Emignatik.NxFileViewer.FileLoading
 
         public IReadOnlyList<SectionItem> Build(NcaItem parentItem)
         {
+            if (parentItem == null)
+                throw new ArgumentNullException(nameof(parentItem));
+            OnBeforeLoadChildren(parentItem);
+
             var children = new List<SectionItem>();
 
             try
@@ -138,7 +166,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToCheckIfSectionCanBeOpened, ex.Message));
+                        var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToCheckIfSectionCanBeOpened.SafeFormat(ex.Message);
+                        parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                        _logger.LogError(ex, message);
                         continue;
                     }
 
@@ -149,7 +179,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToGetNcaFsHeader, sectionIndex, ex.Message));
+                        var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToGetNcaFsHeader.SafeFormat(sectionIndex, ex.Message);
+                        parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                        _logger.LogError(ex, message);
                         continue;
                     }
 
@@ -160,17 +192,20 @@ namespace Emignatik.NxFileViewer.FileLoading
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenNcaFileSystem, ex.Message));
+                        var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenNcaSection.SafeFormat(sectionIndex, ex.Message);
+                        parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                        _logger.LogError(ex, message);
                         continue;
                     }
-
 
                     children.Add(new SectionItem(sectionIndex, ncaFsHeader, fileSystem, parentItem, this));
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadNcaContent, ex.Message));
+                var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadNcaContent.SafeFormat(ex.Message);
+                parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                _logger.LogError(ex, message);
             }
 
             return children;
@@ -178,13 +213,17 @@ namespace Emignatik.NxFileViewer.FileLoading
 
         public IReadOnlyList<DirectoryEntryItem> Build(SectionItem parentItem)
         {
+            if (parentItem == null)
+                throw new ArgumentNullException(nameof(parentItem));
+            OnBeforeLoadChildren(parentItem);
+
             var children = new List<DirectoryEntryItem>();
 
             try
             {
                 const string? rootPath = "/";
 
-                var directoryEntries = SafeGetDirectoryEntries(parentItem.FileSystem, rootPath);
+                var directoryEntries = SafeGetDirectoryEntries(parentItem.FileSystem, rootPath, parentItem);
 
                 foreach (var directoryEntry in directoryEntries)
                 {
@@ -201,7 +240,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenNacpFile, ex.Message));
+                            var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenNacpFile.SafeFormat(ex.Message);
+                            parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                            _logger.LogError(ex, message);
                             continue;
                         }
 
@@ -212,7 +253,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadNacpFile, ex.Message));
+                            var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadNacpFile.SafeFormat(ex.Message);
+                            parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                            _logger.LogError(ex, message);
                             continue;
                         }
 
@@ -228,7 +271,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenCnmtFile, ex.Message));
+                            var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenCnmtFile.SafeFormat(ex.Message);
+                            parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                            _logger.LogError(ex, message);
                             continue;
                         }
 
@@ -239,7 +284,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadCnmtFile, ex.Message));
+                            var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadCnmtFile.SafeFormat(ex.Message);
+                            parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                            _logger.LogError(ex, message);
                             continue;
                         }
                         children.Add(new CnmtItem(cnmt, parentItem, directoryEntry, entryName, entryPath, this));
@@ -254,7 +301,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenMainFile, ex.Message));
+                            var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenMainFile.SafeFormat(ex.Message);
+                            parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                            _logger.LogError(ex, message);
                             continue;
                         }
 
@@ -267,7 +316,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadMainFile, ex.Message));
+                            var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadMainFile.SafeFormat(ex.Message);
+                            parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                            _logger.LogError(ex, message);
                             continue;
                         }
 
@@ -281,7 +332,9 @@ namespace Emignatik.NxFileViewer.FileLoading
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadSectionContent, ex.Message));
+                var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadSectionContent.SafeFormat(ex.Message);
+                parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                _logger.LogError(ex, message);
             }
 
             return children;
@@ -289,6 +342,10 @@ namespace Emignatik.NxFileViewer.FileLoading
 
         public IReadOnlyList<DirectoryEntryItem> Build(DirectoryEntryItem parentItem)
         {
+            if (parentItem == null)
+                throw new ArgumentNullException(nameof(parentItem));
+            OnBeforeLoadChildren(parentItem);
+
             var children = new List<DirectoryEntryItem>();
 
             try
@@ -297,7 +354,7 @@ namespace Emignatik.NxFileViewer.FileLoading
                     return children;
 
                 var currentPath = parentItem.Path;
-                var directoryEntries = SafeGetDirectoryEntries(parentItem.ContainerSectionItem.FileSystem, currentPath);
+                var directoryEntries = SafeGetDirectoryEntries(parentItem.ContainerSectionItem.FileSystem, currentPath, parentItem);
 
                 foreach (var directoryEntry in directoryEntries)
                 {
@@ -309,18 +366,29 @@ namespace Emignatik.NxFileViewer.FileLoading
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadDirectoryContent, ex.Message));
+                var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadDirectoryContent.SafeFormat(ex.Message);
+                parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                _logger.LogError(ex, message);
             }
 
             return children;
         }
 
-        public IReadOnlyList<IItem> Build(PartitionFileEntryItem partitionFileEntryItem)
+        public IReadOnlyList<IItem> Build(PartitionFileEntryItem parentItem)
         {
+            if (parentItem == null)
+                throw new ArgumentNullException(nameof(parentItem));
+            OnBeforeLoadChildren(parentItem);
+
             return new List<IItem>();
         }
 
-        private DirectoryEntry[] SafeGetDirectoryEntries(IFileSystem fileSystem, string currentPath)
+        private void OnBeforeLoadChildren(IItem parentItem)
+        {
+            parentItem.Errors.RemoveAll(CHILD_LOADING_CATEGORY);
+        }
+
+        private DirectoryEntry[] SafeGetDirectoryEntries(IFileSystem fileSystem, string currentPath, IItem parentItem)
         {
             try
             {
@@ -335,7 +403,9 @@ namespace Emignatik.NxFileViewer.FileLoading
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_FailedToGetFileSystemDirectoryEntries, ex.Message));
+                var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToGetFileSystemDirectoryEntries.SafeFormat(ex.Message);
+                parentItem.Errors.Add(CHILD_LOADING_CATEGORY, message);
+                _logger.LogError(ex, message);
                 return new DirectoryEntry[0];
             }
         }

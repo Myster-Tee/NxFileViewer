@@ -12,46 +12,47 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     /// </summary>
     public class PartitionFileEntryItem : ItemBase
     {
-        private readonly IFile _file;
         private IReadOnlyList<IItem>? _childItems;
 
         public PartitionFileEntryItem(PartitionFileEntry partitionFileEntry, IFile file, PartitionFileSystemItem parentPartitionFileSystemItem, IChildItemsBuilder childItemsBuilder)
+            : base(childItemsBuilder)
         {
             PartitionFileEntry = partitionFileEntry ?? throw new ArgumentNullException(nameof(partitionFileEntry));
-            _file = file ?? throw new ArgumentNullException(nameof(file));
-            ChildItemsBuilder = childItemsBuilder ?? throw new ArgumentNullException(nameof(childItemsBuilder));
+            File = file ?? throw new ArgumentNullException(nameof(file));
             ParentPartitionFileSystemItem = parentPartitionFileSystemItem ?? throw new ArgumentNullException(nameof(parentPartitionFileSystemItem));
         }
 
-        protected IChildItemsBuilder ChildItemsBuilder { get; }
+        public IFile File { get; }
 
         public PartitionFileEntry PartitionFileEntry { get; }
 
-        public string Name => PartitionFileEntry.Name;
+        public sealed override string LibHacTypeName => nameof(PartitionFileEntry);
 
-        public sealed override string ObjectType => nameof(PartitionFileEntry);
+        public override string? LibHacUnderlyingTypeName => null;
+
+        public override string Name => PartitionFileEntry.Name;
 
         public override string DisplayName => Name;
+
+        public long Size => PartitionFileEntry.Size;
 
         public PartitionFileSystemItem ParentPartitionFileSystemItem { get; }
 
         public override IItem ParentItem => ParentPartitionFileSystemItem;
 
-        public override IReadOnlyList<IItem> LoadChildItems(bool force)
+        protected override IReadOnlyList<IItem> SafeLoadChildItemsInternal()
         {
-            return GetChildItems(force);
+            return GetChildItems();
         }
 
-        private IReadOnlyList<IItem> GetChildItems(bool force)
+        private IReadOnlyList<IItem> GetChildItems()
         {
-            if (_childItems == null || force)
-                _childItems = ChildItemsBuilder.Build(this);
-            return _childItems;
+            return _childItems ??= ChildItemsBuilder.Build(this);
         }
 
         public override void Dispose()
         {
-            _file.Dispose();
+            File.Dispose();
         }
     }
 }

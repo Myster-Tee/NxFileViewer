@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model.Overview;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Views
 {
@@ -14,7 +17,7 @@ namespace Emignatik.NxFileViewer.Views
     {
         private readonly CnmtContainer _cnmtContainer;
         private readonly int _containerNumber;
-        private TitleInfo? _selectedTitle;
+        private TitleInfoViewModel? _selectedTitle;
 
         public CnmtContainerViewModel(CnmtContainer cnmtContainer, int containerNumber, IServiceProvider serviceProvider)
         {
@@ -23,29 +26,29 @@ namespace Emignatik.NxFileViewer.Views
             ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
             SaveSelectedImageCommand = serviceProvider.GetRequiredService<ISaveTitleImageCommand>();
-            CopySelectedImageCommand = serviceProvider.GetRequiredService<ICopyTitleImageCommand>();
-            Titles = _cnmtContainer.NacpContainer?.Titles;
+            CopySelectedImageCommand = serviceProvider.GetRequiredService<ICopyImageCommand>();
+            Titles = _cnmtContainer.NacpContainer?.Titles.Select(titleInfo => new TitleInfoViewModel(titleInfo, serviceProvider)).ToArray();
             SelectedTitle = Titles?.FirstOrDefault();
         }
 
         public IServiceProvider ServiceProvider { get; }
 
-        public ICopyTitleImageCommand CopySelectedImageCommand { get; }
+        public ICopyImageCommand CopySelectedImageCommand { get; }
 
         public ISaveTitleImageCommand SaveSelectedImageCommand { get; }
 
         public string TitleId => _cnmtContainer.CnmtItem.TitleId;
 
-        public List<TitleInfo>? Titles { get; }
+        public IReadOnlyList<TitleInfoViewModel>? Titles { get; }
 
-        public TitleInfo? SelectedTitle
+        public TitleInfoViewModel? SelectedTitle
         {
             get => _selectedTitle;
             set
             {
                 _selectedTitle = value;
-                SaveSelectedImageCommand.Title = value;
-                CopySelectedImageCommand.Title = value;
+                SaveSelectedImageCommand.Title = value?.Title;
+                CopySelectedImageCommand.Image = value?.Icon;
                 NotifyPropertyChanged();
             }
         }
@@ -63,7 +66,7 @@ namespace Emignatik.NxFileViewer.Views
         /// <summary>
         /// Corresponds to the technical patch level
         /// </summary>
-        public string? TitleVersion => _cnmtContainer.CnmtItem.TitleVersion?.ToString();
+        public string? TitleVersion => _cnmtContainer.CnmtItem.TitleVersion;
 
         /// <summary>
         /// Get the patch level
@@ -74,7 +77,7 @@ namespace Emignatik.NxFileViewer.Views
             {
                 var patchLevel = _cnmtContainer.CnmtItem.PatchLevel;
                 if (patchLevel != null)
-                    return string.Format(LocalizationManager.Instance.Current.Keys.ToolTip_PatchLevel, patchLevel);
+                    return LocalizationManager.Instance.Current.Keys.ToolTip_PatchLevel.SafeFormat(patchLevel);
                 return null;
             }
         }
@@ -91,5 +94,54 @@ namespace Emignatik.NxFileViewer.Views
 
 
         public Visibility PresentationGroupBoxVisibility => _cnmtContainer.NacpContainer == null ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    public class TitleInfoViewModel
+    {
+        private readonly ILogger _logger;
+
+        public TitleInfoViewModel(TitleInfo titleInfo, IServiceProvider serviceProvider)
+        {
+            Title = titleInfo ?? throw new ArgumentNullException(nameof(titleInfo));
+            serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _logger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(this.GetType());
+
+            Icon = BuildBitmapImage(Title.Icon);
+        }
+
+        public BitmapSource? Icon { get; }
+
+        public TitleInfo Title { get; }
+
+        public string AppName => Title.AppName;
+
+        public string Publisher => Title.Publisher;
+
+        public NacpLanguage Language => Title.Language;
+
+
+        private BitmapImage? BuildBitmapImage(byte[]? bytes)
+        {
+            if (bytes == null)
+                return null;
+
+            try
+            {
+                using var ms = new MemoryStream(bytes);
+                var image = new BitmapImage();
+                image.BeginInit();
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.StreamSource = ms;
+                image.EndInit();
+                return image;
+            }
+            catch (Exception ex)
+            {
+                var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadIcon.SafeFormat(ex.Message);
+                _logger.LogError(message);
+                return null;
+            }
+        }
+
     }
 }

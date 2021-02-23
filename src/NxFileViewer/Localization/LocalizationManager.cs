@@ -5,6 +5,6 @@ namespace Emignatik.NxFileViewer.Localization
 {
     public class LocalizationManager : LocalizationManager<ILocalizationKeys>
     {
-        public static LocalizationManager Instance { get; } = new LocalizationManager();
+        public static LocalizationManager Instance { get; } = new();
     }
 }

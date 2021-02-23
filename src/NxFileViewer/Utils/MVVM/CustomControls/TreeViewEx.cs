@@ -6,10 +6,10 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.CustomControls
     public class TreeViewEx : TreeView
     {
 
+        #region Allow the selected item to be bound
+
         public static readonly DependencyProperty BindableSelectedItemProperty = DependencyProperty.Register(
             "BindableSelectedItem", typeof(object), typeof(TreeViewEx), new UIPropertyMetadata(default(object)));
-
-
 
         public object BindableSelectedItem
         {
@@ -22,5 +22,8 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.CustomControls
             base.OnSelectedItemChanged(e);
             BindableSelectedItem = SelectedItem;
         }
+
+        #endregion
+
     }
 }

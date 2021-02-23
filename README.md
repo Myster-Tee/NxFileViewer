@@ -10,7 +10,7 @@ Download latest version [here](https://github.com/Myster-Tee/NxFileViewer/releas
 - Supported files: NSP, NSZ, XCI, XCZ
 - Supports Super NSP/XCI
 - Browse files content structure
-- Export contained files
+- Export files
 - Save or copy title images
 - Specify your own keys location
 - Searches keys in commonly used locations
@@ -21,12 +21,15 @@ Download latest version [here](https://github.com/Myster-Tee/NxFileViewer/releas
 - User-friendly and responsive interface
 - Single executable file
 - Do not write anything outside of the program directory
+- Verify hash and signature
 
 ## Screenshots
 
 ![Overview](./screenshots/Overview.png)
 
 ![Content](./screenshots/Content.png)
+
+![Settings](./screenshots/Settings.png)
 
 ## Requirements
 

@@ -22,8 +22,5 @@ namespace Emignatik.NxFileViewer.Settings.Model
         public LogLevel LogLevel { get; set; } = LogLevel.Information;
 
         public string? ProdKeysDownloadUrl { get; set; }
-
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public StructureLoadingMode StructureLoadingMode { get; set; } = StructureLoadingMode.Full;
     }
 }

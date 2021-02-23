@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Input;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 
@@ -11,12 +12,10 @@ namespace Emignatik.NxFileViewer.Commands
         public CloseFileCommand(IOpenedFileService openedFileService)
         {
             _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
-            _openedFileService.OpenedFileChanged += OnOpenedFileChanged;
-        }
-
-        private void OnOpenedFileChanged(object? sender, OpenedFileChangedHandlerArgs args)
-        {
-            TriggerCanExecuteChanged();
+            _openedFileService.OpenedFileChanged += (sender, args) =>
+            {
+                TriggerCanExecuteChanged();
+            };
         }
 
         public override bool CanExecute(object? parameter)
@@ -30,5 +29,9 @@ namespace Emignatik.NxFileViewer.Commands
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
+    }
+
+    public interface ICloseFileCommand : ICommand
+    {
     }
 }

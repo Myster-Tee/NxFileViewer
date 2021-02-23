@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Emignatik.NxFileViewer.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,5 +48,9 @@ namespace Emignatik.NxFileViewer.Commands
             _settingsWindow = null;
             TriggerCanExecuteChanged();
         }
+    }
+
+    public interface IShowSettingsViewCommand : ICommand
+    {
     }
 }

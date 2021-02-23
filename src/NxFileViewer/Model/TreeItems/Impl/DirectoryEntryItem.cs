@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Emignatik.NxFileViewer.FileLoading;
-using Emignatik.NxFileViewer.Utils;
-using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
+using LibHac.Common;
 using LibHac.Fs;
 using LibHac.Fs.Fsa;
 
@@ -13,7 +12,6 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     /// </summary>
     public class DirectoryEntryItem : ItemBase
     {
-        private readonly IChildItemsBuilder _childItemsBuilder;
         private IReadOnlyList<DirectoryEntryItem>? _subDirEntries;
 
         public DirectoryEntryItem(SectionItem containerSectionItem, DirectoryEntry directoryEntry, string name, string path, DirectoryEntryItem parentDirectoryEntryItem, IChildItemsBuilder childItemsBuilder)
@@ -29,26 +27,30 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         }
 
         private DirectoryEntryItem(SectionItem containerSectionItem, DirectoryEntry directoryEntry, string name, string path, IItem parentItem, IChildItemsBuilder childItemsBuilder)
+            : base(childItemsBuilder)
         {
-            _childItemsBuilder = childItemsBuilder ?? throw new ArgumentNullException(nameof(childItemsBuilder));
             DirectoryEntry = directoryEntry;
             Name = name ?? throw new ArgumentNullException(nameof(name));
             ContainerSectionItem = containerSectionItem ?? throw new ArgumentNullException(nameof(containerSectionItem));
             Path = path ?? throw new ArgumentNullException(nameof(path));
             ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
-            SizeStr = directoryEntry.Size.ToFileSize();
+            Size = directoryEntry.Size;
         }
 
-        public sealed override string ObjectType => nameof(DirectoryEntry);
+        /// <summary>
+        /// Get the <see cref="DirectoryEntry"/> metadata
+        /// </summary>
+        public DirectoryEntry DirectoryEntry { get; }
 
-        [PropertiesView]
+        public sealed override string LibHacTypeName => nameof(DirectoryEntry);
+
+        public override string? LibHacUnderlyingTypeName => null;
+
+        public override string Name { get; }
+
+        public long Size { get; }
+
         public DirectoryEntryType DirectoryEntryType => DirectoryEntry.Type;
-
-        [PropertiesView]
-        public string Name { get; }
-
-        [PropertiesView("Size")]
-        public string SizeStr { get; }
 
         public string Path { get; }
 
@@ -75,7 +77,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         /// <summary>
         /// Get the child directory entries (can be either a file or a directory)
         /// </summary>
-        public IReadOnlyList<DirectoryEntryItem> ChildDirectoryEntryItems => GetChildDirectoryEntryItems(force: false);
+        public IReadOnlyList<DirectoryEntryItem> ChildDirectoryEntryItems => GetChildDirectoryEntryItems();
 
         /// <summary>
         /// Get the section which contains this <see cref="DirectoryEntryItem"/> in its descendants
@@ -83,20 +85,23 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         public SectionItem ContainerSectionItem { get; }
 
         /// <summary>
-        /// Get the <see cref="DirectoryEntry"/> metadata
+        /// Should be called only for entries of type <see cref="LibHac.Fs.DirectoryEntryType.File"/>
         /// </summary>
-        public DirectoryEntry DirectoryEntry { get; }
-
-        public override IReadOnlyList<IItem> LoadChildItems(bool force)
+        /// <returns></returns>
+        public IFile GetFile()
         {
-            return GetChildDirectoryEntryItems(force);
+            this.ContainerSectionItem.FileSystem.OpenFile(out var file, new U8Span(this.Path), OpenMode.Read).ThrowIfFailure();
+            return file;
         }
 
-        private IReadOnlyList<DirectoryEntryItem> GetChildDirectoryEntryItems(bool force)
+        protected override IReadOnlyList<IItem> SafeLoadChildItemsInternal()
         {
-            if (_subDirEntries == null || force)
-                _subDirEntries = _childItemsBuilder.Build(this);
-            return _subDirEntries;
+            return GetChildDirectoryEntryItems();
+        }
+
+        private IReadOnlyList<DirectoryEntryItem> GetChildDirectoryEntryItems()
+        {
+            return _subDirEntries ??= ChildItemsBuilder.Build(this);
         }
 
         public override string ToString()

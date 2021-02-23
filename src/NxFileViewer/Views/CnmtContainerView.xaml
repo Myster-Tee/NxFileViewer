@@ -11,25 +11,42 @@
              d:DesignHeight="450" d:DesignWidth="400" d:DataContext="{d:DesignInstance views:CnmtContainerViewModel}">
 
     <DockPanel Margin="0">
+
+        <!-- General Info -->
         <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.GeneralInfo}" DockPanel.Dock="Top">
-            <StackPanel>
-                <StackPanel>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Row="0" Grid.Column="0">
                     <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ContentType}" Style="{StaticResource Title2}"/>
                     <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=Type, Mode=OneWay}" />
                 </StackPanel>
-                <StackPanel>
+
+                <StackPanel Grid.Row="0" Grid.Column="2">
                     <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.TitleId}" Style="{StaticResource Title2}"/>
                     <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=TitleId, Mode=OneWay}" />
                 </StackPanel>
-                <StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="0">
                     <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.TitleVersion}" Style="{StaticResource Title2}"/>
                     <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=TitleVersion, Mode=OneWay}" ToolTip="{Binding Path=PatchLevel, Mode=OneWay}" />
-                </StackPanel>   
-                <StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="2">
                     <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MinimumSystemVersion}" Style="{StaticResource Title2}"/>
                     <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=MinimumSystemVersion, Mode=OneWay}" />
                 </StackPanel>
-            </StackPanel>
+            </Grid>
+
         </GroupBox>
 
         <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Presentation}" Visibility="{Binding Path=PresentationGroupBoxVisibility}">
@@ -52,7 +69,10 @@
                 </StackPanel>
 
                 <DockPanel Grid.Column="0" Grid.Row="1">
-                    <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.AvailableLanguages}" Style="{StaticResource Title2}" DockPanel.Dock="Top" />
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" >
+                        <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.AvailableLanguages}" Style="{StaticResource Title2}"/>
+                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ToolTip_AvailableLanguages}" />
+                    </StackPanel>
                     <ListView ItemsSource="{Binding Path=Titles}" VerticalAlignment="Stretch" 
                               SelectedItem="{Binding Path=SelectedTitle}" MinHeight="150" MinWidth="130" SelectionMode="Single">
                         <ListView.ItemTemplate>

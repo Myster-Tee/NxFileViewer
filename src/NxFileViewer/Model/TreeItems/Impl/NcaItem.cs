@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Emignatik.NxFileViewer.FileLoading;
-using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
+using LibHac;
 using LibHac.Fs.Fsa;
 using LibHac.FsSystem;
 using LibHac.FsSystem.NcaUtils;
@@ -9,75 +9,78 @@ using LibHac.FsSystem.NcaUtils;
 namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 {
     /// <summary>
-    /// 
+    /// <see cref="Nca"/> wrapper
     /// </summary>
     public class NcaItem : PartitionFileEntryItem
     {
         private IReadOnlyList<SectionItem>? _sections;
+        private Validity _hashValidity = Validity.Unchecked;
+        private Validity _headerSignatureValidity;
 
-        public NcaItem(Nca nca, PartitionFileEntry partitionFileEntry, IFile openFile, PartitionFileSystemItem parentPartitionFileSystemItem, IChildItemsBuilder childItemsBuilder)
-            : base(partitionFileEntry, openFile, parentPartitionFileSystemItem, childItemsBuilder)
+        public NcaItem(Nca nca, PartitionFileEntry partitionFileEntry, IFile file, PartitionFileSystemItem parentPartitionFileSystemItem, IChildItemsBuilder childItemsBuilder)
+            : base(partitionFileEntry, file, parentPartitionFileSystemItem, childItemsBuilder)
         {
-            PartitionFileEntry = partitionFileEntry ?? throw new ArgumentNullException(nameof(partitionFileEntry));
             Nca = nca ?? throw new ArgumentNullException(nameof(nca));
-            ParentPartitionFileSystemItem = parentPartitionFileSystemItem ?? throw new ArgumentNullException(nameof(parentPartitionFileSystemItem));
 
-            Id = PartitionFileEntry.Name.Split('.')[0];
+            Id = PartitionFileEntry.Name.Split('.', 2)[0];
         }
-
-        public string Id { get; }
 
         public Nca Nca { get; }
 
-        [PropertiesView]
-        public string UnderlyingType => nameof(Nca);
+        public override string LibHacUnderlyingTypeName => nameof(Nca);
 
-        [PropertiesView]
-        public NcaContentType NcaType => Nca.Header.ContentType;
+        public string Id { get; }
 
-        [PropertiesView]
         public TitleVersion SdkVersion => Nca.Header.SdkVersion;
 
-        [PropertiesView]
+        public NcaContentType ContentType => Nca.Header.ContentType;
+
         public DistributionType DistributionType => Nca.Header.DistributionType;
 
-        [PropertiesView]
-        public byte KeyGeneration => Nca.Header.KeyGeneration;
-
-        [PropertiesView]
         public int ContentIndex => Nca.Header.ContentIndex;
 
-        [PropertiesView]
+        public byte KeyGeneration => Nca.Header.KeyGeneration;
+
         public NcaVersion FormatVersion => Nca.Header.FormatVersion;
 
-        [PropertiesView]
         public bool IsEncrypted => Nca.Header.IsEncrypted;
-
-        public NcaContentType ContentType => Nca.Header.ContentType;
 
         public string FileName => PartitionFileEntry.Name;
 
         public override string DisplayName => $"{FileName} ({Nca.Header.ContentType})";
 
-        public PartitionFileSystemItem ParentPartitionFileSystemItem { get; }
-
         public override IItem ParentItem => ParentPartitionFileSystemItem;
 
-        public IReadOnlyList<SectionItem> Sections => GetSections(force: false);
+        public IReadOnlyList<SectionItem> Sections => GetSections();
 
-        public PartitionFileEntry PartitionFileEntry { get; }
-
-
-        public override IReadOnlyList<IItem> LoadChildItems(bool force)
+        public Validity HeaderSignatureValidity
         {
-            return GetSections(force);
+            get => _headerSignatureValidity;
+            internal set
+            {
+                _headerSignatureValidity = value;
+                NotifyPropertyChanged();
+            }
         }
 
-        private IReadOnlyList<SectionItem> GetSections(bool force)
+        public Validity HashValidity
         {
-            if (_sections == null || force)
-                _sections = ChildItemsBuilder.Build(this);
-            return _sections;
+            get => _hashValidity;
+            internal set
+            {
+                _hashValidity = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        protected sealed override IReadOnlyList<IItem> SafeLoadChildItemsInternal()
+        {
+            return GetSections();
+        }
+
+        private IReadOnlyList<SectionItem> GetSections()
+        {
+            return _sections ??= ChildItemsBuilder.Build(this);
         }
     }
 }

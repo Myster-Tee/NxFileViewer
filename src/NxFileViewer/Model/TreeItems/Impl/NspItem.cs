@@ -14,16 +14,20 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     {
         private readonly IFile _file;
 
-        public NspItem(PartitionFileSystem nspPartitionFileSystem, string name, IFile file, Keyset keySet, IChildItemsBuilder childItemsBuilder) : base(nspPartitionFileSystem, childItemsBuilder)
+        public NspItem(PartitionFileSystem nspPartitionFileSystem, string name, IFile file, Keyset keySet, IChildItemsBuilder childItemsBuilder)
+            : base(nspPartitionFileSystem, childItemsBuilder)
         {
+            NspPartitionFileSystem = nspPartitionFileSystem ?? throw new ArgumentNullException(nameof(nspPartitionFileSystem));
             Name = name ?? throw new ArgumentNullException(nameof(name));
             _file = file ?? throw new ArgumentNullException(nameof(file));
             KeySet = keySet ?? throw new ArgumentNullException(nameof(keySet));
         }
 
+        public PartitionFileSystem NspPartitionFileSystem { get; }
+
         public override Keyset KeySet { get; }
 
-        public string Name { get; }
+        public override string Name { get; }
 
         public override string DisplayName => Name;
 

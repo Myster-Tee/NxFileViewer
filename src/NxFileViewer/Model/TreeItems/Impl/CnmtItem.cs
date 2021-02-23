@@ -1,7 +1,6 @@
 ﻿using System;
 using Emignatik.NxFileViewer.FileLoading;
 using Emignatik.NxFileViewer.Utils;
-using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 using LibHac;
 using LibHac.Fs;
 using LibHac.FsSystem.NcaUtils;
@@ -16,35 +15,30 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         {
             Cnmt = cnmt ?? throw new ArgumentNullException(nameof(cnmt));
             PatchLevel = GetPatchLevel(Cnmt.TitleVersion);
+            TitleId = Cnmt.TitleId.ToStrId();
+            ApplicationTitleId = Cnmt.ApplicationTitleId.ToStrId();
+            PatchTitleId = Cnmt.PatchTitleId.ToStrId();
+            TitleVersion = Cnmt.TitleVersion?.Version.ToString();
         }
 
         public Cnmt Cnmt { get; }
 
-        [PropertiesView]
-        public string UnderlyingType => nameof(Cnmt);
+        public override string LibHacUnderlyingTypeName => nameof(Cnmt);
 
-        [PropertiesView]
         public ContentMetaType ContentType => Cnmt.Type;
 
-        [PropertiesView]
-        public string TitleId => Cnmt.TitleId.ToStrId();
+        public string TitleId { get; }
 
-        [PropertiesView]
-        public string ApplicationTitleId => Cnmt.ApplicationTitleId.ToStrId();
+        public string ApplicationTitleId { get; }
 
-        [PropertiesView]
-        public string PatchTitleId => Cnmt.PatchTitleId.ToStrId();
+        public string PatchTitleId { get; }
 
-        [PropertiesView]
-        public uint? TitleVersion => Cnmt.TitleVersion?.Version;
+        public string? TitleVersion { get; }
 
-        [PropertiesView]
         public int? PatchLevel { get; }
 
-        [PropertiesView]
         public TitleVersion? MinimumApplicationVersion => Cnmt.MinimumApplicationVersion;
 
-        [PropertiesView]
         public TitleVersion? MinimumSystemVersion => Cnmt.MinimumSystemVersion;
 
         private static int? GetPatchLevel(TitleVersion? titleVersion)

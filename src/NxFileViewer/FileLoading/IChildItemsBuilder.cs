@@ -16,7 +16,7 @@ namespace Emignatik.NxFileViewer.FileLoading
 
         IReadOnlyList<DirectoryEntryItem> Build(DirectoryEntryItem parentItem);
 
-        IReadOnlyList<IItem> Build(PartitionFileEntryItem partitionFileEntryItem);
+        IReadOnlyList<IItem> Build(PartitionFileEntryItem parentItem);
     }
 
     public interface IPartitionChildByTypes

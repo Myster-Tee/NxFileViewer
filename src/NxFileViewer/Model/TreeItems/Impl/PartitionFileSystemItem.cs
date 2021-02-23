@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Emignatik.NxFileViewer.FileLoading;
-using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 using LibHac;
 using LibHac.FsSystem;
 
@@ -9,47 +8,44 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 {
     public abstract class PartitionFileSystemItem : ItemBase
     {
-        private readonly IChildItemsBuilder _childItemsBuilder;
         private IPartitionChildByTypes? _partitionChildByTypes;
 
-        public PartitionFileSystemItem(PartitionFileSystem partitionFileSystem, IChildItemsBuilder childItemsBuilder)
+        protected PartitionFileSystemItem(PartitionFileSystem partitionFileSystem, IChildItemsBuilder childItemsBuilder)
+            : base(childItemsBuilder)
         {
-            _childItemsBuilder = childItemsBuilder ?? throw new ArgumentNullException(nameof(childItemsBuilder));
             PartitionFileSystem = partitionFileSystem ?? throw new ArgumentNullException(nameof(partitionFileSystem));
         }
 
-        public sealed override string ObjectType => nameof(PartitionFileSystem);
+        public PartitionFileSystem PartitionFileSystem { get; }
 
-        [PropertiesView]
         public PartitionFileSystemType PartitionType => PartitionFileSystem.Header.Type;
 
-        [PropertiesView]
         public int NumFiles => PartitionFileSystem.Header.NumFiles;
 
-        public abstract Keyset KeySet { get; }
+        public sealed override string LibHacTypeName => nameof(PartitionFileSystem);
 
-        public PartitionFileSystem PartitionFileSystem { get; }
+        public override string? LibHacUnderlyingTypeName => null;
+
+        public abstract Keyset KeySet { get; }
 
         /// <summary>
         /// Get child items of type <see cref="NcaItem"/>
         /// </summary>
-        public IReadOnlyList<NcaItem> NcaItems => GetChildItemsByTypes(force: false).NcaItems;
+        public IReadOnlyList<NcaItem> NcaItems => GetChildItemsByTypes().NcaItems;
 
         /// <summary>
         /// Get child items of type <see cref="PartitionFileEntryItem"/>
         /// </summary>
-        public IReadOnlyList<PartitionFileEntryItem> PartitionFileEntryItems => GetChildItemsByTypes(force: false).PartitionFileEntryItems;
+        public IReadOnlyList<PartitionFileEntryItem> PartitionFileEntryItems => GetChildItemsByTypes().PartitionFileEntryItems;
 
-        public sealed override IReadOnlyList<IItem> LoadChildItems(bool force)
+        protected sealed override IReadOnlyList<IItem> SafeLoadChildItemsInternal()
         {
-            return GetChildItemsByTypes(force).AllChildItems;
+            return GetChildItemsByTypes().AllChildItems;
         }
 
-        private IPartitionChildByTypes GetChildItemsByTypes(bool force)
+        private IPartitionChildByTypes GetChildItemsByTypes()
         {
-            if (_partitionChildByTypes == null || force)
-                _partitionChildByTypes = _childItemsBuilder.Build(this);
-            return _partitionChildByTypes;
+            return _partitionChildByTypes ??= ChildItemsBuilder.Build(this);
         }
     }
 }

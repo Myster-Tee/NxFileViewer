@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Emignatik.NxFileViewer.Model.TreeItems
 {
@@ -7,7 +8,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems
     /// Base interface exposing the hierarchical tree structure of a loaded file.
     /// Each implementation of a <see cref="IItem"/> is supposed to wrap a LibHac model (class or structure)
     /// </summary>
-    public interface IItem : IDisposable
+    public interface IItem : INotifyPropertyChanged, IDisposable
     {
         /// <summary>
         /// Get the display name of this item in the tree
@@ -15,9 +16,9 @@ namespace Emignatik.NxFileViewer.Model.TreeItems
         string DisplayName { get; }
 
         /// <summary>
-        /// Get the end user displayed type of this item 
+        /// Get the name of the element
         /// </summary>
-        string ObjectType { get; }
+        string Name { get; }
 
         /// <summary>
         /// Get the direct parent item
@@ -30,12 +31,30 @@ namespace Emignatik.NxFileViewer.Model.TreeItems
         IReadOnlyList<IItem> ChildItems { get; }
 
         /// <summary>
-        /// Load the child items.
-        /// When force is false, returns the last loaded cached items.
-        /// When force is true, discard cached items and forces child items loading.
+        /// Loads the child items without throwing
         /// </summary>
-        /// <param name="force"></param>
         /// <returns></returns>
-        IReadOnlyList<IItem> LoadChildItems(bool force);
+        IReadOnlyList<IItem> SafeLoadChildItems();
+        
+        /// <summary>
+        /// Returns true if an error exists in descendants
+        /// </summary>
+        bool HasErrorInDescendants { get; }
+
+        /// <summary>
+        /// Get the name of the wrapped LibHac object
+        /// </summary>
+        string LibHacTypeName { get; }
+
+        /// <summary>
+        /// Get the name of the underlying wrapped LibHac object
+        /// </summary>
+        string? LibHacUnderlyingTypeName { get; }
+
+
+        IItemErrors Errors { get; }
+
+        void ReportNbChildErrors(int moreOrLessErrors);
+
     }
 }

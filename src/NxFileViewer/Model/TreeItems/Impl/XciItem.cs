@@ -9,42 +9,41 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     public class XciItem : ItemBase
     {
         private readonly IFile _file;
-        private readonly IChildItemsBuilder _childItemsBuilder;
         private IReadOnlyList<XciPartitionItem>? _xciPartitionItems;
 
         public XciItem(Xci xci, string name, IFile file, Keyset keySet, IChildItemsBuilder childItemsBuilder)
+            : base(childItemsBuilder)
         {
             Xci = xci ?? throw new ArgumentNullException(nameof(xci));
             Name = name ?? throw new ArgumentNullException(nameof(name));
             _file = file ?? throw new ArgumentNullException(nameof(file));
-            _childItemsBuilder = childItemsBuilder ?? throw new ArgumentNullException(nameof(childItemsBuilder));
             KeySet = keySet ?? throw new ArgumentNullException(nameof(keySet));
         }
 
-        public string Name { get; }
+        public Xci Xci { get; }
 
-        public override string ObjectType => nameof(Xci);
+        public override string LibHacTypeName => nameof(Xci);
+
+        public override string? LibHacUnderlyingTypeName => null;
+
+        public override string Name { get; }
 
         public override string DisplayName => Name;
 
         public override IItem? ParentItem => null;
 
-        public Xci Xci { get; }
-
-        public IReadOnlyList<XciPartitionItem> Partitions => GetPartitions(force: false);
+        public IReadOnlyList<XciPartitionItem> Partitions => GetPartitions();
 
         public Keyset KeySet { get; }
 
-        public override IReadOnlyList<IItem> LoadChildItems(bool force)
+        protected sealed override IReadOnlyList<IItem> SafeLoadChildItemsInternal()
         {
-            return GetPartitions(force);
+            return GetPartitions();
         }
 
-        private IReadOnlyList<XciPartitionItem> GetPartitions(bool force)
+        private IReadOnlyList<XciPartitionItem> GetPartitions()
         {
-            if (_xciPartitionItems == null || force)
-                _xciPartitionItems = _childItemsBuilder.Build(this);
-            return _xciPartitionItems;
+            return _xciPartitionItems ??= ChildItemsBuilder.Build(this);
         }
 
         public override void Dispose()

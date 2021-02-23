@@ -16,14 +16,18 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string MenuItemOpenLast { get; }
         string MenuItemClose { get; }
         string MenuItemExit { get; }
+        string MenuItemTools { get; }
+        string MenuItem_VerifyNcasHash { get; }
+        string MenuItem_VerifyNcasHeaderSignature { get; }
         string MenuItemOptions { get; }
         string MenuItemSettings { get; }
 
-        string AvailableContents { get; }
+        string MultiContentPackage { get; }
         string GeneralInfo { get; }
         string TitleId { get; }
         string DisplayVersion { get; }
         string Presentation { get; }
+        string ToolTip_AvailableLanguages { get; }
         string AvailableLanguages { get; }
         string AppTitle { get; }
         string Publisher { get; }
@@ -75,8 +79,12 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string ContextMenu_SaveImage { get; }
         string CopyTitleImageError { get; }
         string SaveTitleImageError { get; }
-        string SaveFileDialog_SaveImageTitle { get; }
-        string SaveFileDialog_JpegImageFilter { get; }
+
+        string SaveDialog_Title { get; }
+        string SaveDialog_ImageFilter { get; }
+        string SaveDialog_AnyFileFilter { get; }
+        string SaveFile_Error { get; }
+
         string ContextMenuCopyImage { get; }
 
         string TabOverview { get; }
@@ -84,10 +92,9 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string GroupBoxStructure { get; }
         string GroupBoxProperties { get; }
 
-        string ContextMenu_SaveFile { get; }
-        string SaveFileDialog_SaveFileTitle { get; }
-        string SaveFileDialog_AnyFileFilter { get; }
-        string SaveFileTitleError { get; }
+        string ContextMenu_SaveItemFile { get; }
+        string ContextMenu_ShowItemErrors { get; }
+
         string SettingsLoadingError { get; }
         string SettingsSavingError { get; }
 
@@ -99,7 +106,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string LoadingError_FailedToLoadNcaFile { get; }
         string LoadingError_FailedToLoadPartitionFileSystemContent { get; }
         string LoadingError_FailedToCheckIfSectionCanBeOpened { get; }
-        string LoadingError_FailedToOpenNcaFileSystem { get; }
+        string LoadingError_FailedToOpenNcaSection { get; }
         string LoadingError_FailedToLoadSectionContent { get; }
         string LoadingError_FailedToGetFileSystemDirectoryEntries { get; }
         string LoadingError_FailedToOpenNacpFile { get; }
@@ -120,11 +127,44 @@ namespace Emignatik.NxFileViewer.Localization.Keys
 
         string KeysFileUsed { get; }
         string NoneKeysFile { get; }
+
         string FailedToDownloadProdKeysFromUrl { get; }
         string DownloadingProdKeysFromUrl { get; }
         string ProdKeysSuccessfullyDownloaded { get; }
         string ToolTip_PatchLevel { get; }
         string Log_OpeningFile { get; }
         string MainModuleIdTooltip { get; }
+        string ATaskIsAlreadyRunning { get; }
+
+        string Integrity { get; }
+        string AvailableContents { get; }
+        string MultiContentPackageToolTip { get; }
+
+        string Title_NcasHeaderSignature { get; }
+        string ToolTip_NcasHeaderSignature { get; }
+        string Title_NcasHash { get; }
+        string ToolTip_NcasHash { get; }
+        string NcaHeaderSignatureValid_Log { get; }
+        string NcaHeaderSignatureInvalid { get; }
+        string NcaHeaderSignatureInvalid_Log { get; }
+        string NcaHashValid_Log { get; }
+        string NcaHashInvalid { get; }
+        string NcaHashInvalid_Log { get; }
+        string NcasHashError_Log { get; }
+        string NcasHeaderSignatureError_Log { get; }
+
+        string CancelAction { get; }
+        string Ready { get; }
+        string LoadingFile_PleaseWait { get; }
+
+        string NcasValidity_NoNca { get; }
+        string NcasValidity_Unchecked { get; }
+        string NcasValidity_InProgress { get; }
+        string NcasValidity_Invalid { get; }
+        string NcasValidity_Valid { get; }
+        string NcasValidity_Error { get; }
+        string NcasValidity_Unknown { get; }
+
+        string Status_SavingFile { get; }
     }
 }

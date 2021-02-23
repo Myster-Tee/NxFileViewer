@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Emignatik.NxFileViewer.FileLoading;
-using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 using LibHac.Fs.Fsa;
 using LibHac.FsSystem.NcaUtils;
 
@@ -9,20 +8,24 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 {
     public class SectionItem : ItemBase
     {
-        private readonly NcaFsHeader _ncaFsHeader;
-        private readonly IChildItemsBuilder _childItemsBuilder;
         private IReadOnlyList<DirectoryEntryItem>? _dirEntries;
 
         public SectionItem(int sectionIndex, NcaFsHeader ncaFsHeader, IFileSystem fileSystem, NcaItem parentNcaItem, IChildItemsBuilder childItemsBuilder)
+            : base(childItemsBuilder)
         {
-            _ncaFsHeader = ncaFsHeader;
-            _childItemsBuilder = childItemsBuilder ?? throw new ArgumentNullException(nameof(childItemsBuilder));
+            FsHeader = ncaFsHeader;
             SectionIndex = sectionIndex;
             FileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
             ParentNcaItem = parentNcaItem ?? throw new ArgumentNullException(nameof(parentNcaItem));
         }
 
-        public override string ObjectType => "Section";
+        public NcaFsHeader FsHeader { get; }
+
+        public override string LibHacTypeName => "Section";
+
+        public override string? LibHacUnderlyingTypeName => FsHeader.FormatType.ToString();
+
+        public override string Name => SectionIndex.ToString();
 
         public override string DisplayName => $"Section {SectionIndex}";
 
@@ -30,35 +33,28 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public override IItem ParentItem => ParentNcaItem;
 
-        public IReadOnlyList<DirectoryEntryItem> ChildDirectoryEntryItems => GetChildDirectoryEntryItems(force: false);
-
-        [PropertiesView]
-        public int SectionIndex { get; }
-
-        [PropertiesView]
-        public NcaEncryptionType EncryptionType => _ncaFsHeader.EncryptionType;
-
-        [PropertiesView]
-        public NcaFormatType FormatType => _ncaFsHeader.FormatType;
-
-        [PropertiesView]
-        public NcaHashType HashType => _ncaFsHeader.HashType;
-
-        [PropertiesView]
-        public short Version => _ncaFsHeader.Version;
+        public IReadOnlyList<DirectoryEntryItem> ChildDirectoryEntryItems => GetChildDirectoryEntryItems();
 
         public IFileSystem FileSystem { get; }
 
-        public override IReadOnlyList<IItem> LoadChildItems(bool force)
+        public NcaEncryptionType EncryptionType => FsHeader.EncryptionType;
+
+        public NcaFormatType FormatType => FsHeader.FormatType;
+
+        public NcaHashType HashType => FsHeader.HashType;
+
+        public short Version => FsHeader.Version;
+
+        public int SectionIndex { get; }
+
+        protected sealed override IReadOnlyList<IItem> SafeLoadChildItemsInternal()
         {
-            return GetChildDirectoryEntryItems(force);
+            return GetChildDirectoryEntryItems();
         }
 
-        private IReadOnlyList<DirectoryEntryItem> GetChildDirectoryEntryItems(bool force)
+        private IReadOnlyList<DirectoryEntryItem> GetChildDirectoryEntryItems()
         {
-            if (_dirEntries == null || force)
-                _dirEntries = _childItemsBuilder.Build(this);
-            return _dirEntries;
+            return _dirEntries ??= ChildItemsBuilder.Build(this);
         }
     }
 }

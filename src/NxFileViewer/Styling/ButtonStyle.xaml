@@ -1,10 +1,55 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls">
 
     <Style x:Key="BrowseButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Margin" Value="2,0" />
         <Setter Property="Width" Value="20" />
         <Setter Property="MinWidth" Value="10" />
+    </Style>
+
+    <Style TargetType="customControls:PlayStopButton" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="BorderBrush" Value="{DynamicResource PlayStopButton.Static.Border}" />
+        <Setter Property="Background" Value="{DynamicResource PlayStopButton.Static.Background}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="customControls:PlayStopButton">
+                    <Border x:Name="Border" Height="{TemplateBinding Height}">
+                        <Viewbox>
+                            <Grid x:Name="Grid" Width="100" Height="100" Background="Transparent">
+                                <Ellipse x:Name="Ellipse" Width="100" Height="100" Fill="{TemplateBinding Background}" StrokeThickness="{TemplateBinding BorderThickness}" Stroke="{TemplateBinding BorderBrush}"/>
+                                <Path x:Name="PlayIcon" Fill="{DynamicResource PlayStopButton.Play.Icon}" Data="M 32,20 85,50 32,80" />
+                                <Rectangle x:Name="StopIcon" Fill="{DynamicResource PlayStopButton.Stop.Icon}" Width="50" Height="50" />
+                            </Grid>
+                        </Viewbox>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Ellipse" Property="Fill" Value="{DynamicResource PlayStopButton.MouseOver.Background}" />
+                        </Trigger>
+                        <Trigger Property="PlayStopButtonState" Value="Play">
+                            <Setter TargetName="PlayIcon" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="StopIcon" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                        <Trigger Property="PlayStopButtonState" Value="Stop">
+                            <Setter TargetName="PlayIcon" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="StopIcon" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="PlayStopButtonState" Value="Cancelling">
+                            <Setter TargetName="PlayIcon" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="StopIcon" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="StopIcon" Property="Fill" Value="{DynamicResource PlayStopButton.Cancelling.Icon}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Border" Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>

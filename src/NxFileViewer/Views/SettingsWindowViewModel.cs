@@ -17,7 +17,6 @@ namespace Emignatik.NxFileViewer.Views
         private string _prodKeysFilePath;
         private string _consoleKeysFilePath;
         private string _titleKeysFilePath;
-        private StructureLoadingMode _selectedStructureLoadingMode;
         private LogLevel _selectedLogLevel;
         private string _prodKeysDownloadUrl;
 
@@ -36,7 +35,6 @@ namespace Emignatik.NxFileViewer.Views
             ProdKeysFilePath = _appSettings.ProdKeysFilePath;
             ConsoleKeysFilePath = _appSettings.ConsoleKeysFilePath;
             TitleKeysFilePath = _appSettings.TitleKeysFilePath;
-            SelectedStructureLoadingMode = _appSettings.StructureLoadingMode;
             SelectedLogLevel = _appSettings.LogLevel;
             ProdKeysDownloadUrl = _appSettings.ProdKeysDownloadUrl;
         }
@@ -81,18 +79,6 @@ namespace Emignatik.NxFileViewer.Views
             {
                 _titleKeysFilePath = value;
                 NotifyPropertyChanged(nameof(TitleKeysFilePath));
-            }
-        }
-
-        public IEnumerable<StructureLoadingMode> StructureLoadingModes => Enum.GetValues<StructureLoadingMode>();
-
-        public StructureLoadingMode SelectedStructureLoadingMode
-        {
-            get => _selectedStructureLoadingMode;
-            set
-            {
-                _selectedStructureLoadingMode = value;
-                NotifyPropertyChanged();
             }
         }
 
@@ -170,7 +156,6 @@ namespace Emignatik.NxFileViewer.Views
             _appSettings.ProdKeysFilePath = ProdKeysFilePath;
             _appSettings.ConsoleKeysFilePath = ConsoleKeysFilePath;
             _appSettings.TitleKeysFilePath = TitleKeysFilePath;
-            _appSettings.StructureLoadingMode = SelectedStructureLoadingMode;
             _appSettings.LogLevel = SelectedLogLevel;
             _appSettings.ProdKeysDownloadUrl = ProdKeysDownloadUrl;
 

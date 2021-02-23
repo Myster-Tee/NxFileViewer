@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Threading.Tasks;
 using Emignatik.NxFileViewer.FileLoading;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model;
-using Emignatik.NxFileViewer.Model.Overview;
-using Emignatik.NxFileViewer.Model.TreeItems;
+using Emignatik.NxFileViewer.Services.BackgroundTask;
+using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
 using Emignatik.NxFileViewer.Settings;
 using Microsoft.Extensions.Logging;
 
@@ -14,82 +14,46 @@ namespace Emignatik.NxFileViewer.Services
     {
         private readonly IOpenedFileService _openedFileService;
         private readonly IAppSettings _appSettings;
-        private readonly IFileTypeAnalyzer _fileTypeAnalyzer;
-        private readonly IFileItemLoader _fileItemLoader;
-        private readonly IFileOverviewLoader _fileOverviewLoader;
+        private readonly IFileLoader _fileLoader;
+        private readonly IBackgroundTaskService _backgroundTaskService;
         private readonly ILogger _logger;
 
-        public FileOpenerService(
-            IOpenedFileService openedFileService,
-            ILoggerFactory loggerFactory,
-            IAppSettings appSettings,
-            IFileTypeAnalyzer fileTypeAnalyzer,
-            IFileItemLoader fileItemLoader,
-            IFileOverviewLoader fileOverviewLoader)
+        public FileOpenerService(IOpenedFileService openedFileService, ILoggerFactory loggerFactory, IAppSettings appSettings, IFileLoader fileLoader, IBackgroundTaskService backgroundTaskService)
         {
             _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
             _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
-            _fileTypeAnalyzer = fileTypeAnalyzer ?? throw new ArgumentNullException(nameof(fileTypeAnalyzer));
-            _fileItemLoader = fileItemLoader ?? throw new ArgumentNullException(nameof(fileItemLoader));
-            _fileOverviewLoader = fileOverviewLoader;
+            _fileLoader = fileLoader ?? throw new ArgumentNullException(nameof(fileLoader));
+            _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
             _logger = loggerFactory.CreateLogger(this.GetType());
         }
 
-        public void OpenFile(string filePath)
+        public async Task SafeOpenFile(string filePath)
         {
             try
             {
-                _logger.LogInformation(string.Format(LocalizationManager.Instance.Current.Keys.Log_OpeningFile, filePath));
-                _appSettings.LastOpenedFile = filePath;
-
-                IItem rootItem;
-                FileOverview fileOverview;
-                switch (_fileTypeAnalyzer.GetFileType(filePath))
+                var runnableRelay = new RunnableRelay<NxFile>((reporter, _) =>
                 {
-                    case FileType.UNKNOWN:
-                        _logger.LogError(string.Format(LocalizationManager.Instance.Current.Keys.ErrFileNotSupported, filePath));
-                        return;
+                    var loadingFilePleaseWait = LocalizationManager.Instance.Current.Keys.LoadingFile_PleaseWait;
+                    reporter.SetText(loadingFilePleaseWait);
+                    return _fileLoader.Load(filePath);
+                })
+                {
+                    SupportProgress = false,
+                    SupportsCancellation = false
+                };
 
-                    case FileType.XCI:
-                        var xciItem = _fileItemLoader.LoadXci(filePath);
-                        fileOverview = _fileOverviewLoader.Load(xciItem);
-                        rootItem = xciItem;
+                var nxFile = await _backgroundTaskService.RunAsync(runnableRelay);
 
-                        break;
-                    case FileType.NSP:
-                        var nspItem = _fileItemLoader.LoadNsp(filePath);
-                        fileOverview = _fileOverviewLoader.Load(nspItem);
-                        rootItem = nspItem;
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                if (_appSettings.StructureLoadingMode == StructureLoadingMode.Full)
-                    ForceLoadAllChildren(rootItem);
-
-                _openedFileService.OpenedFile = new OpenedFile(filePath, rootItem, fileOverview);
+                _appSettings.LastOpenedFile = filePath;
+                _openedFileService.OpenedFile = nxFile;
+            }
+            catch (FileNotSupportedException)
+            {
+                _logger.LogError(LocalizationManager.Instance.Current.Keys.ErrFileNotSupported.SafeFormat(filePath));
             }
             catch (Exception ex)
             {
-                _logger.LogError(string.Format(LocalizationManager.Instance.Current.Keys.LoadingError_Failed, filePath, ex.Message), ex);
-            }
-        }
-
-        private static void ForceLoadAllChildren(IItem rootItem)
-        {
-            try
-            {
-                rootItem.LoadChildItems(true);
-            }
-            catch (Exception ex)
-            {
-                Trace.TraceError($"{nameof(IItem)}.{nameof(rootItem.LoadChildItems)} exception: {ex.Message}");
-            }
-            foreach (var childItem in rootItem.ChildItems)
-            {
-                ForceLoadAllChildren(childItem);
+                _logger.LogError(LocalizationManager.Instance.Current.Keys.LoadingError_Failed.SafeFormat(filePath, ex.Message), ex);
             }
         }
     }

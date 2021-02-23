@@ -6,14 +6,14 @@ namespace Emignatik.NxFileViewer.Views
 {
     public class OpenedFileViewModel : ViewModelBase
     {
-        private readonly OpenedFile _openedFile;
+        private readonly NxFile _nxFile;
 
-        public OpenedFileViewModel(OpenedFile openedFile, IServiceProvider serviceProvider)
+        public OpenedFileViewModel(NxFile nxFile, IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            _openedFile = openedFile ?? throw new ArgumentNullException(nameof(openedFile));
-            Content = new ContentViewModel(_openedFile.RootItem, serviceProvider);
-            FileOverview = new FileOverviewViewModel(_openedFile.Overview, serviceProvider);
+            _nxFile = nxFile ?? throw new ArgumentNullException(nameof(nxFile));
+            Content = new ContentViewModel(_nxFile.RootItem, serviceProvider);
+            FileOverview = new FileOverviewViewModel(_nxFile.Overview, serviceProvider);
         }
 
         public IServiceProvider ServiceProvider { get; }

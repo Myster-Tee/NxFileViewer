@@ -1,0 +1,46 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <Color x:Key="AccentColor">#51EBAB</Color>
+
+    <SolidColorBrush x:Key="FontBrush.Default" Color="Black" />
+    <SolidColorBrush x:Key="FontBrush.Success" Color="ForestGreen" />
+    <SolidColorBrush x:Key="FontBrush.Warning" Color="Orange" />
+    <SolidColorBrush x:Key="FontBrush.Error" Color="Red" />
+
+    <SolidColorBrush x:Key="TreeViewItemIcon.Static.Error.Stroke" Color="Red" />
+
+    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Stroke" Color="#FF818181"/>
+    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Fill" Color="Transparent"/>
+
+    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Stroke" Color="#FF262626"/>
+    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Fill" Color="#FF595959"/>
+
+    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.ErrorInDescendants.Stroke" Color="Red" />
+    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.ErrorInDescendants.Fill" Color="Transparent" />
+
+    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.ErrorInDescendants.Stroke" Color="Red" />
+    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.ErrorInDescendants.Fill" Color="Red" />
+
+    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Fill" Color="LightGray"/>
+
+    <SolidColorBrush x:Key="HelpIcon.Static.Background" Color="#9D9AA8"/>
+    <SolidColorBrush x:Key="HelpIcon.Static.Foreground" Color="White"/>
+
+    <!-- ProgressBar -->
+    <SolidColorBrush x:Key="ProgressBar.Static.Background" Color="#686868" />
+    <LinearGradientBrush x:Key="ProgressBar.Progress.Foreground" StartPoint="0, 0.5" EndPoint="1, 0.5">
+        <GradientStop Offset="0" Color="#9919148F" />
+        <GradientStop Offset="0.5" Color="#990099FF" />
+        <GradientStop Offset="1" Color="#9945DE6F" />
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="PlayStopButton.Static.Border" Color="#686868" />
+    <SolidColorBrush x:Key="PlayStopButton.Static.Background" Color="#686868" />
+    <SolidColorBrush x:Key="PlayStopButton.MouseOver.Background" Color="#8D8D99" />
+    <SolidColorBrush x:Key="PlayStopButton.Play.Icon" Color="{StaticResource AccentColor}" />
+    <SolidColorBrush x:Key="PlayStopButton.Stop.Icon" Color="#DC7D7D" />
+    <SolidColorBrush x:Key="PlayStopButton.Cancelling.Icon" Color="Yellow" />
+
+</ResourceDictionary>

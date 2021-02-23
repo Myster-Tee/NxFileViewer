@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:treeItems="clr-namespace:Emignatik.NxFileViewer.Model.TreeItems"
              xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
              xmlns:objectPropertyViewer="clr-namespace:Emignatik.NxFileViewer.Views.ObjectPropertyViewer"
              xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
-             xmlns:cc="clr-namespace:Emignatik.NxFileViewer.Utils.MVVM.CustomControls"
+             xmlns:cc="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
+             xmlns:items="clr-namespace:Emignatik.NxFileViewer.Views.TreeItems"
              mc:Ignorable="d"
              Style="{StaticResource UserControlStyle}"
              d:DesignHeight="400" d:DesignWidth="300" d:DataContext="{d:DesignInstance  views:ContentViewModel}">
@@ -22,26 +22,18 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.GroupBoxStructure}">
-            <cc:TreeViewEx x:Name="ItemsTreeView" ItemsSource="{Binding Path=RootItems}" MinHeight="100" BindableSelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource}">
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding ChildItems}" DataType="{x:Type treeItems:IItem}">
-                        <Grid>
-                            <Grid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ContextMenu_SaveFile}" Command="{Binding Source={x:Reference Name=ItemsTreeView}, Path=DataContext.SaveSelectedItemCommand}" />
-                                </ContextMenu>
-                            </Grid.ContextMenu>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="3"/>
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <ContentControl Grid.Column="0" ContentTemplateSelector="{StaticResource ItemIconDataTemplateSelector}" Content="{Binding}" VerticalAlignment="Center" Focusable="False" />
-                            <TextBlock Grid.Column="2" Text="{Binding Path=DisplayName}" VerticalAlignment="Center" />
-                        </Grid>
+            <cc:ErrorTreeView ItemsSource="{Binding Path=RootItems}" MinHeight="50" BindableSelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource}">
+                <cc:ErrorTreeView.ItemContainerStyle>
+                    <Style TargetType="cc:ErrorTreeViewItem" BasedOn="{StaticResource {x:Type cc:ErrorTreeViewItem}}">
+                        <Setter Property="HasErrorInDescendants" Value="{Binding Path=HasErrorInDescendants}" />
+                    </Style>
+                </cc:ErrorTreeView.ItemContainerStyle>
+                <cc:ErrorTreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type items:IItemViewModel}">
+                        <items:ItemView />
                     </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </cc:TreeViewEx>
+                </cc:ErrorTreeView.ItemTemplate>
+            </cc:ErrorTreeView>
         </GroupBox>
         <GridSplitter Grid.Row="1" ResizeDirection="Rows" Style="{StaticResource HorizontalGridSplitterStyle}" />
         <GroupBox Grid.Row="2" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.GroupBoxProperties}">

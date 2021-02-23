@@ -1,68 +1,62 @@
 ﻿using System;
-using System.Windows;
-using System.Windows.Input;
 
 namespace Emignatik.NxFileViewer.Utils.MVVM.Commands
 {
-    public class RelayCommand : ICommand
-    {
-        private readonly Action<object> _execute;
-        private readonly Predicate<object>? _canExecute;
+    public delegate void ExecuteNoArgHandler();
+    public delegate bool CanExecuteNoArgHandler();
 
-        public RelayCommand(Action execute, Func<bool>? canExecute = null) :
+    public delegate void ExecuteHandler(object? parameter);
+    public delegate bool CanExecuteHandler(object? parameter);
+
+    public class RelayCommand : CommandBase
+    {
+
+        private readonly ExecuteHandler _execute;
+        private readonly CanExecuteHandler? _canExecute;
+
+        private static ExecuteHandler WrapExecute(ExecuteNoArgHandler executeNoArgHandler)
+        {
+            if (executeNoArgHandler == null) throw new ArgumentNullException(nameof(executeNoArgHandler));
+            return parameter => executeNoArgHandler();
+        }
+
+        private static CanExecuteHandler? WrapCanExecute(CanExecuteNoArgHandler? canExecuteNoArgHandler)
+        {
+            if (canExecuteNoArgHandler == null)
+                return null;
+            return parameter => canExecuteNoArgHandler();
+        }
+
+        public RelayCommand(ExecuteNoArgHandler execute, CanExecuteNoArgHandler? canExecute = null) :
             this(WrapExecute(execute), WrapCanExecute(canExecute))
         {
         }
 
-        public RelayCommand(Action<object> execute, Predicate<object>? canExecute = null)
+        public RelayCommand(ExecuteHandler execute, CanExecuteHandler? canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
 
 
-        private static Action<object> WrapExecute(Action execute)
-        {
-            if (execute == null) throw new ArgumentNullException(nameof(execute));
-            return o => { execute(); };
-        }
-
-        private static Predicate<object>? WrapCanExecute(Func<bool>? canExecute)
-        {
-            if (canExecute == null)
-                return null;
-            return o => canExecute();
-        }
-
-        public bool CanExecute(object parameter)
+        public override bool CanExecute(object? parameter)
         {
             return _canExecute == null || _canExecute(parameter);
         }
 
-        public virtual event EventHandler? CanExecuteChanged;
-
-        public void Execute(object parameter)
+        public override void Execute(object? parameter)
         {
             _execute(parameter);
         }
 
-        public virtual void TriggerCanExecuteChanged(bool triggerUiThreadSafe = false)
+        /// <summary>
+        /// <inheritdoc cref="CommandBase.TriggerCanExecuteChanged()"/>
+        /// (exposes publicly the protected method <see cref="CommandBase.TriggerCanExecuteChanged()"/>)
+        /// </summary>
+        /// <param name="uiThreadSafe"></param>
+        public new void TriggerCanExecuteChanged(bool uiThreadSafe = false)
         {
-            var handler = CanExecuteChanged;
-            if (handler == null)
-                return;
-
-            var triggerEventAction = new Action(() => { handler(this, new EventArgs()); });
-
-            var uiDispatcher = Application.Current?.Dispatcher;
-            if (triggerUiThreadSafe && uiDispatcher != null && !uiDispatcher.CheckAccess())
-            {
-                uiDispatcher.Invoke(triggerEventAction);
-            }
-            else
-            {
-                triggerEventAction();
-            }
+            base.TriggerCanExecuteChanged(uiThreadSafe);
         }
     }
 }

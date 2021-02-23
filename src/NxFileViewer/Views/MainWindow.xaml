@@ -6,6 +6,7 @@
         xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
         xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
         xmlns:dragAndDrop="clr-namespace:Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions.DragAndDrop"
+        xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
         mc:Ignorable="d"
         AllowDrop="True"
         Style="{StaticResource WindowStyle}"
@@ -16,12 +17,22 @@
         <KeyBinding Gesture="Ctrl+O" Command="{Binding Path=OpenFileCommand}" />
         <KeyBinding Gesture="Ctrl+Shift+O" Command="{Binding Path=OpenLastFileCommand}" />
         <KeyBinding Gesture="Ctrl+Shift+C" Command="{Binding Path=CloseFileCommand}" />
+        <KeyBinding Gesture="F5" Command="{Binding Path=VerifyNcasHashCommand}" />
+        <KeyBinding Gesture="Ctrl+F5" Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" />
     </Window.InputBindings>
 
     <Grid>
         <Grid.RowDefinitions>
+            <!-- Menu -->
             <RowDefinition Height="Auto" />
+            <!-- Content -->
             <RowDefinition Height="*" />
+            <!-- Grid Splitter Row-->
+            <RowDefinition Height="Auto" />
+            <!-- Log Row -->
+            <RowDefinition Height="0" />
+            <!-- Status Bar -->
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Menu Grid.Row="0">
@@ -33,58 +44,74 @@
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemClose}" Command="{Binding Path=CloseFileCommand}" InputGestureText="Ctrl+Shift+C" />
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemExit}" Command="{Binding Path=ExitAppCommand}" InputGestureText="Alt+F4" />
             </MenuItem>
+            <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemTools}">
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_VerifyNcasHash}" 
+                          Command="{Binding Path=VerifyNcasHashCommand}" InputGestureText="F5" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_VerifyNcasHeaderSignature}" 
+                          Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" InputGestureText="Ctrl+F5" />
+            </MenuItem>
             <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemOptions}">
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemSettings}" Command="{Binding Path=ShowSettingsViewCommand}" />
             </MenuItem>
         </Menu>
 
-        <Grid Grid.Row="1" >
-            <Grid.RowDefinitions>
-                <!-- Content Row -->
-                <RowDefinition Height="*" />
-                <!-- Grid Splitter Row-->
-                <RowDefinition Height="Auto" />
-                <!-- Log Row -->
-                <RowDefinition Height="0" />
-            </Grid.RowDefinitions>
-
-            <TextBlock Style="{StaticResource WatermarkText}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DragMeAFile}" />
-            <ContentControl Grid.Row="0" Content="{Binding Path=OpenedFile, Mode=TwoWay}"
+        <TextBlock Grid.Row="1" Style="{StaticResource WatermarkText}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DragMeAFile}" />
+        <ContentControl Grid.Row="1" Content="{Binding Path=OpenedFile, Mode=TwoWay}"
                             ContentTemplateSelector="{StaticResource OpenedFileDataTemplateSelector}" />
 
-            <GridSplitter Grid.Row="1" ResizeDirection="Rows">
-                <GridSplitter.Style>
-                    <Style TargetType="GridSplitter" BasedOn="{StaticResource HorizontalGridSplitterStyle}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ErrorAnimationEnabled}" Value="True">
-                                <DataTrigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard FillBehavior="Stop">
-                                            <ColorAnimation  
+        <GridSplitter Grid.Row="2" ResizeDirection="Rows">
+            <GridSplitter.Style>
+                <Style TargetType="GridSplitter" BasedOn="{StaticResource HorizontalGridSplitterStyle}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ErrorAnimationEnabled}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard FillBehavior="Stop">
+                                        <ColorAnimation  
                                                 To="Red"
                                                 Storyboard.TargetProperty="(GridSplitter.Foreground).(SolidColorBrush.Color)"
                                                 AutoReverse="True" 
                                                 Duration="0:0:0.3"
                                                 RepeatBehavior="Forever" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.EnterActions>
-                                <DataTrigger.ExitActions>
-                                    <BeginStoryboard>
-                                        <Storyboard FillBehavior="Stop">
-                                            <ColorAnimation  
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard FillBehavior="Stop">
+                                        <ColorAnimation  
                                                 Storyboard.TargetProperty="(GridSplitter.Foreground).(SolidColorBrush.Color)"
                                                 Duration="0:0:0.3" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.ExitActions>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </GridSplitter.Style>
-            </GridSplitter>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </GridSplitter.Style>
+        </GridSplitter>
 
-            <views:LoggingView Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LogSource="{Binding LogSource, Mode=OneWay}" />
-        </Grid>
+        <views:LoggingView Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LogSource="{Binding LogSource, Mode=OneWay}" />
+
+        <StatusBar Grid.Row="4">
+            <StatusBarItem>
+                <TextBlock Text="{Binding Path=BackgroundTask.ProgressText, FallbackValue=Ready.}" />
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <customControls:ProgressBarExt Width="80" Height="16" Minimum="0" Maximum="100" 
+                                               Visibility="{Binding Path=BackgroundTask.IsRunning, Mode=OneWay, Converter={StaticResource FalseToCollapseVisibilityConverter}}"
+                                               Value="{Binding Path=BackgroundTask.ProgressValue, Mode=OneWay, FallbackValue=70}" 
+                                               ValueText="{Binding Path=BackgroundTask.ProgressValueText, Mode=OneWay, FallbackValue=70%}"
+                                               IsIndeterminate="{Binding Path=BackgroundTask.IsIndeterminate, Mode=OneWay, FallbackValue=True}">
+
+                    <customControls:ProgressBarExt.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding BackgroundTask.CancelCommand}" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CancelAction}" />
+                        </ContextMenu>
+                    </customControls:ProgressBarExt.ContextMenu>
+
+                </customControls:ProgressBarExt>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

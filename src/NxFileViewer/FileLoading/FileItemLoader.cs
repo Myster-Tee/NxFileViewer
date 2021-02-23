@@ -5,18 +5,19 @@ using Emignatik.NxFileViewer.Services;
 using LibHac;
 using LibHac.Fs;
 using LibHac.FsSystem;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Emignatik.NxFileViewer.FileLoading
 {
     public class FileItemLoader : IFileItemLoader
     {
         private readonly IKeySetProviderService _keySetProviderService;
-        private readonly IChildItemsBuilder _childItemsBuilder;
+        private readonly IServiceProvider _serviceProvider;
 
-        public FileItemLoader(IKeySetProviderService keySetProviderService, IChildItemsBuilder childItemsBuilder)
+        public FileItemLoader(IKeySetProviderService keySetProviderService, IServiceProvider serviceProvider)
         {
             _keySetProviderService = keySetProviderService ?? throw new ArgumentNullException(nameof(keySetProviderService));
-            _childItemsBuilder = childItemsBuilder ?? throw new ArgumentNullException(nameof(childItemsBuilder));
+            _serviceProvider = serviceProvider;
         }
 
         public NspItem LoadNsp(string nspFilePath)
@@ -28,7 +29,7 @@ namespace Emignatik.NxFileViewer.FileLoading
             var fileStorage = new FileStorage(localFile);
             var nspPartition = new PartitionFileSystem(fileStorage);
 
-            var nspItem = new NspItem(nspPartition, Path.GetFileName(nspFilePath), localFile, keySet, _childItemsBuilder);
+            var nspItem = new NspItem(nspPartition, Path.GetFileName(nspFilePath), localFile, keySet, _serviceProvider.GetRequiredService<IChildItemsBuilder>());
 
             return nspItem;
         }
@@ -42,7 +43,7 @@ namespace Emignatik.NxFileViewer.FileLoading
             var fileStorage = new FileStorage(localFile);
             var xci = new Xci(keySet, fileStorage);
 
-            var xciItem = new XciItem(xci, Path.GetFileName(xciFilePath), localFile, keySet, _childItemsBuilder);
+            var xciItem = new XciItem(xci, Path.GetFileName(xciFilePath), localFile, keySet, _serviceProvider.GetRequiredService<IChildItemsBuilder>());
 
             return xciItem;
         }

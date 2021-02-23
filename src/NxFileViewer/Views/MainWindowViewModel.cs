@@ -6,6 +6,7 @@ using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.Services;
+using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions.DragAndDrop;
 using Microsoft.Extensions.Logging;
@@ -32,9 +33,12 @@ namespace Emignatik.NxFileViewer.Views
             ICloseFileCommand closeFileCommand,
             IExitAppCommand exitAppCommand,
             IShowSettingsViewCommand showSettingsViewCommand,
+            IVerifyNcasHeaderSignatureCommand verifyNcasHeaderSignatureCommand,
+            IVerifyNcasHashCommand verifyNcasHashCommand,
             IFileOpenerService fileOpenerService,
             IServiceProvider serviceProvider,
-            ILogSource logSource)
+            ILogSource logSource,
+            IBackgroundTaskService backgroundTaskService)
         {
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
             _fileOpenerService = fileOpenerService ?? throw new ArgumentNullException(nameof(fileOpenerService));
@@ -42,8 +46,11 @@ namespace Emignatik.NxFileViewer.Views
             OpenFileCommand = openFileCommand ?? throw new ArgumentNullException(nameof(openFileCommand));
             ExitAppCommand = exitAppCommand ?? throw new ArgumentNullException(nameof(exitAppCommand));
             ShowSettingsViewCommand = showSettingsViewCommand ?? throw new ArgumentNullException(nameof(showSettingsViewCommand));
+            VerifyNcasHeaderSignatureCommand = verifyNcasHeaderSignatureCommand ?? throw new ArgumentNullException(nameof(verifyNcasHeaderSignatureCommand));
+            VerifyNcasHashCommand = verifyNcasHashCommand ?? throw new ArgumentNullException(nameof(verifyNcasHashCommand));
             ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             LogSource = logSource ?? throw new ArgumentNullException(nameof(logSource));
+            BackgroundTask = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
             OpenLastFileCommand = openLastFileCommand ?? throw new ArgumentNullException(nameof(openLastFileCommand));
             CloseFileCommand = closeFileCommand ?? throw new ArgumentNullException(nameof(closeFileCommand));
 
@@ -66,6 +73,10 @@ namespace Emignatik.NxFileViewer.Views
         public IExitAppCommand ExitAppCommand { get; }
 
         public IShowSettingsViewCommand ShowSettingsViewCommand { get; }
+
+        public IVerifyNcasHeaderSignatureCommand VerifyNcasHeaderSignatureCommand { get; }
+
+        public IVerifyNcasHashCommand VerifyNcasHashCommand { get; }
 
         public IOpenLastFileCommand OpenLastFileCommand { get; }
 
@@ -92,6 +103,8 @@ namespace Emignatik.NxFileViewer.Views
         }
 
         public ILogSource LogSource { get; }
+
+        public IBackgroundTaskService BackgroundTask { get; }
 
         public bool ErrorAnimationEnabled
         {
@@ -131,7 +144,7 @@ namespace Emignatik.NxFileViewer.Views
             {
                 if (files.Length > 1)
                     _logger.LogWarning(LocalizationManager.Instance.Current.Keys.MultipleFilesDragAndDropNotSupported);
-                _fileOpenerService.OpenFile(files.First());
+                _fileOpenerService.SafeOpenFile(files.First());
             }
         }
 
