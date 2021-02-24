@@ -56,11 +56,6 @@ namespace Emignatik.NxFileViewer.Views
                 return;
             }
 
-            var tr = new TextRange(RichTextBoxLog.Document.ContentEnd, RichTextBoxLog.Document.ContentEnd)
-            {
-                Text = message + Environment.NewLine
-            };
-
             Brush brush;
             if (logLevel >= LogLevel.Error)
                 brush = _brushesProvider.FontBrushError;
@@ -68,7 +63,14 @@ namespace Emignatik.NxFileViewer.Views
                 brush = _brushesProvider.FontBrushWarning;
             else
                 brush = _brushesProvider.FontBrushDefault;
-            tr.ApplyPropertyValue(TextElement.ForegroundProperty, brush);
+
+            var paragraph = new Paragraph();
+            var run = new Run(message)
+            {
+                Foreground = brush
+            };
+            paragraph.Inlines.Add(run);
+            RichTextBoxLog.Document.Blocks.Add(paragraph);
         }
 
         private void MenuItemClearLogClick(object sender, RoutedEventArgs e)
