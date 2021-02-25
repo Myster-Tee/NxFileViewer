@@ -1,5 +1,4 @@
 ﻿using System;
-using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Utils.MVVM.Localization;
 
 namespace Emignatik.NxFileViewer.Localization.Keys
@@ -69,20 +68,22 @@ namespace Emignatik.NxFileViewer.Localization.Keys
                                                        "    1. the path defined by this setting" + Environment.NewLine +
                                                        "    2. the current program's directory" + Environment.NewLine +
                                                        "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
-                                                       $"At startup, the program can automatically download «{KeySetProviderService.DefaultProdKeysFileName}» file when none is found on the system." + Environment.NewLine +
+                                                       "At startup, the program can automatically download the keys file when none is found on the system." + Environment.NewLine +
                                                        "The keys file will be downloaded to the current application's directory.";
+
+        public string SettingsView_ToolTip_TitleKeys => "You can optionally specify a file containing game-specific keys." + Environment.NewLine +
+                                                        "The program will search this file in the following locations:" + Environment.NewLine +
+                                                        "    1. the path defined by this setting" + Environment.NewLine +
+                                                        "    2. the current program's directory" + Environment.NewLine +
+                                                        "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
+                                                        "At startup, the program can automatically download the keys file when none is found on the system." + Environment.NewLine +
+                                                        "The keys file will be downloaded to the current application's directory.";
 
         public string SettingsView_ToolTip_ConsoleKeys => "You can optionally specify a file containing console-unique keys." + Environment.NewLine +
                                                          "The program will search this file in the following locations:" + Environment.NewLine +
                                                          "    1. the path defined by this setting" + Environment.NewLine +
                                                          "    2. the current program's directory" + Environment.NewLine +
                                                          "    3. the «%UserProfile%\\.switch» directory";
-
-        public string SettingsView_ToolTip_TitleKeys => "You can optionally specify a file containing game-specific keys." + Environment.NewLine +
-                                                       "The program will search this file in the following locations:" + Environment.NewLine +
-                                                       "    1. the path defined by this setting" + Environment.NewLine +
-                                                       "    2. the current program's directory" + Environment.NewLine +
-                                                       "    3. the «%UserProfile%\\.switch» directory";
 
         public string SettingsView_LogLevel => "Log level";
         public string SettingsView_ToolTip_LogLevel => "The log level specifies the minimum level to log.";
@@ -151,9 +152,10 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string KeysFileUsed => "«{0}» file used: {1}";
         public string NoneKeysFile => "[none]";
 
-        public string FailedToDownloadProdKeysFromUrl => $"Failed to download «{KeySetProviderService.DefaultProdKeysFileName}» from URL «{{0}}»: {{1}}";
-        public string DownloadingProdKeysFromUrl => $"Downloading «{KeySetProviderService.DefaultProdKeysFileName}» from URL «{{0}}»...";
-        public string ProdKeysSuccessfullyDownloaded => $"«{KeySetProviderService.DefaultProdKeysFileName}» successfully downloaded.";
+        public string Log_FailedToDownloadKeysFromUrl => "Failed to download «{0}» from URL «{1}»: {2}";
+        public string Log_DownloadingKeysFromUrl => "Downloading «{0}» from URL «{1}»...";
+        public string Log_KeysSuccessfullyDownloaded => "«{0}» successfully downloaded.";
+
         public string ToolTip_PatchLevel => "Patch level {0}";
         public string Log_OpeningFile => "=====> {0} <=====";
         public string MainModuleIdTooltip => "Also known as build ID (or BID).";

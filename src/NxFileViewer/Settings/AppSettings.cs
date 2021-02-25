@@ -83,6 +83,16 @@ namespace Emignatik.NxFileViewer.Settings
             }
         }
 
+        public string TitleKeysDownloadUrl
+        {
+            get => _appSettingsModel.TitleKeysDownloadUrl ?? "";
+            set
+            {
+                _appSettingsModel.TitleKeysDownloadUrl = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public AppSettingsModel WrappedModel => _appSettingsModel;
 
         public void Update(AppSettingsModel newModel)

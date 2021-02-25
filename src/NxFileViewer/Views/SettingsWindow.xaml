@@ -41,7 +41,7 @@
                     <Expander Grid.Row="0" >
                         <Expander.Header>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{x:Static services:KeySetProviderService.DefaultProdKeysFileName}" Style="{StaticResource Title1}"/>
+                                <TextBlock Text="{x:Static services:IKeySetProviderService.DefaultProdKeysFileName}" Style="{StaticResource Title1}"/>
                                 <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_ProdKeys}"/>
                             </StackPanel>
                         </Expander.Header>
@@ -59,30 +59,30 @@
                     <Expander Grid.Row="1">
                         <Expander.Header>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{x:Static services:KeySetProviderService.DefaultTitleKeysFileName}" Style="{StaticResource Title1}"/>
+                                <TextBlock Text="{x:Static services:IKeySetProviderService.DefaultTitleKeysFileName}" Style="{StaticResource Title1}"/>
                                 <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_TitleKeys}"/>
                             </StackPanel>
                         </Expander.Header>
                         <StackPanel>
                             <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysFilePath}" />
-
                             <DockPanel LastChildFill="True">
                                 <Button Command="{Binding Path=BrowseTitleKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
                                 <TextBox Text="{Binding Path=TitleKeysFilePath, UpdateSourceTrigger=PropertyChanged}"/>
                             </DockPanel>
+                            <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysDownloadUrl}" />
+                            <TextBox Text="{Binding Path=TitleKeysDownloadUrl}" />
                         </StackPanel>
                     </Expander>
 
                     <Expander Grid.Row="2">
                         <Expander.Header>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{x:Static services:KeySetProviderService.DefaultConsoleKeysFileName}" Style="{StaticResource Title1}"/>
+                                <TextBlock Text="{x:Static services:IKeySetProviderService.DefaultConsoleKeysFileName}" Style="{StaticResource Title1}"/>
                                 <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_ConsoleKeys}"/>
                             </StackPanel>
                         </Expander.Header>
                         <StackPanel>
                             <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysFilePath}" />
-
                             <DockPanel LastChildFill="True">
                                 <Button Command="{Binding Path=BrowseConsoleKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
                                 <TextBox Text="{Binding Path=ConsoleKeysFilePath}"/>

@@ -22,5 +22,7 @@ namespace Emignatik.NxFileViewer.Settings.Model
         public LogLevel LogLevel { get; set; } = LogLevel.Information;
 
         public string? ProdKeysDownloadUrl { get; set; }
+
+        public string? TitleKeysDownloadUrl { get; set; }
     }
 }

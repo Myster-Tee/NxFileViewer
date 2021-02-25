@@ -20,6 +20,7 @@ namespace Emignatik.NxFileViewer.Views
         private string _titleKeysFilePath;
         private LogLevel _selectedLogLevel;
         private string _prodKeysDownloadUrl;
+        private string _titleKeysDownloadUrl;
 
 
         public SettingsWindowViewModel(IAppSettingsManager appSettingsManager)
@@ -38,6 +39,7 @@ namespace Emignatik.NxFileViewer.Views
             TitleKeysFilePath = _appSettings.TitleKeysFilePath;
             SelectedLogLevel = _appSettings.LogLevel;
             ProdKeysDownloadUrl = _appSettings.ProdKeysDownloadUrl;
+            TitleKeysDownloadUrl = _appSettings.TitleKeysDownloadUrl;
         }
 
         public event EventHandler? OnQueryCloseView;
@@ -105,6 +107,16 @@ namespace Emignatik.NxFileViewer.Views
             }
         }
 
+        public string TitleKeysDownloadUrl
+        {
+            get => _titleKeysDownloadUrl;
+            set
+            {
+                _titleKeysDownloadUrl = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         private void OnBrowseProdKeys()
         {
             if (BrowseKeysFilePath(ProdKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ProdTitle, out var selectedFilePath))
@@ -159,6 +171,7 @@ namespace Emignatik.NxFileViewer.Views
             _appSettings.TitleKeysFilePath = TitleKeysFilePath;
             _appSettings.LogLevel = SelectedLogLevel;
             _appSettings.ProdKeysDownloadUrl = ProdKeysDownloadUrl;
+            _appSettings.TitleKeysDownloadUrl = TitleKeysDownloadUrl;
 
             _appSettingsManager.Save();
             NotifyQueryCloseView();

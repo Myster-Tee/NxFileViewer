@@ -18,5 +18,7 @@ namespace Emignatik.NxFileViewer.Settings
         LogLevel LogLevel { get; set; }
 
         string ProdKeysDownloadUrl { get; set; }
+
+        string TitleKeysDownloadUrl { get; set; }
     }
 }

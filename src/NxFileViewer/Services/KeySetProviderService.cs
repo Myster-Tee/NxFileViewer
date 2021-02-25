@@ -2,87 +2,152 @@
 using System.ComponentModel;
 using System.IO;
 using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils;
+using Emignatik.NxFileViewer.Utils.MVVM;
 using LibHac;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Services
 {
-    public class KeySetProviderService : IKeySetProviderService
+    public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderService
     {
-        public const string DefaultProdKeysFileName = "prod.keys";
-        public const string DefaultConsoleKeysFileName = "console.keys";
-        public const string DefaultTitleKeysFileName = "title.keys";
 
+
+        private readonly object _lock = new();
         private readonly IAppSettings _appSettings;
         private Keyset? _keySet = null;
 
-        private string? _prodKeysFilePath;
-        private string? _consoleKeysFilePath;
-        private string? _titleKeysFilePath;
-
         private readonly ILogger _logger;
+        private string? _actualProdKeysFilePath;
+        private string? _actualTitleKeysFilePath;
+        private string? _actualConsoleKeysFilePath;
 
         public KeySetProviderService(IAppSettings appSettings, ILoggerFactory loggerFactory)
         {
-            AppDirProdKeysFilePath = Path.Combine(PathHelper.CurrentAppDir, DefaultProdKeysFileName);
-
+            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory)))
+                .CreateLogger(this.GetType());
             _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
-            _logger = loggerFactory.CreateLogger(this.GetType());
+
+            AppDirProdKeysFilePath = Path.Combine(PathHelper.CurrentAppDir, IKeySetProviderService.DefaultProdKeysFileName);
+            AppDirTitleKeysFilePath = Path.Combine(PathHelper.CurrentAppDir, IKeySetProviderService.DefaultTitleKeysFileName);
+
+            UpdateActualProdKeysFilePath();
+            UpdateActualTitleKeysFilePath();
+            UpdateActualConsoleKeysFilePath();
 
             appSettings.PropertyChanged += OnSettingChanged;
         }
 
         public string AppDirProdKeysFilePath { get; }
 
-        public bool ProdKeysFileFound => GetProdKeysFilePath() != null;
+        public string AppDirTitleKeysFilePath { get; }
+
+        public string? ActualProdKeysFilePath
+        {
+            get => _actualProdKeysFilePath;
+            private set
+            {
+                _actualProdKeysFilePath = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string? ActualTitleKeysFilePath
+        {
+            get => _actualTitleKeysFilePath;
+            private set
+            {
+                _actualTitleKeysFilePath = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string? ActualConsoleKeysFilePath
+        {
+            get => _actualConsoleKeysFilePath;
+            private set
+            {
+                _actualConsoleKeysFilePath = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public Keyset GetKeySet(bool forceReload = false)
         {
-            if (forceReload)
-                UnloadCurrentKeySet();
-            else if (_keySet != null)
-                return _keySet;
+            lock (_lock)
+            {
+                if (forceReload)
+                    UnloadCurrentKeySet();
+                else if (_keySet != null)
+                    return _keySet;
 
-            _keySet = LoadKeySet();
-            return _keySet;
+                _keySet = LoadKeySet();
+                return _keySet;
+            }
         }
 
         private void OnSettingChanged(object? sender, PropertyChangedEventArgs args)
         {
-            if (args.PropertyName == nameof(IAppSettings.ProdKeysFilePath)
-                || args.PropertyName == nameof(IAppSettings.ConsoleKeysFilePath)
-                || args.PropertyName == nameof(IAppSettings.TitleKeysFilePath))
+            if (args.PropertyName == nameof(IAppSettings.ProdKeysFilePath))
             {
                 UnloadCurrentKeySet();
+                UpdateActualProdKeysFilePath();
+            }
+            else if (args.PropertyName == nameof(IAppSettings.TitleKeysFilePath))
+            {
+                UnloadCurrentKeySet();
+                UpdateActualTitleKeysFilePath();
+            }
+            else if (args.PropertyName == nameof(IAppSettings.ConsoleKeysFilePath))
+            {
+                UnloadCurrentKeySet();
+                UpdateActualConsoleKeysFilePath();
             }
         }
 
         public void UnloadCurrentKeySet()
         {
-            _prodKeysFilePath = null;
-            _consoleKeysFilePath = null;
-            _titleKeysFilePath = null;
-            _keySet = null;
+            lock (_lock)
+            {
+                _keySet = null;
+            }
         }
 
+        /// <summary>
+        /// Loads the KeySet with 
+        /// </summary>
+        /// <returns></returns>
         private Keyset LoadKeySet()
         {
-            _prodKeysFilePath = GetProdKeysFilePath();
-            _consoleKeysFilePath = GetConsoleKeysFilePath();
-            _titleKeysFilePath = GetTitleKeysFilePath();
+            var actualProdKeysFilePath = ActualProdKeysFilePath;
+            var actualTitleKeysFilePath = ActualTitleKeysFilePath;
+            var actualConsoleKeysFilePath = ActualConsoleKeysFilePath;
 
             try
             {
-                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(DefaultProdKeysFileName, _prodKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
-                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(DefaultConsoleKeysFileName, _consoleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
-                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(DefaultTitleKeysFileName, _titleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
+                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_KeysLoadingStarting);
+
+                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DefaultProdKeysFileName, actualProdKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
+                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DefaultTitleKeysFileName, actualTitleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
+                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DefaultConsoleKeysFileName, actualConsoleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
 
                 var keySet = new Keyset();
-                // DEBT: ReadKeyFile accepts the first path to be null, should notify libhac owner?
-                ExternalKeyReader.ReadKeyFile(keySet, _prodKeysFilePath, _titleKeysFilePath, _consoleKeysFilePath);
+                ExternalKeyReader.ReadKeyFile(keySet, filename: actualProdKeysFilePath, titleKeysFilename: actualTitleKeysFilePath, consoleKeysFilename: actualConsoleKeysFilePath,
+                    new LibHacProgressReportRelay(
+                        _ =>
+                        {
+
+                        },
+                        message =>
+                        {
+                            _logger.LogWarning(message);
+                        })
+                );
+
+                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_KeysLoadingSuccessful);
+
                 return keySet;
             }
             catch (Exception ex)
@@ -91,25 +156,24 @@ namespace Emignatik.NxFileViewer.Services
             }
         }
 
-        private string? GetProdKeysFilePath()
+        private void UpdateActualProdKeysFilePath()
         {
-            var findProdKeysFile = _prodKeysFilePath ??= FindKeysFile(_appSettings.ProdKeysFilePath, DefaultProdKeysFileName);
+            var findProdKeysFile = FindKeysFile(_appSettings.ProdKeysFilePath, IKeySetProviderService.DefaultProdKeysFileName);
 
             if (findProdKeysFile == null)
                 _logger.LogWarning(LocalizationManager.Instance.Current.Keys.WarnNoProdKeysFileFound);
 
-            return findProdKeysFile;
+            ActualProdKeysFilePath = findProdKeysFile;
         }
 
-        private string? GetConsoleKeysFilePath()
+        private void UpdateActualTitleKeysFilePath()
         {
-            return _consoleKeysFilePath ??= FindKeysFile(_appSettings.ConsoleKeysFilePath, DefaultConsoleKeysFileName);
+            ActualTitleKeysFilePath = FindKeysFile(_appSettings.TitleKeysFilePath, IKeySetProviderService.DefaultTitleKeysFileName);
         }
 
-
-        private string? GetTitleKeysFilePath()
+        private void UpdateActualConsoleKeysFilePath()
         {
-            return _titleKeysFilePath ??= FindKeysFile(_appSettings.TitleKeysFilePath, DefaultTitleKeysFileName);
+            ActualConsoleKeysFilePath = FindKeysFile(_appSettings.ConsoleKeysFilePath, IKeySetProviderService.DefaultConsoleKeysFileName);
         }
 
         private string? FindKeysFile(string? keysFilePathRawFromSettings, string keysFileName)
@@ -121,7 +185,9 @@ namespace Emignatik.NxFileViewer.Services
                 var keysFilePathTemp = keysFilePathRawFromSettings.ToFullPath();
                 if (File.Exists(keysFilePathTemp))
                     return keysFilePathTemp;
-                _logger.LogWarning(LocalizationManager.Instance.Current.Keys.InvalidSetting_KeysFileNotFound.SafeFormat(keysFilePathRawFromSettings));
+                _logger.LogWarning(
+                    LocalizationManager.Instance.Current.Keys.InvalidSetting_KeysFileNotFound.SafeFormat(
+                        keysFilePathRawFromSettings));
             }
 
             // 2. Try to load from the current app dir

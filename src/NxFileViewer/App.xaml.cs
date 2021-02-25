@@ -119,20 +119,37 @@ namespace Emignatik.NxFileViewer
             var keySetProviderService = ServiceProvider.GetRequiredService<IKeySetProviderService>();
             var appSettings = ServiceProvider.GetRequiredService<IAppSettings>();
             var fileDownloaderService = ServiceProvider.GetRequiredService<IFileDownloaderService>();
+
             var prodKeysDownloadUrl = appSettings.ProdKeysDownloadUrl;
             try
             {
-                if (!keySetProviderService.ProdKeysFileFound && !string.IsNullOrWhiteSpace(prodKeysDownloadUrl))
+                if (keySetProviderService.ActualProdKeysFilePath == null && !string.IsNullOrWhiteSpace(prodKeysDownloadUrl))
                 {
-                    _logger.LogInformation(LocalizationManager.Instance.Current.Keys.DownloadingProdKeysFromUrl.SafeFormat(prodKeysDownloadUrl));
+                    _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_DownloadingKeysFromUrl.SafeFormat(prodKeysDownloadUrl));
                     await fileDownloaderService.DownloadFileAsync(prodKeysDownloadUrl, keySetProviderService.AppDirProdKeysFilePath);
-                    _logger.LogInformation(LocalizationManager.Instance.Current.Keys.ProdKeysSuccessfullyDownloaded);
+                    _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_KeysSuccessfullyDownloaded);
                     keySetProviderService.UnloadCurrentKeySet(); // To force reloading with the downloaded keys file
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.FailedToDownloadProdKeysFromUrl.SafeFormat(prodKeysDownloadUrl, ex.Message));
+                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.Log_FailedToDownloadKeysFromUrl.SafeFormat(IKeySetProviderService.DefaultProdKeysFileName, prodKeysDownloadUrl, ex.Message));
+            }
+
+            var titleKeysDownloadUrl = appSettings.TitleKeysDownloadUrl;
+            try
+            {
+                if (keySetProviderService.ActualTitleKeysFilePath == null && !string.IsNullOrWhiteSpace(titleKeysDownloadUrl))
+                {
+                    _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_DownloadingKeysFromUrl.SafeFormat(titleKeysDownloadUrl));
+                    await fileDownloaderService.DownloadFileAsync(titleKeysDownloadUrl, keySetProviderService.AppDirTitleKeysFilePath);
+                    _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_KeysSuccessfullyDownloaded);
+                    keySetProviderService.UnloadCurrentKeySet(); // To force reloading with the downloaded keys file
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.Log_FailedToDownloadKeysFromUrl.SafeFormat(IKeySetProviderService.DefaultTitleKeysFileName, titleKeysDownloadUrl, ex.Message));
             }
         }
 

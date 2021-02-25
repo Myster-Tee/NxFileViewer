@@ -97,7 +97,10 @@
             <StatusBarItem>
                 <TextBlock Text="{Binding Path=BackgroundTask.ProgressText, FallbackValue=Ready.}" />
             </StatusBarItem>
-            <StatusBarItem HorizontalAlignment="Right">
+            <StatusBarItem DockPanel.Dock="Right" HorizontalAlignment="Right">
+                <TextBlock>🔑</TextBlock>
+            </StatusBarItem>
+            <StatusBarItem DockPanel.Dock="Right" HorizontalAlignment="Right">
                 <customControls:ProgressBarExt Width="80" Height="16" Minimum="0" Maximum="100" 
                                                Visibility="{Binding Path=BackgroundTask.IsRunning, Mode=OneWay, Converter={StaticResource FalseToCollapseVisibilityConverter}}"
                                                Value="{Binding Path=BackgroundTask.ProgressValue, Mode=OneWay, FallbackValue=70}" 
