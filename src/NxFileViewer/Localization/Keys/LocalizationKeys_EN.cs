@@ -56,37 +56,36 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string Lng_Spanish => "Spanish";
         public string Lng_TraditionalChinese => "Traditional Chinese";
 
-        public string SettingsWindowTitle => "Settings";
-        public string SettingsButton_Save => "Save";
-        public string SettingsButton_Cancel => "Cancel";
+        public string SettingsView_Title => "Settings";
+        public string SettingsView_Button_Save => "Save";
+        public string SettingsView_Button_Cancel => "Cancel";
 
-        public string SettingsView_ProdKeys => KeySetProviderService.DefaultProdKeysFileName;
-        public string SettingsView_ProdKeysToolTip => "This file contains common keys used by all Switch devices. This file is required for opening encrypted title files." + Environment.NewLine +
-                                                      "The program will search this file in the following order:" + Environment.NewLine +
-                                                      "    1. the path defined by this setting" + Environment.NewLine +
-                                                      "    2. the current program's directory" + Environment.NewLine +
-                                                      "    3. the «%UserProfile%\\.switch» directory";
+        public string SettingsView_GroupBoxKeys => "Keys";
+        public string SettingsView_Title_KeysFilePath => "Path";
+        public string SettingsView_Title_KeysDownloadUrl => "Download URL";
 
-        public string SettingsView_ConsoleKeys => KeySetProviderService.DefaultConsoleKeysFileName;
-        public string SettingsView_ConsoleKeysToolTip => "You can optionally specify a file containing console-unique keys." + Environment.NewLine +
+        public string SettingsView_ToolTip_ProdKeys => "This file contains common keys used by all Switch devices. This file is required for opening encrypted title files." + Environment.NewLine +
+                                                       "The program will search this file in the following order:" + Environment.NewLine +
+                                                       "    1. the path defined by this setting" + Environment.NewLine +
+                                                       "    2. the current program's directory" + Environment.NewLine +
+                                                       "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
+                                                       $"At startup, the program can automatically download «{KeySetProviderService.DefaultProdKeysFileName}» file when none is found on the system." + Environment.NewLine +
+                                                       "The keys file will be downloaded to the current application's directory.";
+
+        public string SettingsView_ToolTip_ConsoleKeys => "You can optionally specify a file containing console-unique keys." + Environment.NewLine +
                                                          "The program will search this file in the following locations:" + Environment.NewLine +
                                                          "    1. the path defined by this setting" + Environment.NewLine +
                                                          "    2. the current program's directory" + Environment.NewLine +
                                                          "    3. the «%UserProfile%\\.switch» directory";
 
-        public string SettingsView_TitleKeys => KeySetProviderService.DefaultTitleKeysFileName;
-        public string SettingsView_TitleKeysToolTip => "You can optionally specify a file containing game-specific keys." + Environment.NewLine +
+        public string SettingsView_ToolTip_TitleKeys => "You can optionally specify a file containing game-specific keys." + Environment.NewLine +
                                                        "The program will search this file in the following locations:" + Environment.NewLine +
                                                        "    1. the path defined by this setting" + Environment.NewLine +
                                                        "    2. the current program's directory" + Environment.NewLine +
                                                        "    3. the «%UserProfile%\\.switch» directory";
 
-        public string SettingsView_GroupBoxKeys => "Keys";
         public string SettingsView_LogLevel => "Log level";
-        public string SettingsView_LogLevelToolTip => "The log level specifies the minimum level to log.";
-        public string SettingsView_ProdKeysDownloadUrl => $"{KeySetProviderService.DefaultProdKeysFileName} download URL";
-        public string SettingsView_ProdKeysDownloadUrlToolTip => $"At startup, the program can automatically download «{KeySetProviderService.DefaultProdKeysFileName}» file when none is found on the system." + Environment.NewLine +
-                                                                  "The keys file will be downloaded to the current application's directory.";
+        public string SettingsView_ToolTip_LogLevel => "The log level specifies the minimum level to log.";
 
         public string BrowseKeysFile_ProdTitle => "Select \"prod\" keys file";
         public string BrowseKeysFile_ConsoleTitle => "Select \"console\" keys file";
@@ -191,5 +190,8 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string NcasValidity_Unknown => "Unknown";
 
         public string Status_SavingFile => "Saving file «{0}»...";
+
+        public string Log_KeysLoadingStarting => "Loading Keys...";
+        public string Log_KeysLoadingSuccessful => "Keys successfully loaded.";
     }
 }

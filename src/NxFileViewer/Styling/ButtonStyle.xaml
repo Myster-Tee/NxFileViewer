@@ -6,6 +6,7 @@
         <Setter Property="Margin" Value="2,0" />
         <Setter Property="Width" Value="20" />
         <Setter Property="MinWidth" Value="10" />
+        <Setter Property="Content" Value="..." />
     </Style>
 
     <Style TargetType="customControls:PlayStopButton" BasedOn="{StaticResource {x:Type Button}}">

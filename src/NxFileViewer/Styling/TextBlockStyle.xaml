@@ -25,7 +25,7 @@
         </Style.Setters>
     </Style>
 
-    <Style x:Key="WatermarkText" TargetType="TextBlock">
+    <Style x:Key="WatermarkText" TargetType="TextBlock"  BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="Foreground" Value="#9C9C9C"/>
         <Setter Property="FontStyle" Value="Italic"/>
         <Setter Property="FontSize" Value="16"/>

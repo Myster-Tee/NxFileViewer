@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Settings;
@@ -128,7 +129,7 @@ namespace Emignatik.NxFileViewer.Views
             }
         }
 
-        private static bool BrowseKeysFilePath(string initialFilePath, string title, out string? selectedFilePath)
+        private static bool BrowseKeysFilePath(string initialFilePath, string title, [NotNullWhen(true)] out string? selectedFilePath)
         {
             selectedFilePath = null;
 

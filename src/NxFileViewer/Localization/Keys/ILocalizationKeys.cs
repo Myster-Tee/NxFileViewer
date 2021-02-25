@@ -49,20 +49,17 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string Lng_Spanish { get; }
         string Lng_TraditionalChinese { get; }
 
-        string SettingsWindowTitle { get; }
-        string SettingsButton_Save { get; }
-        string SettingsButton_Cancel { get; }
-        string SettingsView_ProdKeys { get; }
-        string SettingsView_ProdKeysToolTip { get; }
-        string SettingsView_ConsoleKeys { get; }
-        string SettingsView_ConsoleKeysToolTip { get; }
-        string SettingsView_TitleKeys { get; }
-        string SettingsView_TitleKeysToolTip { get; }
+        string SettingsView_Title { get; }
+        string SettingsView_Button_Save { get; }
+        string SettingsView_Button_Cancel { get; }
         string SettingsView_GroupBoxKeys { get; }
+        string SettingsView_Title_KeysFilePath { get; }
+        string SettingsView_Title_KeysDownloadUrl { get; }
+        string SettingsView_ToolTip_ProdKeys { get; }
+        string SettingsView_ToolTip_ConsoleKeys { get; }
+        string SettingsView_ToolTip_TitleKeys { get; }
         string SettingsView_LogLevel { get; }
-        string SettingsView_LogLevelToolTip { get; }
-        string SettingsView_ProdKeysDownloadUrl { get; }
-        string SettingsView_ProdKeysDownloadUrlToolTip { get; }
+        string SettingsView_ToolTip_LogLevel { get; }
 
         string BrowseKeysFile_ProdTitle { get; }
         string BrowseKeysFile_ConsoleTitle { get; }
@@ -166,5 +163,8 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string NcasValidity_Unknown { get; }
 
         string Status_SavingFile { get; }
+
+        string Log_KeysLoadingStarting { get; }
+        string Log_KeysLoadingSuccessful { get; }
     }
 }
