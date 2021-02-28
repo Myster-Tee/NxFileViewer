@@ -23,16 +23,10 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
         {
             if(e.PropertyName == nameof(_ncaItem.HeaderSignatureValidity))
                 NotifyPropertyChanged(nameof(HeaderSignatureValidity));
-
-            if(e.PropertyName == nameof(_ncaItem.HashValidity))
-                NotifyPropertyChanged(nameof(HashValidity));
         }
 
         [PropertyView]
         public Validity HeaderSignatureValidity => _ncaItem.HeaderSignatureValidity;
-
-        [PropertyView] 
-        public Validity HashValidity => _ncaItem.HashValidity;
 
         [PropertyView]
         public NcaContentType ContentType => _ncaItem.ContentType;

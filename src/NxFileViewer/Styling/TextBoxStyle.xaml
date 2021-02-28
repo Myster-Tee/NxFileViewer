@@ -6,5 +6,7 @@
 
     <Style TargetType="TextBox" x:Key="ReadOnlyTextBox" BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="Foreground" Value="{DynamicResource ReadOnlyTextBox.Static.Foreground}" />
+        <Setter Property="Background" Value="{DynamicResource ReadOnlyTextBox.Static.Background}" />
     </Style>
 </ResourceDictionary>

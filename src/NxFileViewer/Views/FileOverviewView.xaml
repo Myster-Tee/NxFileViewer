@@ -29,20 +29,22 @@
                         <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Title_NcasHeaderSignature}" Margin="0,1,2,0" />
                         <TextBox MinWidth="80" Style="{StaticResource ReadOnlyTextBox}" 
                                  Text="{Binding Path=NcaHeadersSignatureValidity, Mode=OneWay, Converter={StaticResource NcasValidityConverter}}"
-                                 Foreground="{Binding NcaHeadersSignatureValidityColor}"/>
+                                 Foreground="{Binding NcaHeadersSignatureValidityColor}"
+                                 ToolTip="{Binding NcasHeadersSignatureExceptions}" />
                         <customControls:PlayStopButton Width="16" Height="16" Margin="2,0,0,0"
                                                        Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" />
-                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ToolTip_NcasHeaderSignature}"/>
+                        <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ToolTip_NcasHeaderSignature}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
                         <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Title_NcasHash}" Margin="0,1,2,0" />
                         <TextBox MinWidth="80" Style="{StaticResource ReadOnlyTextBox}" 
                                  Text="{Binding Path=NcasHashValidity, Mode=OneWay, Converter={StaticResource NcasValidityConverter}}"
-                                 Foreground="{Binding NcasHashValidityColor}"/>
+                                 Foreground="{Binding NcasHashValidityColor}"
+                                 ToolTip="{Binding Path=NcasHashExceptions}" />
                         <customControls:PlayStopButton Width="16" Height="16" Margin="2,0,0,0"
                                                        Command="{Binding Path=VerifyNcasHashCommand}" />
-                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ToolTip_NcasHash}"/>
+                        <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ToolTip_NcasHash}"/>
                     </StackPanel>
 
                 </Grid>
@@ -71,7 +73,7 @@
                     <ComboBox Grid.Column="1" HorizontalAlignment="Center" MinWidth="100" VerticalAlignment="Center"
                               ItemsSource="{Binding Path=CnmtContainers}" DisplayMemberPath="DisplayName" SelectedItem="{Binding Path=SelectedCnmtContainer}" />
 
-                    <Label Grid.Column="2" Style="{StaticResource HelpIcon}" ToolTip="{Binding Path=MultiContentPackageToolTip}" HorizontalAlignment="Left"/>
+                    <customControls:TipLabel Grid.Column="2" ToolTip="{Binding Path=MultiContentPackageToolTip}" HorizontalAlignment="Left"/>
 
                 </Grid>
 

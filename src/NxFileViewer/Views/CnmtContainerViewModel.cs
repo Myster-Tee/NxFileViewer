@@ -138,7 +138,7 @@ namespace Emignatik.NxFileViewer.Views
             catch (Exception ex)
             {
                 var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadIcon.SafeFormat(ex.Message);
-                _logger.LogError(message);
+                _logger.LogError(ex, message);
                 return null;
             }
         }

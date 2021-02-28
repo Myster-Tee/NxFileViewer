@@ -5,7 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
         mc:Ignorable="d"
-        Title="{Binding Path=DisplayName}" Width="340" Height="160" WindowStyle="ToolWindow" d:DataContext="{d:DesignInstance views:ItemErrorsWindowViewModel}" ResizeMode="CanResizeWithGrip">
+        Title="{Binding Path=DisplayName}"
+        Width="340" 
+        Height="160" 
+        WindowStyle="ToolWindow" 
+        d:DataContext="{d:DesignInstance views:ItemErrorsWindowViewModel}" 
+        ResizeMode="CanResizeWithGrip">
+
     <Grid>
         <TextBox Text="{Binding Path=Errors, Mode=OneWay}" 
                  HorizontalScrollBarVisibility="Auto" 

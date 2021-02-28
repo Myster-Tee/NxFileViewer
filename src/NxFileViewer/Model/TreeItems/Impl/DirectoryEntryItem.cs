@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Emignatik.NxFileViewer.FileLoading;
 using LibHac.Common;
 using LibHac.Fs;
 using LibHac.Fs.Fsa;
@@ -12,22 +11,34 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     /// </summary>
     public class DirectoryEntryItem : ItemBase
     {
-        private IReadOnlyList<DirectoryEntryItem>? _subDirEntries;
-
-        public DirectoryEntryItem(SectionItem containerSectionItem, DirectoryEntry directoryEntry, string name, string path, DirectoryEntryItem parentDirectoryEntryItem, IChildItemsBuilder childItemsBuilder)
-            : this(containerSectionItem, directoryEntry, name, path, (IItem)parentDirectoryEntryItem, childItemsBuilder)
+        /// <summary>
+        /// Constructor when entry is direct child of a <see cref="SectionItem"/>
+        /// </summary>
+        /// <param name="parentItem"></param>
+        /// <param name="directoryEntry"></param>
+        /// <param name="name"></param>
+        /// <param name="path"></param>
+        public DirectoryEntryItem(SectionItem parentItem, DirectoryEntry directoryEntry, string name, string path)
+            : this(parentItem, parentItem, directoryEntry, name, path)
         {
-            ParentDirectoryEntryItem = parentDirectoryEntryItem;
+            ParentSectionItem = parentItem;
         }
 
-        public DirectoryEntryItem(SectionItem parentSectionItem, DirectoryEntry directoryEntry, string name, string path, IChildItemsBuilder childItemsBuilder)
-            : this(parentSectionItem, directoryEntry, name, path, parentSectionItem, childItemsBuilder)
+        /// <summary>
+        /// Constructor when entry is direct child of another <see cref="DirectoryEntryItem"/>
+        /// </summary>
+        /// <param name="containerSectionItem"></param>
+        /// <param name="directoryEntry"></param>
+        /// <param name="name"></param>
+        /// <param name="path"></param>
+        /// <param name="parentItem"></param>
+        public DirectoryEntryItem(SectionItem containerSectionItem, DirectoryEntry directoryEntry, string name, string path, DirectoryEntryItem parentItem)
+            : this(parentItem, containerSectionItem, directoryEntry, name, path)
         {
-            ParentSectionItem = parentSectionItem;
+            ParentDirectoryEntryItem = parentItem;
         }
 
-        private DirectoryEntryItem(SectionItem containerSectionItem, DirectoryEntry directoryEntry, string name, string path, IItem parentItem, IChildItemsBuilder childItemsBuilder)
-            : base(childItemsBuilder)
+        private DirectoryEntryItem(IItem parentItem, SectionItem containerSectionItem, DirectoryEntry directoryEntry, string name, string path)
         {
             DirectoryEntry = directoryEntry;
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -36,6 +47,34 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
             ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
             Size = directoryEntry.Size;
         }
+
+        public override IItem ParentItem { get; }
+
+        /// <summary>
+        /// Get the parent <see cref="DirectoryEntryItem"/> or null (<see cref="ParentSectionItem"/>).
+        /// 
+        /// A <see cref="DirectoryEntryItem"/> can either be a child of another <see cref="DirectoryEntryItem"/>
+        /// or a child of a <see cref="SectionItem"/>
+        /// </summary>
+        public DirectoryEntryItem? ParentDirectoryEntryItem { get; }
+
+        /// <summary>
+        /// Get the parent <see cref="SectionItem"/> or null (<see cref="ParentDirectoryEntryItem"/>).
+        /// 
+        /// A <see cref="DirectoryEntryItem"/> can either be a child of another <see cref="DirectoryEntryItem"/>
+        /// or a child of a <see cref="SectionItem"/>
+        /// </summary>
+        public SectionItem? ParentSectionItem { get; }
+
+        /// <summary>
+        /// Get the section which contains this <see cref="DirectoryEntryItem"/> in its descendants
+        /// </summary>
+        public SectionItem ContainerSectionItem { get; }
+
+        /// <summary>
+        /// Get the child directory entries (can be either a file or a directory)
+        /// </summary>
+        public sealed override List<DirectoryEntryItem> ChildItems { get; } = new();
 
         /// <summary>
         /// Get the <see cref="DirectoryEntry"/> metadata
@@ -57,51 +96,13 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         public override string DisplayName => Name;
 
         /// <summary>
-        /// Get the parent <see cref="DirectoryEntryItem"/> or null (<see cref="ParentSectionItem"/>).
-        /// 
-        /// A <see cref="DirectoryEntryItem"/> can either be a child of another <see cref="DirectoryEntryItem"/>
-        /// or a child of a <see cref="SectionItem"/>
-        /// </summary>
-        public DirectoryEntryItem? ParentDirectoryEntryItem { get; }
-
-        /// <summary>
-        /// Get the parent <see cref="SectionItem"/> or null (<see cref="ParentDirectoryEntryItem"/>).
-        /// 
-        /// A <see cref="DirectoryEntryItem"/> can either be a child of another <see cref="DirectoryEntryItem"/>
-        /// or a child of a <see cref="SectionItem"/>
-        /// </summary>
-        public SectionItem? ParentSectionItem { get; }
-
-        public override IItem ParentItem { get; }
-
-        /// <summary>
-        /// Get the child directory entries (can be either a file or a directory)
-        /// </summary>
-        public IReadOnlyList<DirectoryEntryItem> ChildDirectoryEntryItems => GetChildDirectoryEntryItems();
-
-        /// <summary>
-        /// Get the section which contains this <see cref="DirectoryEntryItem"/> in its descendants
-        /// </summary>
-        public SectionItem ContainerSectionItem { get; }
-
-        /// <summary>
         /// Should be called only for entries of type <see cref="LibHac.Fs.DirectoryEntryType.File"/>
         /// </summary>
         /// <returns></returns>
         public IFile GetFile()
         {
-            this.ContainerSectionItem.FileSystem.OpenFile(out var file, new U8Span(this.Path), OpenMode.Read).ThrowIfFailure();
+            this.ContainerSectionItem.FileSystem!.OpenFile(out var file, new U8Span(this.Path), OpenMode.Read).ThrowIfFailure();
             return file;
-        }
-
-        protected override IReadOnlyList<IItem> SafeLoadChildItemsInternal()
-        {
-            return GetChildDirectoryEntryItems();
-        }
-
-        private IReadOnlyList<DirectoryEntryItem> GetChildDirectoryEntryItems()
-        {
-            return _subDirEntries ??= ChildItemsBuilder.Build(this);
         }
 
         public override string ToString()

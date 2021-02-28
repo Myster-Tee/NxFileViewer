@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Emignatik.NxFileViewer.FileLoading;
+﻿using System.Collections.Generic;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Utils.MVVM;
 
@@ -8,14 +6,11 @@ namespace Emignatik.NxFileViewer.Model.TreeItems
 {
     public abstract class ItemBase : NotifyPropertyChangedBase, IItem
     {
-        protected readonly IChildItemsBuilder ChildItemsBuilder;
-
         private int _nbErrorsBeforeNextChange = 0;
         private int _nbChildErrors = 0;
 
-        protected ItemBase(IChildItemsBuilder childItemsBuilder)
+        protected ItemBase()
         {
-            ChildItemsBuilder = childItemsBuilder ?? throw new ArgumentNullException(nameof(childItemsBuilder));
             Errors.ErrorsChanged += OnErrorsChanged;
         }
 
@@ -23,16 +18,10 @@ namespace Emignatik.NxFileViewer.Model.TreeItems
 
         public abstract string DisplayName { get; }
 
-        public IReadOnlyList<IItem> ChildItems => SafeLoadChildItems();
+        public abstract IEnumerable<IItem> ChildItems { get; }
 
         public abstract IItem? ParentItem { get; }
 
-        public IReadOnlyList<IItem> SafeLoadChildItems()
-        {
-            return SafeLoadChildItemsInternal();
-        }
-
-        protected abstract IReadOnlyList<IItem> SafeLoadChildItemsInternal();
 
         public abstract string LibHacTypeName { get; }
 

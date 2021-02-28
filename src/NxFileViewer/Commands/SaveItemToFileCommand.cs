@@ -82,7 +82,7 @@ namespace Emignatik.NxFileViewer.Commands
                 }
             }
 
-            if (selectedItem is PartitionFileEntryItem partitionFileEntryItem)
+            if (selectedItem is PartitionFileEntryItemBase partitionFileEntryItem)
             {
                 var file = partitionFileEntryItem.File;
                 var filePath = PromptSaveFile(_fsSanitizer.SanitizeFileName(partitionFileEntryItem.Name));
@@ -102,7 +102,7 @@ namespace Emignatik.NxFileViewer.Commands
                 var targetDirPath = Path.Combine(dirPath, $"Section_{sectionItem.SectionIndex}");
 
                 var runnable = _serviceProvider.GetRequiredService<ISaveDirectoryRunnable>();
-                runnable.Setup(sectionItem.ChildDirectoryEntryItems, targetDirPath);
+                runnable.Setup(sectionItem.ChildItems, targetDirPath);
                 return runnable;
             }
 
@@ -133,7 +133,7 @@ namespace Emignatik.NxFileViewer.Commands
         {
             var selectedItem = _selectedItemService.SelectedItem;
             return selectedItem is DirectoryEntryItem ||
-                   selectedItem is PartitionFileEntryItem ||
+                   selectedItem is PartitionFileEntryItemBase ||
                    selectedItem is SectionItem;
         }
 

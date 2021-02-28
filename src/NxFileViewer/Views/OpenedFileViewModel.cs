@@ -1,6 +1,8 @@
 ﻿using System;
+using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Model;
 using Emignatik.NxFileViewer.Utils.MVVM;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Emignatik.NxFileViewer.Views
 {
@@ -10,17 +12,21 @@ namespace Emignatik.NxFileViewer.Views
 
         public OpenedFileViewModel(NxFile nxFile, IServiceProvider serviceProvider)
         {
-            ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _nxFile = nxFile ?? throw new ArgumentNullException(nameof(nxFile));
             Content = new ContentViewModel(_nxFile.RootItem, serviceProvider);
             FileOverview = new FileOverviewViewModel(_nxFile.Overview, serviceProvider);
-        }
 
-        public IServiceProvider ServiceProvider { get; }
+            OpenFileLocationCommand = serviceProvider.GetRequiredService<IOpenFileLocationCommand>();
+            OpenFileLocationCommand.FilePath = _nxFile.Path;
+        }
 
         public FileOverviewViewModel FileOverview { get; }
 
         public ContentViewModel Content { get; }
 
+        public string FilePath => _nxFile.Path;
+
+        public IOpenFileLocationCommand OpenFileLocationCommand { get; }
     }
 }

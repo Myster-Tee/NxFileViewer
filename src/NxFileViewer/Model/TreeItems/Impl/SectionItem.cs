@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Emignatik.NxFileViewer.FileLoading;
+using LibHac;
 using LibHac.Fs.Fsa;
 using LibHac.FsSystem.NcaUtils;
 
@@ -8,16 +8,18 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 {
     public class SectionItem : ItemBase
     {
-        private IReadOnlyList<DirectoryEntryItem>? _dirEntries;
+        private Validity _hashValidity = Validity.Unchecked;
 
-        public SectionItem(int sectionIndex, NcaFsHeader ncaFsHeader, IFileSystem fileSystem, NcaItem parentNcaItem, IChildItemsBuilder childItemsBuilder)
-            : base(childItemsBuilder)
+        public SectionItem(int sectionIndex, NcaFsHeader ncaFsHeader, NcaItem parentItem)
         {
             FsHeader = ncaFsHeader;
             SectionIndex = sectionIndex;
-            FileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
-            ParentNcaItem = parentNcaItem ?? throw new ArgumentNullException(nameof(parentNcaItem));
+            ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
         }
+
+        public override NcaItem ParentItem { get; }
+
+        public override List<DirectoryEntryItem> ChildItems { get; } = new();
 
         public NcaFsHeader FsHeader { get; }
 
@@ -29,13 +31,11 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public override string DisplayName => $"Section {SectionIndex}";
 
-        public NcaItem ParentNcaItem { get; }
-
-        public override IItem ParentItem => ParentNcaItem;
-
-        public IReadOnlyList<DirectoryEntryItem> ChildDirectoryEntryItems => GetChildDirectoryEntryItems();
-
-        public IFileSystem FileSystem { get; }
+        /// <summary>
+        /// Get the FileSystem of this section.
+        /// Can be null when the FileSystem of this section couldn't be opened.
+        /// </summary>
+        public IFileSystem? FileSystem { get; internal set; }
 
         public NcaEncryptionType EncryptionType => FsHeader.EncryptionType;
 
@@ -47,14 +47,19 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public int SectionIndex { get; }
 
-        protected sealed override IReadOnlyList<IItem> SafeLoadChildItemsInternal()
+        public Validity HashValidity
         {
-            return GetChildDirectoryEntryItems();
+            get => _hashValidity;
+            internal set
+            {
+                _hashValidity = value;
+                NotifyPropertyChanged();
+            }
         }
 
-        private IReadOnlyList<DirectoryEntryItem> GetChildDirectoryEntryItems()
+        public override void Dispose()
         {
-            return _dirEntries ??= ChildItemsBuilder.Build(this);
+            FileSystem?.Dispose();
         }
     }
 }

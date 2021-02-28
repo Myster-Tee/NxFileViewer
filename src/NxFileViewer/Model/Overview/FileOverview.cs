@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Emignatik.NxFileViewer.Model.TreeItems;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
@@ -12,6 +13,8 @@ namespace Emignatik.NxFileViewer.Model.Overview
         private NcasValidity _ncasHashValidity;
         private NcaItem[]? _ncaItems;
         private NcasValidity _ncasHeadersSignatureValidity;
+        private IReadOnlyList<Exception>? _ncasHeadersSignatureExceptions;
+        private IReadOnlyList<Exception>? _ncasHashExceptions;
 
         public FileOverview(IItem rootItem)
         {
@@ -19,6 +22,8 @@ namespace Emignatik.NxFileViewer.Model.Overview
             NcasHashValidity = NcaItems.Length <= 0 ? NcasValidity.NoNca : NcasValidity.Unchecked;
             NcasHeadersSignatureValidity = NcaItems.Length <= 0 ? NcasValidity.NoNca : NcasValidity.Unchecked;
         }
+
+        public ObservableCollection<MissingKey> MissingKeys { get; } = new();
 
         public IItem RootItem { get; }
 
@@ -44,6 +49,16 @@ namespace Emignatik.NxFileViewer.Model.Overview
             }
         }
 
+        public IReadOnlyList<Exception>? NcasHashExceptions
+        {
+            get => _ncasHashExceptions;
+            internal set
+            {
+                _ncasHashExceptions = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public NcasValidity NcasHeadersSignatureValidity
         {
             get => _ncasHeadersSignatureValidity;
@@ -53,6 +68,17 @@ namespace Emignatik.NxFileViewer.Model.Overview
                 NotifyPropertyChanged();
             }
         }
+
+        public IReadOnlyList<Exception>? NcasHeadersSignatureExceptions
+        {
+            get => _ncasHeadersSignatureExceptions;
+            internal set
+            {
+                _ncasHeadersSignatureExceptions = value;
+                NotifyPropertyChanged();
+            }
+        }
+
     }
 
     public enum NcasValidity

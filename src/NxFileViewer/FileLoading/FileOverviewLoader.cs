@@ -46,7 +46,7 @@ namespace Emignatik.NxFileViewer.FileLoading
             public FileOverview CreateXciOverview(XciItem xciItem)
             {
                 // NOTE: the secure partition of an XCI is equivalent to an NSP
-                var securePartitionItem = xciItem.Partitions.FirstOrDefault(partition => partition.XciPartitionType == XciPartitionType.Secure);
+                var securePartitionItem = xciItem.ChildItems.FirstOrDefault(partition => partition.XciPartitionType == XciPartitionType.Secure);
 
                 var fileOverview = new FileOverview(xciItem);
 
@@ -67,7 +67,7 @@ namespace Emignatik.NxFileViewer.FileLoading
                 return FillOverview(fileOverview, nspItem);
             }
 
-            private FileOverview FillOverview(FileOverview fileOverview, PartitionFileSystemItem partitionItem)
+            private FileOverview FillOverview(FileOverview fileOverview, PartitionFileSystemItemBase partitionItem)
             {
                 var cnmtContainers = BuildCnmtContainers(partitionItem).ToArray();
 
@@ -98,7 +98,7 @@ namespace Emignatik.NxFileViewer.FileLoading
                 return packageType;
             }
 
-            private IEnumerable<CnmtContainer> BuildCnmtContainers(PartitionFileSystemItem partitionItem)
+            private IEnumerable<CnmtContainer> BuildCnmtContainers(PartitionFileSystemItemBase partitionItem)
             {
 
                 // Find all Cnmt (kind of manifest containing contents information such a base title, a patch, etc.)
@@ -119,7 +119,7 @@ namespace Emignatik.NxFileViewer.FileLoading
                     {
                         var ncaId = cnmtContentEntry.NcaId.ToStrId();
 
-                        var parentPartitionFileSystemItem = cnmtItem.ContainerSectionItem.ParentNcaItem.ParentPartitionFileSystemItem;
+                        var parentPartitionFileSystemItem = cnmtItem.ContainerSectionItem.ParentItem.ParentItem;
                         var ncaItem = parentPartitionFileSystemItem.FindNcaItem(ncaId);
                         if (ncaItem == null)
                         {
@@ -181,7 +181,7 @@ namespace Emignatik.NxFileViewer.FileLoading
 
                 var expectedFileName = $"icon_{languageName}.dat";
 
-                var iconItem = sectionItem.ChildDirectoryEntryItems.FirstOrDefault(item => string.Equals(item.Name, expectedFileName, StringComparison.OrdinalIgnoreCase));
+                var iconItem = sectionItem.ChildItems.FirstOrDefault(item => string.Equals(item.Name, expectedFileName, StringComparison.OrdinalIgnoreCase));
                 if (iconItem == null)
                 {
                     var message = LocalizationManager.Instance.Current.Keys.LoadingError_IconMissing.SafeFormat(expectedFileName);
@@ -190,9 +190,13 @@ namespace Emignatik.NxFileViewer.FileLoading
                     return null;
                 }
 
+                var fileSystem = sectionItem.FileSystem;
+                if (fileSystem == null)
+                    return null;
+
                 try
                 {
-                    sectionItem.FileSystem.OpenFile(out var file, new U8Span(iconItem.Path), OpenMode.Read).ThrowIfFailure();
+                    fileSystem.OpenFile(out var file, new U8Span(iconItem.Path), OpenMode.Read).ThrowIfFailure();
 
                     file.GetSize(out var fileSize).ThrowIfFailure();
                     var bytes = new byte[fileSize];

@@ -61,20 +61,13 @@
                 </treeItems:ItemIconDataTemplateSelector.FileDirectoryEntryItemIconDataTemplate>
             </treeItems:ItemIconDataTemplateSelector>
 
+            <!-- Converters -->
             <converters:NacpLanguageConverter x:Key="NacpLanguageConverter" />
             <converters1:BoolInverterConverter x:Key="BoolInverterConverter" />
-
-            <converters1:BoolToVisibilityConverter x:Key="FalseToCollapseVisibilityConverter">
-                <converters1:BoolToVisibilityConverter.TrueVisibility>Visible</converters1:BoolToVisibilityConverter.TrueVisibility>
-                <converters1:BoolToVisibilityConverter.FalseVisibility>Collapsed</converters1:BoolToVisibilityConverter.FalseVisibility>
-            </converters1:BoolToVisibilityConverter>
-
-            <converters1:BoolToVisibilityConverter x:Key="FalseToHiddenVisibilityConverter">
-                <converters1:BoolToVisibilityConverter.TrueVisibility>Visible</converters1:BoolToVisibilityConverter.TrueVisibility>
-                <converters1:BoolToVisibilityConverter.FalseVisibility>Hidden</converters1:BoolToVisibilityConverter.FalseVisibility>
-            </converters1:BoolToVisibilityConverter>
-
+            <converters1:BoolToVisibilityConverter x:Key="FalseToCollapseVisibilityConverter" FalseVisibility="Collapsed" TrueVisibility="Visible" />
+            <converters1:BoolToVisibilityConverter x:Key="FalseToHiddenVisibilityConverter" FalseVisibility="Hidden" TrueVisibility="Visible" />
             <converters:NcasValidityConverter x:Key="NcasValidityConverter" />
+            <converters1:NullOrEmptyStringToVisibilityConverter x:Key="StringNullOrEmptyToCollapsedVisibilityConverter" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styling/Theme/DefaultTheme.xaml" />

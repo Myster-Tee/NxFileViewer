@@ -83,7 +83,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
                 remainingElementsToBrowse.RemoveAt(0);
                 elements.Add(element);
 
-                foreach (var childItem in element.Item.ChildDirectoryEntryItems)
+                foreach (var childItem in element.Item.ChildItems)
                 {
                     var relativePath = Path.Combine(element.RelativePath, _fsSanitizer.SanitizeFileName(childItem.Name));
                     remainingElementsToBrowse.Add(new ElementToCopy(childItem, relativePath));

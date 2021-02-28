@@ -7,9 +7,9 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
 {
     public abstract class PartitionFileSystemItemViewModel : ItemViewModel
     {
-        private readonly PartitionFileSystemItem _partitionFileSystemItem;
+        private readonly PartitionFileSystemItemBase _partitionFileSystemItem;
 
-        protected PartitionFileSystemItemViewModel(PartitionFileSystemItem partitionFileSystemItem, IServiceProvider serviceProvider)
+        protected PartitionFileSystemItemViewModel(PartitionFileSystemItemBase partitionFileSystemItem, IServiceProvider serviceProvider)
             : base(partitionFileSystemItem, serviceProvider)
         {
             _partitionFileSystemItem = partitionFileSystemItem;

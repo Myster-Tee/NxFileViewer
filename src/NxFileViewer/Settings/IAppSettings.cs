@@ -20,5 +20,7 @@ namespace Emignatik.NxFileViewer.Settings
         string ProdKeysDownloadUrl { get; set; }
 
         string TitleKeysDownloadUrl { get; set; }
+
+        bool AlwaysReloadKeysBeforeOpen { get; set; }
     }
 }

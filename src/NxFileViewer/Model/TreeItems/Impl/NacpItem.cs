@@ -1,5 +1,4 @@
 ﻿using System;
-using Emignatik.NxFileViewer.FileLoading;
 using Emignatik.NxFileViewer.Utils;
 using LibHac;
 using LibHac.Fs;
@@ -10,12 +9,15 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     {
         public const string NacpFileName = "control.nacp";
 
-        public NacpItem(Nacp nacp, SectionItem parentSectionItem, DirectoryEntry directoryEntry, string name, string path, IChildItemsBuilder childItemsBuilder)
-            : base(parentSectionItem, directoryEntry, name, path, childItemsBuilder)
+        public NacpItem(Nacp nacp, SectionItem parentItem, DirectoryEntry directoryEntry, string name, string path)
+            : base(parentItem, directoryEntry, name, path)
         {
             Nacp = nacp ?? throw new ArgumentNullException(nameof(nacp));
+            ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
             AddOnContentBaseId = Nacp.AddOnContentBaseId.ToStrId();
         }
+
+        public override SectionItem ParentItem { get; }
 
         public Nacp Nacp { get; }
 

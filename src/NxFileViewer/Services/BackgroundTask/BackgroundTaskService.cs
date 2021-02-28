@@ -154,7 +154,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask
             _runningRunnable = null;
 
             IsIndeterminate = false;
-            ProgressText = LocalizationManager.Instance.Current.Keys.Ready;
+            ProgressText = LocalizationManager.Instance.Current.Keys.Status_Ready;
             ProgressValue = 0;
             ProgressValueText = "";
             IsRunning = false;

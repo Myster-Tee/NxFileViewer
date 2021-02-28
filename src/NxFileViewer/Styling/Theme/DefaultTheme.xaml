@@ -9,6 +9,9 @@
     <SolidColorBrush x:Key="FontBrush.Warning" Color="Orange" />
     <SolidColorBrush x:Key="FontBrush.Error" Color="Red" />
 
+    <SolidColorBrush x:Key="ReadOnlyTextBox.Static.Foreground" Color="#1C1C1C" />
+    <SolidColorBrush x:Key="ReadOnlyTextBox.Static.Background" Color="White" />
+
     <SolidColorBrush x:Key="TreeViewItemIcon.Static.Error.Stroke" Color="Red" />
 
     <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Stroke" Color="#FF818181"/>
@@ -28,6 +31,9 @@
     <SolidColorBrush x:Key="HelpIcon.Static.Background" Color="#9D9AA8"/>
     <SolidColorBrush x:Key="HelpIcon.Static.Foreground" Color="White"/>
 
+    <SolidColorBrush x:Key="KeyIcon.Static.Background" Color="#FF595959"/>
+    <SolidColorBrush x:Key="KeyIcon.Static.Foreground" Color="Orange"/>
+
     <!-- ProgressBar -->
     <SolidColorBrush x:Key="ProgressBar.Static.Background" Color="#686868" />
     <LinearGradientBrush x:Key="ProgressBar.Progress.Foreground" StartPoint="0, 0.5" EndPoint="1, 0.5">
@@ -42,5 +48,8 @@
     <SolidColorBrush x:Key="PlayStopButton.Play.Icon" Color="{StaticResource AccentColor}" />
     <SolidColorBrush x:Key="PlayStopButton.Stop.Icon" Color="#DC7D7D" />
     <SolidColorBrush x:Key="PlayStopButton.Cancelling.Icon" Color="Yellow" />
+
+    <Thickness x:Key="ScrollViewer.Border.Thickness">1</Thickness>
+    <SolidColorBrush x:Key="ScrollViewer.Border.Brush" Color="LightGray" />
 
 </ResourceDictionary>

@@ -1,18 +1,19 @@
 ﻿using System;
-using Emignatik.NxFileViewer.FileLoading;
 using LibHac;
 
 namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 {
-    public class XciPartitionItem : PartitionFileSystemItem
+    public class XciPartitionItem : PartitionFileSystemItemBase
     {
-        public XciPartitionItem(XciPartition xciPartition, XciPartitionType xciPartitionType, XciItem parentXciItem, IChildItemsBuilder childItemsBuilder)
-            : base(xciPartition, childItemsBuilder)
+        public XciPartitionItem(XciPartition xciPartition, XciPartitionType xciPartitionType, XciItem parentItem)
+            : base(xciPartition)
         {
             XciPartition = xciPartition ?? throw new ArgumentNullException(nameof(xciPartition));
             XciPartitionType = xciPartitionType;
-            ParentXciItem = parentXciItem ?? throw new ArgumentNullException(nameof(parentXciItem));
+            ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
         }
+
+        public override XciItem ParentItem { get; }
 
         public XciPartition XciPartition { get; }
 
@@ -22,11 +23,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public override string DisplayName => Name;
 
-        public XciItem ParentXciItem { get; }
-
-        public override IItem ParentItem => ParentXciItem;
-
-        public override Keyset KeySet => ParentXciItem.KeySet;
+        public override Keyset KeySet => ParentItem.KeySet;
 
         public XciPartitionType XciPartitionType { get; }
     }

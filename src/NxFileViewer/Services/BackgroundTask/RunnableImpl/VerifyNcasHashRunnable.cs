@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model.Overview;
+using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using LibHac;
 using LibHac.FsSystem.NcaUtils;
 using Microsoft.Extensions.Logging;
@@ -34,60 +36,105 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
             if (_fileOverview == null)
                 throw new InvalidOperationException($"{nameof(Setup)} should be called first.");
 
-            var ncaItems = _fileOverview.NcaItems;
-            if (ncaItems.Length <= 0)
-            {
-                _fileOverview.NcasHashValidity = NcasValidity.NoNca;
-                return;
-            }
-            _fileOverview.NcasHashValidity = NcasValidity.InProgress;
-
+            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaSectionHash_VerificationStart_Log);
             try
             {
-                var allValid = true;
-                var ncaNum = 0;
-                foreach (var ncaItem in ncaItems)
-                {
-                    ncaNum++;
-                    ncaItem.Errors.RemoveAll(NCA_HASH_CATEGORY);
-
-                    //==============================================//
-                    //===============> Compute Hash <===============//
-                    var numCopy = ncaNum;
-                    var validity = ncaItem.Nca.VerifyNca(new LibHacProgressReportRelay(value =>
-                    {
-                        progressReporter.SetPercentage(value);
-                    }, message =>
-                    {
-                        progressReporter.SetText($"{numCopy}/{ncaItems.Length}: {message}");
-                    }));
-                    //===============> Compute Hash <===============//
-                    //==============================================//
-
-                    ncaItem.HashValidity = validity;
-                    if (validity != Validity.Valid)
-                    {
-                        ncaItem.Errors.Add(NCA_HASH_CATEGORY, LocalizationManager.Instance.Current.Keys.NcaHashInvalid.SafeFormat(validity.ToString()));
-                        _logger.LogError(LocalizationManager.Instance.Current.Keys.NcaHashInvalid_Log.SafeFormat(ncaItem.DisplayName, validity.ToString()));
-
-                        allValid = false;
-                    }
-                    else
-                    {
-                        _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaHashValid_Log.SafeFormat(ncaItem.DisplayName, validity.ToString()));
-                    }
-                }
-
-                _fileOverview.NcasHashValidity = allValid ? NcasValidity.Valid : NcasValidity.Invalid;
+                VerifyHashes(progressReporter, _fileOverview);
             }
-            catch (Exception ex)
+            finally
             {
-                _fileOverview.NcasHashValidity = NcasValidity.Error;
-                _logger.LogError(LocalizationManager.Instance.Current.Keys.NcasHashError_Log.SafeFormat(ex.Message));
+                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaSectionHash_VerificationEnd_Log);
             }
         }
 
+        private void VerifyHashes(IProgressReporter progressReporter, FileOverview fileOverview)
+        {
+            fileOverview.NcasHashExceptions = null;
+            var ncaItems = fileOverview.NcaItems;
+            if (ncaItems.Length <= 0)
+            {
+                fileOverview.NcasHashValidity = NcasValidity.NoNca;
+                return;
+            }
+            fileOverview.NcasHashValidity = NcasValidity.InProgress;
 
+            var occurredExceptions = new List<Exception>();
+            var allValid = true;
+            try
+            {
+                var sectionNum = 0;
+                var allSectionItems = ListAllNcaSections(ncaItems);
+
+                foreach (var sectionItem in allSectionItems)
+                {
+                    sectionNum++;
+                    sectionItem.Errors.RemoveAll(NCA_HASH_CATEGORY);
+
+                    progressReporter.SetText($"Section {sectionNum}/{allSectionItems.Count}");
+                    try
+                    {
+                        //=============================================//
+                        //===============> Verify Hash <===============//
+                        var validity = sectionItem.ParentItem.Nca.VerifySection(sectionItem.SectionIndex, new LibHacProgressReportRelay(
+                            value =>
+                            {
+                                progressReporter.SetPercentage(value);
+                            },
+                            message =>
+                            {
+                                _logger.LogInformation(message);
+                            })
+                        );
+                        //===============> Verify Hash <===============//
+                        //=============================================//
+                        sectionItem.HashValidity = validity;
+
+                        if (validity != Validity.Valid)
+                        {
+                            allValid = false;
+                            sectionItem.Errors.Add(NCA_HASH_CATEGORY, LocalizationManager.Instance.Current.Keys.NcaSectionHash_Invalid.SafeFormat(validity));
+                            _logger.LogError(LocalizationManager.Instance.Current.Keys.NcaSectionHash_Invalid_Log.SafeFormat(sectionItem.ParentItem.DisplayName, sectionItem.SectionIndex, validity));
+                        }
+                        else
+                            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaSectionHash_Valid_Log.SafeFormat(sectionItem.ParentItem.DisplayName, sectionItem.SectionIndex, validity));
+                    }
+                    catch (Exception ex)
+                    {
+                        allValid = false;
+                        occurredExceptions.Add(ex);
+                        sectionItem.Errors.Add(NCA_HASH_CATEGORY, LocalizationManager.Instance.Current.Keys.NcaSectionHash_Error.SafeFormat(ex.Message));
+                        _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.NcaSectionHash_Error_Log.SafeFormat(sectionItem.ParentItem.DisplayName, sectionItem.SectionIndex, ex.Message));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                allValid = false;
+                occurredExceptions.Add(ex);
+                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.NcasSectionHash_Error_Log.SafeFormat(ex.Message));
+            }
+
+            if (occurredExceptions.Count > 0)
+            {
+                fileOverview.NcasHashExceptions = occurredExceptions;
+                fileOverview.NcasHashValidity = NcasValidity.Error;
+            }
+            else
+            {
+                fileOverview.NcasHashValidity = allValid ? NcasValidity.Valid : NcasValidity.Invalid;
+            }
+        }
+
+        private List<SectionItem> ListAllNcaSections(IEnumerable<NcaItem> ncaItems)
+        {
+            var sectionItems = new List<SectionItem>();
+            foreach (var ncaItem in ncaItems)
+            {
+                sectionItems.AddRange(ncaItem.ChildItems);
+            }
+
+            return sectionItems;
+        }
     }
 
     public interface IVerifyNcasHashRunnable : IRunnable

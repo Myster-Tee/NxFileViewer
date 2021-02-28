@@ -2,11 +2,25 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls">
 
+    <Style x:Key="EditButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Margin" Value="2,0" />
+        <Setter Property="Width" Value="20" />
+        <Setter Property="MinWidth" Value="10" />
+        <Setter Property="Content" Value="✎" />
+    </Style> 
+    
     <Style x:Key="BrowseButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Margin" Value="2,0" />
         <Setter Property="Width" Value="20" />
         <Setter Property="MinWidth" Value="10" />
         <Setter Property="Content" Value="..." />
+    </Style>   
+    
+    <Style x:Key="DownloadButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Margin" Value="2,0" />
+        <Setter Property="Width" Value="20" />
+        <Setter Property="MinWidth" Value="10" />
+        <Setter Property="Content" Value="⭳" />
     </Style>
 
     <Style TargetType="customControls:PlayStopButton" BasedOn="{StaticResource {x:Type Button}}">

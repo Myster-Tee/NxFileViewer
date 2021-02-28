@@ -6,6 +6,7 @@
              xmlns:overview="clr-namespace:Emignatik.NxFileViewer.Model.Overview"
              xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
              xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
+             xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
              mc:Ignorable="d"
              Style="{StaticResource UserControlStyle}"
              d:DesignHeight="450" d:DesignWidth="400" d:DataContext="{d:DesignInstance views:CnmtContainerViewModel}">
@@ -71,7 +72,7 @@
                 <DockPanel Grid.Column="0" Grid.Row="1">
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" >
                         <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.AvailableLanguages}" Style="{StaticResource Title2}"/>
-                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ToolTip_AvailableLanguages}" />
+                        <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ToolTip_AvailableLanguages}" />
                     </StackPanel>
                     <ListView ItemsSource="{Binding Path=Titles}" VerticalAlignment="Stretch" 
                               SelectedItem="{Binding Path=SelectedTitle}" MinHeight="150" MinWidth="130" SelectionMode="Single">

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.FileLoading;
@@ -40,7 +42,6 @@ namespace Emignatik.NxFileViewer
               .AddSingleton<BackgroundTaskService>()
               .AddSingleton<IBackgroundTaskService>(provider => provider.GetRequiredService<BackgroundTaskService>())
               .AddSingleton<IProgressReporter>(provider => provider.GetRequiredService<BackgroundTaskService>())
-              .AddSingleton<IFileDownloaderService, FileDownloaderService>()
 
               .AddSingleton<IOpenFileCommand, OpenFileCommand>()
               .AddSingleton<IExitAppCommand, ExitAppCommand>()
@@ -53,6 +54,7 @@ namespace Emignatik.NxFileViewer
               .AddSingleton<IShowItemErrorsWindowCommand, ShowItemErrorsWindowCommand>()
               .AddSingleton<ISaveTitleImageCommand, SaveTitleImageCommand>()
               .AddSingleton<ICopyImageCommand, CopyImageCommand>()
+              .AddSingleton<ILoadKeysCommand, LoadKeysCommand>()
 
               .AddSingleton<IFileTypeAnalyzer, FileTypeAnalyzer>()
               .AddSingleton<MainWindowViewModel>()
@@ -61,7 +63,6 @@ namespace Emignatik.NxFileViewer
               .AddSingleton<IAppSettingsManager, AppSettingsManager>()
               .AddSingleton<IFileItemLoader, FileItemLoader>()
               .AddSingleton<IFileOverviewLoader, FileOverviewLoader>()
-              .AddSingleton<IChildItemsBuilder, ChildItemsBuilder>()
               .AddSingleton<IItemViewModelBuilder, ItemViewModelBuilder>()
               .AddSingleton<IFileLoader, FileLoader>()
               .AddSingleton<IBrushesProvider, BrushesProvider>()
@@ -72,6 +73,8 @@ namespace Emignatik.NxFileViewer
               .AddTransient<ISaveDirectoryRunnable, SaveDirectoryRunnable>()
               .AddTransient<IVerifyNcasHashRunnable, VerifyNcasHashRunnable>()
               .AddTransient<IVerifyNcasHeaderSignatureRunnable, VerifyNcasHeaderSignatureRunnable>()
+              .AddTransient<IOpenFileLocationCommand, OpenFileLocationCommand>()
+              .AddTransient<IDownloadFileRunnable, DownloadFileRunnable>()
               .AddTransient<IFsSanitizer, FsSanitizer>()
 
               .AddLogging(builder => builder.AddAppLoggerProvider())
@@ -96,14 +99,46 @@ namespace Emignatik.NxFileViewer
             {
                 DataContext = ServiceProvider.GetRequiredService<MainWindowViewModel>()
             };
-            mainWindow.Loaded += OnMainWindowLoaded;
+
+            void MainWindowLoaded(object sender, RoutedEventArgs args)
+            {
+                mainWindow.Loaded -= MainWindowLoaded;
+                Initialize(e.Args);
+            }
+            mainWindow.Loaded += MainWindowLoaded;
 
             Application.Current.MainWindow = mainWindow;
             mainWindow.Show();
+        }
+
+        private static async void Initialize(IReadOnlyList<string> cmdLineArgs)
+        {
+            var keySetProviderService = ServiceProvider.GetRequiredService<IKeySetProviderService>();
+            var appSettings = ServiceProvider.GetRequiredService<IAppSettings>();
+            var backgroundTaskService = ServiceProvider.GetRequiredService<IBackgroundTaskService>();
+
+            var prodKeysDownloadUrl = appSettings.ProdKeysDownloadUrl;
+
+            if (keySetProviderService.ActualProdKeysFilePath == null && !string.IsNullOrWhiteSpace(prodKeysDownloadUrl))
+            {
+                var downloadFileRunnable = ServiceProvider.GetRequiredService<IDownloadFileRunnable>();
+                downloadFileRunnable.Setup(prodKeysDownloadUrl, keySetProviderService.AppDirProdKeysFilePath);
+                await backgroundTaskService.RunAsync(downloadFileRunnable);
+                keySetProviderService.Reset(); // To force reloading with the downloaded keys file
+            }
+
+            var titleKeysDownloadUrl = appSettings.TitleKeysDownloadUrl;
+            if (keySetProviderService.ActualTitleKeysFilePath == null && !string.IsNullOrWhiteSpace(titleKeysDownloadUrl))
+            {
+                var downloadFileRunnable = ServiceProvider.GetRequiredService<IDownloadFileRunnable>();
+                downloadFileRunnable.Setup(titleKeysDownloadUrl, keySetProviderService.AppDirTitleKeysFilePath);
+                await backgroundTaskService.RunAsync(downloadFileRunnable);
+                keySetProviderService.Reset(); // To force reloading with the downloaded keys file
+            }
 
             var fileOpenerService = ServiceProvider.GetRequiredService<IFileOpenerService>();
-            if (e.Args.Length > 0)
-                fileOpenerService.SafeOpenFile(e.Args[0]);
+            if (cmdLineArgs.Count > 0)
+                await fileOpenerService.SafeOpenFile(cmdLineArgs[0]);
         }
 
         private void OnLocalizationStringFormatException(object? sender, FormatExceptionHandlerArgs args)
@@ -114,44 +149,6 @@ namespace Emignatik.NxFileViewer
             _logger.LogError(message);
         }
 
-        private async void OnMainWindowLoaded(object sender, RoutedEventArgs e)
-        {
-            var keySetProviderService = ServiceProvider.GetRequiredService<IKeySetProviderService>();
-            var appSettings = ServiceProvider.GetRequiredService<IAppSettings>();
-            var fileDownloaderService = ServiceProvider.GetRequiredService<IFileDownloaderService>();
-
-            var prodKeysDownloadUrl = appSettings.ProdKeysDownloadUrl;
-            try
-            {
-                if (keySetProviderService.ActualProdKeysFilePath == null && !string.IsNullOrWhiteSpace(prodKeysDownloadUrl))
-                {
-                    _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_DownloadingKeysFromUrl.SafeFormat(prodKeysDownloadUrl));
-                    await fileDownloaderService.DownloadFileAsync(prodKeysDownloadUrl, keySetProviderService.AppDirProdKeysFilePath);
-                    _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_KeysSuccessfullyDownloaded);
-                    keySetProviderService.UnloadCurrentKeySet(); // To force reloading with the downloaded keys file
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.Log_FailedToDownloadKeysFromUrl.SafeFormat(IKeySetProviderService.DefaultProdKeysFileName, prodKeysDownloadUrl, ex.Message));
-            }
-
-            var titleKeysDownloadUrl = appSettings.TitleKeysDownloadUrl;
-            try
-            {
-                if (keySetProviderService.ActualTitleKeysFilePath == null && !string.IsNullOrWhiteSpace(titleKeysDownloadUrl))
-                {
-                    _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_DownloadingKeysFromUrl.SafeFormat(titleKeysDownloadUrl));
-                    await fileDownloaderService.DownloadFileAsync(titleKeysDownloadUrl, keySetProviderService.AppDirTitleKeysFilePath);
-                    _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_KeysSuccessfullyDownloaded);
-                    keySetProviderService.UnloadCurrentKeySet(); // To force reloading with the downloaded keys file
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.Log_FailedToDownloadKeysFromUrl.SafeFormat(IKeySetProviderService.DefaultTitleKeysFileName, titleKeysDownloadUrl, ex.Message));
-            }
-        }
 
         protected override void OnExit(ExitEventArgs e)
         {

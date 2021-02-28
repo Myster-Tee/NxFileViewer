@@ -41,7 +41,7 @@ namespace Emignatik.NxFileViewer.Settings
             }
             catch (Exception ex)
             {
-                _logger.LogError(LocalizationManager.Instance.Current.Keys.SettingsLoadingError.SafeFormat(ex.Message));
+                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SettingsLoadingError.SafeFormat(ex.Message));
             }
         }
 
@@ -54,7 +54,7 @@ namespace Emignatik.NxFileViewer.Settings
             }
             catch (Exception ex)
             {
-                _logger.LogError(LocalizationManager.Instance.Current.Keys.SettingsSavingError.SafeFormat(ex.Message));
+                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SettingsSavingError.SafeFormat(ex.Message));
             }
         }
     }

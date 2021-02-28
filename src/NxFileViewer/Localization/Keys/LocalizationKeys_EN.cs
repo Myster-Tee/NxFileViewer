@@ -10,23 +10,19 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public override string CultureName => "en-US";
         public override string LanguageAuto => "Auto";
 
-        public string ErrKeysLoadingFailed => "Failed to load keys: {0}.";
-        public string WarnNoProdKeysFileFound => "No prod.keys file found.";
-
-        public string InvalidSetting_KeysFileNotFound => "Keys file «{0}» defined in the settings doesn't exist.";
-
-        public string ErrFileNotSupported => "File «{0}» not supported.";
+        public string FileNotSupported_Log => "File «{0}» not supported.";
         public string OpenFile_Filter => "Nintendo Switch files (*.nsp;*.nsz;*.xci;*.xcz)|*.nsp;*.nsz;*.xci;*.xcz|All files (*.*)|*.*";
-        public string MenuItemFile => "_File";
-        public string MenuItemOpen => "_Open...";
-        public string MenuItemOpenLast => "Open _last";
-        public string MenuItemClose => "_Close";
-        public string MenuItemExit => "E_xit";
-        public string MenuItemTools => "_Tools";
+        public string MenuItem_File => "_File";
+        public string MenuItem_Open => "_Open...";
+        public string MenuItem_OpenLast => "Open _last";
+        public string MenuItem_Close => "_Close";
+        public string MenuItem_Exit => "E_xit";
+        public string MenuItem_Tools => "_Tools";
         public string MenuItem_VerifyNcasHash => "Verify _hashes";
         public string MenuItem_VerifyNcasHeaderSignature => "Verify _signatures";
-        public string MenuItemOptions => "_Options";
-        public string MenuItemSettings => "_Settings";
+        public string MenuItem_Options => "_Options";
+        public string MenuItem_Settings => "_Settings";
+        public string MenuItem_ReloadKeys => "Reload keys";
 
         public string MultiContentPackage => "Multi-content Package";
         public string GeneralInfo => "General Info";
@@ -60,7 +56,8 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string SettingsView_Button_Cancel => "Cancel";
 
         public string SettingsView_GroupBoxKeys => "Keys";
-        public string SettingsView_Title_KeysFilePath => "Path";
+        public string SettingsView_Title_ActualKeysFilePath => "Actual path";
+        public string SettingsView_Title_KeysCustomFilePath => "Custom path";
         public string SettingsView_Title_KeysDownloadUrl => "Download URL";
 
         public string SettingsView_ToolTip_ProdKeys => "This file contains common keys used by all Switch devices. This file is required for opening encrypted title files." + Environment.NewLine +
@@ -69,7 +66,8 @@ namespace Emignatik.NxFileViewer.Localization.Keys
                                                        "    2. the current program's directory" + Environment.NewLine +
                                                        "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
                                                        "At startup, the program can automatically download the keys file when none is found on the system." + Environment.NewLine +
-                                                       "The keys file will be downloaded to the current application's directory.";
+                                                       "The keys file will be downloaded to the current application's directory." + Environment.NewLine + Environment.NewLine +
+                                                       "File should contain one key per line in form of «KEY_NAME = HEXADECIMAL_KEY».";
 
         public string SettingsView_ToolTip_TitleKeys => "You can optionally specify a file containing game-specific keys." + Environment.NewLine +
                                                         "The program will search this file in the following locations:" + Environment.NewLine +
@@ -77,16 +75,21 @@ namespace Emignatik.NxFileViewer.Localization.Keys
                                                         "    2. the current program's directory" + Environment.NewLine +
                                                         "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
                                                         "At startup, the program can automatically download the keys file when none is found on the system." + Environment.NewLine +
-                                                        "The keys file will be downloaded to the current application's directory.";
+                                                        "The keys file will be downloaded to the current application's directory." + Environment.NewLine + Environment.NewLine +
+                                                        "File should contain one key per line in form of «KEY_NAME = HEXADECIMAL_KEY».";
+
 
         public string SettingsView_ToolTip_ConsoleKeys => "You can optionally specify a file containing console-unique keys." + Environment.NewLine +
                                                          "The program will search this file in the following locations:" + Environment.NewLine +
                                                          "    1. the path defined by this setting" + Environment.NewLine +
                                                          "    2. the current program's directory" + Environment.NewLine +
-                                                         "    3. the «%UserProfile%\\.switch» directory";
+                                                         "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
+                                                         "File should contain one key per line in form of «KEY_NAME = HEXADECIMAL_KEY».";
+
 
         public string SettingsView_LogLevel => "Log level";
         public string SettingsView_ToolTip_LogLevel => "The log level specifies the minimum level to log.";
+        public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Always reload keys before opening a file";
 
         public string BrowseKeysFile_ProdTitle => "Select \"prod\" keys file";
         public string BrowseKeysFile_ConsoleTitle => "Select \"console\" keys file";
@@ -130,7 +133,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string LoadingError_FailedToLoadNcaFile => "Failed to load NCA file: {0}";
         public string LoadingError_FailedToLoadPartitionFileSystemContent => "Failed to load partition file system content: {0}";
         public string LoadingError_FailedToCheckIfSectionCanBeOpened => "Failed to check if section can be opened: {0}";
-        public string LoadingError_FailedToOpenNcaSection => "Failed to open NCA section «{0}»: {1}";
+        public string LoadingError_FailedToOpenNcaSectionFileSystem => "Failed to open content of NCA section «{0}»: {1}";
         public string LoadingError_FailedToLoadSectionContent => "Failed to load section content: {0}";
         public string LoadingError_FailedToGetFileSystemDirectoryEntries => "Failed to get file system directory entries: {0}";
         public string LoadingError_FailedToOpenNacpFile => "Failed to open NACP file: {0}";
@@ -142,19 +145,20 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string LoadingError_FailedToLoadIcon => "Failed to load icon: {0}";
         public string LoadingError_NcaFileMissing => "NCA entry «{0}» of type «{1}» missing.";
         public string LoadingError_NoCnmtFound => "No CNMT entry found!";
-        public string LoadingError_NacpFileMissing => "NCAP file «{0}» not found!";
+        public string LoadingError_NacpFileMissing => "NACP file «{0}» not found!";
         public string LoadingError_IconMissing => "Expected icon file «{0}» missing.";
         public string LoadingError_XciSecurePartitionNotFound => "XCI secure partition not found!";
-        public string LoadingError_FailedToGetNcaFsHeader => "Failed to get NCA File System Header of section «{0}»: {1}";
+        public string LoadingError_FailedToGetNcaSectionFsHeader => "Failed to get NCA file system header of section «{0}»: {1}";
         public string LoadingError_FailedToOpenMainFile => "Failed to open Main file: {0}";
         public string LoadingError_FailedToLoadMainFile => "Failed to load Main file: {0}";
 
         public string KeysFileUsed => "«{0}» file used: {1}";
         public string NoneKeysFile => "[none]";
 
-        public string Log_FailedToDownloadKeysFromUrl => "Failed to download «{0}» from URL «{1}»: {2}";
-        public string Log_DownloadingKeysFromUrl => "Downloading «{0}» from URL «{1}»...";
-        public string Log_KeysSuccessfullyDownloaded => "«{0}» successfully downloaded.";
+        public string Status_DownloadingFile => "Downloading file «{0}»...";
+        public string Log_DownloadingFileFromUrl => "Downloading «{0}» from URL «{1}»...";
+        public string Log_FileSuccessfullyDownloaded => "File «{0}» successfully downloaded.";
+        public string Log_FailedToDownloadFileFromUrl => "Failed to download «{0}» from URL «{1}»: {2}";
 
         public string ToolTip_PatchLevel => "Patch level {0}";
         public string Log_OpeningFile => "=====> {0} <=====";
@@ -170,17 +174,27 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string Title_NcasHash => "Hash:";
         public string ToolTip_NcasHash => "Verifies the hash of each NCA." + Environment.NewLine +
                                           "A valid hash ensures that a file has not been corrupted.";
-        public string NcaHeaderSignatureValid_Log => "Header signature of NCA «{0}» is valid.";
-        public string NcaHeaderSignatureInvalid => "NCA header signature failed with status «{0}».";
-        public string NcaHeaderSignatureInvalid_Log => "Header signature of NCA «{0}» failed with status «{1}».";
-        public string NcaHashValid_Log => "Hash of NCA «{0}» is valid.";
-        public string NcaHashInvalid => "NCA hash failed with status «{0}».";
-        public string NcaHashInvalid_Log => "Hash of NCA «{0}» failed with status «{1}».";
-        public string NcasHashError_Log => "Failed to verify NCA's hashes: {0}";
-        public string NcasHeaderSignatureError_Log => "Failed to verify NCA's headers signature: {0}";
+
+        public string NcaHeaderSignature_VerificationStart_Log => ">>> Signature verification starting...";
+        public string NcaHeaderSignature_VerificationEnd_Log => ">>> Signature verification finished.";
+        public string NcaHeaderSignature_Valid_Log => "Header signature of NCA «{0}» is valid.";
+        public string NcaHeaderSignature_Invalid => "NCA header signature failed with status «{0}».";
+        public string NcaHeaderSignature_Invalid_Log => "Header signature of NCA «{0}» failed with status «{1}».";
+        public string NcaHeaderSignature_Error => "Failed to verify header signature: {0}.";
+        public string NcaHeaderSignature_Error_log => "Failed to verify header signature of NCA «{0}»: {2}";
+        public string NcasHeaderSignature_Error_Log => "Failed to verify NCA's headers signature: {0}";
+
+        public string NcaSectionHash_VerificationStart_Log => ">>> Hash verification starting...";
+        public string NcaSectionHash_VerificationEnd_Log => ">>> Hash verification finished.";
+        public string NcaSectionHash_Valid_Log => "Hash of NCA «{0}» section «{1}» succeeded with status «{2}».";
+        public string NcaSectionHash_Invalid => "Hash failed with status «{0}».";
+        public string NcaSectionHash_Invalid_Log => "Hash of NCA «{0}» section «{1}» failed with status «{2}».";
+        public string NcaSectionHash_Error => "Failed to verify hash: {0}.";
+        public string NcaSectionHash_Error_Log => "Failed to verify hash of NCA «{0}» section «{1}»: {2}";
+        public string NcasSectionHash_Error_Log => "Failed to verify hashes of NCA sections: {0}";
 
         public string CancelAction => "Cancel";
-        public string Ready => "Ready.";
+        public string Status_Ready => "Ready.";
         public string LoadingFile_PleaseWait => "Loading, please wait...";
 
         public string NcasValidity_NoNca => "No NCA";
@@ -193,7 +207,18 @@ namespace Emignatik.NxFileViewer.Localization.Keys
 
         public string Status_SavingFile => "Saving file «{0}»...";
 
-        public string Log_KeysLoadingStarting => "Loading Keys...";
-        public string Log_KeysLoadingSuccessful => "Keys successfully loaded.";
+        public string KeysLoading_Starting_Log => ">>> Loading Keys...";
+        public string KeysLoading_Successful_Log => ">>> Keys successfully loaded.";
+        public string KeysLoading_Error_Log => "Failed to load keys: {0}";
+        public string KeysLoading_Error => "Failed to load keys: {0}.";
+        public string WarnNoProdKeysFileFound => "No prod.keys file found.";
+        public string InvalidSetting_KeysFileNotFound => "Keys file «{0}» defined in the settings doesn't exist.";
+
+        public string ToolTip_KeyMissing => "Key «{0}» of type «{1}» is missing.";
+
+        public string EditFile_Failed_Log => "Failed to edit file «{0}»: {1}";
+        public string MenuItem_CopyTextToClipboard => "Copy";
+        public string ContextMenu_OpenFileLocation => "Open location...";
+        public string OpenFileLocation_Failed_Log => "Failed to open location of file «{0}»: {1}";
     }
 }

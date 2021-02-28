@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model;
 using Emignatik.NxFileViewer.Model.Overview;
 using Emignatik.NxFileViewer.Model.TreeItems;
+using LibHac;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.FileLoading
@@ -25,6 +27,16 @@ namespace Emignatik.NxFileViewer.FileLoading
         public NxFile Load(string filePath)
         {
             _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_OpeningFile.SafeFormat(filePath));
+
+
+            HashSet<MissingKey> missingKeys = new();
+            _fileItemLoader.MissingKey += (_, args) =>
+            {
+                var ex = args.Exception;
+                var missingKey = new MissingKey(ex.Name, ex.Type);
+
+                missingKeys.Add(missingKey);
+            };
 
             IItem rootItem;
             FileOverview fileOverview;
@@ -49,19 +61,13 @@ namespace Emignatik.NxFileViewer.FileLoading
                     throw new ArgumentOutOfRangeException();
             }
 
-            LoadAllChildren(rootItem);
+            foreach (var missingKey in missingKeys)
+                fileOverview.MissingKeys.Add(missingKey);
 
             var openedFile = new NxFile(filePath, rootItem, fileOverview);
             return openedFile;
         }
 
-        private static void LoadAllChildren(IItem rootItem)
-        {
-            var childItems = rootItem.SafeLoadChildItems();
-            foreach (var childItem in childItems)
-            {
-                LoadAllChildren(childItem);
-            }
-        }
+
     }
 }

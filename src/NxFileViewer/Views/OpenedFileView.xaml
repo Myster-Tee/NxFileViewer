@@ -9,7 +9,17 @@
              Style="{StaticResource UserControlStyle}"
              d:DesignHeight="500" d:DesignWidth="400" d:DataContext="{d:DesignInstance views:OpenedFileViewModel}">
     <TabControl>
-        <TabItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.TabOverview}" >
+        <TabItem>
+            <TabItem.Header>
+                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.TabOverview}" ToolTip="{Binding Path=FilePath}">
+                    <TextBlock.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ContextMenu_OpenFileLocation}"
+                                      Command="{Binding Path=OpenFileLocationCommand}" />
+                        </ContextMenu>
+                    </TextBlock.ContextMenu>
+                </TextBlock>
+            </TabItem.Header>
             <views:FileOverviewView DataContext="{Binding Path=FileOverview}"/>
         </TabItem>
         <TabItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.TabContent}">

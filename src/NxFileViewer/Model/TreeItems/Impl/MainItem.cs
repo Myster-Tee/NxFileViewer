@@ -1,4 +1,4 @@
-﻿using Emignatik.NxFileViewer.FileLoading;
+﻿using System;
 using LibHac;
 using LibHac.Common;
 using LibHac.Fs;
@@ -9,11 +9,14 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     public class MainItem : DirectoryEntryItem
     {
 
-        public MainItem(NsoHeader nsoHeader, SectionItem parentSectionItem, DirectoryEntry directoryEntry, string name, string path, IChildItemsBuilder childItemsBuilder)
-            : base(parentSectionItem, directoryEntry, name, path, childItemsBuilder)
+        public MainItem(NsoHeader nsoHeader, SectionItem parentItem, DirectoryEntry directoryEntry, string name, string path)
+            : base(parentItem, directoryEntry, name, path)
         {
+            ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
             NsoHeader = nsoHeader;
         }
+
+        public override SectionItem ParentItem { get; }
 
         public NsoHeader NsoHeader { get; }
 

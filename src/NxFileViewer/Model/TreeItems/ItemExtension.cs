@@ -27,17 +27,17 @@ namespace Emignatik.NxFileViewer.Model.TreeItems
             }
         }
 
-        public static NcaItem? FindNcaItem(this PartitionFileSystemItem partitionItem, string ncaId)
+        public static NcaItem? FindNcaItem(this PartitionFileSystemItemBase partitionItem, string ncaId)
         {
             var expectedFileName = ncaId;
-            return partitionItem.NcaItems.FirstOrDefault(ncaItem => string.Equals(ncaItem.Id, expectedFileName, StringComparison.OrdinalIgnoreCase));
+            return partitionItem.NcaChildItems.FirstOrDefault(ncaItem => string.Equals(ncaItem.Id, expectedFileName, StringComparison.OrdinalIgnoreCase));
         }
 
         public static NacpItem? FindNacpItem(this NcaItem ncaItem)
         {
-            foreach (var sectionItem in ncaItem.Sections)
+            foreach (var sectionItem in ncaItem.ChildItems)
             {
-                foreach (var dirEntry in sectionItem.ChildDirectoryEntryItems)
+                foreach (var dirEntry in sectionItem.ChildItems)
                 {
                     if (dirEntry is NacpItem nacpItem)
                         return nacpItem;
@@ -47,13 +47,13 @@ namespace Emignatik.NxFileViewer.Model.TreeItems
             return null;
         }
 
-        public static IEnumerable<CnmtItem> FindAllCnmtItems(this PartitionFileSystemItem partitionItem)
+        public static IEnumerable<CnmtItem> FindAllCnmtItems(this PartitionFileSystemItemBase partitionItem)
         {
-            foreach (var ncaItem in partitionItem.NcaItems)
+            foreach (var ncaItem in partitionItem.NcaChildItems)
             {
                 if (ncaItem.ContentType != NcaContentType.Meta)
                     continue;
-                foreach (var sectionItem in ncaItem.Sections)
+                foreach (var sectionItem in ncaItem.ChildItems)
                 {
                     foreach (var child in sectionItem.ChildItems)
                     {

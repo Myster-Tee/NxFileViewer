@@ -93,6 +93,16 @@ namespace Emignatik.NxFileViewer.Settings
             }
         }
 
+        public bool AlwaysReloadKeysBeforeOpen
+        {
+            get => _appSettingsModel.AlwaysReloadKeysBeforeOpen;
+            set
+            {
+                _appSettingsModel.AlwaysReloadKeysBeforeOpen = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public AppSettingsModel WrappedModel => _appSettingsModel;
 
         public void Update(AppSettingsModel newModel)

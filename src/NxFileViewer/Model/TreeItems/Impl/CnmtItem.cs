@@ -1,5 +1,4 @@
 ﻿using System;
-using Emignatik.NxFileViewer.FileLoading;
 using Emignatik.NxFileViewer.Utils;
 using LibHac;
 using LibHac.Fs;
@@ -10,16 +9,19 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 {
     public class CnmtItem : DirectoryEntryItem
     {
-        public CnmtItem(Cnmt cnmt, SectionItem parentSectionItem, DirectoryEntry directoryEntry, string name, string path, IChildItemsBuilder childItemsBuilder)
-            : base(parentSectionItem, directoryEntry, name, path, childItemsBuilder)
+        public CnmtItem(Cnmt cnmt, SectionItem parentSectionItem, DirectoryEntry directoryEntry, string name, string path)
+            : base(parentSectionItem, directoryEntry, name, path)
         {
             Cnmt = cnmt ?? throw new ArgumentNullException(nameof(cnmt));
+            ParentItem = parentSectionItem;
             PatchLevel = GetPatchLevel(Cnmt.TitleVersion);
             TitleId = Cnmt.TitleId.ToStrId();
             ApplicationTitleId = Cnmt.ApplicationTitleId.ToStrId();
             PatchTitleId = Cnmt.PatchTitleId.ToStrId();
             TitleVersion = Cnmt.TitleVersion?.Version.ToString();
         }
+
+        public sealed override SectionItem ParentItem { get; }
 
         public Cnmt Cnmt { get; }
 

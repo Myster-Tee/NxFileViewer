@@ -45,9 +45,9 @@ namespace Emignatik.NxFileViewer.Services
         Keyset GetKeySet(bool forceReload = false);
 
         /// <summary>
-        /// Unloads the current KeySet
+        /// Unloads the current KeySet and re-detects the keys file paths
         /// </summary>
-        void UnloadCurrentKeySet();
+        void Reset();
 
     }
 }

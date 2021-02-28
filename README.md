@@ -22,6 +22,7 @@ Download latest version [here](https://github.com/Myster-Tee/NxFileViewer/releas
 - Single executable file
 - Do not write anything outside of the program directory
 - Verify hash and signature
+- Displays missing keys
 
 ## Screenshots
 

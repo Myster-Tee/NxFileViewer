@@ -19,6 +19,7 @@
         <KeyBinding Gesture="Ctrl+Shift+C" Command="{Binding Path=CloseFileCommand}" />
         <KeyBinding Gesture="F5" Command="{Binding Path=VerifyNcasHashCommand}" />
         <KeyBinding Gesture="Ctrl+F5" Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" />
+        <KeyBinding Gesture="F10" Command="{Binding Path=LoadKeysCommand}" Key="F10" />
     </Window.InputBindings>
 
     <Grid>
@@ -36,22 +37,24 @@
         </Grid.RowDefinitions>
 
         <Menu Grid.Row="0">
-            <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemFile}">
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemOpen}" 
+            <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_File}">
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Open}" 
                           Command="{Binding Path=OpenFileCommand}" InputGestureText="Ctrl+O" />
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemOpenLast}"
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_OpenLast}"
                           Command="{Binding Path=OpenLastFileCommand}" InputGestureText="Ctrl+Shift+O" />
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemClose}" Command="{Binding Path=CloseFileCommand}" InputGestureText="Ctrl+Shift+C" />
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemExit}" Command="{Binding Path=ExitAppCommand}" InputGestureText="Alt+F4" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Close}" Command="{Binding Path=CloseFileCommand}" InputGestureText="Ctrl+Shift+C" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Exit}" Command="{Binding Path=ExitAppCommand}" InputGestureText="Alt+F4" />
             </MenuItem>
-            <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemTools}">
+            <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Tools}">
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_VerifyNcasHash}" 
                           Command="{Binding Path=VerifyNcasHashCommand}" InputGestureText="F5" />
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_VerifyNcasHeaderSignature}" 
                           Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" InputGestureText="Ctrl+F5" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_ReloadKeys}" 
+                          Command="{Binding Path=LoadKeysCommand}" InputGestureText="F10" />
             </MenuItem>
-            <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemOptions}">
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItemSettings}" Command="{Binding Path=ShowSettingsViewCommand}" />
+            <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Options}">
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Settings}" Command="{Binding Path=ShowSettingsViewCommand}" />
             </MenuItem>
         </Menu>
 
@@ -90,18 +93,33 @@
                 </Style>
             </GridSplitter.Style>
         </GridSplitter>
-
         <views:LoggingView Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LogSource="{Binding LogSource, Mode=OneWay}" />
 
         <StatusBar Grid.Row="4">
-            <StatusBarItem>
-                <TextBlock Text="{Binding Path=BackgroundTask.ProgressText, FallbackValue=Ready.}" />
+            <!-- Status Text -->
+            <StatusBarItem VerticalAlignment="Center">
+                <TextBlock Text="{Binding Path=BackgroundTask.ProgressText, FallbackValue=Ready.}" ToolTip="{Binding Path=BackgroundTask.ProgressText, FallbackValue=Ready.}" />
             </StatusBarItem>
-            <StatusBarItem DockPanel.Dock="Right" HorizontalAlignment="Right">
-                <TextBlock>🔑</TextBlock>
+
+            <!-- Missing Keys Icon -->
+            <StatusBarItem DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center"
+                           Visibility="{Binding Path=OpenedFile.FileOverview.MissingKeys, FallbackValue=Collapsed, Converter={StaticResource StringNullOrEmptyToCollapsedVisibilityConverter}}">
+                <StatusBarItem.InputBindings>
+                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding ShowSettingsViewCommand}" />
+                </StatusBarItem.InputBindings>
+                <StatusBarItem.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_CopyTextToClipboard}" 
+                                  Command="{Binding Path=OpenedFile.FileOverview.CopyMissingKeysCommand, FallbackValue={x:Null}}" />
+                    </ContextMenu>
+                </StatusBarItem.ContextMenu>
+                <Label Style="{StaticResource KeyIcon}"
+                       ToolTip="{Binding Path=OpenedFile.FileOverview.MissingKeys, FallbackValue={x:Null}}" />
             </StatusBarItem>
-            <StatusBarItem DockPanel.Dock="Right" HorizontalAlignment="Right">
-                <customControls:ProgressBarExt Width="80" Height="16" Minimum="0" Maximum="100" 
+
+            <!-- Progress Bar -->
+            <StatusBarItem DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <customControls:ProgressBarExt Width="80" Minimum="0" Maximum="100" Height="18"
                                                Visibility="{Binding Path=BackgroundTask.IsRunning, Mode=OneWay, Converter={StaticResource FalseToCollapseVisibilityConverter}}"
                                                Value="{Binding Path=BackgroundTask.ProgressValue, Mode=OneWay, FallbackValue=70}" 
                                                ValueText="{Binding Path=BackgroundTask.ProgressValueText, Mode=OneWay, FallbackValue=70%}"
@@ -116,5 +134,6 @@
                 </customControls:ProgressBarExt>
             </StatusBarItem>
         </StatusBar>
+
     </Grid>
 </Window>

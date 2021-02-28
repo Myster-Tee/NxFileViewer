@@ -42,7 +42,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
                 case XciPartitionItem _:
                     return XciPartitionItemIconDataTemplate;
 
-                case PartitionFileEntryItem _:
+                case PartitionFileEntryItemBase _:
                     return PartitionFileEntryItemIconDataTemplate;
 
                 case NspItem _:

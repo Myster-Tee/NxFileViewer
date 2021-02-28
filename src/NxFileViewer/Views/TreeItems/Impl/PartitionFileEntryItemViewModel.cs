@@ -7,9 +7,9 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
 {
     public class PartitionFileEntryItemViewModel : ItemViewModel
     {
-        private readonly PartitionFileEntryItem _partitionFileEntryItem;
+        private readonly PartitionFileEntryItemBase _partitionFileEntryItem;
 
-        public PartitionFileEntryItemViewModel(PartitionFileEntryItem partitionFileEntryItem, IServiceProvider serviceProvider)
+        public PartitionFileEntryItemViewModel(PartitionFileEntryItemBase partitionFileEntryItem, IServiceProvider serviceProvider)
             : base(partitionFileEntryItem, serviceProvider)
         {
             _partitionFileEntryItem = partitionFileEntryItem;

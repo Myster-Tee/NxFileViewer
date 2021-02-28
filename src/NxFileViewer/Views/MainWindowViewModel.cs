@@ -20,7 +20,7 @@ namespace Emignatik.NxFileViewer.Views
 
         private OpenedFileViewModel? _openedFile;
         private readonly string _appNameAndVersion;
-        private string _title;
+        private string _title = "";
         private readonly IOpenedFileService _openedFileService;
         private bool _errorAnimationEnabled;
         private readonly Timer _animationDurationTimer;
@@ -35,6 +35,7 @@ namespace Emignatik.NxFileViewer.Views
             IShowSettingsViewCommand showSettingsViewCommand,
             IVerifyNcasHeaderSignatureCommand verifyNcasHeaderSignatureCommand,
             IVerifyNcasHashCommand verifyNcasHashCommand,
+            ILoadKeysCommand loadKeysCommand,
             IFileOpenerService fileOpenerService,
             IServiceProvider serviceProvider,
             ILogSource logSource,
@@ -48,6 +49,7 @@ namespace Emignatik.NxFileViewer.Views
             ShowSettingsViewCommand = showSettingsViewCommand ?? throw new ArgumentNullException(nameof(showSettingsViewCommand));
             VerifyNcasHeaderSignatureCommand = verifyNcasHeaderSignatureCommand ?? throw new ArgumentNullException(nameof(verifyNcasHeaderSignatureCommand));
             VerifyNcasHashCommand = verifyNcasHashCommand ?? throw new ArgumentNullException(nameof(verifyNcasHashCommand));
+            LoadKeysCommand = loadKeysCommand ?? throw new ArgumentNullException(nameof(loadKeysCommand));
             ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             LogSource = logSource ?? throw new ArgumentNullException(nameof(logSource));
             BackgroundTask = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
@@ -64,6 +66,7 @@ namespace Emignatik.NxFileViewer.Views
 
             _animationDurationTimer = new Timer(3000);
             _animationDurationTimer.Elapsed += OnAnimationDurationTimerElapsed;
+
         }
 
         public IServiceProvider ServiceProvider { get; }
@@ -77,6 +80,8 @@ namespace Emignatik.NxFileViewer.Views
         public IVerifyNcasHeaderSignatureCommand VerifyNcasHeaderSignatureCommand { get; }
 
         public IVerifyNcasHashCommand VerifyNcasHashCommand { get; }
+
+        public ILoadKeysCommand LoadKeysCommand { get; }
 
         public IOpenLastFileCommand OpenLastFileCommand { get; }
 

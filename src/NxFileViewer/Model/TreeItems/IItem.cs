@@ -28,13 +28,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems
         /// <summary>
         /// Get the direct child items
         /// </summary>
-        IReadOnlyList<IItem> ChildItems { get; }
-
-        /// <summary>
-        /// Loads the child items without throwing
-        /// </summary>
-        /// <returns></returns>
-        IReadOnlyList<IItem> SafeLoadChildItems();
+        IEnumerable<IItem> ChildItems { get; }
         
         /// <summary>
         /// Returns true if an error exists in descendants

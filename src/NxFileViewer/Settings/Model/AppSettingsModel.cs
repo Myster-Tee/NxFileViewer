@@ -24,5 +24,7 @@ namespace Emignatik.NxFileViewer.Settings.Model
         public string? ProdKeysDownloadUrl { get; set; }
 
         public string? TitleKeysDownloadUrl { get; set; }
+
+        public bool AlwaysReloadKeysBeforeOpen { get; set; }
     }
 }

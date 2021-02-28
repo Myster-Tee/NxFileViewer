@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Services;
+using Emignatik.NxFileViewer.Services.BackgroundTask;
+using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 
@@ -14,25 +20,47 @@ namespace Emignatik.NxFileViewer.Views
     public class SettingsWindowViewModel : ViewModelBase
     {
         private readonly IAppSettingsManager _appSettingsManager;
+        private readonly IBackgroundTaskService _backgroundTaskService;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IKeySetProviderService _keySetProviderService;
         private readonly IAppSettings _appSettings;
-        private string _prodKeysFilePath;
-        private string _consoleKeysFilePath;
-        private string _titleKeysFilePath;
+        private readonly ILogger _logger;
+
+        private string _prodKeysFilePath = "";
+        private string _consoleKeysFilePath = "";
+        private string _titleKeysFilePath = "";
+        private string _prodKeysDownloadUrl = "";
+        private string _titleKeysDownloadUrl = "";
+
         private LogLevel _selectedLogLevel;
-        private string _prodKeysDownloadUrl;
-        private string _titleKeysDownloadUrl;
+        private bool _alwaysReloadKeysBeforeOpen;
 
 
-        public SettingsWindowViewModel(IAppSettingsManager appSettingsManager)
+        public SettingsWindowViewModel(
+            IAppSettingsManager appSettingsManager,
+            IBackgroundTaskService backgroundTaskService,
+            IServiceProvider serviceProvider,
+            IKeySetProviderService keySetProviderService,
+            ILoggerFactory loggerFactory)
         {
             _appSettingsManager = appSettingsManager ?? throw new ArgumentNullException(nameof(appSettingsManager));
+            _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _keySetProviderService = keySetProviderService ?? throw new ArgumentNullException(nameof(keySetProviderService));
+            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+
             _appSettings = appSettingsManager.Settings;
 
-            BrowseProdKeysCommand = new RelayCommand(OnBrowseProdKeys);
-            BrowseConsoleKeysCommand = new RelayCommand(OnBrowseConsoleKeys);
-            BrowseTitleKeysCommand = new RelayCommand(OnBrowseTitleKeys);
-            SaveSettingsCommand = new RelayCommand(OnSaveSettings);
-            CancelSettingsCommand = new RelayCommand(OnCancelSettings);
+            BrowseProdKeysCommand = new RelayCommand(BrowseProdKeys);
+            BrowseConsoleKeysCommand = new RelayCommand(BrowseConsoleKeys);
+            BrowseTitleKeysCommand = new RelayCommand(BrowseTitleKeys);
+            SaveSettingsCommand = new RelayCommand(SaveSettings);
+            CancelSettingsCommand = new RelayCommand(CancelSettings);
+            DownloadProdKeysCommand = new RelayCommand(DownloadProdKeys, CanDownloadProdKeys);
+            DownloadTitleKeysCommand = new RelayCommand(DownloadTitleKeys, CanDownloadTitleKeys);
+            EditProdKeysCommand = new RelayCommand(EditProdKeys, CanEditProdKeys);
+            EditTitleKeysCommand = new RelayCommand(EditTitleKeys, CanEditTitleKeys);
+            EditConsoleKeysCommand = new RelayCommand(EditConsoleKeys, CanEditConsoleKeys);
 
             ProdKeysFilePath = _appSettings.ProdKeysFilePath;
             ConsoleKeysFilePath = _appSettings.ConsoleKeysFilePath;
@@ -40,6 +68,27 @@ namespace Emignatik.NxFileViewer.Views
             SelectedLogLevel = _appSettings.LogLevel;
             ProdKeysDownloadUrl = _appSettings.ProdKeysDownloadUrl;
             TitleKeysDownloadUrl = _appSettings.TitleKeysDownloadUrl;
+            AlwaysReloadKeysBeforeOpen = _appSettings.AlwaysReloadKeysBeforeOpen;
+
+            _backgroundTaskService.PropertyChanged += (_, args) =>
+            {
+                if (args.PropertyName == nameof(IBackgroundTaskService.IsRunning))
+                {
+                    DownloadProdKeysCommand.TriggerCanExecuteChanged();
+                    DownloadTitleKeysCommand.TriggerCanExecuteChanged();
+                }
+            };
+
+
+            _keySetProviderService.PropertyChanged += (_, args) =>
+            {
+                if (args.PropertyName == nameof(IKeySetProviderService.ActualProdKeysFilePath))
+                    NotifyPropertyChanged(nameof(ActualProdKeysFilePath));
+                else if (args.PropertyName == nameof(IKeySetProviderService.ActualTitleKeysFilePath))
+                    NotifyPropertyChanged(nameof(ActualTitleKeysFilePath));
+                else if (args.PropertyName == nameof(IKeySetProviderService.ActualConsoleKeysFilePath))
+                    NotifyPropertyChanged(nameof(ActualConsoleKeysFilePath));
+            };
         }
 
         public event EventHandler? OnQueryCloseView;
@@ -54,6 +103,25 @@ namespace Emignatik.NxFileViewer.Views
 
         public ICommand CancelSettingsCommand { get; }
 
+        public RelayCommand DownloadProdKeysCommand { get; }
+
+        public RelayCommand DownloadTitleKeysCommand { get; }
+
+        public RelayCommand EditProdKeysCommand { get; }
+
+        public RelayCommand EditTitleKeysCommand { get; }
+
+        public RelayCommand EditConsoleKeysCommand { get; }
+
+        public bool AlwaysReloadKeysBeforeOpen
+        {
+            get => _alwaysReloadKeysBeforeOpen;
+            set
+            {
+                _alwaysReloadKeysBeforeOpen = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public string ProdKeysFilePath
         {
@@ -117,7 +185,13 @@ namespace Emignatik.NxFileViewer.Views
             }
         }
 
-        private void OnBrowseProdKeys()
+        public string ActualProdKeysFilePath => _keySetProviderService.ActualProdKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile;
+
+        public string ActualTitleKeysFilePath => _keySetProviderService.ActualTitleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile;
+
+        public string ActualConsoleKeysFilePath => _keySetProviderService.ActualConsoleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile;
+
+        private void BrowseProdKeys()
         {
             if (BrowseKeysFilePath(ProdKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ProdTitle, out var selectedFilePath))
             {
@@ -125,7 +199,7 @@ namespace Emignatik.NxFileViewer.Views
             }
         }
 
-        private void OnBrowseConsoleKeys()
+        private void BrowseConsoleKeys()
         {
             if (BrowseKeysFilePath(ConsoleKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ConsoleTitle, out var selectedFilePath))
             {
@@ -133,11 +207,95 @@ namespace Emignatik.NxFileViewer.Views
             }
         }
 
-        private void OnBrowseTitleKeys()
+        private void BrowseTitleKeys()
         {
             if (BrowseKeysFilePath(TitleKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_TitleTitle, out var selectedFilePath))
             {
                 TitleKeysFilePath = selectedFilePath;
+            }
+        }
+
+
+        private async void DownloadProdKeys()
+        {
+            var downloadFileRunnable = _serviceProvider.GetRequiredService<IDownloadFileRunnable>();
+            downloadFileRunnable.Setup(ProdKeysDownloadUrl, _keySetProviderService.AppDirProdKeysFilePath);
+            await _backgroundTaskService.RunAsync(downloadFileRunnable);
+            _keySetProviderService.Reset();
+        }
+
+        private async void DownloadTitleKeys()
+        {
+            var downloadFileRunnable = _serviceProvider.GetRequiredService<IDownloadFileRunnable>();
+            downloadFileRunnable.Setup(TitleKeysDownloadUrl, _keySetProviderService.AppDirTitleKeysFilePath);
+            await _backgroundTaskService.RunAsync(downloadFileRunnable);
+            _keySetProviderService.Reset();
+        }
+
+        private bool CanDownloadTitleKeys()
+        {
+            return !_backgroundTaskService.IsRunning;
+        }
+
+        private bool CanDownloadProdKeys()
+        {
+            return !_backgroundTaskService.IsRunning;
+        }
+
+
+        private bool CanEditProdKeys()
+        {
+            return SafeCheckFileExists(_keySetProviderService.ActualProdKeysFilePath!);
+        }
+
+        private void EditProdKeys()
+        {
+            SafeOpenFile(ActualProdKeysFilePath);
+        }
+
+        private bool CanEditTitleKeys()
+        {
+            return SafeCheckFileExists(_keySetProviderService.ActualTitleKeysFilePath!);
+        }
+
+        private void EditTitleKeys()
+        {
+            SafeOpenFile(_keySetProviderService.ActualTitleKeysFilePath!);
+        }
+
+        private bool CanEditConsoleKeys()
+        {
+            return SafeCheckFileExists(_keySetProviderService.ActualConsoleKeysFilePath!);
+        }
+
+        private void EditConsoleKeys()
+        {
+            SafeOpenFile(_keySetProviderService.ActualConsoleKeysFilePath!);
+        }
+
+        private bool SafeCheckFileExists(string filePath)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filePath))
+                    return false;
+                return File.Exists(filePath);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private void SafeOpenFile(string filePath)
+        {
+            try
+            {
+                Process.Start("explorer", filePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.EditFile_Failed_Log.SafeFormat(filePath, ex.Message));
             }
         }
 
@@ -164,7 +322,7 @@ namespace Emignatik.NxFileViewer.Views
             }
         }
 
-        private void OnSaveSettings()
+        private void SaveSettings()
         {
             _appSettings.ProdKeysFilePath = ProdKeysFilePath;
             _appSettings.ConsoleKeysFilePath = ConsoleKeysFilePath;
@@ -172,12 +330,13 @@ namespace Emignatik.NxFileViewer.Views
             _appSettings.LogLevel = SelectedLogLevel;
             _appSettings.ProdKeysDownloadUrl = ProdKeysDownloadUrl;
             _appSettings.TitleKeysDownloadUrl = TitleKeysDownloadUrl;
+            _appSettings.AlwaysReloadKeysBeforeOpen = AlwaysReloadKeysBeforeOpen;
 
             _appSettingsManager.Save();
             NotifyQueryCloseView();
         }
 
-        private void OnCancelSettings()
+        private void CancelSettings()
         {
             NotifyQueryCloseView();
         }

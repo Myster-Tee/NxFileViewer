@@ -6,107 +6,132 @@
         xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
         xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
         xmlns:services="clr-namespace:Emignatik.NxFileViewer.Services"
+        xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
         mc:Ignorable="d"
         Style="{StaticResource WindowStyle}"
-        Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title}" MinWidth="400" d:DataContext="{d:DesignInstance views:SettingsWindowViewModel}"
-        SizeToContent="WidthAndHeight">
+        Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title}" 
+        Width="400"
+        Height="280"
+        d:DataContext="{d:DesignInstance views:SettingsWindowViewModel}"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResizeWithGrip">
+
     <Window.Resources>
         <Style x:Key="OkCancelButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="MinWidth" Value="50" />
+            <Setter Property="MinWidth" Value="60" />
         </Style>
     </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <GroupBox Grid.Row="0" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_GroupBoxKeys}">
-            <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
+        <Border Grid.Row="0" BorderBrush="{DynamicResource ScrollViewer.Border.Brush}" BorderThickness="{DynamicResource ScrollViewer.Border.Thickness}">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_GroupBoxKeys}">
+                        <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
+                            <CheckBox IsChecked="{Binding AlwaysReloadKeysBeforeOpen}"
+                                        Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen}" />
+                            <Expander>
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{x:Static services:IKeySetProviderService.DefaultProdKeysFileName}" Style="{StaticResource Title1}"/>
+                                        <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_ProdKeys}"/>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_ActualKeysFilePath}" />
+                                    <DockPanel LastChildFill="true">
+                                        <Button Command="{Binding Path=EditProdKeysCommand}" Style="{StaticResource EditButton}" DockPanel.Dock="Right"/>
+                                        <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=ActualProdKeysFilePath, Mode=OneWay}" />
+                                    </DockPanel>
 
-                    <Expander Grid.Row="0" >
-                        <Expander.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{x:Static services:IKeySetProviderService.DefaultProdKeysFileName}" Style="{StaticResource Title1}"/>
-                                <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_ProdKeys}"/>
-                            </StackPanel>
-                        </Expander.Header>
-                        <StackPanel>
-                            <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysFilePath}" />
-                            <DockPanel LastChildFill="true">
-                                <Button Command="{Binding Path=BrowseProdKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
-                                <TextBox Text="{Binding Path=ProdKeysFilePath}" HorizontalAlignment="Stretch" />
-                            </DockPanel>
-                            <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysDownloadUrl}" />
-                            <TextBox Text="{Binding Path=ProdKeysDownloadUrl}" />
+                                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysCustomFilePath}" />
+                                    <DockPanel LastChildFill="true">
+                                        <Button Command="{Binding Path=BrowseProdKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
+                                        <TextBox Text="{Binding Path=ProdKeysFilePath}" HorizontalAlignment="Stretch" />
+                                    </DockPanel>
+
+                                    <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysDownloadUrl}" />
+                                    <DockPanel LastChildFill="true">
+                                        <Button Style="{StaticResource DownloadButton}" DockPanel.Dock="Right" 
+                                                Command="{Binding Path=DownloadProdKeysCommand}"/>
+                                        <TextBox Text="{Binding Path=ProdKeysDownloadUrl}" />
+                                    </DockPanel>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander>
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{x:Static services:IKeySetProviderService.DefaultTitleKeysFileName}" Style="{StaticResource Title1}"/>
+                                        <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_TitleKeys}"/>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_ActualKeysFilePath}" />
+                                    <DockPanel LastChildFill="true">
+                                        <Button Command="{Binding Path=EditTitleKeysCommand}" Style="{StaticResource EditButton}" DockPanel.Dock="Right"/>
+                                        <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=ActualTitleKeysFilePath, Mode=OneWay}" />
+                                    </DockPanel>
+
+                                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysCustomFilePath}" />
+                                    <DockPanel LastChildFill="True">
+                                        <Button Command="{Binding Path=BrowseTitleKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
+                                        <TextBox Text="{Binding Path=TitleKeysFilePath, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </DockPanel>
+                                    <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysDownloadUrl}" />
+                                    <DockPanel LastChildFill="true">
+                                        <Button Style="{StaticResource DownloadButton}" DockPanel.Dock="Right"
+                                                Command="{Binding Path=DownloadTitleKeysCommand}"/>
+                                        <TextBox Text="{Binding Path=TitleKeysDownloadUrl}" />
+                                    </DockPanel>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander>
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{x:Static services:IKeySetProviderService.DefaultConsoleKeysFileName}" Style="{StaticResource Title1}"/>
+                                        <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_ConsoleKeys}"/>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_ActualKeysFilePath}" />
+                                    <DockPanel LastChildFill="true">
+                                        <Button Command="{Binding Path=EditConsoleKeysCommand}" Style="{StaticResource EditButton}" DockPanel.Dock="Right"/>
+                                        <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=ActualConsoleKeysFilePath, Mode=OneWay}" />
+                                    </DockPanel>
+
+                                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysCustomFilePath}" />
+                                    <DockPanel LastChildFill="True">
+                                        <Button Command="{Binding Path=BrowseConsoleKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
+                                        <TextBox Text="{Binding Path=ConsoleKeysFilePath}"/>
+                                    </DockPanel>
+                                </StackPanel>
+                            </Expander>
+
                         </StackPanel>
-                    </Expander>
+                    </GroupBox>
 
-                    <Expander Grid.Row="1">
-                        <Expander.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{x:Static services:IKeySetProviderService.DefaultTitleKeysFileName}" Style="{StaticResource Title1}"/>
-                                <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_TitleKeys}"/>
+                    <GroupBox Header="Misc.">
+                        <Grid>
+                            <StackPanel Grid.Row="0" Grid.Column="0">
+                                <StackPanel  Orientation="Horizontal">
+                                    <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_LogLevel}" />
+                                    <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_LogLevel}"/>
+                                </StackPanel>
+                                <ComboBox ItemsSource="{Binding Path=LogLevels}" SelectedItem="{Binding Path=SelectedLogLevel}" Width="100" HorizontalAlignment="Left" />
                             </StackPanel>
-                        </Expander.Header>
-                        <StackPanel>
-                            <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysFilePath}" />
-                            <DockPanel LastChildFill="True">
-                                <Button Command="{Binding Path=BrowseTitleKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
-                                <TextBox Text="{Binding Path=TitleKeysFilePath, UpdateSourceTrigger=PropertyChanged}"/>
-                            </DockPanel>
-                            <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysDownloadUrl}" />
-                            <TextBox Text="{Binding Path=TitleKeysDownloadUrl}" />
-                        </StackPanel>
-                    </Expander>
-
-                    <Expander Grid.Row="2">
-                        <Expander.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{x:Static services:IKeySetProviderService.DefaultConsoleKeysFileName}" Style="{StaticResource Title1}"/>
-                                <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_ConsoleKeys}"/>
-                            </StackPanel>
-                        </Expander.Header>
-                        <StackPanel>
-                            <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysFilePath}" />
-                            <DockPanel LastChildFill="True">
-                                <Button Command="{Binding Path=BrowseConsoleKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
-                                <TextBox Text="{Binding Path=ConsoleKeysFilePath}"/>
-                            </DockPanel>
-                        </StackPanel>
-                    </Expander>
-
-                </Grid>
-            </StackPanel>
-        </GroupBox>
-
-        <GroupBox Grid.Row="1" Header="Misc.">
-            <Grid>
-                <StackPanel Grid.Row="0" Grid.Column="0">
-                    <StackPanel  Orientation="Horizontal">
-                        <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_LogLevel}" />
-                        <Label Style="{StaticResource HelpIcon}" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_LogLevel}"/>
-                    </StackPanel>
-                    <ComboBox ItemsSource="{Binding Path=LogLevels}" SelectedItem="{Binding Path=SelectedLogLevel}" Width="100" HorizontalAlignment="Left" />
+                        </Grid>
+                    </GroupBox>
                 </StackPanel>
-            </Grid>
-        </GroupBox>
-
-        <StackPanel Grid.Row="3" Orientation="Horizontal" DockPanel.Dock="Bottom" Height="30" HorizontalAlignment="Center" Margin="0,10">
+            </ScrollViewer>
+        </Border>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" DockPanel.Dock="Bottom" Height="30" HorizontalAlignment="Center" Margin="0,10">
             <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Save}" IsDefault="True" Command="{Binding Path=SaveSettingsCommand}" Margin="0,0,5,0" Style="{StaticResource OkCancelButton}" />
             <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Cancel}" IsCancel="True" Command="{Binding Path=CancelSettingsCommand}" Style="{StaticResource OkCancelButton}"/>
         </StackPanel>

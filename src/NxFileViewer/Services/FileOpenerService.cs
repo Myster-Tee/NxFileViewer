@@ -47,13 +47,13 @@ namespace Emignatik.NxFileViewer.Services
                 _appSettings.LastOpenedFile = filePath;
                 _openedFileService.OpenedFile = nxFile;
             }
-            catch (FileNotSupportedException)
+            catch (FileNotSupportedException ex)
             {
-                _logger.LogError(LocalizationManager.Instance.Current.Keys.ErrFileNotSupported.SafeFormat(filePath));
+                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.FileNotSupported_Log.SafeFormat(filePath));
             }
             catch (Exception ex)
             {
-                _logger.LogError(LocalizationManager.Instance.Current.Keys.LoadingError_Failed.SafeFormat(filePath, ex.Message), ex);
+                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.LoadingError_Failed.SafeFormat(filePath, ex.Message), ex);
             }
         }
     }

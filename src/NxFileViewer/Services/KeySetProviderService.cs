@@ -33,9 +33,7 @@ namespace Emignatik.NxFileViewer.Services
             AppDirProdKeysFilePath = Path.Combine(PathHelper.CurrentAppDir, IKeySetProviderService.DefaultProdKeysFileName);
             AppDirTitleKeysFilePath = Path.Combine(PathHelper.CurrentAppDir, IKeySetProviderService.DefaultTitleKeysFileName);
 
-            UpdateActualProdKeysFilePath();
-            UpdateActualTitleKeysFilePath();
-            UpdateActualConsoleKeysFilePath();
+            Reset();
 
             appSettings.PropertyChanged += OnSettingChanged;
         }
@@ -90,24 +88,22 @@ namespace Emignatik.NxFileViewer.Services
 
         private void OnSettingChanged(object? sender, PropertyChangedEventArgs args)
         {
-            if (args.PropertyName == nameof(IAppSettings.ProdKeysFilePath))
-            {
-                UnloadCurrentKeySet();
-                UpdateActualProdKeysFilePath();
-            }
-            else if (args.PropertyName == nameof(IAppSettings.TitleKeysFilePath))
-            {
-                UnloadCurrentKeySet();
-                UpdateActualTitleKeysFilePath();
-            }
-            else if (args.PropertyName == nameof(IAppSettings.ConsoleKeysFilePath))
-            {
-                UnloadCurrentKeySet();
-                UpdateActualConsoleKeysFilePath();
-            }
+            if (args.PropertyName == nameof(IAppSettings.ProdKeysFilePath)
+                || args.PropertyName == nameof(IAppSettings.TitleKeysFilePath)
+                || args.PropertyName == nameof(IAppSettings.ConsoleKeysFilePath))
+                Reset();
+
         }
 
-        public void UnloadCurrentKeySet()
+        public void Reset()
+        {
+            UnloadCurrentKeySet();
+            UpdateActualProdKeysFilePath();
+            UpdateActualTitleKeysFilePath();
+            UpdateActualConsoleKeysFilePath();
+        }
+
+        private void UnloadCurrentKeySet()
         {
             lock (_lock)
             {
@@ -121,13 +117,13 @@ namespace Emignatik.NxFileViewer.Services
         /// <returns></returns>
         private Keyset LoadKeySet()
         {
-            var actualProdKeysFilePath = ActualProdKeysFilePath;
-            var actualTitleKeysFilePath = ActualTitleKeysFilePath;
-            var actualConsoleKeysFilePath = ActualConsoleKeysFilePath;
-
             try
             {
-                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_KeysLoadingStarting);
+                var actualProdKeysFilePath = ActualProdKeysFilePath;
+                var actualTitleKeysFilePath = ActualTitleKeysFilePath;
+                var actualConsoleKeysFilePath = ActualConsoleKeysFilePath;
+
+                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysLoading_Starting_Log);
 
                 _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DefaultProdKeysFileName, actualProdKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
                 _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DefaultTitleKeysFileName, actualTitleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
@@ -146,13 +142,14 @@ namespace Emignatik.NxFileViewer.Services
                         })
                 );
 
-                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_KeysLoadingSuccessful);
+                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysLoading_Successful_Log);
 
                 return keySet;
             }
             catch (Exception ex)
             {
-                throw new Exception(LocalizationManager.Instance.Current.Keys.ErrKeysLoadingFailed.SafeFormat(ex.Message));
+                Reset();
+                throw new Exception(LocalizationManager.Instance.Current.Keys.KeysLoading_Error.SafeFormat(ex.Message));
             }
         }
 

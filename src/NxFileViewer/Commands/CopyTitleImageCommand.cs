@@ -40,7 +40,7 @@ namespace Emignatik.NxFileViewer.Commands
             }
             catch (Exception ex)
             {
-                _logger.LogError(LocalizationManager.Instance.Current.Keys.CopyTitleImageError.SafeFormat(ex.Message));
+                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.CopyTitleImageError.SafeFormat(ex.Message));
             }
         }
 
