@@ -151,6 +151,11 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string LoadingError_FailedToGetNcaSectionFsHeader => "Failed to get NCA file system header of section «{0}»: {1}";
         public string LoadingError_FailedToOpenMainFile => "Failed to open Main file: {0}";
         public string LoadingError_FailedToLoadMainFile => "Failed to load Main file: {0}";
+        public string LoadingError_FailedToLoadTicketFile => "Failed to load ticket file: {0}";
+        public string LoadingError_FailedToLoadTitleIdKey => "Failed to load title ID key from ticket file «{0}»: {1}";
+        public string LoadingInfo_TitleIdKeySuccessfullyInjected => "Title ID key «{0}={1}» found in ticket file «{2}» successfully added to the set of keys.";
+        public string LoadingWarning_TitleIdKeyReplaced => "Title ID key «{0}={1}» found in ticket file «{2}» has been used as replacement of the existing title ID key «{0}={2}» found in the set of keys.";
+        public string LoadingDebug_TitleIdKeyAlreadyExists => "Title ID key «{0}={1}» found in ticket file «{2}» was already registered in the set of keys.";
 
         public string KeysFileUsed => "«{0}» file used: {1}";
         public string NoneKeysFile => "[none]";

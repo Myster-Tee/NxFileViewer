@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model.TreeItems;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
@@ -12,6 +14,7 @@ using LibHac.Fs.Fsa;
 using LibHac.FsSystem;
 using LibHac.FsSystem.NcaUtils;
 using LibHac.Loader;
+using LibHac.Spl;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.FileLoading
@@ -124,7 +127,90 @@ namespace Emignatik.NxFileViewer.FileLoading
             try
             {
                 var partitionFileSystem = parentItem.PartitionFileSystem;
+
+                var remainingEntries = new List<PartitionFileEntry>();
+
+                // First loop on *.tik files to inject title keys in KeySet
                 foreach (var partitionFileEntry in partitionFileSystem.Files)
+                {
+                    var fileName = partitionFileEntry.Name;
+                    if (!fileName.EndsWith(".tik", StringComparison.OrdinalIgnoreCase))
+                    {
+                        remainingEntries.Add(partitionFileEntry);
+                        continue;
+                    }
+
+                    IFile file;
+                    try
+                    {
+                        file = partitionFileSystem.OpenFile(partitionFileEntry, OpenMode.Read);
+                    }
+                    catch (Exception ex)
+                    {
+                        OnLoadingException(ex, parentItem);
+
+                        var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenPartitionFile.SafeFormat(ex.Message);
+                        parentItem.Errors.Add(TREE_LOADING_CATEGORY, message);
+                        _logger.LogError(ex, message);
+                        continue;
+                    }
+
+                    Ticket ticket;
+                    try
+                    {
+                        using var asStream = file.AsStream();
+                        ticket = new Ticket(asStream);
+                    }
+                    catch (Exception ex)
+                    {
+                        OnLoadingException(ex, parentItem);
+
+                        var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadTicketFile.SafeFormat(ex.Message);
+                        parentItem.Errors.Add(TREE_LOADING_CATEGORY, message);
+                        _logger.LogError(ex, message);
+                        continue;
+                    }
+
+                    var ticketItem = new TicketItem(ticket, partitionFileEntry, file, parentItem);
+
+                    try
+                    {
+                        var rightsId = new RightsId(ticket.RightsId);
+                        var accessKey = new AccessKey(ticket.TitleKeyBlock);
+
+                        ticketItem.RightsId = rightsId;
+                        ticketItem.AccessKey = accessKey;
+
+                        if (parentItem.KeySet.ExternalKeySet.Get(rightsId, out var existingAccessKey) == Result.Success)
+                        {
+                            // Here RightID key is already defined
+                            if (existingAccessKey != accessKey)
+                            {
+                                // Replaces the RightID key with the one defined in the ticket
+                                parentItem.KeySet.ExternalKeySet.Remove(rightsId);
+                                parentItem.KeySet.ExternalKeySet.Add(rightsId, accessKey).ThrowIfFailure();
+                                _logger.LogWarning(LocalizationManager.Instance.Current.Keys.LoadingWarning_TitleIdKeyReplaced.SafeFormat(rightsId.ToString(), accessKey.ToString(), fileName, existingAccessKey));
+                            }
+                            else
+                            {
+                                _logger.LogDebug(LocalizationManager.Instance.Current.Keys.LoadingDebug_TitleIdKeyAlreadyExists.SafeFormat(rightsId.ToString(), accessKey.ToString(), fileName));
+                            }
+                        }
+                        else
+                        {
+                            parentItem.KeySet.ExternalKeySet.Add(rightsId, accessKey).ThrowIfFailure();
+                            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.LoadingInfo_TitleIdKeySuccessfullyInjected.SafeFormat(rightsId.ToString(), accessKey.ToString(), fileName));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadTitleIdKey.SafeFormat(fileName, ex.Message));
+                    }
+
+                    parentItem.TicketChildItems.Add(ticketItem);
+                }
+
+                foreach (var partitionFileEntry in remainingEntries)
                 {
                     IFile file;
                     try

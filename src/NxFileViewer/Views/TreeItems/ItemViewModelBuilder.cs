@@ -29,7 +29,10 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
                     return new NspItemViewModel(nspItem, _serviceProvider);
 
                 case NcaItem ncaItem:
-                    return new NcaItemViewModel(ncaItem, _serviceProvider);
+                    return new NcaItemViewModel(ncaItem, _serviceProvider);    
+                
+                case TicketItem ticketItem:
+                    return new TicketItemViewModel(ticketItem, _serviceProvider);
 
                 case PartitionFileEntryItemBase partitionFileEntryItem:
                     return new PartitionFileEntryItemViewModel(partitionFileEntryItem, _serviceProvider);

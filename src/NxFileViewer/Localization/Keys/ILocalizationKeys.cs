@@ -122,6 +122,11 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string LoadingError_FailedToGetNcaSectionFsHeader { get; }
         string LoadingError_FailedToOpenMainFile { get; }
         string LoadingError_FailedToLoadMainFile { get; }
+        string LoadingError_FailedToLoadTicketFile { get; }
+        string LoadingError_FailedToLoadTitleIdKey { get; }
+        string LoadingInfo_TitleIdKeySuccessfullyInjected { get; }
+        string LoadingWarning_TitleIdKeyReplaced { get; }
+        string LoadingDebug_TitleIdKeyAlreadyExists { get; }
 
         string KeysFileUsed { get; }
         string NoneKeysFile { get; }

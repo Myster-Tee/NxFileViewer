@@ -28,14 +28,19 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         {
             get
             {
-                foreach (var ncaChildItem in NcaChildItems)
+                foreach (var childItem in NcaChildItems)
                 {
-                    yield return ncaChildItem;
+                    yield return childItem;
+                }       
+                
+                foreach (var childItem in TicketChildItems)
+                {
+                    yield return childItem;
                 }
 
-                foreach (var partitionFileEntryItem in PartitionFileEntryChildItems)
+                foreach (var childItem in PartitionFileEntryChildItems)
                 {
-                    yield return partitionFileEntryItem;
+                    yield return childItem;
                 }
             }
         }
@@ -46,9 +51,14 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         public List<NcaItem> NcaChildItems { get; } = new();
 
         /// <summary>
+        /// Get child items of type <see cref="TicketItem"/>
+        /// </summary>
+        public List<TicketItem> TicketChildItems { get; } = new();
+
+        /// <summary>
         /// Get child items of type <see cref="PartitionFileEntryItemBase"/>
         /// </summary>
-        public List<PartitionFileEntryItem> PartitionFileEntryChildItems { get; } = new();
+        public List<PartitionFileEntryItemBase> PartitionFileEntryChildItems { get; } = new();
 
     }
 }
