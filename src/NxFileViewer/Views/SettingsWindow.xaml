@@ -118,15 +118,21 @@
                     </GroupBox>
 
                     <GroupBox Header="Misc.">
-                        <Grid>
-                            <StackPanel Grid.Row="0" Grid.Column="0">
+                        <StackPanel>
+                            <StackPanel>
                                 <StackPanel  Orientation="Horizontal">
                                     <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_LogLevel}" />
                                     <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_LogLevel}"/>
                                 </StackPanel>
                                 <ComboBox ItemsSource="{Binding Path=LogLevels}" SelectedItem="{Binding Path=SelectedLogLevel}" Width="100" HorizontalAlignment="Left" />
                             </StackPanel>
-                        </Grid>
+
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_TitlePageUrl}" />
+                                <TextBox Text="{Binding Path=TitlePageUrl}" />
+                            </StackPanel>
+
+                        </StackPanel>
                     </GroupBox>
                 </StackPanel>
             </ScrollViewer>

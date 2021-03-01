@@ -55,6 +55,7 @@ namespace Emignatik.NxFileViewer
               .AddSingleton<ISaveTitleImageCommand, SaveTitleImageCommand>()
               .AddSingleton<ICopyImageCommand, CopyImageCommand>()
               .AddSingleton<ILoadKeysCommand, LoadKeysCommand>()
+              .AddSingleton<IOpenTitleWebPageCommand, OpenTitleWebPageCommand>()
 
               .AddSingleton<IFileTypeAnalyzer, FileTypeAnalyzer>()
               .AddSingleton<MainWindowViewModel>()

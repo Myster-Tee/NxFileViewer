@@ -27,7 +27,7 @@ namespace Emignatik.NxFileViewer.Model.Overview
 
         public IItem RootItem { get; }
 
-        public List<CnmtContainer> CnmtContainers { get; } = new List<CnmtContainer>();
+        public List<CnmtContainer> CnmtContainers { get; } = new();
 
         public PackageType PackageType { get; internal set; } = PackageType.Unknown;
 

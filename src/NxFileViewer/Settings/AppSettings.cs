@@ -103,6 +103,16 @@ namespace Emignatik.NxFileViewer.Settings
             }
         }
 
+        public string TitlePageUrl
+        {
+            get => _appSettingsModel.TitlePageUrl;
+            set
+            {
+                _appSettingsModel.TitlePageUrl = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public AppSettingsModel WrappedModel => _appSettingsModel;
 
         public void Update(AppSettingsModel newModel)

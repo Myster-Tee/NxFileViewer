@@ -23,6 +23,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string MenuItem_Options => "_Options";
         public string MenuItem_Settings => "_Settings";
         public string MenuItem_ReloadKeys => "Reload keys";
+        public string MenuItem_OpenTitleWebPage => "Open title web page...";
 
         public string MultiContentPackage => "Multi-content Package";
         public string GeneralInfo => "General Info";
@@ -225,5 +226,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string MenuItem_CopyTextToClipboard => "Copy";
         public string ContextMenu_OpenFileLocation => "Open location...";
         public string OpenFileLocation_Failed_Log => "Failed to open location of file «{0}»: {1}";
+        public string SettingsView_TitlePageUrl => "Title page URL";
+        public string OpenTitleWebPage_Failed => "Failed to open title web page: {0}";
     }
 }

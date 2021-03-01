@@ -31,6 +31,7 @@ namespace Emignatik.NxFileViewer.Views
         private string _titleKeysFilePath = "";
         private string _prodKeysDownloadUrl = "";
         private string _titleKeysDownloadUrl = "";
+        private string _titlePageUrl = "";
 
         private LogLevel _selectedLogLevel;
         private bool _alwaysReloadKeysBeforeOpen;
@@ -69,6 +70,7 @@ namespace Emignatik.NxFileViewer.Views
             ProdKeysDownloadUrl = _appSettings.ProdKeysDownloadUrl;
             TitleKeysDownloadUrl = _appSettings.TitleKeysDownloadUrl;
             AlwaysReloadKeysBeforeOpen = _appSettings.AlwaysReloadKeysBeforeOpen;
+            TitlePageUrl = _appSettings.TitlePageUrl;
 
             _backgroundTaskService.PropertyChanged += (_, args) =>
             {
@@ -191,6 +193,15 @@ namespace Emignatik.NxFileViewer.Views
 
         public string ActualConsoleKeysFilePath => _keySetProviderService.ActualConsoleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile;
 
+        public string TitlePageUrl
+        {
+            get => _titlePageUrl;
+            set
+            {
+                _titlePageUrl = value;
+                NotifyPropertyChanged();
+            }
+        }
         private void BrowseProdKeys()
         {
             if (BrowseKeysFilePath(ProdKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ProdTitle, out var selectedFilePath))
@@ -331,6 +342,7 @@ namespace Emignatik.NxFileViewer.Views
             _appSettings.ProdKeysDownloadUrl = ProdKeysDownloadUrl;
             _appSettings.TitleKeysDownloadUrl = TitleKeysDownloadUrl;
             _appSettings.AlwaysReloadKeysBeforeOpen = AlwaysReloadKeysBeforeOpen;
+            _appSettings.TitlePageUrl = TitlePageUrl;
 
             _appSettingsManager.Save();
             NotifyQueryCloseView();

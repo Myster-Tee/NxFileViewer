@@ -20,6 +20,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string MenuItem_Options { get; }
         string MenuItem_Settings { get; }
         string MenuItem_ReloadKeys { get; }
+        string MenuItem_OpenTitleWebPage { get; }
 
         string MultiContentPackage { get; }
         string GeneralInfo { get; }
@@ -196,5 +197,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
 
         string ContextMenu_OpenFileLocation { get; }
         string OpenFileLocation_Failed_Log { get; }
+        string SettingsView_TitlePageUrl { get; }
+        string OpenTitleWebPage_Failed { get; }
     }
 }

@@ -36,6 +36,7 @@ namespace Emignatik.NxFileViewer.Views
             IVerifyNcasHeaderSignatureCommand verifyNcasHeaderSignatureCommand,
             IVerifyNcasHashCommand verifyNcasHashCommand,
             ILoadKeysCommand loadKeysCommand,
+            IOpenTitleWebPageCommand openTitleWebPageCommand,
             IFileOpenerService fileOpenerService,
             IServiceProvider serviceProvider,
             ILogSource logSource,
@@ -55,6 +56,7 @@ namespace Emignatik.NxFileViewer.Views
             BackgroundTask = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
             OpenLastFileCommand = openLastFileCommand ?? throw new ArgumentNullException(nameof(openLastFileCommand));
             CloseFileCommand = closeFileCommand ?? throw new ArgumentNullException(nameof(closeFileCommand));
+            OpenTitleWebPageCommand = openTitleWebPageCommand ?? throw new ArgumentNullException(nameof(closeFileCommand));
 
             var assemblyName = Assembly.GetExecutingAssembly().GetName();
             var assemblyVersion = (assemblyName.Version ?? new Version());
@@ -69,7 +71,7 @@ namespace Emignatik.NxFileViewer.Views
 
         }
 
-        public IServiceProvider ServiceProvider { get; }
+        private IServiceProvider ServiceProvider { get; }
 
         public IOpenFileCommand OpenFileCommand { get; }
 
@@ -86,6 +88,8 @@ namespace Emignatik.NxFileViewer.Views
         public IOpenLastFileCommand OpenLastFileCommand { get; }
 
         public ICloseFileCommand CloseFileCommand { get; }
+
+        public IOpenTitleWebPageCommand OpenTitleWebPageCommand { get; }
 
         public string Title
         {

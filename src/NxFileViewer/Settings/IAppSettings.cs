@@ -22,5 +22,7 @@ namespace Emignatik.NxFileViewer.Settings
         string TitleKeysDownloadUrl { get; set; }
 
         bool AlwaysReloadKeysBeforeOpen { get; set; }
+
+        string TitlePageUrl { get; set; }
     }
 }

@@ -26,5 +26,7 @@ namespace Emignatik.NxFileViewer.Settings.Model
         public string? TitleKeysDownloadUrl { get; set; }
 
         public bool AlwaysReloadKeysBeforeOpen { get; set; }
+
+        public string TitlePageUrl { get; set; } = "https://tinfoil.io/Title/{0}";
     }
 }
