@@ -15,13 +15,13 @@ namespace Emignatik.NxFileViewer.Model.TreeItems
             while (remainingItemsToVisit.Count > 0)
             {
                 var item = remainingItemsToVisit[0];
+                remainingItemsToVisit.RemoveAt(0);
+
                 if (item == null)
                     continue;
 
                 if (item is NcaItem ncaItem)
                     yield return ncaItem;
-
-                remainingItemsToVisit.RemoveAt(0);
 
                 remainingItemsToVisit.AddRange(item.ChildItems);
             }
