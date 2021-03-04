@@ -47,6 +47,9 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
         public NcaVersion FormatVersion => _ncaItem.FormatVersion;
 
         [PropertyView]
-        public bool IsEncrypted => _ncaItem.IsEncrypted;
+        public bool IsEncrypted => _ncaItem.IsEncrypted;     
+        
+        [PropertyView]
+        public bool IsNca0 => _ncaItem.IsNca0;
     }
 }

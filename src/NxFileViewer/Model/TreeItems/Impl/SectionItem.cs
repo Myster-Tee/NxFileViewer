@@ -31,6 +31,8 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public override string DisplayName => $"Section {SectionIndex}";
 
+        public bool IsPatchSection => FsHeader.IsPatchSection();
+
         /// <summary>
         /// Get the FileSystem of this section.
         /// Can be null when the FileSystem of this section couldn't be opened.

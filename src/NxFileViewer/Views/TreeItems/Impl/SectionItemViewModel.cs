@@ -37,9 +37,14 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
         public NcaFormatType FormatType => _sectionItem.FormatType;
 
         [PropertyView]
+        public bool IsPatchSection => _sectionItem.IsPatchSection;
+
+        [PropertyView]
         public NcaHashType HashType => _sectionItem.HashType;
 
         [PropertyView]
         public short Version => _sectionItem.Version;
+
+
     }
 }

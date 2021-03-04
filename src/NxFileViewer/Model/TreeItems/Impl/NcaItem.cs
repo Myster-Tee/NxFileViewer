@@ -43,6 +43,8 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public NcaVersion FormatVersion => Nca.Header.FormatVersion;
 
+        public bool IsNca0 => Nca.Header.IsNca0();
+
         public bool IsEncrypted => Nca.Header.IsEncrypted;
 
         public string FileName => PartitionFileEntry.Name;
