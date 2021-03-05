@@ -1,21 +1,42 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Controls;
+using System.Windows.Data;
+using Emignatik.NxFileViewer.Commands;
+using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Localization.Keys;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 using LibHac;
 using LibHac.FsSystem.NcaUtils;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
 {
     public class SectionItemViewModel : ItemViewModel
     {
         private readonly SectionItem _sectionItem;
+        private readonly MenuItem _menuItemSaveSection;
 
         public SectionItemViewModel(SectionItem sectionItem, IServiceProvider serviceProvider)
             : base(sectionItem, serviceProvider)
         {
             _sectionItem = sectionItem;
             _sectionItem.PropertyChanged += OnSectionItemPropertyChanged;
+
+            var saveSectionContentCommand = serviceProvider.GetRequiredService<ISaveSectionContentCommand>();
+            saveSectionContentCommand.SectionItem = sectionItem;
+
+            _menuItemSaveSection = new MenuItem
+            {
+                Command = saveSectionContentCommand
+            };
+
+            _menuItemSaveSection.SetBinding(MenuItem.HeaderProperty, new Binding($"Current.Keys.{nameof(ILocalizationKeys.ContextMenu_SaveSectionItem)}")
+            {
+                Source = LocalizationManager.Instance
+            });
         }
 
         private void OnSectionItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -45,6 +66,9 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
         [PropertyView]
         public short Version => _sectionItem.Version;
 
-
+        public override IEnumerable<MenuItem> GetOtherContextMenuItems()
+        {
+            yield return _menuItemSaveSection;
+        }
     }
 }

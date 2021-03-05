@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
              xmlns:treeItems="clr-namespace:Emignatik.NxFileViewer.Views.TreeItems"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance treeItems:IItemViewModel}"
              Style="{StaticResource UserControlStyle}"
@@ -15,12 +14,7 @@
             </ToolTip>
         </Grid.ToolTip>
         <Grid.ContextMenu>
-            <ContextMenu>
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ContextMenu_ShowItemErrors}" Command="{Binding ShowItemErrorsWindowCommand}"
-                          Visibility="{Binding Path=HasErrors, Converter={StaticResource FalseToCollapseVisibilityConverter}}">
-                </MenuItem>
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ContextMenu_SaveItemFile}" Command="{Binding SaveItemToFileCommand}" />
-            </ContextMenu>
+            <ContextMenu ItemsSource="{Binding ContextMenuItems}" />
         </Grid.ContextMenu>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

@@ -113,15 +113,18 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string SaveDialog_AnyFileFilter => "File";
         public string SaveFile_Error => "Failed to save file: {0}";
 
-        public string ContextMenuCopyImage => "Copy";
+        public string ContextMenu_CopyImage => "Copy";
 
         public string TabOverview => "Overview";
         public string TabContent => "Content";
         public string GroupBoxStructure => "Structure";
         public string GroupBoxProperties => "Properties";
 
-        public string ContextMenu_SaveItemFile => "Save...";
         public string ContextMenu_ShowItemErrors => "Show errors...";
+        public string ContextMenu_SaveSectionItem => "Save section content...";
+        public string ContextMenu_SaveDirectoryItem => "Save directory...";
+        public string ContextMenu_SaveFileItem => "Save file...";
+        public string ContextMenu_SavePartitionFileItem => "Save partition file...";
 
         public string SettingsLoadingError => "Failed to load settings: {0}";
         public string SettingsSavingError => "Failed to save settings: {0}";

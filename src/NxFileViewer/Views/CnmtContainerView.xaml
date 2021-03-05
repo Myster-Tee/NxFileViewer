@@ -95,7 +95,7 @@
                             <Image.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ContextMenu_SaveImage}" Command="{Binding Path=SaveSelectedImageCommand}" />
-                                    <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ContextMenuCopyImage}" Command="{Binding Path=CopySelectedImageCommand}" />
+                                    <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ContextMenu_CopyImage}" Command="{Binding Path=CopySelectedImageCommand}" />
                                 </ContextMenu>
                             </Image.ContextMenu>
                         </Image>

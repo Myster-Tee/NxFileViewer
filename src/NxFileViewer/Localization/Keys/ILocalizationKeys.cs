@@ -84,15 +84,18 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string SaveDialog_AnyFileFilter { get; }
         string SaveFile_Error { get; }
 
-        string ContextMenuCopyImage { get; }
+        string ContextMenu_CopyImage { get; }
 
         string TabOverview { get; }
         string TabContent { get; }
         string GroupBoxStructure { get; }
         string GroupBoxProperties { get; }
 
-        string ContextMenu_SaveItemFile { get; }
         string ContextMenu_ShowItemErrors { get; }
+        string ContextMenu_SaveSectionItem { get; }
+        string ContextMenu_SaveDirectoryItem { get; }
+        string ContextMenu_SaveFileItem { get; }
+        string ContextMenu_SavePartitionFileItem { get; }
 
         string SettingsLoadingError { get; }
         string SettingsSavingError { get; }

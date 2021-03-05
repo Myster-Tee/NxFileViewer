@@ -61,7 +61,7 @@ namespace Emignatik.NxFileViewer.Views.ObjectPropertyViewer
 
         }
 
-        private static readonly Dictionary<Type, Property[]> CachedPropertiesByType = new Dictionary<Type, Property[]>();
+        private static readonly Dictionary<Type, Property[]> CachedPropertiesByType = new();
 
         private static Property[] GetCachedObjectTypeProperties(Type type)
         {

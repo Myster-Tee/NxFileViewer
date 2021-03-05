@@ -1,4 +1,5 @@
 ﻿using System;
+using Emignatik.NxFileViewer.Localization.Keys;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 using LibHac.Common;
@@ -15,7 +16,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
             _mainItem = mainItem;
         }
 
-        [PropertyView(DescriptionLocalizationKey = "MainModuleIdTooltip")]
+        [PropertyView(DescriptionLocalizationKey = nameof(ILocalizationKeys.MainModuleIdTooltip))]
         public Buffer32 ModuleId => _mainItem.ModuleId;
     }
 }

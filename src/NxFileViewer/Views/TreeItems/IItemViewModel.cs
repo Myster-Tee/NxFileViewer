@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Emignatik.NxFileViewer.Commands;
+using System.Windows.Controls;
 using Emignatik.NxFileViewer.Model.TreeItems;
 using Emignatik.NxFileViewer.Utils.MVVM;
 
@@ -20,10 +20,6 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
 
         public bool HasErrorInDescendants { get; }
 
-        ISaveItemToFileCommand SaveItemToFileCommand { get; }
-
-        IShowItemErrorsWindowCommand ShowItemErrorsWindowCommand { get; }
-
         /// <summary>
         /// Returns true if this item has errors
         /// </summary>
@@ -33,5 +29,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
         /// Returns errors formatted for the tooltip
         /// </summary>
         public string ErrorsTooltip { get; }
+
+        public IEnumerable<MenuItem> ContextMenuItems { get; }
     }
 }

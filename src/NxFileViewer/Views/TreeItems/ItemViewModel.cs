@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Data;
 using Emignatik.NxFileViewer.Commands;
+using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Localization.Keys;
 using Emignatik.NxFileViewer.Model.TreeItems;
 using Emignatik.NxFileViewer.Utils;
 using Emignatik.NxFileViewer.Utils.MVVM;
@@ -14,7 +18,10 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
     public class ItemViewModel : ViewModelBase, IItemViewModel
     {
         private readonly IItem _item;
+        private readonly MenuItem _menuItemShowErrors;
+
         private string _errorsTooltip;
+        private bool _hasErrors;
 
         public ItemViewModel(IItem item, IServiceProvider serviceProvider)
         {
@@ -25,14 +32,20 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
 
             Children = _item.ChildItems.Select(childItem => itemViewModelBuilder.Build(childItem)).ToList();
 
+            _menuItemShowErrors = new MenuItem
+            {
+                Command = serviceProvider.GetRequiredService<IShowItemErrorsWindowCommand>()
+            };
+
+            _menuItemShowErrors.SetBinding(MenuItem.HeaderProperty, new Binding($"Current.Keys.{nameof(ILocalizationKeys.ContextMenu_ShowItemErrors)}")
+            {
+                Source = LocalizationManager.Instance
+            });
+
             _item.PropertyChanged += OnItemPropertyChanged;
-            _item.Errors.ErrorsChanged += OnItemErrorsChanged;
+            _item.Errors.ErrorsChanged += (_, _) => { UpdateErrors(); };
 
-
-            SaveItemToFileCommand = serviceProvider.GetRequiredService<ISaveItemToFileCommand>();
-            ShowItemErrorsWindowCommand = serviceProvider.GetRequiredService<IShowItemErrorsWindowCommand>();
-
-            UpdateErrorsTooltip();
+            UpdateErrors();
         }
 
         [PropertyView("Name")]
@@ -52,11 +65,15 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
 
         public IReadOnlyCollection<IItemViewModel> Children { get; }
 
-        public ISaveItemToFileCommand SaveItemToFileCommand { get; }
-
-        public IShowItemErrorsWindowCommand ShowItemErrorsWindowCommand { get; }
-
-        public bool HasErrors => _item.Errors.Count > 0;
+        public bool HasErrors
+        {
+            get => _hasErrors;
+            private set
+            {
+                _hasErrors = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public string ErrorsTooltip
         {
@@ -68,21 +85,34 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
             }
         }
 
+        public IEnumerable<MenuItem> ContextMenuItems
+        {
+            get
+            {
+                yield return _menuItemShowErrors;
+                foreach (var menuItem in GetOtherContextMenuItems())
+                    yield return menuItem;
+            }
+        }
+
+        public virtual IEnumerable<MenuItem> GetOtherContextMenuItems()
+        {
+            yield break;
+        }
+
         private void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(IItem.HasErrorInDescendants))
                 NotifyPropertyChanged(nameof(HasErrorInDescendants));
         }
 
-        private void OnItemErrorsChanged(object sender, ErrorsChangedHandlerArgs args)
+        private void UpdateErrors()
         {
-            UpdateErrorsTooltip();
+            var itemErrors = _item.Errors;
+
+            ErrorsTooltip = ErrorsFormatter.Format(itemErrors);
+            HasErrors = itemErrors.Count > 0;
         }
 
-        private void UpdateErrorsTooltip()
-        {
-            ErrorsTooltip = ErrorsFormatter.Format(_item.Errors);
-            NotifyPropertyChanged(nameof(HasErrors));
-        }
     }
 }
