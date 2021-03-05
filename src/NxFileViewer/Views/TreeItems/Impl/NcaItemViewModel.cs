@@ -1,15 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Controls;
+using Emignatik.NxFileViewer.Commands;
+using Emignatik.NxFileViewer.Localization.Keys;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 using LibHac;
 using LibHac.FsSystem.NcaUtils;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
 {
     public class NcaItemViewModel : PartitionFileEntryItemViewModel
     {
         private readonly NcaItem _ncaItem;
+        private readonly MenuItem _menuItemSaveNcaRaw;
+        private readonly MenuItem _menuItemSaveNcaDecrypted;
 
         public NcaItemViewModel(NcaItem ncaItem, IServiceProvider serviceProvider)
             : base(ncaItem, serviceProvider)
@@ -17,12 +24,26 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
             _ncaItem = ncaItem;
 
             _ncaItem.PropertyChanged += OnNcaItemPropertyChanged;
+
+            var savePartitionFileCommand = serviceProvider.GetRequiredService<ISavePartitionFileCommand>();
+            savePartitionFileCommand.PartitionFileItem = ncaItem;
+            _menuItemSaveNcaRaw = CreateLocalizedMenuItem(nameof(ILocalizationKeys.ContextMenu_SaveNcaFileRaw), savePartitionFileCommand);
+
+            var saveNcaFileDecryptedCommand = serviceProvider.GetRequiredService<ISaveNcaFileDecryptedCommand>();
+            saveNcaFileDecryptedCommand.NcaItem = ncaItem;
+            _menuItemSaveNcaDecrypted = CreateLocalizedMenuItem(nameof(ILocalizationKeys.ContextMenu_SaveNcaFileDecrypted), saveNcaFileDecryptedCommand);
         }
 
         private void OnNcaItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(_ncaItem.HeaderSignatureValidity))
+            if (e.PropertyName == nameof(_ncaItem.HeaderSignatureValidity))
                 NotifyPropertyChanged(nameof(HeaderSignatureValidity));
+        }
+
+        public override IEnumerable<MenuItem> GetOtherContextMenuItems()
+        {
+            yield return _menuItemSaveNcaRaw;
+            yield return _menuItemSaveNcaDecrypted;
         }
 
         [PropertyView]
@@ -47,8 +68,8 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
         public NcaVersion FormatVersion => _ncaItem.FormatVersion;
 
         [PropertyView]
-        public bool IsEncrypted => _ncaItem.IsEncrypted;     
-        
+        public bool IsEncrypted => _ncaItem.IsEncrypted;
+
         [PropertyView]
         public bool IsNca0 => _ncaItem.IsNca0;
     }

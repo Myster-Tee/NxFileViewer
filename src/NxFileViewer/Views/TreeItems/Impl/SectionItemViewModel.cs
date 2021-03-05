@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Controls;
-using System.Windows.Data;
 using Emignatik.NxFileViewer.Commands;
-using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Localization.Keys;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
@@ -27,16 +25,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
 
             var saveSectionContentCommand = serviceProvider.GetRequiredService<ISaveSectionContentCommand>();
             saveSectionContentCommand.SectionItem = sectionItem;
-
-            _menuItemSaveSection = new MenuItem
-            {
-                Command = saveSectionContentCommand
-            };
-
-            _menuItemSaveSection.SetBinding(MenuItem.HeaderProperty, new Binding($"Current.Keys.{nameof(ILocalizationKeys.ContextMenu_SaveSectionItem)}")
-            {
-                Source = LocalizationManager.Instance
-            });
+            _menuItemSaveSection = CreateLocalizedMenuItem(nameof(ILocalizationKeys.ContextMenu_SaveSectionItem), saveSectionContentCommand);
         }
 
         private void OnSectionItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -48,10 +37,10 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
         [PropertyView]
         public Validity HashValidity => _sectionItem.HashValidity;
 
-        [PropertyView] 
+        [PropertyView]
         public int SectionIndex => _sectionItem.SectionIndex;
 
-        [PropertyView] 
+        [PropertyView]
         public NcaEncryptionType EncryptionType => _sectionItem.EncryptionType;
 
         [PropertyView]

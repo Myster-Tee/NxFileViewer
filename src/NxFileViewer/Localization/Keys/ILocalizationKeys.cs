@@ -96,6 +96,8 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string ContextMenu_SaveDirectoryItem { get; }
         string ContextMenu_SaveFileItem { get; }
         string ContextMenu_SavePartitionFileItem { get; }
+        string ContextMenu_SaveNcaFileRaw { get; }
+        string ContextMenu_SaveNcaFileDecrypted { get; }
 
         string SettingsLoadingError { get; }
         string SettingsSavingError { get; }

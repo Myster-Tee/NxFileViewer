@@ -125,6 +125,8 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string ContextMenu_SaveDirectoryItem => "Save directory...";
         public string ContextMenu_SaveFileItem => "Save file...";
         public string ContextMenu_SavePartitionFileItem => "Save partition file...";
+        public string ContextMenu_SaveNcaFileRaw => "Save NCA raw...";
+        public string ContextMenu_SaveNcaFileDecrypted => "Save NCA decrypted...";
 
         public string SettingsLoadingError => "Failed to load settings: {0}";
         public string SettingsSavingError => "Failed to save settings: {0}";

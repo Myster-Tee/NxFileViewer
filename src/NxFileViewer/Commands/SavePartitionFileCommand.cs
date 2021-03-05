@@ -21,7 +21,6 @@ namespace Emignatik.NxFileViewer.Commands
         private readonly ILogger _logger;
         private PartitionFileEntryItemBase? _partitionFileItem;
 
-
         public SavePartitionFileCommand(
             ILoggerFactory loggerFactory,
             IBackgroundTaskService backgroundTaskService,

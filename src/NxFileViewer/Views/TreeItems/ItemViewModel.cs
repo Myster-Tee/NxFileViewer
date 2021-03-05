@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Localization.Keys;
@@ -32,15 +33,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
 
             Children = _item.ChildItems.Select(childItem => itemViewModelBuilder.Build(childItem)).ToList();
 
-            _menuItemShowErrors = new MenuItem
-            {
-                Command = serviceProvider.GetRequiredService<IShowItemErrorsWindowCommand>()
-            };
-
-            _menuItemShowErrors.SetBinding(MenuItem.HeaderProperty, new Binding($"Current.Keys.{nameof(ILocalizationKeys.ContextMenu_ShowItemErrors)}")
-            {
-                Source = LocalizationManager.Instance
-            });
+            _menuItemShowErrors = CreateLocalizedMenuItem(nameof(ILocalizationKeys.ContextMenu_ShowItemErrors), serviceProvider.GetRequiredService<IShowItemErrorsWindowCommand>());
 
             _item.PropertyChanged += OnItemPropertyChanged;
             _item.Errors.ErrorsChanged += (_, _) => { UpdateErrors(); };
@@ -112,6 +105,21 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
 
             ErrorsTooltip = ErrorsFormatter.Format(itemErrors);
             HasErrors = itemErrors.Count > 0;
+        }
+
+        protected MenuItem CreateLocalizedMenuItem(string localizationKey, ICommand command)
+        {
+            var menuItem = new MenuItem
+            {
+                Command = command
+            };
+
+            menuItem.SetBinding(MenuItem.HeaderProperty, new Binding($"Current.Keys.{localizationKey}")
+            {
+                Source = LocalizationManager.Instance
+            });
+
+            return menuItem;
         }
 
     }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.FileLoading;
@@ -39,6 +38,7 @@ namespace Emignatik.NxFileViewer
               .AddSingleton<IFileOpenerService, FileOpenerService>()
               .AddSingleton<IOpenedFileService, OpenedFileService>()
               .AddSingleton<ISelectedItemService, SelectedItemService>()
+              .AddSingleton<IPromptService, PromptService>()
               .AddSingleton<BackgroundTaskService>()
               .AddSingleton<IBackgroundTaskService>(provider => provider.GetRequiredService<BackgroundTaskService>())
               .AddSingleton<IProgressReporter>(provider => provider.GetRequiredService<BackgroundTaskService>())
@@ -48,7 +48,6 @@ namespace Emignatik.NxFileViewer
               .AddSingleton<IOpenLastFileCommand, OpenLastFileCommand>()
               .AddSingleton<ICloseFileCommand, CloseFileCommand>()
               .AddSingleton<IShowSettingsViewCommand, ShowSettingsViewCommand>()
-              .AddSingleton<ISaveItemToFileCommand, SaveItemToFileCommand>()
               .AddSingleton<IVerifyNcasHashCommand, VerifyNcasHashCommand>()
               .AddSingleton<IVerifyNcasHeaderSignatureCommand, VerifyNcasHeaderSignatureCommand>()
               .AddSingleton<IShowItemErrorsWindowCommand, ShowItemErrorsWindowCommand>()
@@ -75,6 +74,10 @@ namespace Emignatik.NxFileViewer
               .AddTransient<IVerifyNcasHashRunnable, VerifyNcasHashRunnable>()
               .AddTransient<IVerifyNcasHeaderSignatureRunnable, VerifyNcasHeaderSignatureRunnable>()
               .AddTransient<IOpenFileLocationCommand, OpenFileLocationCommand>()
+              .AddTransient<ISaveDirectoryEntryCommand, SaveDirectoryEntryCommand>()
+              .AddTransient<ISavePartitionFileCommand, SavePartitionFileCommand>()
+              .AddTransient<ISaveSectionContentCommand, SaveSectionContentCommand>()
+              .AddTransient<ISaveNcaFileDecryptedCommand, SaveNcaFileDecryptedCommand>()
               .AddTransient<IDownloadFileRunnable, DownloadFileRunnable>()
               .AddTransient<IFsSanitizer, FsSanitizer>()
 

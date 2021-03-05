@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
-using System.Windows.Data;
 using Emignatik.NxFileViewer.Commands;
-using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Localization.Keys;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Utils;
@@ -24,16 +22,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
 
             var savePartitionFileItemCommand = serviceProvider.GetRequiredService<ISavePartitionFileCommand>();
             savePartitionFileItemCommand.PartitionFileItem = partitionFileEntryItem;
-
-            _menuItemSavePartitionFile = new MenuItem
-            {
-                Command = savePartitionFileItemCommand
-            };
-
-            _menuItemSavePartitionFile.SetBinding(MenuItem.HeaderProperty, new Binding($"Current.Keys.{nameof(ILocalizationKeys.ContextMenu_SavePartitionFileItem)}")
-            {
-                Source = LocalizationManager.Instance
-            });
+            _menuItemSavePartitionFile = CreateLocalizedMenuItem(nameof(ILocalizationKeys.ContextMenu_SavePartitionFileItem), savePartitionFileItemCommand);
         }
 
         public override IEnumerable<MenuItem> GetOtherContextMenuItems()
