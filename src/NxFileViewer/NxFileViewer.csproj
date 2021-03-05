@@ -23,6 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Styling\Icons\CnmtContentEntryItem.png" />
     <None Remove="Styling\Icons\FileDirectoryEntryItem.png" />
     <None Remove="Styling\Icons\FolderDirectoryEntryItem.png" />
     <None Remove="Styling\Icons\Icon.ico" />
@@ -49,6 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Styling\Icons\CnmtContentEntryItem.png" />
     <Resource Include="Styling\Icons\FileDirectoryEntryItem.png" />
     <Resource Include="Styling\Icons\FolderDirectoryEntryItem.png" />
     <Resource Include="Styling\Icons\Icon.ico" />

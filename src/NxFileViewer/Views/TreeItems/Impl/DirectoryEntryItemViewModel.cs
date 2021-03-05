@@ -2,6 +2,7 @@
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Utils;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
+using LibHac.Fs;
 
 namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
 {
@@ -20,6 +21,6 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
         public string SizeStr { get; }
 
         [PropertyView]
-        public string DirectoryEntryType => _directoryEntryItem.DirectoryEntryType.ToString();
+        public DirectoryEntryType DirectoryEntryType => _directoryEntryItem.DirectoryEntryType;
     }
 }

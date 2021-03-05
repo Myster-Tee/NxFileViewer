@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using Emignatik.NxFileViewer.Model.TreeItems.Impl;
+using Emignatik.NxFileViewer.Views.TreeItems.Impl;
 using LibHac.Fs;
 
 namespace Emignatik.NxFileViewer.Views.TreeItems
@@ -22,6 +22,8 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
 
         public DataTemplate? FileDirectoryEntryItemIconDataTemplate { get; set; }
 
+        public DataTemplate? CnmtContentEntryItemIconDataTemplate { get; set; }
+
         public override DataTemplate? SelectTemplate(object? obj, DependencyObject container)
         {
             if (obj == null)
@@ -33,32 +35,33 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
                 return null;
             }
 
-            var item = itemViewModel.AttachedItem;
-            switch (item)
+            switch (itemViewModel)
             {
-                case XciItem _:
+                case XciItemViewModel _:
                     return XciItemIconDataTemplate;
 
-                case XciPartitionItem _:
+                case XciPartitionItemViewModel _:
                     return XciPartitionItemIconDataTemplate;
 
-                case PartitionFileEntryItemBase _:
+                case PartitionFileEntryItemViewModel _:
                     return PartitionFileEntryItemIconDataTemplate;
 
-                case NspItem _:
+                case NspItemViewModel _:
                     return NspItemIconDataTemplate;
 
-                case SectionItem _:
+                case SectionItemViewModel _:
                     return SectionItemIconDataTemplate;
 
-                case DirectoryEntryItem directoryEntryItem when directoryEntryItem.DirectoryEntryType == DirectoryEntryType.Directory:
+                case DirectoryEntryItemViewModel directoryEntryItem when directoryEntryItem.DirectoryEntryType == DirectoryEntryType.Directory:
                     return FolderDirectoryEntryItemIconDataTemplate;
 
-                case DirectoryEntryItem directoryEntryItem when directoryEntryItem.DirectoryEntryType == DirectoryEntryType.File:
+                case DirectoryEntryItemViewModel directoryEntryItem when directoryEntryItem.DirectoryEntryType == DirectoryEntryType.File:
                     return FileDirectoryEntryItemIconDataTemplate;
 
+                case CnmtContentEntryItemViewModel:
+                    return CnmtContentEntryItemIconDataTemplate;
                 default:
-                    Debug.Fail($"Icon data template is missing for item of type {item.GetType().Name}!");
+                    Debug.Fail($"Icon data template is missing for item of type {itemViewModel.GetType().Name}!");
                     return null;
             }
         }

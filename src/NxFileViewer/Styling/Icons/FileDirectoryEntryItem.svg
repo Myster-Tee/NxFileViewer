@@ -1,42 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" style="" xml:space="preserve" width="16" height="16"><rect id="backgroundrect" width="100%" height="100%" x="0" y="0" fill="none" stroke="none" class="" style=""/>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" style="" width="16" height="16">
+  <rect id="backgroundrect" width="100%" height="100%" x="0" y="0" fill="none" stroke="none" class="" style=""/>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<g class="currentLayer" style=""><title>Layer 1</title><g class="" id="svg_22" fill="#7f7f7f" fill-opacity="1"><g id="svg_1" class="" fill="#7f7f7f" fill-opacity="1">
-	<g id="svg_2" fill="#7f7f7f" fill-opacity="1">
-		<path d="M10.65774549277273,4.279168552735372 c-0.29357647396494446,0 -0.5315584215106826,-0.23798194754573926 -0.5315584215106826,-0.5315584215106826 V0.5583218929464964 H3.7476105947056584 C2.8669123182037843,0.5583218929464964 2.152966475566564,1.272267735583713 2.152966475566564,2.152966012085592 v11.694067255484356 c0,0.8806982765018813 0.7139458426372178,1.5946441191390968 1.5946441191390968,1.5946441191390968 h8.504779017206163 c0.8806982765018813,0 1.5946441191390968,-0.7139458426372178 1.5946441191390968,-1.5946441191390968 v-9.567864714834574 H10.65774549277273 z" id="svg_3" fill="#7f7f7f" fill-opacity="1"/>
-	</g>
-</g><g id="svg_4" class="" fill="#7f7f7f" fill-opacity="1">
-	<g id="svg_5" fill="#7f7f7f" fill-opacity="1">
-		<polygon points="11.1892728805542,0.8698069453239441 11.1892728805542,3.216051995754242 13.53554630279541,3.216051995754242 " id="svg_6" fill="#7f7f7f" fill-opacity="1"/>
-	</g>
-</g><g id="svg_7" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_8" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_9" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_10" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_11" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_12" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_13" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_14" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_15" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_16" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_17" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_18" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_19" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_20" class="" fill="#7f7f7f" fill-opacity="1">
-</g><g id="svg_21" class="" fill="#7f7f7f" fill-opacity="1">
-</g></g></g></svg>
+  <g class="currentLayer" style="">
+    <title>Layer 1</title>
+    <g class="" id="svg_22" fill="#7f7f7f" fill-opacity="1">
+      <g id="svg_1" class="" fill="#7f7f7f" fill-opacity="1">
+        <g id="svg_2" fill="#7f7f7f" fill-opacity="1">
+          <path d="M10.65774549277273,4.279168552735372 c-0.29357647396494446,0 -0.5315584215106826,-0.23798194754573926 -0.5315584215106826,-0.5315584215106826 V0.5583218929464964 H3.7476105947056584 C2.8669123182037843,0.5583218929464964 2.152966475566564,1.272267735583713 2.152966475566564,2.152966012085592 v11.694067255484356 c0,0.8806982765018813 0.7139458426372178,1.5946441191390968 1.5946441191390968,1.5946441191390968 h8.504779017206163 c0.8806982765018813,0 1.5946441191390968,-0.7139458426372178 1.5946441191390968,-1.5946441191390968 v-9.567864714834574 H10.65774549277273 z" id="svg_3" fill="#7f7f7f" fill-opacity="1"/>
+        </g>
+      </g>
+      <g id="svg_4" class="" fill="#7f7f7f" fill-opacity="1">
+        <g id="svg_5" fill="#7f7f7f" fill-opacity="1">
+          <polygon points="11.1892728805542,0.8698069453239441 11.1892728805542,3.216051995754242 13.53554630279541,3.216051995754242 " id="svg_6" fill="#7f7f7f" fill-opacity="1"/>
+        </g>
+      </g>
+      <g id="svg_7" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_8" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_9" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_10" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_11" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_12" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_13" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_14" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_15" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_16" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_17" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_18" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_19" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_20" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+      <g id="svg_21" class="" fill="#7f7f7f" fill-opacity="1">
+      </g>
+    </g>
+  </g>
+</svg>

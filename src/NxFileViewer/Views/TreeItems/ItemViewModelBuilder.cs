@@ -50,7 +50,10 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
                     return new MainItemViewModel(mainItem, _serviceProvider);
 
                 case DirectoryEntryItem directoryEntryItem:
-                    return new DirectoryEntryItemViewModel(directoryEntryItem, _serviceProvider);
+                    return new DirectoryEntryItemViewModel(directoryEntryItem, _serviceProvider);      
+                
+                case CnmtContentEntryItem cnmtContentEntryItem:
+                    return new CnmtContentEntryItemViewModel(cnmtContentEntryItem, _serviceProvider);
 
                 default:
                     Debug.Fail($"{nameof(IItemViewModel)} implementation missing for item of type «{item.GetType().Name}».");

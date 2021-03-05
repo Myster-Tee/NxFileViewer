@@ -58,7 +58,13 @@
                     <DataTemplate>
                         <Image Source="Styling/Icons/FileDirectoryEntryItem.png" />
                     </DataTemplate>
-                </treeItems:ItemIconDataTemplateSelector.FileDirectoryEntryItemIconDataTemplate>
+                </treeItems:ItemIconDataTemplateSelector.FileDirectoryEntryItemIconDataTemplate>  
+                
+                <treeItems:ItemIconDataTemplateSelector.CnmtContentEntryItemIconDataTemplate>
+                    <DataTemplate>
+                        <Image Source="Styling/Icons/CnmtContentEntryItem.png" />
+                    </DataTemplate>
+                </treeItems:ItemIconDataTemplateSelector.CnmtContentEntryItemIconDataTemplate>
             </treeItems:ItemIconDataTemplateSelector>
 
             <!-- Converters -->
