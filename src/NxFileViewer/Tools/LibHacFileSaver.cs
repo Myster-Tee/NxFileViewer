@@ -31,7 +31,9 @@ namespace Emignatik.NxFileViewer.Tools
                 dstStream.Write(buffer, 0, nbBytesRead);
                 totalBytesWritten += nbBytesRead;
 
-                progressValueHandler?.Invoke((double)(totalBytesWritten / totalBytes));
+                var progressValue = totalBytes == 0 ? 1.0 : (double)(totalBytesWritten / totalBytes);
+                progressValueHandler?.Invoke(progressValue);
+
             } while (nbBytesRead > 0 && !cancellationToken.IsCancellationRequested);
 
             if (cancellationToken.IsCancellationRequested)
