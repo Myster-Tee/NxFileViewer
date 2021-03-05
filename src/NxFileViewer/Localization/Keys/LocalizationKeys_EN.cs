@@ -126,7 +126,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string ContextMenu_SaveFileItem => "Save file...";
         public string ContextMenu_SavePartitionFileItem => "Save partition file...";
         public string ContextMenu_SaveNcaFileRaw => "Save NCA raw...";
-        public string ContextMenu_SaveNcaFileDecrypted => "Save NCA decrypted...";
+        public string ContextMenu_SaveNcaFilePlaintext => "Save NCA plaintext...";
 
         public string SettingsLoadingError => "Failed to load settings: {0}";
         public string SettingsSavingError => "Failed to save settings: {0}";
@@ -220,10 +220,10 @@ namespace Emignatik.NxFileViewer.Localization.Keys
 
         public string KeysLoading_Starting_Log => ">>> Loading Keys...";
         public string KeysLoading_Successful_Log => ">>> Keys successfully loaded.";
-        public string KeysLoading_Error_Log => "Failed to load keys: {0}";
         public string KeysLoading_Error => "Failed to load keys: {0}.";
         public string WarnNoProdKeysFileFound => "No prod.keys file found.";
         public string InvalidSetting_KeysFileNotFound => "Keys file «{0}» defined in the settings doesn't exist.";
+        public string InvalidSetting_BufferSizeInvalid => "Buffer size «{0}» defined in the settings is not valid, value should be strictly greater than 0.";
 
         public string ToolTip_KeyMissing => "Key «{0}» of type «{1}» is missing.";
 

@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Settings;
+using Emignatik.NxFileViewer.Tools;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace Emignatik.NxFileViewer.Services
@@ -10,10 +11,12 @@ namespace Emignatik.NxFileViewer.Services
     public class PromptService : IPromptService
     {
         private readonly IAppSettings _appSettings;
+        private readonly IFsSanitizer _fsSanitizer;
 
-        public PromptService(IAppSettings appSettings)
+        public PromptService(IAppSettings appSettings, IFsSanitizer fsSanitizer)
         {
             _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+            _fsSanitizer = fsSanitizer ?? throw new ArgumentNullException(nameof(fsSanitizer));
         }
 
         public string? PromptSaveDir()
@@ -38,6 +41,8 @@ namespace Emignatik.NxFileViewer.Services
 
         public string? PromptSaveFile(string proposedFileName)
         {
+            var sanitizedFileName = _fsSanitizer.SanitizeFileName(proposedFileName);
+
             var fileDialog = new CommonSaveFileDialog
             {
                 Title = LocalizationManager.Instance.Current.Keys.SaveDialog_Title,
@@ -48,7 +53,7 @@ namespace Emignatik.NxFileViewer.Services
                     DisplayName = LocalizationManager.Instance.Current.Keys.SaveDialog_AnyFileFilter,
                     ShowExtensions = false
                 } },
-                DefaultFileName = proposedFileName,
+                DefaultFileName = sanitizedFileName,
             };
 
             if (fileDialog.ShowDialog(Application.Current.MainWindow) != CommonFileDialogResult.Ok)

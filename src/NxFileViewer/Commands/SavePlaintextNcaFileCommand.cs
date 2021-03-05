@@ -11,15 +11,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Commands
 {
-    public class SavePartitionFileCommand : CommandBase, ISavePartitionFileCommand
+    public class SavePlaintextNcaFileCommand : CommandBase, ISavePlaintextNcaFileCommand
     {
-        private readonly IBackgroundTaskService _backgroundTaskService;
         private readonly IServiceProvider _serviceProvider;
-        private readonly IPromptService _promptService;
+        private readonly IBackgroundTaskService _backgroundTaskService;
         private readonly ILogger _logger;
-        private PartitionFileEntryItemBase? _partitionFileItem;
+        private readonly IPromptService _promptService;
 
-        public SavePartitionFileCommand(ILoggerFactory loggerFactory, IBackgroundTaskService backgroundTaskService, IServiceProvider serviceProvider, IPromptService promptService)
+        private NcaItem? _ncaItem;
+
+
+        public SavePlaintextNcaFileCommand(ILoggerFactory loggerFactory, IBackgroundTaskService backgroundTaskService, IServiceProvider serviceProvider, IPromptService promptService)
         {
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
             _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
@@ -27,48 +29,45 @@ namespace Emignatik.NxFileViewer.Commands
             _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
         }
 
-        public PartitionFileEntryItemBase PartitionFileItem
+        public NcaItem NcaItem
         {
             set
             {
-                _partitionFileItem = value;
+                _ncaItem = value;
                 TriggerCanExecuteChanged();
             }
         }
-
         public override async void Execute(object? parameter)
         {
-            if (_partitionFileItem == null)
-                return;
-
             try
             {
-                var file = _partitionFileItem.File;
+                if (_ncaItem == null)
+                    return;
 
-                var filePath = _promptService.PromptSaveFile(_partitionFileItem.Name);
+                var filePath = _promptService.PromptSaveFile(_ncaItem.FileName);
                 if (filePath == null)
                     return;
-                var runnable = _serviceProvider.GetRequiredService<ISaveFileRunnable>();
-                runnable.Setup(file, filePath);
 
-                await _backgroundTaskService.RunAsync(runnable);
+                var openDecryptedNca = _ncaItem.Nca.OpenDecryptedNca();
+                var saveStorageRunnable = _serviceProvider.GetRequiredService<ISaveStorageRunnable>();
+                saveStorageRunnable.Setup(openDecryptedNca, filePath);
+
+                await _backgroundTaskService.RunAsync(saveStorageRunnable);
             }
             catch (Exception ex)
             {
-                //TODO: personnaliser la localisation de SaveFile
-                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SaveFile_Error.SafeFormat(ex.Message));
+                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SaveFile_Error, ex.Message);
             }
         }
 
         public override bool CanExecute(object? parameter)
         {
-            return _partitionFileItem != null && !_backgroundTaskService.IsRunning;
+            return _ncaItem != null && !_backgroundTaskService.IsRunning;
         }
-
     }
 
-    public interface ISavePartitionFileCommand : ICommand
+    public interface ISavePlaintextNcaFileCommand : ICommand
     {
-        PartitionFileEntryItemBase PartitionFileItem { set; }
+        NcaItem NcaItem { set; }
     }
 }

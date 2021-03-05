@@ -68,7 +68,7 @@ namespace Emignatik.NxFileViewer
               .AddSingleton<IBrushesProvider, BrushesProvider>()
 
               .AddTransient<SettingsWindowViewModel>() // Important to let transient so that real actual settings are displayed when settings view is shown
-              .AddTransient<ILibHacFileSaver, LibHacFileSaver>()
+              .AddTransient<IStreamToFileHelper, StreamToFileHelper>()
               .AddTransient<ISaveFileRunnable, SaveFileRunnable>()
               .AddTransient<ISaveDirectoryRunnable, SaveDirectoryRunnable>()
               .AddTransient<IVerifyNcasHashRunnable, VerifyNcasHashRunnable>()
@@ -77,8 +77,9 @@ namespace Emignatik.NxFileViewer
               .AddTransient<ISaveDirectoryEntryCommand, SaveDirectoryEntryCommand>()
               .AddTransient<ISavePartitionFileCommand, SavePartitionFileCommand>()
               .AddTransient<ISaveSectionContentCommand, SaveSectionContentCommand>()
-              .AddTransient<ISaveNcaFileDecryptedCommand, SaveNcaFileDecryptedCommand>()
+              .AddTransient<ISavePlaintextNcaFileCommand, SavePlaintextNcaFileCommand>()
               .AddTransient<IDownloadFileRunnable, DownloadFileRunnable>()
+              .AddTransient<ISaveStorageRunnable, SaveStorageRunnable>()
               .AddTransient<IFsSanitizer, FsSanitizer>()
 
               .AddLogging(builder => builder.AddAppLoggerProvider())

@@ -113,6 +113,8 @@ namespace Emignatik.NxFileViewer.Settings
             }
         }
 
+        public int StreamCopyBufferSize { get; set; } = 4 * 1024 * 1024; //TODO: expose in the settings?
+
         public AppSettingsModel WrappedModel => _appSettingsModel;
 
         public void Update(AppSettingsModel newModel)

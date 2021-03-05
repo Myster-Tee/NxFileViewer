@@ -24,5 +24,7 @@ namespace Emignatik.NxFileViewer.Settings
         bool AlwaysReloadKeysBeforeOpen { get; set; }
 
         string TitlePageUrl { get; set; }
+
+        public int StreamCopyBufferSize { get; set; }
     }
 }

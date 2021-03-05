@@ -5,7 +5,6 @@ using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
-using Emignatik.NxFileViewer.Tools;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using LibHac.Fs;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,18 +15,16 @@ namespace Emignatik.NxFileViewer.Commands
     public class SaveDirectoryEntryCommand : CommandBase, ISaveDirectoryEntryCommand
     {
         private readonly IPromptService _promptService;
-        private readonly IFsSanitizer _fsSanitizer;
         private readonly IServiceProvider _serviceProvider;
         private readonly IBackgroundTaskService _backgroundTaskService;
         private readonly ILogger _logger;
 
         private DirectoryEntryItem? _directoryEntryItem;
 
-        public SaveDirectoryEntryCommand(IPromptService promptService, IFsSanitizer fsSanitizer, IServiceProvider serviceProvider, IBackgroundTaskService backgroundTaskService, ILoggerFactory loggerFactory)
+        public SaveDirectoryEntryCommand(IPromptService promptService, IServiceProvider serviceProvider, IBackgroundTaskService backgroundTaskService, ILoggerFactory loggerFactory)
         {
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
             _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
-            _fsSanitizer = fsSanitizer ?? throw new ArgumentNullException(nameof(fsSanitizer));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
         }
@@ -43,7 +40,7 @@ namespace Emignatik.NxFileViewer.Commands
 
         public override async void Execute(object? parameter)
         {
-            if (_directoryEntryItem == null) 
+            if (_directoryEntryItem == null)
                 return;
 
             try
@@ -52,7 +49,7 @@ namespace Emignatik.NxFileViewer.Commands
                 if (_directoryEntryItem.DirectoryEntryType == DirectoryEntryType.File)
                 {
                     var file = _directoryEntryItem.GetFile();
-                    var filePath = _promptService.PromptSaveFile(_fsSanitizer.SanitizeFileName(_directoryEntryItem.Name));
+                    var filePath = _promptService.PromptSaveFile(_directoryEntryItem.Name);
                     if (filePath == null)
                         return;
 

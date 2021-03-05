@@ -16,7 +16,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
     {
         private readonly NcaItem _ncaItem;
         private readonly MenuItem _menuItemSaveNcaRaw;
-        private readonly MenuItem _menuItemSaveNcaDecrypted;
+        private readonly MenuItem _menuItemSavePlaintextNca;
 
         public NcaItemViewModel(NcaItem ncaItem, IServiceProvider serviceProvider)
             : base(ncaItem, serviceProvider)
@@ -29,9 +29,9 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
             savePartitionFileCommand.PartitionFileItem = ncaItem;
             _menuItemSaveNcaRaw = CreateLocalizedMenuItem(nameof(ILocalizationKeys.ContextMenu_SaveNcaFileRaw), savePartitionFileCommand);
 
-            var saveNcaFileDecryptedCommand = serviceProvider.GetRequiredService<ISaveNcaFileDecryptedCommand>();
-            saveNcaFileDecryptedCommand.NcaItem = ncaItem;
-            _menuItemSaveNcaDecrypted = CreateLocalizedMenuItem(nameof(ILocalizationKeys.ContextMenu_SaveNcaFileDecrypted), saveNcaFileDecryptedCommand);
+            var savePlaintextNcaFileCommand = serviceProvider.GetRequiredService<ISavePlaintextNcaFileCommand>();
+            savePlaintextNcaFileCommand.NcaItem = ncaItem;
+            _menuItemSavePlaintextNca = CreateLocalizedMenuItem(nameof(ILocalizationKeys.ContextMenu_SaveNcaFilePlaintext), savePlaintextNcaFileCommand);
         }
 
         private void OnNcaItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -43,7 +43,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
         public override IEnumerable<MenuItem> GetOtherContextMenuItems()
         {
             yield return _menuItemSaveNcaRaw;
-            yield return _menuItemSaveNcaDecrypted;
+            yield return _menuItemSavePlaintextNca;
         }
 
         [PropertyView]

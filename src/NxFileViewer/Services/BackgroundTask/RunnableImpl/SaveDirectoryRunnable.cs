@@ -5,19 +5,20 @@ using System.Threading;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Tools;
 using LibHac.Fs;
+using LibHac.FsSystem;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 {
     internal class SaveDirectoryRunnable : ISaveDirectoryRunnable
     {
-        private readonly ILibHacFileSaver _libHacFileSaver;
+        private readonly IStreamToFileHelper _streamToFileHelper;
         private readonly IFsSanitizer _fsSanitizer;
         private IEnumerable<DirectoryEntryItem>? _directoryEntryItems;
         private string? _targetDirectory;
 
-        public SaveDirectoryRunnable(ILibHacFileSaver libHacFileSaver, IFsSanitizer fsSanitizer)
+        public SaveDirectoryRunnable(IStreamToFileHelper streamToFileHelper, IFsSanitizer fsSanitizer)
         {
-            _libHacFileSaver = libHacFileSaver ?? throw new ArgumentNullException(nameof(libHacFileSaver));
+            _streamToFileHelper = streamToFileHelper ?? throw new ArgumentNullException(nameof(streamToFileHelper));
             _fsSanitizer = fsSanitizer ?? throw new ArgumentNullException(nameof(fsSanitizer));
         }
 
@@ -56,7 +57,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
                         break;
                     case DirectoryEntryType.File:
                         var file = item.GetFile();
-                        _libHacFileSaver.Save(file, dstPath, cancellationToken, progressReporter.SetPercentage);
+                        _streamToFileHelper.Save(file.AsStream(), dstPath, cancellationToken, progressReporter.SetPercentage);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

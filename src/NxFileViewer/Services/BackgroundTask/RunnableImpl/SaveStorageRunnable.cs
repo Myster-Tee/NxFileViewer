@@ -1,21 +1,20 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
-using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Tools;
-using LibHac.Fs.Fsa;
+using LibHac.Fs;
 using LibHac.FsSystem;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 {
-    public class SaveFileRunnable : ISaveFileRunnable
+    public class SaveStorageRunnable : ISaveStorageRunnable
     {
         private readonly IStreamToFileHelper _streamToFileHelper;
 
-        private IFile? _srcFile;
+        private IStorage? _srcStorage;
         private string? _dstFilePath;
 
-        public SaveFileRunnable(IStreamToFileHelper streamToFileHelper)
+
+        public SaveStorageRunnable(IStreamToFileHelper streamToFileHelper)
         {
             _streamToFileHelper = streamToFileHelper ?? throw new ArgumentNullException(nameof(streamToFileHelper));
         }
@@ -24,27 +23,26 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 
         public bool SupportProgress => true;
 
-        public void Setup(IFile srcFile, string dstFilePath)
+
+        public void Setup(IStorage srcStorage, string dstFilePath)
         {
-            _srcFile = srcFile ?? throw new ArgumentNullException(nameof(srcFile));
             _dstFilePath = dstFilePath ?? throw new ArgumentNullException(nameof(dstFilePath));
+            _srcStorage = srcStorage ?? throw new ArgumentNullException(nameof(srcStorage));
         }
 
         public void Run(IProgressReporter progressReporter, CancellationToken cancellationToken)
         {
-            if (_srcFile == null || _dstFilePath == null)
+            if (_srcStorage == null || _dstFilePath == null)
                 throw new InvalidOperationException($"{nameof(Setup)} should be called first.");
 
-            var progressText = LocalizationManager.Instance.Current.Keys.Status_SavingFile.SafeFormat(Path.GetFileName(_dstFilePath));
-            progressReporter.SetText(progressText);
-
-
-            _streamToFileHelper.Save(_srcFile.AsStream(), _dstFilePath, cancellationToken, progressReporter.SetPercentage);
+            _streamToFileHelper.Save(_srcStorage.AsStream(), _dstFilePath, cancellationToken, progressReporter.SetPercentage);
         }
+
+
     }
 
-    public interface ISaveFileRunnable : IRunnable
+    public interface ISaveStorageRunnable : IRunnable
     {
-        void Setup(IFile srcFile, string dstFilePath);
+        void Setup(IStorage srcStorage, string dstFilePath);
     }
 }

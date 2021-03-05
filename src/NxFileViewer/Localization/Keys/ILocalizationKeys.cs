@@ -97,7 +97,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string ContextMenu_SaveFileItem { get; }
         string ContextMenu_SavePartitionFileItem { get; }
         string ContextMenu_SaveNcaFileRaw { get; }
-        string ContextMenu_SaveNcaFileDecrypted { get; }
+        string ContextMenu_SaveNcaFilePlaintext { get; }
 
         string SettingsLoadingError { get; }
         string SettingsSavingError { get; }
@@ -190,10 +190,10 @@ namespace Emignatik.NxFileViewer.Localization.Keys
 
         string KeysLoading_Starting_Log { get; }
         string KeysLoading_Successful_Log { get; }
-        string KeysLoading_Error_Log { get; }
         string KeysLoading_Error { get; }
         string WarnNoProdKeysFileFound { get; }
         string InvalidSetting_KeysFileNotFound { get; }
+        string InvalidSetting_BufferSizeInvalid { get; }
 
         string ToolTip_KeyMissing { get; }
 
