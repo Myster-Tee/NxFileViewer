@@ -14,7 +14,14 @@
             </ToolTip>
         </Grid.ToolTip>
         <Grid.ContextMenu>
-            <ContextMenu ItemsSource="{Binding ContextMenuItems}" />
+            <ContextMenu ItemsSource="{Binding ContextMenuItems}">
+                <ContextMenu.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Command" Value="{Binding Command}" />
+                        <Setter Property="Header" Value="{Binding Name}" />
+                    </Style>
+                </ContextMenu.ItemContainerStyle>
+            </ContextMenu>
         </Grid.ContextMenu>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

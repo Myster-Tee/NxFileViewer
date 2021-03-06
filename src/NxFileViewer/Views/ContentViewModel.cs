@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Emignatik.NxFileViewer.Model.TreeItems;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Utils.MVVM;
@@ -10,28 +10,22 @@ namespace Emignatik.NxFileViewer.Views
 {
     public class ContentViewModel : ViewModelBase
     {
-        private readonly IItem _rootItem;
         private readonly ISelectedItemService _selectedItemService;
         private IItemViewModel? _selectedItemViewModel;
-
+            
         public ContentViewModel(IItem rootItem, IServiceProvider serviceProvider)
         {
+            rootItem = rootItem ?? throw new ArgumentNullException(nameof(rootItem));
             ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            _rootItem = rootItem ?? throw new ArgumentNullException(nameof(rootItem));
             _selectedItemService = serviceProvider.GetRequiredService<ISelectedItemService>();
 
-            _selectedItemService.SelectedItemChanged += (sender, args) =>
-             {
-                 NotifyPropertyChanged(nameof(SelectedItem));
-             };
-
             var itemViewModelBuilder = ServiceProvider.GetRequiredService<IItemViewModelBuilder>();
-            RootItems = new List<IItemViewModel> { itemViewModelBuilder.Build(_rootItem) };
+            RootItems.Add(itemViewModelBuilder.Build(rootItem));
         }
 
         public IServiceProvider ServiceProvider { get; }
 
-        public IEnumerable<IItemViewModel> RootItems { get; }
+        public ObservableCollection<IItemViewModel> RootItems { get; } = new();
 
         public IItemViewModel? SelectedItem
         {

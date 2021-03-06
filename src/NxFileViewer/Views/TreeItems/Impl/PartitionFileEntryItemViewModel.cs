@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Controls;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization.Keys;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
@@ -13,7 +12,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
     public class PartitionFileEntryItemViewModel : ItemViewModel
     {
         private readonly PartitionFileEntryItemBase _partitionFileEntryItem;
-        private readonly MenuItem _menuItemSavePartitionFile;
+        private readonly IMenuItemViewModel _menuItemSavePartitionFile;
 
         public PartitionFileEntryItemViewModel(PartitionFileEntryItemBase partitionFileEntryItem, IServiceProvider serviceProvider)
             : base(partitionFileEntryItem, serviceProvider)
@@ -25,7 +24,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
             _menuItemSavePartitionFile = CreateLocalizedMenuItem(nameof(ILocalizationKeys.ContextMenu_SavePartitionFileItem), savePartitionFileItemCommand);
         }
 
-        public override IEnumerable<MenuItem> GetOtherContextMenuItems()
+        public override IEnumerable<IMenuItemViewModel> GetOtherContextMenuItems()
         {
             yield return _menuItemSavePartitionFile;
         }

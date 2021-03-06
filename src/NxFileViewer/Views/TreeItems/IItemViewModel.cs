@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Controls;
+using System.Windows.Input;
 using Emignatik.NxFileViewer.Model.TreeItems;
 using Emignatik.NxFileViewer.Utils.MVVM;
 
@@ -30,6 +30,22 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
         /// </summary>
         public string ErrorsTooltip { get; }
 
-        public IEnumerable<MenuItem> ContextMenuItems { get; }
+        public IEnumerable<IMenuItemViewModel> ContextMenuItems { get; }
+    }
+
+    /// <summary>
+    /// Represents an item of the context menu associated with a <see cref="IItemViewModel"/>
+    /// </summary>
+    public interface IMenuItemViewModel
+    {
+        /// <summary>
+        /// Name of the menu item
+        /// </summary>
+        string? Name { get; }
+
+        /// <summary>
+        /// Command
+        /// </summary>
+        ICommand? Command { get; }
     }
 }

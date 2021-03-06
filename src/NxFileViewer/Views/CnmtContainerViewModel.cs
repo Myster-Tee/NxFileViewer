@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -27,7 +27,18 @@ namespace Emignatik.NxFileViewer.Views
 
             SaveSelectedImageCommand = serviceProvider.GetRequiredService<ISaveTitleImageCommand>();
             CopySelectedImageCommand = serviceProvider.GetRequiredService<ICopyImageCommand>();
-            Titles = _cnmtContainer.NacpContainer?.Titles.Select(titleInfo => new TitleInfoViewModel(titleInfo, serviceProvider)).ToArray();
+
+            var nacpContainer = _cnmtContainer.NacpContainer;
+            if (nacpContainer != null)
+            {
+                var titleInfoViewModels = nacpContainer.Titles.Select(titleInfo => new TitleInfoViewModel(titleInfo, serviceProvider));
+
+                foreach (var titleInfoViewModel in titleInfoViewModels)
+                {
+                    Titles.Add(titleInfoViewModel);
+                }
+            }
+
             SelectedTitle = Titles?.FirstOrDefault();
         }
 
@@ -39,7 +50,7 @@ namespace Emignatik.NxFileViewer.Views
 
         public string TitleId => _cnmtContainer.CnmtItem.TitleId;
 
-        public IReadOnlyList<TitleInfoViewModel>? Titles { get; }
+        public ObservableCollection<TitleInfoViewModel> Titles { get; } = new();
 
         public TitleInfoViewModel? SelectedTitle
         {

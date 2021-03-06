@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Controls;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization.Keys;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
@@ -15,7 +14,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
     public class SectionItemViewModel : ItemViewModel
     {
         private readonly SectionItem _sectionItem;
-        private readonly MenuItem _menuItemSaveSection;
+        private readonly IMenuItemViewModel _menuItemSaveSection;
 
         public SectionItemViewModel(SectionItem sectionItem, IServiceProvider serviceProvider)
             : base(sectionItem, serviceProvider)
@@ -55,7 +54,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
         [PropertyView]
         public short Version => _sectionItem.Version;
 
-        public override IEnumerable<MenuItem> GetOtherContextMenuItems()
+        public override IEnumerable<IMenuItemViewModel> GetOtherContextMenuItems()
         {
             yield return _menuItemSaveSection;
         }

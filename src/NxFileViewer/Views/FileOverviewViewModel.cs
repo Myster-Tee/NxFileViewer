@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -40,7 +41,11 @@ namespace Emignatik.NxFileViewer.Views
                 UpdateMissingKeys();
             };
 
-            CnmtContainers = _fileOverview.CnmtContainers.Select((contentOverview, i) => new CnmtContainerViewModel(contentOverview, i + 1, serviceProvider)).ToArray();
+            foreach (var cnmtContainerViewModel in _fileOverview.CnmtContainers.Select((contentOverview, i) => new CnmtContainerViewModel(contentOverview, i + 1, serviceProvider)))
+            {
+                CnmtContainers.Add(cnmtContainerViewModel);
+            }
+
             SelectedCnmtContainer = CnmtContainers.FirstOrDefault();
 
             UpdateMissingKeys();
@@ -70,7 +75,7 @@ namespace Emignatik.NxFileViewer.Views
 
         public bool IsMultiContentPackage => _fileOverview.CnmtContainers.Count > 1;
 
-        public CnmtContainerViewModel[] CnmtContainers { get; }
+        public ObservableCollection<CnmtContainerViewModel> CnmtContainers { get; } = new();
 
         public CnmtContainerViewModel? SelectedCnmtContainer
         {

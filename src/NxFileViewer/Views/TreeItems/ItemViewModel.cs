@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
@@ -19,7 +17,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
     public class ItemViewModel : ViewModelBase, IItemViewModel
     {
         private readonly IItem _item;
-        private readonly MenuItem _menuItemShowErrors;
+        private readonly IMenuItemViewModel _menuItemShowErrors;
 
         private string _errorsTooltip;
         private bool _hasErrors;
@@ -78,7 +76,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
             }
         }
 
-        public IEnumerable<MenuItem> ContextMenuItems
+        public IEnumerable<IMenuItemViewModel> ContextMenuItems
         {
             get
             {
@@ -88,7 +86,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
             }
         }
 
-        public virtual IEnumerable<MenuItem> GetOtherContextMenuItems()
+        public virtual IEnumerable<IMenuItemViewModel> GetOtherContextMenuItems()
         {
             yield break;
         }
@@ -107,20 +105,53 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
             HasErrors = itemErrors.Count > 0;
         }
 
-        protected MenuItem CreateLocalizedMenuItem(string localizationKey, ICommand command)
+        /// <summary>
+        /// </summary>
+        /// <param name="localizationKey">The localization key to use for the menu item header text</param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        protected static IMenuItemViewModel CreateLocalizedMenuItem(string localizationKey, ICommand command)
         {
-            var menuItem = new MenuItem
-            {
-                Command = command
-            };
-
-            menuItem.SetBinding(MenuItem.HeaderProperty, new Binding($"Current.Keys.{localizationKey}")
-            {
-                Source = LocalizationManager.Instance
-            });
-
-            return menuItem;
+            return new MenuItemViewModel(localizationKey, command);
         }
 
     }
+
+    public class MenuItemViewModel : ViewModelBase, IMenuItemViewModel
+    {
+        private readonly string _localizationKey;
+
+        private string? _name = "";
+
+        public MenuItemViewModel(string localizationKey, ICommand command)
+        {
+            _localizationKey = localizationKey ?? throw new ArgumentNullException(nameof(localizationKey));
+            Command = command ?? throw new ArgumentNullException(nameof(command));
+
+            LocalizationManager.Instance.AddWeakLocalizationChangedHandler((_, _) =>
+            {
+                Update();
+            });
+
+            Update();
+        }
+
+        private void Update()
+        {
+            Name = LocalizationManager.Instance.Current.Keys[_localizationKey];
+        }
+
+        public string? Name
+        {
+            get => _name;
+            private set
+            {
+                _name = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public ICommand? Command { get; }
+    }
+
 }

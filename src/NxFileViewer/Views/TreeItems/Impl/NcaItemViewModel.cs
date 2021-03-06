@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Controls;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization.Keys;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
@@ -15,8 +14,8 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
     public class NcaItemViewModel : PartitionFileEntryItemViewModel
     {
         private readonly NcaItem _ncaItem;
-        private readonly MenuItem _menuItemSaveNcaRaw;
-        private readonly MenuItem _menuItemSavePlaintextNca;
+        private readonly IMenuItemViewModel _menuItemSaveNcaRaw;
+        private readonly IMenuItemViewModel _menuItemSavePlaintextNca;
 
         public NcaItemViewModel(NcaItem ncaItem, IServiceProvider serviceProvider)
             : base(ncaItem, serviceProvider)
@@ -40,7 +39,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
                 NotifyPropertyChanged(nameof(HeaderSignatureValidity));
         }
 
-        public override IEnumerable<MenuItem> GetOtherContextMenuItems()
+        public override IEnumerable<IMenuItemViewModel> GetOtherContextMenuItems()
         {
             yield return _menuItemSaveNcaRaw;
             yield return _menuItemSavePlaintextNca;
