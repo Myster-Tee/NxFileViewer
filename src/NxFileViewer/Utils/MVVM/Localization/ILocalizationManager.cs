@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
@@ -8,7 +9,7 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
         /// <summary>
         /// Occurs when <see cref="Current"/> changes
         /// </summary>
-        event LocalizationChangedHandler<TKeys>? LocalizationChanged;
+        event EventHandler<LocalizationChangedHandlerArgs<TKeys>>? LocalizationChanged;
 
         /// <summary>
         /// List of available localizations
@@ -35,18 +36,27 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
         /// </summary>
         bool UseAutoLocalization { get; set; }
 
+        /// <summary>
+        /// Adds a weak reference subscription to the <see cref="LocalizationChanged"/> event
+        /// </summary>
+        /// <param name="localizationChangedHandler"></param>
+        void AddWeakLocalizationChangedHandler(EventHandler<LocalizationChangedHandlerArgs<TKeys>> localizationChangedHandler);
+
+        /// <summary>
+        /// Removes a weak reference subscription to the <see cref="LocalizationChanged"/> event
+        /// </summary>
+        /// <param name="localizationChangedHandler"></param>
+        void RemoveWeakLocalizationChangedHandler(EventHandler<LocalizationChangedHandlerArgs<TKeys>> localizationChangedHandler);
     }
 
-    public delegate void LocalizationChangedHandler<T>(object sender, LocalizationChangedHandlerArgs<T> args) where T : ILocalizationKeysBase;
-
-    public class LocalizationChangedHandlerArgs<T> where T : ILocalizationKeysBase
+    public class LocalizationChangedHandlerArgs<TKeys> : EventArgs where TKeys : ILocalizationKeysBase
     {
-        public LocalizationChangedHandlerArgs(ILocalization<T> newLocalization)
+        public LocalizationChangedHandlerArgs(ILocalization<TKeys> newLocalization)
         {
             NewLocalization = newLocalization;
         }
 
-        public ILocalization<T> NewLocalization { get; }
+        public ILocalization<TKeys> NewLocalization { get; }
     }
 
 }

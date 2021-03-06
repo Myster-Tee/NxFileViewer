@@ -39,5 +39,13 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
         /// <returns></returns>
         bool TryGetValue(string key, out string value, StringComparison stringComparison = StringComparison.Ordinal);
 
+        /// <summary>
+        /// Get the localized value from the specified key.
+        /// Returns null if key doesn't exist.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        string? this[string key] { get; }
+
     }
 }

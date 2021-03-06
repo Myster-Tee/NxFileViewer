@@ -47,6 +47,16 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
             return false;
         }
 
+        public string? this[string key]
+        {
+            get
+            {
+                if (TryGetValue(key, out var value, StringComparison.OrdinalIgnoreCase))
+                    return value;
+                return null;
+            }
+        }
+
         private PropertyInfo? FindProperty(string key, StringComparison stringComparison)
         {
             return GetKeyProperties().FirstOrDefault(propertyInfo => propertyInfo.PropertyType == typeof(string) && string.Equals(propertyInfo.Name, key, stringComparison));

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Windows;
 
 namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
 {
@@ -21,7 +22,7 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
         private readonly RealLocalization<TKeys>? _systemLocalization;
         private bool _useAutoLocalization;
 
-        public event LocalizationChangedHandler<TKeys>? LocalizationChanged;
+        public event EventHandler<LocalizationChangedHandlerArgs<TKeys>>? LocalizationChanged;
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
@@ -137,6 +138,17 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
             }
         }
 
+
+        public void AddWeakLocalizationChangedHandler(EventHandler<LocalizationChangedHandlerArgs<TKeys>> localizationChangedHandler)
+        {
+            WeakEventManager<LocalizationManager<TKeys>, LocalizationChangedHandlerArgs<TKeys>>.AddHandler(this, nameof(LocalizationChanged), localizationChangedHandler);
+        }
+
+        public void RemoveWeakLocalizationChangedHandler(EventHandler<LocalizationChangedHandlerArgs<TKeys>> localizationChangedHandler)
+        {
+            WeakEventManager<LocalizationManager<TKeys>, LocalizationChangedHandlerArgs<TKeys>>.RemoveHandler(this, nameof(LocalizationChanged), localizationChangedHandler);
+        }
+
         private void InitializeAutoLocalization()
         {
             if (UseAutoLocalization)
@@ -167,7 +179,5 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
             LocalizationChanged?.Invoke(this, new LocalizationChangedHandlerArgs<TKeys>(localization));
         }
     }
-
-
 
 }
