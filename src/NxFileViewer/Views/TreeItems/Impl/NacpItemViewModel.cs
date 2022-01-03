@@ -1,6 +1,7 @@
 ﻿using System;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
+using LibHac.Ns;
 
 namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
 {
@@ -30,6 +31,6 @@ namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
         public string BcatPassphrase => _nacpItem.BcatPassphrase;
 
         [PropertyView]
-        public uint ParentalControlFlag => _nacpItem.ParentalControlFlag;
+        public ParentalControlFlagValue ParentalControl => _nacpItem.ParentalControl;
     }
 }

@@ -162,12 +162,16 @@ namespace Emignatik.NxFileViewer.FileLoading
 
                 var nacp = nacpItem.Nacp;
 
-                foreach (var description in nacp.Descriptions)
+                var language = -1;
+                foreach (var applicationControlTitle in nacp.Titles)
                 {
-                    if (string.IsNullOrEmpty(description.Title))
-                        continue;
+                    language++;
 
-                    var titleInfo = new TitleInfo(description);
+                    if (string.IsNullOrEmpty(applicationControlTitle.Name.ToString()))
+                        continue; //TODO: valider cette ligne
+
+
+                    var titleInfo = new TitleInfo(applicationControlTitle, (NacpLanguage)language);
 
                     titleInfo.Icon = LoadExpectedIcon(nacpItem.ContainerSectionItem, titleInfo.Language);
                     contentDetails.Titles.Add(titleInfo);

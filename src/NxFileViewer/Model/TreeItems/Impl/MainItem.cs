@@ -1,5 +1,4 @@
 ﻿using System;
-using LibHac;
 using LibHac.Common;
 using LibHac.Fs;
 using LibHac.Loader;
@@ -20,7 +19,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public NsoHeader NsoHeader { get; }
 
-        public override string LibHacUnderlyingTypeName => nameof(Nso);
+        public override string LibHacUnderlyingTypeName => "Nso";
 
         public Buffer32 ModuleId => NsoHeader.ModuleId;
 

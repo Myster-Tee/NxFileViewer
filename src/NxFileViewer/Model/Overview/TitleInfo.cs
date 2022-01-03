@@ -1,22 +1,22 @@
-﻿using System;
-using LibHac;
+﻿using LibHac.Ns;
 
 namespace Emignatik.NxFileViewer.Model.Overview
 {
     public class TitleInfo
     {
-        private readonly NacpDescription _description;
+        private readonly ApplicationControlTitle _description;
 
-        public TitleInfo(NacpDescription description)
+        public TitleInfo(ApplicationControlTitle description, NacpLanguage language)
         {
-            _description = description ?? throw new ArgumentNullException(nameof(description));
+            _description = description;
+            Language = language;
         }
 
-        public string AppName => _description.Title;
+        public string AppName => _description.Name.ToString();
 
-        public string Publisher => _description.Developer;
+        public string Publisher => _description.Publisher.ToString();
 
-        public NacpLanguage Language => (NacpLanguage)_description.Language;
+        public NacpLanguage Language { get; }
 
         public byte[]? Icon { get; set; }
 
