@@ -47,5 +47,13 @@ If you'd like to have this app in your language, feel free to give me your trans
 - Special thanks to [Thealexbarney](https://github.com/Thealexbarney) for his powerful and easy to use [LibHac](https://github.com/Thealexbarney/LibHac) library.
 - Thanks to all the Switch scene :)
 
+## Building the solution
+
+Use Microsoft Visual Studio 2019+ to build the solution.
+
+By default, the assembly is signed using my personal certificate bundled in AppSign.pfx, install it using the following command (required once):
+
+
+    sn.exe -i AppSign.pfx <key_container_name_from_error_message>
 
 
