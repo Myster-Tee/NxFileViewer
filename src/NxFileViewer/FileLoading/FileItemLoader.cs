@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model.TreeItems;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
@@ -15,7 +13,9 @@ using LibHac.FsSystem;
 using LibHac.FsSystem.NcaUtils;
 using LibHac.Loader;
 using LibHac.Spl;
+using LibHac.Util;
 using Microsoft.Extensions.Logging;
+using Path = System.IO.Path;
 
 namespace Emignatik.NxFileViewer.FileLoading
 {
@@ -360,7 +360,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                         IFile nacpFile;
                         try
                         {
-                            fileSystem.OpenFile(out nacpFile, new U8Span(entryPath), OpenMode.Read).ThrowIfFailure();
+                            var uniqueRefFile = new UniqueRef<IFile>();
+                            fileSystem.OpenFile(ref uniqueRefFile, new U8Span(entryPath), OpenMode.Read).ThrowIfFailure();
+                            nacpFile = uniqueRefFile.Get;
                         }
                         catch (Exception ex)
                         {
@@ -395,7 +397,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                         IFile cnmtFile;
                         try
                         {
-                            fileSystem.OpenFile(out cnmtFile, new U8Span(entryPath), OpenMode.Read).ThrowIfFailure();
+                            var uniqueRefFile = new UniqueRef<IFile>();
+                            fileSystem.OpenFile(ref uniqueRefFile, new U8Span(entryPath), OpenMode.Read).ThrowIfFailure();
+                            cnmtFile = uniqueRefFile.Get;
                         }
                         catch (Exception ex)
                         {
@@ -429,7 +433,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                         IFile nsoFile;
                         try
                         {
-                            fileSystem.OpenFile(out nsoFile, new U8Span(entryPath), OpenMode.Read).ThrowIfFailure();
+                            var uniqueRefFile = new UniqueRef<IFile>();
+                            fileSystem.OpenFile(ref uniqueRefFile, new U8Span(entryPath), OpenMode.Read).ThrowIfFailure();
+                            nsoFile = uniqueRefFile.Get;
                         }
                         catch (Exception ex)
                         {
@@ -512,8 +518,13 @@ namespace Emignatik.NxFileViewer.FileLoading
         {
             try
             {
-                fileSystem.OpenDirectory(out IDirectory directory, currentPath.ToU8Span(), OpenDirectoryMode.All).ThrowIfFailure();
+                var uniqueRefDirectory = new UniqueRef<IDirectory>();
 
+                var path = new LibHac.Fs.Path();
+                path.Initialize(currentPath.ToU8Span());
+                fileSystem.OpenDirectory(ref uniqueRefDirectory, path, OpenDirectoryMode.All).ThrowIfFailure();
+
+                var directory = uniqueRefDirectory.Get;
                 directory.GetEntryCount(out var nbEntries).ThrowIfFailure();
 
                 var entries = new DirectoryEntry[nbEntries];
@@ -528,7 +539,7 @@ namespace Emignatik.NxFileViewer.FileLoading
                 var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToGetFileSystemDirectoryEntries.SafeFormat(ex.Message);
                 parentItem.Errors.Add(TREE_LOADING_CATEGORY, message);
                 _logger.LogError(ex, message);
-                return new DirectoryEntry[0];
+                return Array.Empty<DirectoryEntry>();
             }
         }
 

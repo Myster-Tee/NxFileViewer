@@ -1,5 +1,6 @@
 ﻿using System;
 using LibHac;
+using LibHac.Common.Keys;
 
 namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 {
@@ -23,7 +24,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public override string DisplayName => Name;
 
-        public override Keyset KeySet => ParentItem.KeySet;
+        public override KeySet KeySet => ParentItem.KeySet;
 
         public XciPartitionType XciPartitionType { get; }
     }

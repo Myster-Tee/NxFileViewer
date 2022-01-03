@@ -101,8 +101,9 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         /// <returns></returns>
         public IFile GetFile()
         {
-            this.ContainerSectionItem.FileSystem!.OpenFile(out var file, new U8Span(this.Path), OpenMode.Read).ThrowIfFailure();
-            return file;
+            var file = new UniqueRef<IFile>();
+            this.ContainerSectionItem.FileSystem!.OpenFile(ref file, new U8Span(this.Path), OpenMode.Read).ThrowIfFailure();
+            return file.Get;
         }
 
         public override string ToString()

@@ -1,6 +1,4 @@
 ﻿using System;
-using Emignatik.NxFileViewer.Utils;
-using LibHac;
 using LibHac.Fs;
 
 namespace Emignatik.NxFileViewer.Model.TreeItems.Impl

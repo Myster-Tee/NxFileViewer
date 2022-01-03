@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using LibHac;
+using LibHac.Common.Keys;
 using LibHac.FsSystem;
 
 namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
@@ -22,7 +22,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public override string? LibHacUnderlyingTypeName => null;
 
-        public abstract Keyset KeySet { get; }
+        public abstract KeySet KeySet { get; }
 
         public sealed override IEnumerable<IItem> ChildItems
         {

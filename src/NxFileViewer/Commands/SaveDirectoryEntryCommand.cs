@@ -54,7 +54,7 @@ namespace Emignatik.NxFileViewer.Commands
                         return;
 
                     var saveFileRunnable = _serviceProvider.GetRequiredService<ISaveFileRunnable>();
-                    saveFileRunnable.Setup(file, filePath);
+                    saveFileRunnable.Setup(file.Get, filePath);
                     runnable = saveFileRunnable;
                 }
                 else
