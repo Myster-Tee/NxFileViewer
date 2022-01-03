@@ -37,6 +37,21 @@ namespace Emignatik.NxFileViewer.Commands
                 {
                     // ignored
                 }
+
+                if (!string.IsNullOrEmpty(initialDirectory) )
+                {
+
+                    try
+                    {
+                        if (!Directory.Exists(initialDirectory))
+                            initialDirectory = string.Empty;
+                    }
+                    catch
+                    {
+                        initialDirectory = string.Empty;
+                    }
+                }
+
             }
 
             var openFileDialog = new OpenFileDialog
@@ -46,7 +61,8 @@ namespace Emignatik.NxFileViewer.Commands
                 Filter = LocalizationManager.Instance.Current.Keys.OpenFile_Filter
             };
 
-            if (openFileDialog.ShowDialog(Application.Current.MainWindow) != true) return;
+            var currentMainWindow = Application.Current.MainWindow;
+            if (openFileDialog.ShowDialog(currentMainWindow) != true) return;
 
             var filePath = openFileDialog.FileName;
 
