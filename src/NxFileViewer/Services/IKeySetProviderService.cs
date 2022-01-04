@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using LibHac;
+using LibHac.Common.Keys;
 
 namespace Emignatik.NxFileViewer.Services
 {
@@ -42,7 +42,7 @@ namespace Emignatik.NxFileViewer.Services
         /// </summary>
         /// <param name="forceReload"></param>
         /// <returns></returns>
-        Keyset GetKeySet(bool forceReload = false);
+        KeySet GetKeySet(bool forceReload = false);
 
         /// <summary>
         /// Unloads the current KeySet and re-detects the keys file paths

@@ -1,7 +1,7 @@
 ﻿using System;
 using Emignatik.NxFileViewer.Utils;
-using LibHac;
 using LibHac.Fs;
+using LibHac.Ns;
 
 namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 {
@@ -9,30 +9,30 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     {
         public const string NacpFileName = "control.nacp";
 
-        public NacpItem(Nacp nacp, SectionItem parentItem, DirectoryEntry directoryEntry, string name, string path)
-            : base(parentItem, directoryEntry, name, path)
+        public NacpItem(ApplicationControlProperty nacp, SectionItem parentItem, DirectoryEntryEx directoryEntry)
+            : base(parentItem, directoryEntry)
         {
-            Nacp = nacp ?? throw new ArgumentNullException(nameof(nacp));
+            Nacp = nacp;
             ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
             AddOnContentBaseId = Nacp.AddOnContentBaseId.ToStrId();
         }
 
         public override SectionItem ParentItem { get; }
 
-        public Nacp Nacp { get; }
+        public ApplicationControlProperty Nacp { get; }
 
         public override string LibHacUnderlyingTypeName => nameof(Nacp);
 
-        public string DisplayVersion => Nacp.DisplayVersion;
+        public string DisplayVersion => Nacp.DisplayVersion.ToString();
 
         public string AddOnContentBaseId { get; }
 
-        public string Isbn => Nacp.Isbn;
+        public string Isbn => Nacp.Isbn.ToString();
 
-        public string ApplicationErrorCodeCategory => Nacp.ApplicationErrorCodeCategory;
+        public string ApplicationErrorCodeCategory => Nacp.ApplicationErrorCodeCategory.ToString();
 
-        public string BcatPassphrase => Nacp.BcatPassphrase;
+        public string BcatPassphrase => Nacp.BcatPassphrase.ToString();
 
-        public uint ParentalControlFlag => Nacp.ParentalControlFlag;
+        public ParentalControlFlagValue ParentalControl => Nacp.ParentalControl;
     }
 }

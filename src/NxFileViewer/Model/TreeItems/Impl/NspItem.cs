@@ -1,5 +1,5 @@
 ﻿using System;
-using LibHac;
+using LibHac.Common.Keys;
 using LibHac.Fs.Fsa;
 using LibHac.FsSystem;
 
@@ -13,7 +13,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     {
         private readonly IFile _file;
 
-        public NspItem(PartitionFileSystem nspPartitionFileSystem, string name, IFile file, Keyset keySet)
+        public NspItem(PartitionFileSystem nspPartitionFileSystem, string name, IFile file, KeySet keySet)
             : base(nspPartitionFileSystem)
         {
             NspPartitionFileSystem = nspPartitionFileSystem ?? throw new ArgumentNullException(nameof(nspPartitionFileSystem));
@@ -26,7 +26,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public PartitionFileSystem NspPartitionFileSystem { get; }
 
-        public override Keyset KeySet { get; }
+        public override KeySet KeySet { get; }
 
         public override string Name { get; }
 

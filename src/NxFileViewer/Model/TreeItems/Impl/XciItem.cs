@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using LibHac;
+using LibHac.Common.Keys;
 using LibHac.Fs.Fsa;
 
 namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
@@ -9,7 +10,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     {
         private readonly IFile _file;
 
-        public XciItem(Xci xci, string name, IFile file, Keyset keySet)
+        public XciItem(Xci xci, string name, IFile file, KeySet keySet)
         {
             Xci = xci ?? throw new ArgumentNullException(nameof(xci));
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -31,7 +32,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public override string DisplayName => Name;
 
-        public Keyset KeySet { get; }
+        public KeySet KeySet { get; }
 
         public override void Dispose()
         {

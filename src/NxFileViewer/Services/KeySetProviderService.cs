@@ -6,7 +6,7 @@ using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils;
 using Emignatik.NxFileViewer.Utils.MVVM;
-using LibHac;
+using LibHac.Common.Keys;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Services
@@ -17,7 +17,7 @@ namespace Emignatik.NxFileViewer.Services
 
         private readonly object _lock = new();
         private readonly IAppSettings _appSettings;
-        private Keyset? _keySet = null;
+        private KeySet? _keySet = null;
 
         private readonly ILogger _logger;
         private string? _actualProdKeysFilePath;
@@ -72,7 +72,7 @@ namespace Emignatik.NxFileViewer.Services
             }
         }
 
-        public Keyset GetKeySet(bool forceReload = false)
+        public KeySet GetKeySet(bool forceReload = false)
         {
             lock (_lock)
             {
@@ -115,7 +115,7 @@ namespace Emignatik.NxFileViewer.Services
         /// Loads the KeySet with 
         /// </summary>
         /// <returns></returns>
-        private Keyset LoadKeySet()
+        private KeySet LoadKeySet()
         {
             try
             {
@@ -129,7 +129,7 @@ namespace Emignatik.NxFileViewer.Services
                 _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DefaultTitleKeysFileName, actualTitleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
                 _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DefaultConsoleKeysFileName, actualConsoleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
 
-                var keySet = new Keyset();
+                var keySet = new KeySet();
                 ExternalKeyReader.ReadKeyFile(keySet, filename: actualProdKeysFilePath, titleKeysFilename: actualTitleKeysFilePath, consoleKeysFilename: actualConsoleKeysFilePath,
                     new LibHacProgressReportRelay(
                         _ =>

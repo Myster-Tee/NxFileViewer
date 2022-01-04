@@ -9,6 +9,7 @@ using Emignatik.NxFileViewer.Utils;
 using LibHac;
 using LibHac.Common;
 using LibHac.Fs;
+using LibHac.Fs.Fsa;
 using LibHac.FsSystem;
 using Microsoft.Extensions.Logging;
 using ContentType = LibHac.Ncm.ContentType;
@@ -161,12 +162,15 @@ namespace Emignatik.NxFileViewer.FileLoading
 
                 var nacp = nacpItem.Nacp;
 
-                foreach (var description in nacp.Descriptions)
+                var language = -1;
+                foreach (ref var applicationControlTitle in nacp.Titles)
                 {
-                    if (string.IsNullOrEmpty(description.Title))
+                    language++;
+
+                    if (applicationControlTitle.Name.IsEmpty())
                         continue;
 
-                    var titleInfo = new TitleInfo(description);
+                    var titleInfo = new TitleInfo(ref applicationControlTitle, (NacpLanguage)language);
 
                     titleInfo.Icon = LoadExpectedIcon(nacpItem.ContainerSectionItem, titleInfo.Language);
                     contentDetails.Titles.Add(titleInfo);
@@ -196,7 +200,10 @@ namespace Emignatik.NxFileViewer.FileLoading
 
                 try
                 {
-                    fileSystem.OpenFile(out var file, new U8Span(iconItem.Path), OpenMode.Read).ThrowIfFailure();
+                    using var uniqueRefFile = new UniqueRef<IFile>();
+
+                    fileSystem.OpenFile(ref uniqueRefFile.Ref(), iconItem.Path.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                    var file = uniqueRefFile.Release();
 
                     file.GetSize(out var fileSize).ThrowIfFailure();
                     var bytes = new byte[fileSize];

@@ -14,7 +14,7 @@ namespace Emignatik.NxFileViewer.Model.Overview
 
         public NacpItem NacpItem { get; }
 
-        public List<TitleInfo> Titles { get; } = new List<TitleInfo>();
+        public List<TitleInfo> Titles { get; } = new();
 
     }
 }
