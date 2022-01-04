@@ -19,7 +19,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
         private readonly IItem _item;
         private readonly IMenuItemViewModel _menuItemShowErrors;
 
-        private string _errorsTooltip;
+        private string? _errorsTooltip;
         private bool _hasErrors;
 
         public ItemViewModel(IItem item, IServiceProvider serviceProvider)
@@ -66,7 +66,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
             }
         }
 
-        public string ErrorsTooltip
+        public string? ErrorsTooltip
         {
             get => _errorsTooltip;
             private set

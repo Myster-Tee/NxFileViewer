@@ -14,6 +14,10 @@
                         <views:OpenedFileView />
                     </DataTemplate>
                 </views:OpenedFileDataTemplateSelector.OpenedFileTemplate>
+                <views:OpenedFileDataTemplateSelector.NoOpenedFileTemplate>
+                    <DataTemplate>
+                    </DataTemplate>
+                </views:OpenedFileDataTemplateSelector.NoOpenedFileTemplate>
             </views:OpenedFileDataTemplateSelector>
 
             <!-- ItemIconDataTemplateSelector -->

@@ -26,7 +26,7 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
-        public LocalizationManager(bool useAutoLocalization = true) : this(new[] { Assembly.GetEntryAssembly(), Assembly.GetExecutingAssembly() }, useAutoLocalization)
+        public LocalizationManager(bool useAutoLocalization = true) : this(new[] { Assembly.GetEntryAssembly()!, Assembly.GetExecutingAssembly() }, useAutoLocalization)
         {
         }
 

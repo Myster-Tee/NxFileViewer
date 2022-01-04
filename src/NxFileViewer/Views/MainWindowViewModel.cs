@@ -125,7 +125,7 @@ namespace Emignatik.NxFileViewer.Views
             }
         }
 
-        private void OnAnimationDurationTimerElapsed(object sender, ElapsedEventArgs e)
+        private void OnAnimationDurationTimerElapsed(object? sender, ElapsedEventArgs e)
         {
             this.ErrorAnimationEnabled = false;
         }

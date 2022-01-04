@@ -6,7 +6,7 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
 {
     public class AutoLocalization<T> : ILocalization<T>, INotifyPropertyChanged where T : ILocalizationKeysBase
     {
-        private string _displayName;
+        private string _displayName = string.Empty;
 
         public AutoLocalization(T keys)
         {

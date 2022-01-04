@@ -52,7 +52,7 @@ namespace Emignatik.NxFileViewer.Commands
 
             try
             {
-                var url = _appSettings.TitlePageUrl.SafeFormat(Uri.EscapeUriString(cnmtItem.ApplicationTitleId));
+                var url = _appSettings.TitlePageUrl.SafeFormat(Uri.EscapeDataString(cnmtItem.ApplicationTitleId));
 
                 var processStartInfo = new ProcessStartInfo(url)
                 {

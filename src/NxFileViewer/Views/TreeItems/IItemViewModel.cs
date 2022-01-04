@@ -28,7 +28,7 @@ namespace Emignatik.NxFileViewer.Views.TreeItems
         /// <summary>
         /// Returns errors formatted for the tooltip
         /// </summary>
-        public string ErrorsTooltip { get; }
+        public string? ErrorsTooltip { get; }
 
         public IEnumerable<IMenuItemViewModel> ContextMenuItems { get; }
     }

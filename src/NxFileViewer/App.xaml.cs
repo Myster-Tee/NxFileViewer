@@ -86,7 +86,7 @@ namespace Emignatik.NxFileViewer
 
               .BuildServiceProvider();
 
-            _logger = ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(MethodBase.GetCurrentMethod()!.DeclaringType);
+            _logger = ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(MethodBase.GetCurrentMethod()!.DeclaringType!);
         }
 
         public static IServiceProvider ServiceProvider { get; }

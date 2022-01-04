@@ -8,7 +8,7 @@
         /// <summary>
         /// Object property name (first column)
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; init; } = "";
 
         /// <summary>
         /// Object description (Use for tooltip)

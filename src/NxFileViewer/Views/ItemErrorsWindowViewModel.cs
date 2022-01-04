@@ -8,7 +8,7 @@ namespace Emignatik.NxFileViewer.Views
     public class ItemErrorsWindowViewModel : ViewModelBase
     {
         private readonly IItem _item;
-        private string _errors;
+        private string _errors = string.Empty;
 
         public ItemErrorsWindowViewModel(IItem item)
         {
