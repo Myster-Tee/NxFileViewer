@@ -16,10 +16,8 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         /// </summary>
         /// <param name="parentItem"></param>
         /// <param name="directoryEntry"></param>
-        /// <param name="name"></param>
-        /// <param name="path"></param>
-        public DirectoryEntryItem(SectionItem parentItem, DirectoryEntry directoryEntry, string name, string path)
-            : this(parentItem, parentItem, directoryEntry, name, path)
+        public DirectoryEntryItem(SectionItem parentItem, DirectoryEntryEx directoryEntry)
+            : this(parentItem, parentItem, directoryEntry)
         {
             ParentSectionItem = parentItem;
         }
@@ -29,21 +27,17 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         /// </summary>
         /// <param name="containerSectionItem"></param>
         /// <param name="directoryEntry"></param>
-        /// <param name="name"></param>
-        /// <param name="path"></param>
         /// <param name="parentItem"></param>
-        public DirectoryEntryItem(SectionItem containerSectionItem, DirectoryEntry directoryEntry, string name, string path, DirectoryEntryItem parentItem)
-            : this(parentItem, containerSectionItem, directoryEntry, name, path)
+        public DirectoryEntryItem(SectionItem containerSectionItem, DirectoryEntryEx directoryEntry, DirectoryEntryItem parentItem)
+            : this(parentItem, containerSectionItem, directoryEntry)
         {
             ParentDirectoryEntryItem = parentItem;
         }
 
-        private DirectoryEntryItem(IItem parentItem, SectionItem containerSectionItem, DirectoryEntry directoryEntry, string name, string path)
+        private DirectoryEntryItem(IItem parentItem, SectionItem containerSectionItem, DirectoryEntryEx directoryEntry)
         {
             DirectoryEntry = directoryEntry;
-            Name = name ?? throw new ArgumentNullException(nameof(name));
             ContainerSectionItem = containerSectionItem ?? throw new ArgumentNullException(nameof(containerSectionItem));
-            Path = path ?? throw new ArgumentNullException(nameof(path));
             ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
             Size = directoryEntry.Size;
         }
@@ -79,19 +73,19 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         /// <summary>
         /// Get the <see cref="DirectoryEntry"/> metadata
         /// </summary>
-        public DirectoryEntry DirectoryEntry { get; }
+        public DirectoryEntryEx DirectoryEntry { get; }
 
         public sealed override string LibHacTypeName => nameof(DirectoryEntry);
 
         public override string? LibHacUnderlyingTypeName => null;
 
-        public override string Name { get; }
+        public override string Name => DirectoryEntry.Name;
 
         public long Size { get; }
 
         public DirectoryEntryType DirectoryEntryType => DirectoryEntry.Type;
 
-        public string Path { get; }
+        public string Path => DirectoryEntry.FullPath;
 
         public override string DisplayName => Name;
 
@@ -101,9 +95,9 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
         /// <returns></returns>
         public IFile GetFile()
         {
-            var file = new UniqueRef<IFile>();
-            this.ContainerSectionItem.FileSystem!.OpenFile(ref file, new U8Span(this.Path), OpenMode.Read).ThrowIfFailure();
-            return file.Get;
+            using var uniqueRefFile = new UniqueRef<IFile>();
+            this.ContainerSectionItem.FileSystem!.OpenFile(ref uniqueRefFile.Ref(), this.Path.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+            return uniqueRefFile.Release();
         }
 
         public override string ToString()

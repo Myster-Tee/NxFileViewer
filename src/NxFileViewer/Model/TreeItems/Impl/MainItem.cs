@@ -8,8 +8,8 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     public class MainItem : DirectoryEntryItem
     {
 
-        public MainItem(NsoHeader nsoHeader, SectionItem parentItem, DirectoryEntry directoryEntry, string name, string path)
-            : base(parentItem, directoryEntry, name, path)
+        public MainItem(NsoHeader nsoHeader, SectionItem parentItem, DirectoryEntryEx directoryEntry)
+            : base(parentItem, directoryEntry)
         {
             ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
             NsoHeader = nsoHeader;

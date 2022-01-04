@@ -12,10 +12,10 @@ using LibHac.Fs.Fsa;
 using LibHac.FsSystem;
 using LibHac.FsSystem.NcaUtils;
 using LibHac.Loader;
+using LibHac.Ns;
 using LibHac.Spl;
-using LibHac.Util;
 using Microsoft.Extensions.Logging;
-using Path = System.IO.Path;
+
 
 namespace Emignatik.NxFileViewer.FileLoading
 {
@@ -43,7 +43,8 @@ namespace Emignatik.NxFileViewer.FileLoading
             var fileStorage = new FileStorage(localFile);
             var nspPartition = new PartitionFileSystem(fileStorage);
 
-            var nspItem = new NspItem(nspPartition, Path.GetFileName(nspFilePath), localFile, keySet);
+
+            var nspItem = new NspItem(nspPartition, System.IO.Path.GetFileName(nspFilePath), localFile, keySet);
             BuildChildItems(nspItem);
 
             return nspItem;
@@ -60,7 +61,7 @@ namespace Emignatik.NxFileViewer.FileLoading
             var fileStorage = new FileStorage(localFile);
             var xci = new Xci(keySet, fileStorage);
 
-            var xciItem = new XciItem(xci, Path.GetFileName(xciFilePath), localFile, keySet);
+            var xciItem = new XciItem(xci, System.IO.Path.GetFileName(xciFilePath), localFile, keySet);
             BuildChildItems(xciItem);
             return xciItem;
         }
@@ -123,7 +124,6 @@ namespace Emignatik.NxFileViewer.FileLoading
 
         private void BuildChildItems(PartitionFileSystemItemBase parentItem)
         {
-
             try
             {
                 var partitionFileSystem = parentItem.PartitionFileSystem;
@@ -271,6 +271,8 @@ namespace Emignatik.NxFileViewer.FileLoading
 
             try
             {
+
+
                 var nca = parentItem.Nca;
                 for (var sectionIndex = 0; sectionIndex < NcaItem.MaxSections; sectionIndex++)
                 {
@@ -338,7 +340,6 @@ namespace Emignatik.NxFileViewer.FileLoading
 
         private void BuildChildItems(SectionItem parentItem)
         {
-
             try
             {
                 const string? ROOT_PATH = "/";
@@ -351,8 +352,8 @@ namespace Emignatik.NxFileViewer.FileLoading
 
                 foreach (var directoryEntry in directoryEntries)
                 {
-                    var entryName = StringUtils.Utf8ZToString(directoryEntry.Name);
-                    var entryPath = PathTools.Combine(ROOT_PATH, entryName);
+                    var entryName = directoryEntry.Name;
+                    var entryPath = directoryEntry.FullPath;
 
                     // NACP File
                     if (parentItem.ParentItem.ContentType == NcaContentType.Control && string.Equals(entryName, NacpItem.NacpFileName, StringComparison.OrdinalIgnoreCase) && directoryEntry.Type == DirectoryEntryType.File)
@@ -360,9 +361,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                         IFile nacpFile;
                         try
                         {
-                            var uniqueRefFile = new UniqueRef<IFile>();
-                            fileSystem.OpenFile(ref uniqueRefFile, new U8Span(entryPath), OpenMode.Read).ThrowIfFailure();
-                            nacpFile = uniqueRefFile.Get;
+                            using var uniqueRefFile = new UniqueRef<IFile>();
+                            fileSystem.OpenFile(ref uniqueRefFile.Ref(), entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                            nacpFile = uniqueRefFile.Release();
                         }
                         catch (Exception ex)
                         {
@@ -374,10 +375,13 @@ namespace Emignatik.NxFileViewer.FileLoading
                             continue;
                         }
 
-                        Nacp nacp;
+                        ApplicationControlProperty nacp;
                         try
                         {
-                            nacp = new Nacp(nacpFile.AsStream());
+                            var blitStruct = new BlitStruct<ApplicationControlProperty>(1);
+                            nacpFile.Read(out _, 0, blitStruct.ByteSpan).ThrowIfFailure();
+
+                            nacp = blitStruct.Value;
                         }
                         catch (Exception ex)
                         {
@@ -389,7 +393,7 @@ namespace Emignatik.NxFileViewer.FileLoading
                             continue;
                         }
 
-                        parentItem.ChildItems.Add(new NacpItem(nacp, parentItem, directoryEntry, entryName, entryPath));
+                        parentItem.ChildItems.Add(new NacpItem(nacp, parentItem, directoryEntry));
                     }
                     // CNMT File
                     else if (parentItem.ParentItem.ContentType == NcaContentType.Meta && entryName.EndsWith(".cnmt", StringComparison.OrdinalIgnoreCase) && directoryEntry.Type == DirectoryEntryType.File)
@@ -397,9 +401,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                         IFile cnmtFile;
                         try
                         {
-                            var uniqueRefFile = new UniqueRef<IFile>();
-                            fileSystem.OpenFile(ref uniqueRefFile, new U8Span(entryPath), OpenMode.Read).ThrowIfFailure();
-                            cnmtFile = uniqueRefFile.Get;
+                            using var uniqueRefFile = new UniqueRef<IFile>();
+                            fileSystem.OpenFile(ref uniqueRefFile.Ref(), entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                            cnmtFile = uniqueRefFile.Release();
                         }
                         catch (Exception ex)
                         {
@@ -425,7 +429,7 @@ namespace Emignatik.NxFileViewer.FileLoading
                             _logger.LogError(ex, message);
                             continue;
                         }
-                        parentItem.ChildItems.Add(new CnmtItem(cnmt, parentItem, directoryEntry, entryName, entryPath));
+                        parentItem.ChildItems.Add(new CnmtItem(cnmt, parentItem, directoryEntry));
                     }
                     // MAIN file
                     else if (parentItem.ParentItem.ContentType == NcaContentType.Program && string.Equals(entryName, "main", StringComparison.OrdinalIgnoreCase) && directoryEntry.Type == DirectoryEntryType.File)
@@ -433,9 +437,9 @@ namespace Emignatik.NxFileViewer.FileLoading
                         IFile nsoFile;
                         try
                         {
-                            var uniqueRefFile = new UniqueRef<IFile>();
-                            fileSystem.OpenFile(ref uniqueRefFile, new U8Span(entryPath), OpenMode.Read).ThrowIfFailure();
-                            nsoFile = uniqueRefFile.Get;
+                            using var uniqueRefFile = new UniqueRef<IFile>();
+                            fileSystem.OpenFile(ref uniqueRefFile.Ref(), entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                            nsoFile = uniqueRefFile.Release();
                         }
                         catch (Exception ex)
                         {
@@ -464,11 +468,11 @@ namespace Emignatik.NxFileViewer.FileLoading
                             continue;
                         }
 
-                        parentItem.ChildItems.Add(new MainItem(nsoHeader.Value, parentItem, directoryEntry, entryName, entryPath));
+                        parentItem.ChildItems.Add(new MainItem(nsoHeader.Value, parentItem, directoryEntry));
                     }
                     else
                     {
-                        var directoryEntryItem = new DirectoryEntryItem(parentItem, directoryEntry, entryName, entryPath);
+                        var directoryEntryItem = new DirectoryEntryItem(parentItem, directoryEntry);
                         BuildChildItems(directoryEntryItem);
                         parentItem.ChildItems.Add(directoryEntryItem);
                     }
@@ -496,10 +500,7 @@ namespace Emignatik.NxFileViewer.FileLoading
 
                 foreach (var directoryEntry in directoryEntries)
                 {
-                    var entryName = StringUtils.Utf8ZToString(directoryEntry.Name);
-                    var entryPath = PathTools.Combine(currentPath, entryName);
-
-                    var directoryEntryItem = new DirectoryEntryItem(parentItem.ContainerSectionItem, directoryEntry, entryName, entryPath, parentItem);
+                    var directoryEntryItem = new DirectoryEntryItem(parentItem.ContainerSectionItem, directoryEntry, parentItem);
                     BuildChildItems(directoryEntryItem);
                     parentItem.ChildItems.Add(directoryEntryItem);
                 }
@@ -514,23 +515,11 @@ namespace Emignatik.NxFileViewer.FileLoading
             }
         }
 
-        private DirectoryEntry[] SafeGetDirectoryEntries(IFileSystem fileSystem, string currentPath, IItem parentItem)
+        private IEnumerable<DirectoryEntryEx> SafeGetDirectoryEntries(IFileSystem fileSystem, string currentPath, IItem parentItem)
         {
             try
             {
-                var uniqueRefDirectory = new UniqueRef<IDirectory>();
-
-                var path = new LibHac.Fs.Path();
-                path.Initialize(currentPath.ToU8Span());
-                fileSystem.OpenDirectory(ref uniqueRefDirectory, path, OpenDirectoryMode.All).ThrowIfFailure();
-
-                var directory = uniqueRefDirectory.Get;
-                directory.GetEntryCount(out var nbEntries).ThrowIfFailure();
-
-                var entries = new DirectoryEntry[nbEntries];
-
-                directory.Read(out _, new Span<DirectoryEntry>(entries)).ThrowIfFailure();
-                return entries;
+                return fileSystem.EnumerateEntries(currentPath, "*", SearchOptions.RecurseSubdirectories);
             }
             catch (Exception ex)
             {
@@ -539,7 +528,7 @@ namespace Emignatik.NxFileViewer.FileLoading
                 var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToGetFileSystemDirectoryEntries.SafeFormat(ex.Message);
                 parentItem.Errors.Add(TREE_LOADING_CATEGORY, message);
                 _logger.LogError(ex, message);
-                return Array.Empty<DirectoryEntry>();
+                return Array.Empty<DirectoryEntryEx>();
             }
         }
 

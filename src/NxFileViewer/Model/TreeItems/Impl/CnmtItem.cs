@@ -10,8 +10,8 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 {
     public class CnmtItem : DirectoryEntryItem, IItem
     {
-        public CnmtItem(Cnmt cnmt, SectionItem parentSectionItem, DirectoryEntry directoryEntry, string name, string path)
-            : base(parentSectionItem, directoryEntry, name, path)
+        public CnmtItem(Cnmt cnmt, SectionItem parentSectionItem, DirectoryEntryEx directoryEntry)
+            : base(parentSectionItem, directoryEntry)
         {
             Cnmt = cnmt ?? throw new ArgumentNullException(nameof(cnmt));
             

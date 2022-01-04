@@ -9,8 +9,8 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
     {
         public const string NacpFileName = "control.nacp";
 
-        public NacpItem(ApplicationControlProperty nacp, SectionItem parentItem, DirectoryEntry directoryEntry, string name, string path)
-            : base(parentItem, directoryEntry, name, path)
+        public NacpItem(ApplicationControlProperty nacp, SectionItem parentItem, DirectoryEntryEx directoryEntry)
+            : base(parentItem, directoryEntry)
         {
             Nacp = nacp;
             ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));

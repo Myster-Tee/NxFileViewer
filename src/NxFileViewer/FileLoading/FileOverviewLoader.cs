@@ -163,15 +163,14 @@ namespace Emignatik.NxFileViewer.FileLoading
                 var nacp = nacpItem.Nacp;
 
                 var language = -1;
-                foreach (var applicationControlTitle in nacp.Titles)
+                foreach (ref var applicationControlTitle in nacp.Titles)
                 {
                     language++;
 
-                    if (string.IsNullOrEmpty(applicationControlTitle.Name.ToString()))
-                        continue; //TODO: valider cette ligne
+                    if (applicationControlTitle.Name.IsEmpty())
+                        continue;
 
-
-                    var titleInfo = new TitleInfo(applicationControlTitle, (NacpLanguage)language);
+                    var titleInfo = new TitleInfo(ref applicationControlTitle, (NacpLanguage)language);
 
                     titleInfo.Icon = LoadExpectedIcon(nacpItem.ContainerSectionItem, titleInfo.Language);
                     contentDetails.Titles.Add(titleInfo);
@@ -201,10 +200,10 @@ namespace Emignatik.NxFileViewer.FileLoading
 
                 try
                 {
-                    var uniqueRefFile = new UniqueRef<IFile>();
+                    using var uniqueRefFile = new UniqueRef<IFile>();
 
-                    fileSystem.OpenFile(ref uniqueRefFile, new U8Span(iconItem.Path), OpenMode.Read).ThrowIfFailure();
-                    var file = uniqueRefFile.Get;
+                    fileSystem.OpenFile(ref uniqueRefFile.Ref(), iconItem.Path.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                    var file = uniqueRefFile.Release();
 
                     file.GetSize(out var fileSize).ThrowIfFailure();
                     var bytes = new byte[fileSize];
