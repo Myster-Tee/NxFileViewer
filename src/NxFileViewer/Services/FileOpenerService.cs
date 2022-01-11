@@ -31,6 +31,8 @@ namespace Emignatik.NxFileViewer.Services
         {
             try
             {
+                _appSettings.LastOpenedFile = filePath;
+
                 var runnableRelay = new RunnableRelay<NxFile>((reporter, _) =>
                 {
                     var loadingFilePleaseWait = LocalizationManager.Instance.Current.Keys.LoadingFile_PleaseWait;
@@ -44,7 +46,6 @@ namespace Emignatik.NxFileViewer.Services
 
                 var nxFile = await _backgroundTaskService.RunAsync(runnableRelay);
 
-                _appSettings.LastOpenedFile = filePath;
                 _openedFileService.OpenedFile = nxFile;
             }
             catch (FileNotSupportedException ex)

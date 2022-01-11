@@ -9,117 +9,115 @@ namespace Emignatik.NxFileViewer.Settings
 {
     public class AppSettingsWrapper : IAppSettingsWrapper<AppSettingsModel>
     {
-        private AppSettingsModel _appSettingsModel = new AppSettingsModel();
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public string LastSaveDir
         {
-            get => _appSettingsModel.LastSaveDir ?? "";
+            get => WrappedModel.LastSaveDir ?? "";
             set
             {
-                _appSettingsModel.LastSaveDir = value;
+                WrappedModel.LastSaveDir = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string LastOpenedFile
         {
-            get => _appSettingsModel.LastOpenedFile ?? "";
+            get => WrappedModel.LastOpenedFile ?? "";
             set
             {
-                _appSettingsModel.LastOpenedFile = value;
+                WrappedModel.LastOpenedFile = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string ProdKeysFilePath
         {
-            get => _appSettingsModel.KeysFilePath ?? "";
+            get => WrappedModel.KeysFilePath ?? "";
             set
             {
-                _appSettingsModel.KeysFilePath = value;
+                WrappedModel.KeysFilePath = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string ConsoleKeysFilePath
         {
-            get => _appSettingsModel.ConsoleKeysFilePath ?? "";
+            get => WrappedModel.ConsoleKeysFilePath ?? "";
             set
             {
-                _appSettingsModel.ConsoleKeysFilePath = value;
+                WrappedModel.ConsoleKeysFilePath = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string TitleKeysFilePath
         {
-            get => _appSettingsModel.TitleKeysFilePath ?? "";
+            get => WrappedModel.TitleKeysFilePath ?? "";
             set
             {
-                _appSettingsModel.TitleKeysFilePath = value;
+                WrappedModel.TitleKeysFilePath = value;
                 NotifyPropertyChanged();
             }
         }
 
         public LogLevel LogLevel
         {
-            get => _appSettingsModel.LogLevel;
+            get => WrappedModel.LogLevel;
             set
             {
-                _appSettingsModel.LogLevel = value;
+                WrappedModel.LogLevel = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string ProdKeysDownloadUrl
         {
-            get => _appSettingsModel.ProdKeysDownloadUrl ?? "";
+            get => WrappedModel.ProdKeysDownloadUrl ?? "";
             set
             {
-                _appSettingsModel.ProdKeysDownloadUrl = value;
+                WrappedModel.ProdKeysDownloadUrl = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string TitleKeysDownloadUrl
         {
-            get => _appSettingsModel.TitleKeysDownloadUrl ?? "";
+            get => WrappedModel.TitleKeysDownloadUrl ?? "";
             set
             {
-                _appSettingsModel.TitleKeysDownloadUrl = value;
+                WrappedModel.TitleKeysDownloadUrl = value;
                 NotifyPropertyChanged();
             }
         }
 
         public bool AlwaysReloadKeysBeforeOpen
         {
-            get => _appSettingsModel.AlwaysReloadKeysBeforeOpen;
+            get => WrappedModel.AlwaysReloadKeysBeforeOpen;
             set
             {
-                _appSettingsModel.AlwaysReloadKeysBeforeOpen = value;
+                WrappedModel.AlwaysReloadKeysBeforeOpen = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string TitlePageUrl
         {
-            get => _appSettingsModel.TitlePageUrl;
+            get => WrappedModel.TitlePageUrl;
             set
             {
-                _appSettingsModel.TitlePageUrl = value;
+                WrappedModel.TitlePageUrl = value;
                 NotifyPropertyChanged();
             }
         }
 
         public int StreamCopyBufferSize { get; set; } = 4 * 1024 * 1024; //TODO: expose in the settings?
 
-        public AppSettingsModel WrappedModel => _appSettingsModel;
+        public AppSettingsModel WrappedModel { get; private set; } = new();
 
         public void Update(AppSettingsModel newModel)
         {
-            _appSettingsModel = newModel ?? throw new ArgumentNullException(nameof(newModel));
+            WrappedModel = newModel ?? throw new ArgumentNullException(nameof(newModel));
 
             NotifyAllPropertiesChanged();
         }

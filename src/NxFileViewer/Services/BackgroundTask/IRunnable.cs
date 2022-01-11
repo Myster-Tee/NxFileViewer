@@ -19,6 +19,10 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask
         void Run(IProgressReporter progressReporter, CancellationToken cancellationToken);
     }
 
+
+    /// <summary>
+    /// </summary>
+    /// <typeparam name="T">Type of object returned by the method <see cref="Run"/></typeparam>
     public interface IRunnable<out T> : IRunnableBase
     {
         T Run(IProgressReporter progressReporter, CancellationToken cancellationToken);

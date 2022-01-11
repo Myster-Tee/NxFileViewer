@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Threading;
 using Emignatik.NxFileViewer.Localization;
 using Microsoft.Extensions.Logging;
@@ -9,12 +8,14 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 {
     public class DownloadFileRunnable : IDownloadFileRunnable
     {
+        private readonly IHttpDownloader _httpDownloader;
         private readonly ILogger _logger;
         private string? _url;
         private string? _filePath;
 
-        public DownloadFileRunnable(ILoggerFactory loggerFactory)
+        public DownloadFileRunnable(ILoggerFactory loggerFactory, IHttpDownloader httpDownloader)
         {
+            _httpDownloader = httpDownloader ?? throw new ArgumentNullException(nameof(httpDownloader));
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         }
 
@@ -22,7 +23,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 
         public bool SupportProgress => false;
 
-        public Exception? Run(IProgressReporter progressReporter, CancellationToken cancellationToken)
+        public void Run(IProgressReporter progressReporter, CancellationToken cancellationToken)
         {
             try
             {
@@ -33,16 +34,14 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 
                 _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_DownloadingFileFromUrl.SafeFormat(_filePath, _url));
 
-                using var client = new WebClient();
-                client.DownloadFile(_url, _filePath);
+                _httpDownloader.DownloadFileAsync(_url, _filePath, cancellationToken).Wait(cancellationToken);
 
                 _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_FileSuccessfullyDownloaded.SafeFormat(_filePath));
-                return null;
+
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.Log_FailedToDownloadFileFromUrl.SafeFormat(_filePath, _url, ex.Message));
-                return ex;
             }
         }
 
@@ -53,7 +52,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
         }
     }
 
-    public interface IDownloadFileRunnable : IRunnable<Exception?>
+    public interface IDownloadFileRunnable : IRunnable
     {
         void Setup(string url, string filePath);
     }

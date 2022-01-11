@@ -81,6 +81,7 @@ namespace Emignatik.NxFileViewer
               .AddTransient<IDownloadFileRunnable, DownloadFileRunnable>()
               .AddTransient<ISaveStorageRunnable, SaveStorageRunnable>()
               .AddTransient<IFsSanitizer, FsSanitizer>()
+              .AddTransient<IHttpDownloader, HttpDownloader>()
 
               .AddLogging(builder => builder.AddAppLoggerProvider())
 
