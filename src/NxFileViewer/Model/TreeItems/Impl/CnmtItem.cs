@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Emignatik.NxFileViewer.Utils;
-using LibHac;
-using LibHac.Fs;
-using LibHac.FsSystem.NcaUtils;
 using LibHac.Ncm;
+using LibHac.Tools.Fs;
+using LibHac.Tools.FsSystem.NcaUtils;
+using LibHac.Tools.Ncm;
 
 namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 {

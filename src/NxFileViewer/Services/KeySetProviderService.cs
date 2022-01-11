@@ -129,7 +129,9 @@ namespace Emignatik.NxFileViewer.Services
                 _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DefaultTitleKeysFileName, actualTitleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
                 _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DefaultConsoleKeysFileName, actualConsoleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
 
-                var keySet = new KeySet();
+
+                var keySet = KeySet.CreateDefaultKeySet();
+
                 ExternalKeyReader.ReadKeyFile(keySet, filename: actualProdKeysFilePath, titleKeysFilename: actualTitleKeysFilePath, consoleKeysFilename: actualConsoleKeysFilePath,
                     new LibHacProgressReportRelay(
                         _ =>

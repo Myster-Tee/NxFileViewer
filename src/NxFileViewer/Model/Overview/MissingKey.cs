@@ -1,5 +1,6 @@
 ﻿using System;
 using LibHac;
+using LibHac.Common.Keys;
 
 namespace Emignatik.NxFileViewer.Model.Overview
 {

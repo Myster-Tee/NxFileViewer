@@ -6,11 +6,11 @@ using Emignatik.NxFileViewer.Model.Overview;
 using Emignatik.NxFileViewer.Model.TreeItems;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Utils;
-using LibHac;
 using LibHac.Common;
 using LibHac.Fs;
 using LibHac.Fs.Fsa;
-using LibHac.FsSystem;
+using LibHac.Tools.Fs;
+using LibHac.Tools.FsSystem;
 using Microsoft.Extensions.Logging;
 using ContentType = LibHac.Ncm.ContentType;
 

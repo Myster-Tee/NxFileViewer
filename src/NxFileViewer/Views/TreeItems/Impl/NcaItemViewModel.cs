@@ -5,8 +5,9 @@ using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization.Keys;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
-using LibHac;
-using LibHac.FsSystem.NcaUtils;
+using LibHac.Common;
+using LibHac.FsSystem;
+using LibHac.Tools.FsSystem.NcaUtils;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Emignatik.NxFileViewer.Views.TreeItems.Impl

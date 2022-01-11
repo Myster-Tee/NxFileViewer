@@ -4,8 +4,8 @@ using System.Threading;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model.Overview;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
-using LibHac;
-using LibHac.FsSystem.NcaUtils;
+using LibHac.Common;
+using LibHac.Tools.FsSystem.NcaUtils;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl

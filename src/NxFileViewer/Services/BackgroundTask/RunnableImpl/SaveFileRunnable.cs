@@ -4,7 +4,7 @@ using System.Threading;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Tools;
 using LibHac.Fs.Fsa;
-using LibHac.FsSystem;
+using LibHac.Tools.FsSystem;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 {

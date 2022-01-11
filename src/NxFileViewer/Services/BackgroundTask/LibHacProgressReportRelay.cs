@@ -1,5 +1,5 @@
 ﻿using System;
-using LibHac;
+using LibHac.Common;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask
 {

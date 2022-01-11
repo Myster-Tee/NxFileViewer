@@ -5,7 +5,7 @@ using System.Threading;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Tools;
 using LibHac.Fs;
-using LibHac.FsSystem;
+using LibHac.Tools.FsSystem;
 using Path = System.IO.Path;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl

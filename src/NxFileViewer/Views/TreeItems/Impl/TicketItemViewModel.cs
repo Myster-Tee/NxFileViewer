@@ -2,7 +2,7 @@
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Utils;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
-using LibHac;
+using LibHac.Tools.Es;
 
 namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
 {

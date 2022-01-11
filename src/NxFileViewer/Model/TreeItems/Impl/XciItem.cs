@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using LibHac;
 using LibHac.Common.Keys;
 using LibHac.Fs.Fsa;
+using LibHac.Tools.Fs;
 
 namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 {

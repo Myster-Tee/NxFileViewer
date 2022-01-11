@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model.Overview;
-using LibHac;
+using LibHac.Common;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
