@@ -49,7 +49,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
         {
             fileOverview.NcasHeadersSignatureExceptions = null;
             var ncaItems = fileOverview.NcaItems;
-            if (ncaItems.Length <= 0)
+            if (ncaItems.Count <= 0)
             {
                 fileOverview.NcasHeadersSignatureValidity = NcasValidity.NoNca;
                 return;
@@ -93,7 +93,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
                         _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_Error_log.SafeFormat(ncaItem.DisplayName, ex.Message));
                     }
 
-                    progressReporter.SetPercentage(++i / (double)ncaItems.Length);
+                    progressReporter.SetPercentage(++i / (double)ncaItems.Count);
                 }
 
                 progressReporter.SetPercentage(1);

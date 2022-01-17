@@ -19,8 +19,8 @@ namespace Emignatik.NxFileViewer.Model.Overview
         public FileOverview(IItem rootItem)
         {
             RootItem = rootItem ?? throw new ArgumentNullException(nameof(rootItem));
-            NcasHashValidity = NcaItems.Length <= 0 ? NcasValidity.NoNca : NcasValidity.Unchecked;
-            NcasHeadersSignatureValidity = NcaItems.Length <= 0 ? NcasValidity.NoNca : NcasValidity.Unchecked;
+            NcasHashValidity = NcaItems.Count <= 0 ? NcasValidity.NoNca : NcasValidity.Unchecked;
+            NcasHeadersSignatureValidity = NcaItems.Count <= 0 ? NcasValidity.NoNca : NcasValidity.Unchecked;
         }
 
         public ObservableCollection<MissingKey> MissingKeys { get; } = new();
@@ -31,7 +31,11 @@ namespace Emignatik.NxFileViewer.Model.Overview
 
         public PackageType PackageType { get; internal set; } = PackageType.Unknown;
 
-        public NcaItem[] NcaItems
+        /// <summary>
+        /// Shortcut which returns the list of all <see cref="NcaItem"/> contained in the <see cref="RootItem"/>
+        /// (<see cref="ItemExtension.FindAllNcaItems"/>)
+        /// </summary>
+        public IReadOnlyCollection<NcaItem> NcaItems
         {
             get
             {

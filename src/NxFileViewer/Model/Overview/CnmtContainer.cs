@@ -3,6 +3,10 @@ using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 
 namespace Emignatik.NxFileViewer.Model.Overview
 {
+
+    /// <summary>
+    /// Aggregates a <see cref="TreeItems.Impl.CnmtItem"/> with its corresponding <see cref="Overview.NacpContainer"/>
+    /// </summary>
     public class CnmtContainer 
     {
 

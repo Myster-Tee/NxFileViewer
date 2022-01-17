@@ -18,7 +18,7 @@
         /// <summary>
         /// Sets the progress percentage value
         /// </summary>
-        /// <param name="value">A value in range of [0-1]</param>
+        /// <param name="value">A value in range of [0.0 - 1.0]</param>
         void SetPercentage(double value);
     }
 }

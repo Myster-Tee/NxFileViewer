@@ -34,7 +34,7 @@ namespace Emignatik.NxFileViewer.Commands
         public override bool CanExecute(object? parameter)
         {
             var openedFile = _openedFileService.OpenedFile;
-            return openedFile != null && openedFile.Overview.NcaItems.Length > 0 && !_backgroundTaskService.IsRunning;
+            return openedFile != null && openedFile.Overview.NcaItems.Count > 0 && !_backgroundTaskService.IsRunning;
         }
 
         public override void Execute(object? parameter)
@@ -44,7 +44,7 @@ namespace Emignatik.NxFileViewer.Commands
                 return;
 
             var fileOverview = openedFile.Overview;
-            if (fileOverview.NcaItems.Length <= 0)
+            if (fileOverview.NcaItems.Count <= 0)
                 return;
 
             var verifyNcasHeaderSignatureRunnable = _serviceProvider.GetRequiredService<IVerifyNcasHeaderSignatureRunnable>();

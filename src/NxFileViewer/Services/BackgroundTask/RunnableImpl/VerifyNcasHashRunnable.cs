@@ -49,9 +49,10 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 
         private void VerifyHashes(IProgressReporter progressReporter, FileOverview fileOverview)
         {
+
             fileOverview.NcasHashExceptions = null;
             var ncaItems = fileOverview.NcaItems;
-            if (ncaItems.Length <= 0)
+            if (ncaItems.Count <= 0)
             {
                 fileOverview.NcasHashValidity = NcasValidity.NoNca;
                 return;

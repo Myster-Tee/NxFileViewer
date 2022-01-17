@@ -4,6 +4,9 @@ using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 
 namespace Emignatik.NxFileViewer.Model.Overview
 {
+    /// <summary>
+    /// Aggregates an NacpItem with its corresponding titles <see cref="Titles"/>
+    /// </summary>
     public class NacpContainer
     {
 

@@ -8,13 +8,19 @@ using LibHac.Tools.Ncm;
 
 namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 {
+
+    /// <summary>
+    /// <see cref="IItem"/> wrapping a <see cref="Cnmt"/> file
+    /// A cnmt file is a metadata file containing various information about what is contained in a package.
+    /// The cnmt file references many other files (<see cref="Cnmt.ContentEntries"/> as example).
+    /// </summary>
     public class CnmtItem : DirectoryEntryItem, IItem
     {
         public CnmtItem(Cnmt cnmt, SectionItem parentSectionItem, DirectoryEntryEx directoryEntry)
             : base(parentSectionItem, directoryEntry)
         {
             Cnmt = cnmt ?? throw new ArgumentNullException(nameof(cnmt));
-            
+         
             ParentItem = parentSectionItem;
             PatchLevel = GetPatchLevel(Cnmt.TitleVersion);
             TitleId = Cnmt.TitleId.ToStrId();
