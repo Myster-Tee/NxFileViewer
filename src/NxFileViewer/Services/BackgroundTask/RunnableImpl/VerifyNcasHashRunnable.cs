@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model.Overview;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
-using LibHac.Common;
-using LibHac.Tools.FsSystem.NcaUtils;
+using Emignatik.NxFileViewer.Utils;
+using LibHac;
+using LibHac.Fs.Fsa;
+using LibHac.Tools.FsSystem;
+using LibHac.Tools.Ncm;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
@@ -22,7 +27,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         }
 
-        public bool SupportsCancellation => false;
+        public bool SupportsCancellation => true;
 
         public bool SupportProgress => true;
 
@@ -36,83 +41,103 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
             if (_fileOverview == null)
                 throw new InvalidOperationException($"{nameof(Setup)} should be called first.");
 
-            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaSectionHash_VerificationStart_Log);
+            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaHash_VerificationStart_Log);
             try
             {
-                VerifyHashes(progressReporter, _fileOverview);
+                VerifyHashes(progressReporter, _fileOverview, cancellationToken);
             }
             finally
             {
-                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaSectionHash_VerificationEnd_Log);
+                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaHash_VerificationEnd_Log);
             }
         }
 
-        private void VerifyHashes(IProgressReporter progressReporter, FileOverview fileOverview)
+
+        private void VerifyHashes(IProgressReporter progressReporter, FileOverview fileOverview, CancellationToken cancellationToken)
         {
+            // TODO: supporter le cancellationToken
 
             fileOverview.NcasHashExceptions = null;
-            var ncaItems = fileOverview.NcaItems;
-            if (ncaItems.Count <= 0)
+
+            // Build the list of all CnmtContentEntry with their corresponding CnmtItem
+            // The CnmtContentEntry contains a reference to an NCA with the expected Sha256 hash
+            var itemsToProcess = new List<Tuple<CnmtContentEntry, CnmtItem>>();
+            foreach (var cnmtItem in fileOverview.CnmtContainers.Select(container => container.CnmtItem))
+            {
+                itemsToProcess.AddRange(cnmtItem.Cnmt.ContentEntries.Select(cnmtContentEntry =>
+                {
+                    cnmtItem.Errors.RemoveAll(NCA_HASH_CATEGORY);
+                    return new Tuple<CnmtContentEntry, CnmtItem>(cnmtContentEntry, cnmtItem);
+                }));
+            }
+
+            if (itemsToProcess.Count <= 0)
             {
                 fileOverview.NcasHashValidity = NcasValidity.NoNca;
                 return;
             }
-            fileOverview.NcasHashValidity = NcasValidity.InProgress;
 
             var occurredExceptions = new List<Exception>();
             var allValid = true;
+
             try
             {
-                var sectionNum = 0;
-                var allSectionItems = ListAllNcaSections(ncaItems);
 
-                foreach (var sectionItem in allSectionItems)
+                fileOverview.NcasHashValidity = NcasValidity.InProgress;
+
+                var processedItem = 0;
+                foreach (var (cnmtContentEntry, cnmtItem) in itemsToProcess)
                 {
-                    sectionNum++;
-                    sectionItem.Errors.RemoveAll(NCA_HASH_CATEGORY);
+                    progressReporter.SetPercentage(0.0);
+                    progressReporter.SetText($"{++processedItem}/{itemsToProcess.Count}");
 
-                    progressReporter.SetText($"Section {sectionNum}/{allSectionItems.Count}");
+                    var expectedNcaHash = cnmtContentEntry.Hash;
+                    var expectedNcaId = cnmtContentEntry.NcaId.ToStrId();
+
+                    // Search for the referenced NCA
+                    var ncaItem = fileOverview.NcaItems.FirstOrDefault(item => item.FileName.StartsWith(expectedNcaId + ".", StringComparison.OrdinalIgnoreCase));
+
+                    if (ncaItem == null)
+                    {
+                        cnmtItem.Errors.Add(NCA_HASH_CATEGORY, LocalizationManager.Instance.Current.Keys.NcaHash_CnmtItem_Error_NcaMissing.SafeFormat(expectedNcaId));
+                        continue;
+                    }
+
                     try
                     {
-                        //=============================================//
-                        //===============> Verify Hash <===============//
-                        var validity = sectionItem.ParentItem.Nca.VerifySection(sectionItem.SectionIndex, new LibHacProgressReportRelay(
-                            value =>
-                            {
-                                progressReporter.SetPercentage(value);
-                            },
-                            message =>
-                            {
-                                _logger.LogInformation(message);
-                            })
-                        );
-                        //===============> Verify Hash <===============//
-                        //=============================================//
-                        sectionItem.HashValidity = validity;
+                        ncaItem.Errors.RemoveAll(NCA_HASH_CATEGORY);
 
-                        if (validity != Validity.Valid)
+                        //=============================================//
+                        //===============> Verify Hash <===============//
+                        VerifyFileHash(progressReporter, ncaItem.File, expectedNcaHash, out var hashValid);
+                        //===============> Verify Hash <===============//
+                        //=============================================//
+
+                        if (!hashValid)
                         {
                             allValid = false;
-                            sectionItem.Errors.Add(NCA_HASH_CATEGORY, LocalizationManager.Instance.Current.Keys.NcaSectionHash_Invalid.SafeFormat(validity));
-                            _logger.LogError(LocalizationManager.Instance.Current.Keys.NcaSectionHash_Invalid_Log.SafeFormat(sectionItem.ParentItem.DisplayName, sectionItem.SectionIndex, validity));
+                            ncaItem.Errors.Add(NCA_HASH_CATEGORY, LocalizationManager.Instance.Current.Keys.NcaHash_NcaItem_Invalid);
+                            _logger.LogError(LocalizationManager.Instance.Current.Keys.NcaHash_Invalid_Log.SafeFormat(ncaItem.DisplayName));
                         }
                         else
-                            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaSectionHash_Valid_Log.SafeFormat(sectionItem.ParentItem.DisplayName, sectionItem.SectionIndex, validity));
+                            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaHash_Valid_Log.SafeFormat(ncaItem.DisplayName));
+
                     }
                     catch (Exception ex)
                     {
                         allValid = false;
                         occurredExceptions.Add(ex);
-                        sectionItem.Errors.Add(NCA_HASH_CATEGORY, LocalizationManager.Instance.Current.Keys.NcaSectionHash_Error.SafeFormat(ex.Message));
-                        _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.NcaSectionHash_Error_Log.SafeFormat(sectionItem.ParentItem.DisplayName, sectionItem.SectionIndex, ex.Message));
+                        ncaItem.Errors.Add(NCA_HASH_CATEGORY, LocalizationManager.Instance.Current.Keys.NcaHash_NcaItem_Exception.SafeFormat(ex.Message));
+                        _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.NcaHash_Exception_Log.SafeFormat(ncaItem.DisplayName, ex.Message));
                     }
                 }
+
             }
             catch (Exception ex)
             {
                 allValid = false;
                 occurredExceptions.Add(ex);
-                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.NcasSectionHash_Error_Log.SafeFormat(ex.Message));
+                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.NcasHash_Error_Log.SafeFormat(ex.Message));
             }
 
             if (occurredExceptions.Count > 0)
@@ -124,6 +149,40 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
             {
                 fileOverview.NcasHashValidity = allValid ? NcasValidity.Valid : NcasValidity.Invalid;
             }
+
+        }
+
+        private static void VerifyFileHash(IProgressReporter progressReporter, IFile file, IReadOnlyCollection<byte> expectedNcaHash, out bool hashValid)
+        {
+            if (file.GetSize(out var fileSize) != Result.Success)
+                fileSize = 0;
+
+            var sha256 = SHA256.Create();
+
+            var ncaStream = file.AsStream();
+            var buffer = new byte[4096];
+
+            decimal totalRead = 0;
+            int read;
+            while ((read = ncaStream.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                sha256.TransformBlock(buffer, 0, read, null, 0);
+                totalRead += read;
+                progressReporter.SetPercentage(fileSize == 0 ? 0.0 : (double)(totalRead / fileSize));
+            }
+
+            sha256.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
+            var currentNcaHash = sha256.Hash!;
+
+            hashValid = IsHashEqual(currentNcaHash, expectedNcaHash);
+        }
+
+        private static bool IsHashEqual(IReadOnlyList<byte> currentNcaHash, IReadOnlyCollection<byte> expectedNcaHash)
+        {
+            if (currentNcaHash.Count != expectedNcaHash.Count)
+                return false;
+
+            return !expectedNcaHash.Where((expectedByte, byteIndex) => currentNcaHash[byteIndex] != expectedByte).Any();
         }
 
         private List<SectionItem> ListAllNcaSections(IEnumerable<NcaItem> ncaItems)

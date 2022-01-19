@@ -195,14 +195,15 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string NcaHeaderSignature_Error_log => "Failed to verify header signature of NCA «{0}»: {2}";
         public string NcasHeaderSignature_Error_Log => "Failed to verify NCA's headers signature: {0}";
 
-        public string NcaSectionHash_VerificationStart_Log => ">>> Hash verification starting...";
-        public string NcaSectionHash_VerificationEnd_Log => ">>> Hash verification finished.";
-        public string NcaSectionHash_Valid_Log => "Hash of NCA «{0}» section «{1}» succeeded with status «{2}».";
-        public string NcaSectionHash_Invalid => "Hash failed with status «{0}».";
-        public string NcaSectionHash_Invalid_Log => "Hash of NCA «{0}» section «{1}» failed with status «{2}».";
-        public string NcaSectionHash_Error => "Failed to verify hash: {0}.";
-        public string NcaSectionHash_Error_Log => "Failed to verify hash of NCA «{0}» section «{1}»: {2}";
-        public string NcasSectionHash_Error_Log => "Failed to verify hashes of NCA sections: {0}";
+        public string NcaHash_VerificationStart_Log => ">>> NCAs hash verification starting...";
+        public string NcaHash_VerificationEnd_Log => ">>> NCAs hash verification finished.";
+        public string NcaHash_Valid_Log => "Hash of NCA «{0}» is valid.";
+        public string NcaHash_NcaItem_Invalid => "Hash is not valid.";
+        public string NcaHash_Invalid_Log => "Hash of NCA «{0}» is not valid.";
+        public string NcaHash_CnmtItem_Error_NcaMissing => "Hash can't be verified, NCA «{0}» is missing.";
+        public string NcaHash_NcaItem_Exception => "Failed to verify hash: {0}";
+        public string NcaHash_Exception_Log => "Failed to verify hash of NCA «{0}»: {1}";
+        public string NcasHash_Error_Log => "Failed to verify NCAs hashes: {0}";
 
         public string CancelAction => "Cancel";
         public string Status_Ready => "Ready.";

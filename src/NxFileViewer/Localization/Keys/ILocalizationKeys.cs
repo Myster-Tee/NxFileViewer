@@ -165,14 +165,15 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string NcaHeaderSignature_Error_log { get; }
         string NcasHeaderSignature_Error_Log { get; }
 
-        string NcaSectionHash_VerificationStart_Log { get; }
-        string NcaSectionHash_VerificationEnd_Log { get; }
-        string NcaSectionHash_Valid_Log { get; }
-        string NcaSectionHash_Invalid { get; }
-        string NcaSectionHash_Invalid_Log { get; }
-        string NcaSectionHash_Error { get; }
-        string NcaSectionHash_Error_Log { get; }
-        string NcasSectionHash_Error_Log { get; }
+        string NcaHash_VerificationStart_Log { get; }
+        string NcaHash_VerificationEnd_Log { get; }
+        string NcaHash_Valid_Log { get; }
+        string NcaHash_NcaItem_Invalid { get; }
+        string NcaHash_Invalid_Log { get; }
+        string NcaHash_CnmtItem_Error_NcaMissing { get; }
+        string NcaHash_NcaItem_Exception { get; }
+        string NcaHash_Exception_Log { get; }
+        string NcasHash_Error_Log { get; }
 
         string CancelAction { get; }
         string Status_Ready { get; }
