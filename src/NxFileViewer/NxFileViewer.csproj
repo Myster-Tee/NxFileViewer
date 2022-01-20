@@ -7,7 +7,7 @@
     <RootNamespace>Emignatik.NxFileViewer</RootNamespace>
     <Nullable>enable</Nullable>
     <ApplicationIcon>Styling\Icons\Icon.ico</ApplicationIcon>
-    <AssemblyVersion>2.4.0.0</AssemblyVersion>
+    <AssemblyVersion>2.5.0.0</AssemblyVersion>
     <FileVersion>2.4.0.0</FileVersion>
     <PackageId>NxFileViewer</PackageId>
     <Company>NxFileViewer</Company>
