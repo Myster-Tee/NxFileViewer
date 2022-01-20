@@ -23,7 +23,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string MenuItem_Options => "_Options";
         public string MenuItem_Settings => "_Settings";
         public string MenuItem_ReloadKeys => "Reload keys";
-        public string MenuItem_OpenTitleWebPage => "Open title web page...";
+        public string MenuItem_OpenTitleWebPage => "Open title Web page...";
 
         public string MultiContentPackage => "Multi-content Package";
         public string GeneralInfo => "General Info";
@@ -91,6 +91,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string SettingsView_LogLevel => "Log level";
         public string SettingsView_ToolTip_LogLevel => "The log level specifies the minimum level to log.";
         public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Always reload keys before opening a file";
+        public string SettingsView_Title_Language => "Language";
 
         public string BrowseKeysFile_ProdTitle => "Select \"prod\" keys file";
         public string BrowseKeysFile_ConsoleTitle => "Select \"console\" keys file";
@@ -158,7 +159,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string LoadingError_FailedToOpenMainFile => "Failed to open Main file: {0}";
         public string LoadingError_FailedToLoadMainFile => "Failed to load Main file: {0}";
         public string LoadingError_FailedToLoadTicketFile => "Failed to load ticket file: {0}";
-        public string LoadingError_FailedToLoadTitleIdKey => "Failed to load title ID key from ticket file «{0}»: {1}";
+        public string LoadingError_FailedToLoadTitleIdKey => "Failed to load Title ID key from ticket file «{0}»: {1}";
         public string LoadingInfo_TitleIdKeySuccessfullyInjected => "Title ID key «{0}={1}» found in ticket file «{2}» successfully added to the set of keys.";
         public string LoadingWarning_TitleIdKeyReplaced => "Title ID key «{0}={1}» found in ticket file «{2}» has been used as replacement of the existing title ID key «{0}={2}» found in the set of keys.";
         public string LoadingDebug_TitleIdKeyAlreadyExists => "Title ID key «{0}={1}» found in ticket file «{2}» was already registered in the set of keys.";
@@ -173,7 +174,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
 
         public string ToolTip_PatchLevel => "Patch level {0}";
         public string Log_OpeningFile => "=====> {0} <=====";
-        public string MainModuleIdTooltip => "Also known as build ID (or BID).";
+        public string MainModuleIdTooltip => "Also known as «Build ID» (or BID).";
         public string ATaskIsAlreadyRunning => "A task is already running...";
 
         public string Integrity => "Integrity";
@@ -189,10 +190,10 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string NcaHeaderSignature_VerificationStart_Log => ">>> Signature verification starting...";
         public string NcaHeaderSignature_VerificationEnd_Log => ">>> Signature verification finished.";
         public string NcaHeaderSignature_Valid_Log => "Header signature of NCA «{0}» is valid.";
-        public string NcaHeaderSignature_Invalid => "NCA header signature failed with status «{0}».";
-        public string NcaHeaderSignature_Invalid_Log => "Header signature of NCA «{0}» failed with status «{1}».";
-        public string NcaHeaderSignature_Error => "Failed to verify header signature: {0}.";
-        public string NcaHeaderSignature_Error_log => "Failed to verify header signature of NCA «{0}»: {2}";
+        public string NcaHeaderSignature_Invalid => "NCA header signature verification failed with status «{0}».";
+        public string NcaHeaderSignature_Invalid_Log => "Header signature verification of NCA «{0}» failed with status «{1}».";
+        public string NcaHeaderSignature_Error => "Failed to verify NCA header signature: {0}.";
+        public string NcaHeaderSignature_Error_log => "Failed to verify header signature of NCA «{0}»: {1}";
         public string NcasHeaderSignature_Error_Log => "Failed to verify NCA's headers signature: {0}";
 
         public string NcaHash_VerificationStart_Log => ">>> NCAs hash verification starting...";
@@ -222,7 +223,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string KeysLoading_Starting_Log => ">>> Loading Keys...";
         public string KeysLoading_Successful_Log => ">>> Keys successfully loaded.";
         public string KeysLoading_Error => "Failed to load keys: {0}.";
-        public string WarnNoProdKeysFileFound => "No prod.keys file found.";
+        public string WarnNoProdKeysFileFound => "No «prod.keys» file found.";
         public string InvalidSetting_KeysFileNotFound => "Keys file «{0}» defined in the settings doesn't exist.";
         public string InvalidSetting_BufferSizeInvalid => "Buffer size «{0}» defined in the settings is not valid, value should be strictly greater than 0.";
 
@@ -233,6 +234,6 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string ContextMenu_OpenFileLocation => "Open location...";
         public string OpenFileLocation_Failed_Log => "Failed to open location of file «{0}»: {1}";
         public string SettingsView_TitlePageUrl => "Title page URL";
-        public string OpenTitleWebPage_Failed => "Failed to open title web page: {0}";
+        public string OpenTitleWebPage_Failed => "Failed to open title Web page: {0}";
     }
 }

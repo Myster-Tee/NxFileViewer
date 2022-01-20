@@ -62,6 +62,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string SettingsView_LogLevel { get; }
         string SettingsView_ToolTip_LogLevel { get; }
         string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen { get; }
+        string SettingsView_Title_Language { get; }
 
         string BrowseKeysFile_ProdTitle { get; }
         string BrowseKeysFile_ConsoleTitle { get; }
