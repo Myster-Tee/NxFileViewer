@@ -6,7 +6,7 @@ View and browse content of Nintendo Switch files.
 Download latest version [here](https://github.com/Myster-Tee/NxFileViewer/releases).
 
 ## Features
-- Now based on [LibHac](https://github.com/Thealexbarney/LibHac)
+- Based on [LibHac](https://github.com/Thealexbarney/LibHac)
 - Supported files: NSP, NSZ, XCI, XCZ
 - Supports Super NSP/XCI
 - Browse files content structure
@@ -23,6 +23,8 @@ Download latest version [here](https://github.com/Myster-Tee/NxFileViewer/releas
 - Do not write anything outside of the program directory
 - Verify hash and signature
 - Displays missing keys
+- Opens title URL
+- Multiple languages (actually English and French, PR me for more ;))
 
 ## Screenshots
 
