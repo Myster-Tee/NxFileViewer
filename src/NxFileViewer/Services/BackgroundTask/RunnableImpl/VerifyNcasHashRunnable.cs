@@ -58,8 +58,6 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 
         private void VerifyHashes(IProgressReporter progressReporter, FileOverview fileOverview, CancellationToken cancellationToken)
         {
-            // TODO: supporter le cancellationToken
-
             fileOverview.NcasHashExceptions = null;
 
             // Build the list of all CnmtContentEntry with their corresponding CnmtItem
@@ -82,7 +80,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 
             var occurredExceptions = new List<Exception>();
             var allValid = true;
-
+            var operationCanceled = false;
             try
             {
 
@@ -91,8 +89,12 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
                 var processedItem = 0;
                 foreach (var (cnmtContentEntry, cnmtItem) in itemsToProcess)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     progressReporter.SetPercentage(0.0);
-                    progressReporter.SetText($"{++processedItem}/{itemsToProcess.Count}");
+
+                    var progressText = LocalizationManager.Instance.Current.Keys.NcaHash_ProgressText.SafeFormat(++processedItem, itemsToProcess.Count);
+                    progressReporter.SetText(progressText);
 
                     var expectedNcaHash = cnmtContentEntry.Hash;
                     var expectedNcaId = cnmtContentEntry.NcaId.ToStrId();
@@ -112,7 +114,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 
                         //=============================================//
                         //===============> Verify Hash <===============//
-                        VerifyFileHash(progressReporter, ncaItem.File, _appSettings.ProgressBufferSize, expectedNcaHash, out var hashValid);
+                        VerifyFileHash(progressReporter, ncaItem.File, _appSettings.ProgressBufferSize, expectedNcaHash, cancellationToken, out var hashValid);
                         //===============> Verify Hash <===============//
                         //=============================================//
 
@@ -126,6 +128,10 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
                             _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaHash_Valid_Log.SafeFormat(ncaItem.DisplayName));
 
                     }
+                    catch (OperationCanceledException)
+                    {
+                        throw;
+                    }
                     catch (Exception ex)
                     {
                         allValid = false;
@@ -136,6 +142,11 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
                 }
 
             }
+            catch (OperationCanceledException)
+            {
+                _logger.LogWarning(LocalizationManager.Instance.Current.Keys.Log_NcaHashCanceled);
+                operationCanceled = true;
+            }
             catch (Exception ex)
             {
                 allValid = false;
@@ -143,7 +154,11 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
                 _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.NcasHash_Error_Log.SafeFormat(ex.Message));
             }
 
-            if (occurredExceptions.Count > 0)
+            if (operationCanceled)
+            {
+                fileOverview.NcasHashValidity = NcasValidity.Unchecked;
+            }
+            else if (occurredExceptions.Count > 0)
             {
                 fileOverview.NcasHashExceptions = occurredExceptions;
                 fileOverview.NcasHashValidity = NcasValidity.Error;
@@ -155,7 +170,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 
         }
 
-        private static void VerifyFileHash(IProgressReporter progressReporter, IFile file, int bufferSize, IReadOnlyCollection<byte> expectedNcaHash, out bool hashValid)
+        private static void VerifyFileHash(IProgressReporter progressReporter, IFile file, int bufferSize, IReadOnlyCollection<byte> expectedNcaHash, CancellationToken cancellationToken, out bool hashValid)
         {
             if (file.GetSize(out var fileSize) != Result.Success)
                 fileSize = 0;
@@ -169,6 +184,8 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
             int read;
             while ((read = ncaStream.Read(buffer, 0, buffer.Length)) > 0)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 sha256.TransformBlock(buffer, 0, read, null, 0);
                 totalRead += read;
                 progressReporter.SetPercentage(fileSize == 0 ? 0.0 : (double)(totalRead / fileSize));

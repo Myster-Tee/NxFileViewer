@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading;
+using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Tools;
 using LibHac.Fs;
 using LibHac.Tools.FsSystem;
+using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 {
@@ -12,11 +14,13 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 
         private IStorage? _srcStorage;
         private string? _dstFilePath;
+        private readonly ILogger _logger;
 
 
-        public SaveStorageRunnable(IStreamToFileHelper streamToFileHelper)
+        public SaveStorageRunnable(IStreamToFileHelper streamToFileHelper, ILoggerFactory loggerFactory)
         {
             _streamToFileHelper = streamToFileHelper ?? throw new ArgumentNullException(nameof(streamToFileHelper));
+            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         }
 
         public bool SupportsCancellation => true;
@@ -35,9 +39,15 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
             if (_srcStorage == null || _dstFilePath == null)
                 throw new InvalidOperationException($"{nameof(Setup)} should be called first.");
 
-            _streamToFileHelper.Save(_srcStorage.AsStream(), _dstFilePath, cancellationToken, progressReporter.SetPercentage);
+            try
+            {
+                _streamToFileHelper.Save(_srcStorage.AsStream(), _dstFilePath, cancellationToken, progressReporter.SetPercentage);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogWarning(LocalizationManager.Instance.Current.Keys.Log_SaveStorageCanceled);
+            }
         }
-
 
     }
 

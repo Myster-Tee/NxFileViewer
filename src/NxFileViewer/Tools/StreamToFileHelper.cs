@@ -17,7 +17,7 @@ namespace Emignatik.NxFileViewer.Tools
 
         public void Save(Stream srcStream, string dstFilePath, CancellationToken cancellationToken, ProgressValueHandler? progressValueHandler)
         {
-            var bufferSize = _appSettings.StreamCopyBufferSize;
+            var bufferSize = _appSettings.ProgressBufferSize;
             if (bufferSize <= 0)
                 throw new InvalidOperationException(LocalizationManager.Instance.Current.Keys.InvalidSetting_BufferSizeInvalid.SafeFormat(bufferSize));
 
@@ -26,27 +26,32 @@ namespace Emignatik.NxFileViewer.Tools
                 Directory.CreateDirectory(targetDirectory);
 
             using var dstStream = File.Create(dstFilePath);
-
-            decimal totalBytes = srcStream.Length;
-
-            var buffer = new byte[bufferSize];
-
-            long totalBytesWritten = 0;
-            do
+            try
             {
-                var nbBytesRead = srcStream.Read(buffer);
-                dstStream.Write(buffer, 0, nbBytesRead);
-                totalBytesWritten += nbBytesRead;
 
-                var progressValue = totalBytes == 0 ? 1.0 : (double)(totalBytesWritten / totalBytes);
-                progressValueHandler?.Invoke(progressValue);
+                decimal totalBytes = srcStream.Length;
 
-            } while (totalBytesWritten < totalBytes && !cancellationToken.IsCancellationRequested);
+                var buffer = new byte[bufferSize];
 
-            if (cancellationToken.IsCancellationRequested)
+                long totalBytesWritten = 0;
+                do
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    var nbBytesRead = srcStream.Read(buffer);
+                    dstStream.Write(buffer, 0, nbBytesRead);
+                    totalBytesWritten += nbBytesRead;
+
+                    var progressValue = totalBytes == 0 ? 1.0 : (double)(totalBytesWritten / totalBytes);
+                    progressValueHandler?.Invoke(progressValue);
+
+                } while (totalBytesWritten < totalBytes);
+            }
+            catch (OperationCanceledException)
             {
                 dstStream.Dispose();
                 File.Delete(dstFilePath);
+                throw;
             }
         }
     }

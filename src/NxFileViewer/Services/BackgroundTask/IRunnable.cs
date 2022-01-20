@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask
 {
@@ -25,6 +26,12 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask
     /// <typeparam name="T">Type of object returned by the method <see cref="Run"/></typeparam>
     public interface IRunnable<out T> : IRunnableBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="progressReporter"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         T Run(IProgressReporter progressReporter, CancellationToken cancellationToken);
     }
 }

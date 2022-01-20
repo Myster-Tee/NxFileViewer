@@ -1,4 +1,5 @@
 ﻿using Emignatik.NxFileViewer.Utils.MVVM.Localization;
+using Microsoft.Extensions.Logging;
 
 // ReSharper disable InconsistentNaming
 
@@ -175,6 +176,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string NcaHash_NcaItem_Exception { get; }
         string NcaHash_Exception_Log { get; }
         string NcasHash_Error_Log { get; }
+        string NcaHash_ProgressText { get; }
 
         string CancelAction { get; }
         string Status_Ready { get; }
@@ -208,5 +210,10 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string SettingsView_TitlePageUrl { get; }
         string OpenTitleWebPage_Failed { get; }
 
+        string Log_DownloadFileCanceled { get; }
+        string Log_SaveToDirCanceled { get; }
+        string Log_SaveFileCanceled { get; }
+        string Log_SaveStorageCanceled { get; }
+        string Log_NcaHashCanceled { get; }
     }
 }

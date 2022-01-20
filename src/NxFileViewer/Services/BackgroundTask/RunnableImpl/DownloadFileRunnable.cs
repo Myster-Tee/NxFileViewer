@@ -19,7 +19,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         }
 
-        public bool SupportsCancellation => false;
+        public bool SupportsCancellation => true;
 
         public bool SupportProgress => false;
 
@@ -37,7 +37,16 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
                 _httpDownloader.DownloadFileAsync(_url, _filePath, cancellationToken).Wait(cancellationToken);
 
                 _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_FileSuccessfullyDownloaded.SafeFormat(_filePath));
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogWarning(LocalizationManager.Instance.Current.Keys.Log_DownloadFileCanceled);
 
+                try { File.Delete(_filePath!); }
+                catch
+                {
+                    // ignored
+                }
             }
             catch (Exception ex)
             {

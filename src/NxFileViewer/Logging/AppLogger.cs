@@ -39,7 +39,7 @@ namespace Emignatik.NxFileViewer.Logging
 
         public IDisposable BeginScope<TState>(TState state)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

@@ -5,6 +5,7 @@ using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Tools;
 using LibHac.Fs.Fsa;
 using LibHac.Tools.FsSystem;
+using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 {
@@ -14,10 +15,12 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 
         private IFile? _srcFile;
         private string? _dstFilePath;
+        private readonly ILogger _logger;
 
-        public SaveFileRunnable(IStreamToFileHelper streamToFileHelper)
+        public SaveFileRunnable(IStreamToFileHelper streamToFileHelper, ILoggerFactory loggerFactory)
         {
             _streamToFileHelper = streamToFileHelper ?? throw new ArgumentNullException(nameof(streamToFileHelper));
+            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         }
 
         public bool SupportsCancellation => true;
@@ -38,8 +41,14 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
             var progressText = LocalizationManager.Instance.Current.Keys.Status_SavingFile.SafeFormat(Path.GetFileName(_dstFilePath));
             progressReporter.SetText(progressText);
 
-
-            _streamToFileHelper.Save(_srcFile.AsStream(), _dstFilePath, cancellationToken, progressReporter.SetPercentage);
+            try
+            {
+                _streamToFileHelper.Save(_srcFile.AsStream(), _dstFilePath, cancellationToken, progressReporter.SetPercentage);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogWarning(LocalizationManager.Instance.Current.Keys.Log_SaveFileCanceled);
+            }
         }
     }
 

@@ -3,6 +3,10 @@ using System.Threading;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 {
+
+    /// <summary>
+    /// Defers the run logic outside (<see cref="RunHandler"/>)
+    /// </summary>
     public class RunnableRelay : IRunnable
     {
         private readonly RunHandler _runHandler;
@@ -22,6 +26,9 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
         }
     }
 
+    /// <summary>
+    /// Defers the run logic outside (<see cref="RunHandler{T}"/>)
+    /// </summary>
     public class RunnableRelay<T> : IRunnable<T>
     {
         private readonly RunHandler<T> _runHandler;

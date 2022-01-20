@@ -89,7 +89,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
 
 
         public string SettingsView_LogLevel => "Niveau de log";
-        public string SettingsView_ToolTip_LogLevel => "Le niveau de log indique a partir de quel niveau les messages sont logués.";
+        public string SettingsView_ToolTip_LogLevel => "Le niveau de log indique à partir de quel niveau les messages sont logués.";
         public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Toujours recharger les clés avant l'ouverture d'un fichier";
         public string SettingsView_Title_Language => "Langue";
 
@@ -205,6 +205,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string NcaHash_NcaItem_Exception => "Echec de vérification du hash: {0}";
         public string NcaHash_Exception_Log => "Echec de vérification du hash du NCA «{0}»: {1}";
         public string NcasHash_Error_Log => "Echec de vérification du hash des NCAs: {0}";
+        public string NcaHash_ProgressText => "Hashage du NCA {0}/{1}...";
 
         public string CancelAction => "Annuler";
         public string Status_Ready => "Prêt.";
@@ -236,5 +237,11 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string OpenFileLocation_Failed_Log => "Echec d'ouverture de l'emplacement du fichier «{0}»: {1}";
         public string SettingsView_TitlePageUrl => "URL du titre";
         public string OpenTitleWebPage_Failed => "Echec d'ouverture de la page Web: {0}";
+
+        public string Log_DownloadFileCanceled => "Téléchargement annulé.";
+        public string Log_SaveToDirCanceled => "Sauvegarde du répertoire annulé.";
+        public string Log_SaveFileCanceled => "Sauvegarde du fichier annulé.";
+        public string Log_SaveStorageCanceled => "Sauvegarde du stockage annulé.";
+        public string Log_NcaHashCanceled => "Hash des NCAs annulé.";
     }
 }

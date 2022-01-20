@@ -205,6 +205,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string NcaHash_NcaItem_Exception => "Failed to verify hash: {0}";
         public string NcaHash_Exception_Log => "Failed to verify hash of NCA «{0}»: {1}";
         public string NcasHash_Error_Log => "Failed to verify NCAs hashes: {0}";
+        public string NcaHash_ProgressText => "Hashing NCA {0}/{1}...";
 
         public string CancelAction => "Cancel";
         public string Status_Ready => "Ready.";
@@ -237,5 +238,10 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string SettingsView_TitlePageUrl => "Title page URL";
         public string OpenTitleWebPage_Failed => "Failed to open title Web page: {0}";
 
+        public string Log_DownloadFileCanceled => "Download canceled.";
+        public string Log_SaveToDirCanceled => "Directory saving canceled.";
+        public string Log_SaveFileCanceled => "File saving canceled.";
+        public string Log_SaveStorageCanceled => "Storage saving canceled.";
+        public string Log_NcaHashCanceled => "NCAs hash canceled.";
     }
 }

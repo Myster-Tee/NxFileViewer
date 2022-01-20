@@ -55,7 +55,6 @@ namespace Emignatik.NxFileViewer.Commands
             }
             catch (Exception ex)
             {
-                //TODO: personnaliser la localisation de SaveFile
                 _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SaveFile_Error.SafeFormat(ex.Message));
             }
         }

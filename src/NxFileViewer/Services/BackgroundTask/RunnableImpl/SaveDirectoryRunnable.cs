@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Tools;
 using LibHac.Fs;
 using LibHac.Tools.FsSystem;
+using Microsoft.Extensions.Logging;
 using Path = System.IO.Path;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
@@ -16,11 +18,13 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
         private readonly IFsSanitizer _fsSanitizer;
         private IEnumerable<DirectoryEntryItem>? _directoryEntryItems;
         private string? _targetDirectory;
+        private readonly ILogger _logger;
 
-        public SaveDirectoryRunnable(IStreamToFileHelper streamToFileHelper, IFsSanitizer fsSanitizer)
+        public SaveDirectoryRunnable(IStreamToFileHelper streamToFileHelper, IFsSanitizer fsSanitizer, ILoggerFactory loggerFactory)
         {
             _streamToFileHelper = streamToFileHelper ?? throw new ArgumentNullException(nameof(streamToFileHelper));
             _fsSanitizer = fsSanitizer ?? throw new ArgumentNullException(nameof(fsSanitizer));
+            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         }
 
         public bool SupportsCancellation => true;
@@ -43,26 +47,33 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
             var nbElements = elements.Count;
 
             var elementNum = 0;
-            foreach (var (item, relativePath) in elements)
+            try
             {
-                elementNum++;
-                progressReporter.SetText($"Saving directory ({elementNum}/{nbElements})");
-
-                var dstPath = Path.Combine(_targetDirectory, relativePath);
-
-                switch (item.DirectoryEntryType)
+                foreach (var (item, relativePath) in elements)
                 {
-                    case DirectoryEntryType.Directory:
-                        if (!Directory.Exists(dstPath))
-                            Directory.CreateDirectory(dstPath);
-                        break;
-                    case DirectoryEntryType.File:
-                        var file = item.GetFile();
-                        _streamToFileHelper.Save(file.AsStream(), dstPath, cancellationToken, progressReporter.SetPercentage);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    elementNum++;
+                    progressReporter.SetText($"Saving directory ({elementNum}/{nbElements})");
+
+                    var dstPath = Path.Combine(_targetDirectory, relativePath);
+
+                    switch (item.DirectoryEntryType)
+                    {
+                        case DirectoryEntryType.Directory:
+                            if (!Directory.Exists(dstPath))
+                                Directory.CreateDirectory(dstPath);
+                            break;
+                        case DirectoryEntryType.File:
+                            var file = item.GetFile();
+                            _streamToFileHelper.Save(file.AsStream(), dstPath, cancellationToken, progressReporter.SetPercentage);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogWarning(LocalizationManager.Instance.Current.Keys.Log_SaveToDirCanceled);
             }
 
         }
