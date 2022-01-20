@@ -121,7 +121,7 @@ namespace Emignatik.NxFileViewer.Settings
             }
         }
 
-        public int StreamCopyBufferSize { get; set; } = 4 * 1024 * 1024; //TODO: expose in the settings?
+        public int ProgressBufferSize { get; set; } = 4 * 1024 * 1024;
 
         public AppSettingsModel WrappedModel { get; private set; } = new();
 

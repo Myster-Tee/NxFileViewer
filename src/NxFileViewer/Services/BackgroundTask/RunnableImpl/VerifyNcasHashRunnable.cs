@@ -6,6 +6,7 @@ using System.Threading;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model.Overview;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
+using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils;
 using LibHac;
 using LibHac.Fs.Fsa;
@@ -17,13 +18,15 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 {
     public class VerifyNcasHashRunnable : IVerifyNcasHashRunnable
     {
+        private readonly IAppSettings _appSettings;
         private const string NCA_HASH_CATEGORY = "NcaHash";
 
         private FileOverview? _fileOverview;
         private readonly ILogger _logger;
 
-        public VerifyNcasHashRunnable(ILoggerFactory loggerFactory)
+        public VerifyNcasHashRunnable(ILoggerFactory loggerFactory, IAppSettings appSettings)
         {
+            _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         }
 
@@ -109,7 +112,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 
                         //=============================================//
                         //===============> Verify Hash <===============//
-                        VerifyFileHash(progressReporter, ncaItem.File, expectedNcaHash, out var hashValid);
+                        VerifyFileHash(progressReporter, ncaItem.File, _appSettings.ProgressBufferSize, expectedNcaHash, out var hashValid);
                         //===============> Verify Hash <===============//
                         //=============================================//
 
@@ -152,7 +155,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
 
         }
 
-        private static void VerifyFileHash(IProgressReporter progressReporter, IFile file, IReadOnlyCollection<byte> expectedNcaHash, out bool hashValid)
+        private static void VerifyFileHash(IProgressReporter progressReporter, IFile file, int bufferSize, IReadOnlyCollection<byte> expectedNcaHash, out bool hashValid)
         {
             if (file.GetSize(out var fileSize) != Result.Success)
                 fileSize = 0;
@@ -160,7 +163,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
             var sha256 = SHA256.Create();
 
             var ncaStream = file.AsStream();
-            var buffer = new byte[4096];
+            var buffer = new byte[bufferSize];
 
             decimal totalRead = 0;
             int read;
