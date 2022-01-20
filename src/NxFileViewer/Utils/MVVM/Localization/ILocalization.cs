@@ -1,6 +1,10 @@
 ﻿namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
 {
 
+    /// <summary>
+    /// Represents a localization associated with a model exposing localization keys (<see cref="T"/>)
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface ILocalization<out T> where T: ILocalizationKeysBase
     {
         /// <summary>

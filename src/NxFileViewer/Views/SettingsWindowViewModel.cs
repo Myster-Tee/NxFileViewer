@@ -5,12 +5,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Localization.Keys;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
+using Emignatik.NxFileViewer.Utils.MVVM.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
@@ -71,6 +73,7 @@ namespace Emignatik.NxFileViewer.Views
             TitleKeysDownloadUrl = _appSettings.TitleKeysDownloadUrl;
             AlwaysReloadKeysBeforeOpen = _appSettings.AlwaysReloadKeysBeforeOpen;
             TitlePageUrl = _appSettings.TitlePageUrl;
+            this.SelectedLanguage = LocalizationManager.Instance.Current;
 
             _backgroundTaskService.PropertyChanged += (_, args) =>
             {
@@ -81,7 +84,6 @@ namespace Emignatik.NxFileViewer.Views
                 }
             };
 
-
             _keySetProviderService.PropertyChanged += (_, args) =>
             {
                 if (args.PropertyName == nameof(IKeySetProviderService.ActualProdKeysFilePath))
@@ -91,6 +93,7 @@ namespace Emignatik.NxFileViewer.Views
                 else if (args.PropertyName == nameof(IKeySetProviderService.ActualConsoleKeysFilePath))
                     NotifyPropertyChanged(nameof(ActualConsoleKeysFilePath));
             };
+
         }
 
         public event EventHandler? OnQueryCloseView;
@@ -202,6 +205,11 @@ namespace Emignatik.NxFileViewer.Views
                 NotifyPropertyChanged();
             }
         }
+
+        public IEnumerable<ILocalization<ILocalizationKeys>> AvailableLanguages => LocalizationManager.Instance.AvailableLocalizations;
+
+        public ILocalization<ILocalizationKeys> SelectedLanguage { get; set; }
+
         private void BrowseProdKeys()
         {
             if (BrowseKeysFilePath(ProdKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ProdTitle, out var selectedFilePath))
@@ -343,6 +351,8 @@ namespace Emignatik.NxFileViewer.Views
             _appSettings.TitleKeysDownloadUrl = TitleKeysDownloadUrl;
             _appSettings.AlwaysReloadKeysBeforeOpen = AlwaysReloadKeysBeforeOpen;
             _appSettings.TitlePageUrl = TitlePageUrl;
+            _appSettings.AppLanguage = SelectedLanguage.CultureName;
+
 
             _appSettingsManager.Save();
             NotifyQueryCloseView();

@@ -11,6 +11,16 @@ namespace Emignatik.NxFileViewer.Settings
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        public string? AppLanguage
+        {
+            get => WrappedModel.AppLanguage ?? "";
+            set
+            {
+                WrappedModel.AppLanguage = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public string LastSaveDir
         {
             get => WrappedModel.LastSaveDir ?? "";

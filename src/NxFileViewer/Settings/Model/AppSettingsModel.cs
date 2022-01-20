@@ -8,6 +8,8 @@ namespace Emignatik.NxFileViewer.Settings.Model
     /// </summary>
     public class AppSettingsModel
     {
+        public string? AppLanguage { get; set; }
+
         public string? LastOpenedFile { get; set; }
 
         public string? KeysFilePath { get; set; }

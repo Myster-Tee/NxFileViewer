@@ -196,6 +196,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string WarnNoProdKeysFileFound { get; }
         string InvalidSetting_KeysFileNotFound { get; }
         string InvalidSetting_BufferSizeInvalid { get; }
+        string InvalidSetting_LanguageNotFound { get; }
 
         string ToolTip_KeyMissing { get; }
 
@@ -206,5 +207,6 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         string OpenFileLocation_Failed_Log { get; }
         string SettingsView_TitlePageUrl { get; }
         string OpenTitleWebPage_Failed { get; }
+
     }
 }

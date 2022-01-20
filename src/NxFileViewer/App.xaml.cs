@@ -66,6 +66,7 @@ namespace Emignatik.NxFileViewer
               .AddSingleton<IItemViewModelBuilder, ItemViewModelBuilder>()
               .AddSingleton<IFileLoader, FileLoader>()
               .AddSingleton<IBrushesProvider, BrushesProvider>()
+              .AddSingleton<ILocalizationFromSettingsSynchronizerService, LocalizationFromSettingsSynchronizerService>()
 
               .AddTransient<SettingsWindowViewModel>() // Important to let transient so that real actual settings are displayed when settings view is shown
               .AddTransient<IStreamToFileHelper, StreamToFileHelper>()
@@ -98,6 +99,9 @@ namespace Emignatik.NxFileViewer
 
             // Loads the application settings
             ServiceProvider.GetRequiredService<IAppSettingsManager>().Load();
+
+            // Initialize localization
+            ServiceProvider.GetRequiredService<ILocalizationFromSettingsSynchronizerService>().Initialize();
 
             LocalizationStringExtension.FormatException += OnLocalizationStringFormatException;
 

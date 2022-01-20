@@ -120,11 +120,16 @@
                     <GroupBox Header="Misc.">
                         <StackPanel>
                             <StackPanel>
+                                <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_Language}" />
+                                <ComboBox ItemsSource="{Binding Path=AvailableLanguages}" SelectedItem="{Binding Path=SelectedLanguage}" DisplayMemberPath="DisplayName" MinWidth="100" HorizontalAlignment="Left"/>
+                            </StackPanel>
+
+                            <StackPanel>
                                 <StackPanel  Orientation="Horizontal">
                                     <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_LogLevel}" />
                                     <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_LogLevel}"/>
                                 </StackPanel>
-                                <ComboBox ItemsSource="{Binding Path=LogLevels}" SelectedItem="{Binding Path=SelectedLogLevel}" Width="100" HorizontalAlignment="Left" />
+                                <ComboBox ItemsSource="{Binding Path=LogLevels}" SelectedItem="{Binding Path=SelectedLogLevel}" MinWidth="100" HorizontalAlignment="Left" />
                             </StackPanel>
 
                             <StackPanel>

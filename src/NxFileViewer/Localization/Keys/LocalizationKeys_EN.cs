@@ -226,6 +226,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string WarnNoProdKeysFileFound => "No «prod.keys» file found.";
         public string InvalidSetting_KeysFileNotFound => "Keys file «{0}» defined in the settings doesn't exist.";
         public string InvalidSetting_BufferSizeInvalid => "Buffer size «{0}» defined in the settings is not valid, value should be strictly greater than 0.";
+        public string InvalidSetting_LanguageNotFound => "Language «{0}» defined in the settings doesn't exist.";
 
         public string ToolTip_KeyMissing => "Key «{0}» of type «{1}» is missing.";
 
@@ -235,5 +236,6 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string OpenFileLocation_Failed_Log => "Failed to open location of file «{0}»: {1}";
         public string SettingsView_TitlePageUrl => "Title page URL";
         public string OpenTitleWebPage_Failed => "Failed to open title Web page: {0}";
+
     }
 }

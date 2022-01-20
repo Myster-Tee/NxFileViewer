@@ -5,6 +5,8 @@ namespace Emignatik.NxFileViewer.Settings
 {
     public interface IAppSettings: INotifyPropertyChanged
     {
+        public string? AppLanguage { get; set; }
+
         string LastSaveDir { get; set; }
 
         string LastOpenedFile { get; set; }

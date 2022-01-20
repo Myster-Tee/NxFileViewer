@@ -226,6 +226,7 @@ namespace Emignatik.NxFileViewer.Localization.Keys
         public string WarnNoProdKeysFileFound => "Aucun fichier «prod.keys» trouvé.";
         public string InvalidSetting_KeysFileNotFound => "Le fichier de clé «{0}» défini dans les paramètres n'existe pas.";
         public string InvalidSetting_BufferSizeInvalid => "La taille du buffer «{0}» défini dans les paramètres n'est pas valide, la valeur doit être strictement supérieure à 0.";
+        public string InvalidSetting_LanguageNotFound => "La langue «{0}» définie dans les paramètres n'existe pas.";
 
         public string ToolTip_KeyMissing => "La clé «{0}» de type «{1}» est manquante.";
 

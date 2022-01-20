@@ -68,7 +68,7 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
 
             foreach (var type in typesSet)
             {
-                var constructorInfo = type.GetConstructor(new Type[0]);
+                var constructorInfo = type.GetConstructor(Type.EmptyTypes);
 
                 if (constructorInfo == null)
                 {
@@ -76,7 +76,7 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.Localization
                     continue;
                 }
 
-                var localizationKeys = (TKeys)constructorInfo.Invoke(new object?[0]);
+                var localizationKeys = (TKeys)constructorInfo.Invoke(Array.Empty<object?>());
                 var realLocalization = new RealLocalization<TKeys>(localizationKeys);
 
                 realLocalizations.Add(realLocalization);
