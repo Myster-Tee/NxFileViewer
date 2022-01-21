@@ -12,6 +12,7 @@ namespace Emignatik.NxFileViewer.Model.TreeItems.Impl
 
         public CnmtContentEntryItem(CnmtContentEntry cnmtContentEntry, CnmtItem parentItem, int index)
         {
+            // TODO: a utiliser au final?
             _cnmtContentEntry = cnmtContentEntry ?? throw new ArgumentNullException(nameof(cnmtContentEntry));
             _index = index;
             ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
