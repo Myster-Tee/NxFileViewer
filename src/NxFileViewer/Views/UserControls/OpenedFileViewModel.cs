@@ -4,7 +4,7 @@ using Emignatik.NxFileViewer.Model;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Emignatik.NxFileViewer.Views
+namespace Emignatik.NxFileViewer.Views.UserControls
 {
     public class OpenedFileViewModel : ViewModelBase
     {

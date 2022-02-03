@@ -1,0 +1,23 @@
+﻿<Window x:Class="Emignatik.NxFileViewer.Views.Windows.BulkRenameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
+        xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
+        xmlns:windows="clr-namespace:Emignatik.NxFileViewer.Views.Windows"
+        mc:Ignorable="d"
+        Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_Title}" Height="350" Width="400" d:DataContext="{d:DesignInstance windows:BulkRenameWindowViewModel}">
+    <Grid>
+        <StackPanel>
+            <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_InputDirectory}" />
+            <TextBox Text="{Binding Path=InputDirectory}" />
+
+            <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_NamingPattern}" />
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="{Binding Path=NamingPattern}" />
+                <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_ToolTip_NamingPattern}"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,12 +1,11 @@
 ﻿using Emignatik.NxFileViewer.Model.Overview;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 
-namespace Emignatik.NxFileViewer.FileLoading
-{
-    public interface IFileOverviewLoader
-    {
-        FileOverview Load(XciItem xciItem);
+namespace Emignatik.NxFileViewer.FileLoading;
 
-        FileOverview Load(NspItem nspItem);
-    }
+public interface IFileOverviewLoader
+{
+    FileOverview Load(XciItem xciItem);
+
+    FileOverview Load(NspItem nspItem);
 }

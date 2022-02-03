@@ -1,16 +1,16 @@
-﻿<UserControl x:Class="Emignatik.NxFileViewer.Views.ContentView"
+﻿<UserControl x:Class="Emignatik.NxFileViewer.Views.UserControls.ContentView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
              xmlns:objectPropertyViewer="clr-namespace:Emignatik.NxFileViewer.Views.ObjectPropertyViewer"
              xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
              xmlns:cc="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
              xmlns:items="clr-namespace:Emignatik.NxFileViewer.Views.TreeItems"
+             xmlns:userControls="clr-namespace:Emignatik.NxFileViewer.Views.UserControls"
              mc:Ignorable="d"
              Style="{StaticResource UserControlStyle}"
-             d:DesignHeight="400" d:DesignWidth="300" d:DataContext="{d:DesignInstance  views:ContentViewModel}">
+             d:DesignHeight="400" d:DesignWidth="300" d:DataContext="{d:DesignInstance  userControls:ContentViewModel}">
 
     <Grid>
         <Grid.RowDefinitions>

@@ -9,65 +9,64 @@ using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Commands
+namespace Emignatik.NxFileViewer.Commands;
+
+public class SavePartitionFileCommand : CommandBase, ISavePartitionFileCommand
 {
-    public class SavePartitionFileCommand : CommandBase, ISavePartitionFileCommand
+    private readonly IBackgroundTaskService _backgroundTaskService;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IPromptService _promptService;
+    private readonly ILogger _logger;
+    private PartitionFileEntryItemBase? _partitionFileItem;
+
+    public SavePartitionFileCommand(ILoggerFactory loggerFactory, IBackgroundTaskService backgroundTaskService, IServiceProvider serviceProvider, IPromptService promptService)
     {
-        private readonly IBackgroundTaskService _backgroundTaskService;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IPromptService _promptService;
-        private readonly ILogger _logger;
-        private PartitionFileEntryItemBase? _partitionFileItem;
+        _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+        _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
+        _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
+    }
 
-        public SavePartitionFileCommand(ILoggerFactory loggerFactory, IBackgroundTaskService backgroundTaskService, IServiceProvider serviceProvider, IPromptService promptService)
+    public PartitionFileEntryItemBase PartitionFileItem
+    {
+        set
         {
-            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
-            _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
+            _partitionFileItem = value;
+            TriggerCanExecuteChanged();
         }
+    }
 
-        public PartitionFileEntryItemBase PartitionFileItem
-        {
-            set
-            {
-                _partitionFileItem = value;
-                TriggerCanExecuteChanged();
-            }
-        }
+    public override async void Execute(object? parameter)
+    {
+        if (_partitionFileItem == null)
+            return;
 
-        public override async void Execute(object? parameter)
+        try
         {
-            if (_partitionFileItem == null)
+            var file = _partitionFileItem.File;
+
+            var filePath = _promptService.PromptSaveFile(_partitionFileItem.Name);
+            if (filePath == null)
                 return;
+            var runnable = _serviceProvider.GetRequiredService<ISaveFileRunnable>();
+            runnable.Setup(file, filePath);
 
-            try
-            {
-                var file = _partitionFileItem.File;
-
-                var filePath = _promptService.PromptSaveFile(_partitionFileItem.Name);
-                if (filePath == null)
-                    return;
-                var runnable = _serviceProvider.GetRequiredService<ISaveFileRunnable>();
-                runnable.Setup(file, filePath);
-
-                await _backgroundTaskService.RunAsync(runnable);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SaveFile_Error.SafeFormat(ex.Message));
-            }
+            await _backgroundTaskService.RunAsync(runnable);
         }
-
-        public override bool CanExecute(object? parameter)
+        catch (Exception ex)
         {
-            return _partitionFileItem != null && !_backgroundTaskService.IsRunning;
+            _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SaveFile_Error.SafeFormat(ex.Message));
         }
-
     }
 
-    public interface ISavePartitionFileCommand : ICommand
+    public override bool CanExecute(object? parameter)
     {
-        PartitionFileEntryItemBase PartitionFileItem { set; }
+        return _partitionFileItem != null && !_backgroundTaskService.IsRunning;
     }
+
+}
+
+public interface ISavePartitionFileCommand : ICommand
+{
+    PartitionFileEntryItemBase PartitionFileItem { set; }
 }

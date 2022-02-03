@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Emignatik.NxFileViewer.Views
+namespace Emignatik.NxFileViewer.Views.Windows
 {
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml

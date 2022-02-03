@@ -1,15 +1,15 @@
-﻿<Window x:Class="Emignatik.NxFileViewer.Views.ItemErrorsWindow"
+﻿<Window x:Class="Emignatik.NxFileViewer.Views.Windows.ItemErrorsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
+        xmlns:windows="clr-namespace:Emignatik.NxFileViewer.Views.Windows"
         mc:Ignorable="d"
         Title="{Binding Path=DisplayName}"
         Width="340" 
         Height="160" 
         WindowStyle="ToolWindow" 
-        d:DataContext="{d:DesignInstance views:ItemErrorsWindowViewModel}" 
+        d:DataContext="{d:DesignInstance windows:ItemErrorsWindowViewModel}" 
         ResizeMode="CanResizeWithGrip">
 
     <Grid>

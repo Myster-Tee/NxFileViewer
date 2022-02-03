@@ -3,9 +3,9 @@ using Emignatik.NxFileViewer.Model.TreeItems;
 using Emignatik.NxFileViewer.Utils;
 using Emignatik.NxFileViewer.Utils.MVVM;
 
-namespace Emignatik.NxFileViewer.Views
+namespace Emignatik.NxFileViewer.Views.Windows
 {
-    public class ItemErrorsWindowViewModel : ViewModelBase
+    public class ItemErrorsWindowViewModel : WindowViewModelBase
     {
         private readonly IItem _item;
         private string _errors = string.Empty;

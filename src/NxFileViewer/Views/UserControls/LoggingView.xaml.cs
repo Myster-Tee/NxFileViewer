@@ -8,7 +8,7 @@ using Emignatik.NxFileViewer.Styling.Theme;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Views
+namespace Emignatik.NxFileViewer.Views.UserControls
 {
     /// <summary>
     /// Logique d'interaction pour LoggingView.xaml

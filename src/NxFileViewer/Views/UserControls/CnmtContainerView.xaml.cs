@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Emignatik.NxFileViewer.Views
+namespace Emignatik.NxFileViewer.Views.UserControls
 {
     /// <summary>
     /// Logique d'interaction pour CnmtContainerView.xaml

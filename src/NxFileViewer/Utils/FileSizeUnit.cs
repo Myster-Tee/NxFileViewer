@@ -1,8 +1,7 @@
-﻿namespace Emignatik.NxFileViewer.Utils
+﻿namespace Emignatik.NxFileViewer.Utils;
+
+public enum FileSizeUnit
 {
-    public enum FileSizeUnit
-    {
-        BINARY,
-        DECIMAL,
-    }
+    BINARY,
+    DECIMAL,
 }

@@ -4,14 +4,15 @@
              xmlns:converters="clr-namespace:Emignatik.NxFileViewer.Views.Converters"
              xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
              xmlns:converters1="clr-namespace:Emignatik.NxFileViewer.Utils.MVVM.Converters"
-             xmlns:treeItems="clr-namespace:Emignatik.NxFileViewer.Views.TreeItems">
+             xmlns:treeItems="clr-namespace:Emignatik.NxFileViewer.Views.TreeItems"
+             xmlns:userControls="clr-namespace:Emignatik.NxFileViewer.Views.UserControls">
     <Application.Resources>
         <ResourceDictionary>
             <!-- OpenedFileDataTemplateSelector -->
             <views:OpenedFileDataTemplateSelector x:Key="OpenedFileDataTemplateSelector">
                 <views:OpenedFileDataTemplateSelector.OpenedFileTemplate>
                     <DataTemplate>
-                        <views:OpenedFileView />
+                        <userControls:OpenedFileView />
                     </DataTemplate>
                 </views:OpenedFileDataTemplateSelector.OpenedFileTemplate>
                 <views:OpenedFileDataTemplateSelector.NoOpenedFileTemplate>

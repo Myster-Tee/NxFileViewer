@@ -2,49 +2,48 @@
 using System.IO;
 using System.Reflection;
 
-namespace Emignatik.NxFileViewer.Utils
+namespace Emignatik.NxFileViewer.Utils;
+
+public static class PathHelper
 {
-    public static class PathHelper
+    static PathHelper()
     {
-        static PathHelper()
+        try
         {
-            try
-            {
-                CurrentAppDir = AppDomain.CurrentDomain.BaseDirectory ?? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Directory.GetCurrentDirectory();
-            }
-            catch
-            {
-                CurrentAppDir = Directory.GetCurrentDirectory();
-            }
+            CurrentAppDir = AppDomain.CurrentDomain.BaseDirectory ?? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Directory.GetCurrentDirectory();
+        }
+        catch
+        {
+            CurrentAppDir = Directory.GetCurrentDirectory();
+        }
                 
-            try
-            {
-                HomeUserDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            }
-            catch
-            {
-                HomeUserDir = null;
-            }
-        }
-
-        public static string? HomeUserDir { get; }
-
-
-        public static string CurrentAppDir { get; }
-
-        /// <summary>
-        /// Compute the full path relative to the current application directory
-        /// </summary>
-        /// <param name="relOrAbsPath"></param>
-        /// <returns></returns>
-        public static string ToFullPath(this string? relOrAbsPath)
+        try
         {
-
-            if (string.IsNullOrEmpty(relOrAbsPath))
-                return CurrentAppDir;
-
-            return Path.GetFullPath(Path.IsPathRooted(relOrAbsPath) ? relOrAbsPath : Path.Combine(CurrentAppDir, relOrAbsPath));
+            HomeUserDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
-
+        catch
+        {
+            HomeUserDir = null;
+        }
     }
+
+    public static string? HomeUserDir { get; }
+
+
+    public static string CurrentAppDir { get; }
+
+    /// <summary>
+    /// Compute the full path relative to the current application directory
+    /// </summary>
+    /// <param name="relOrAbsPath"></param>
+    /// <returns></returns>
+    public static string ToFullPath(this string? relOrAbsPath)
+    {
+
+        if (string.IsNullOrEmpty(relOrAbsPath))
+            return CurrentAppDir;
+
+        return Path.GetFullPath(Path.IsPathRooted(relOrAbsPath) ? relOrAbsPath : Path.Combine(CurrentAppDir, relOrAbsPath));
+    }
+
 }

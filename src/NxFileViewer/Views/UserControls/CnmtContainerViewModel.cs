@@ -11,7 +11,7 @@ using Emignatik.NxFileViewer.Utils.MVVM;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Views
+namespace Emignatik.NxFileViewer.Views.UserControls
 {
     public class CnmtContainerViewModel : ViewModelBase
     {

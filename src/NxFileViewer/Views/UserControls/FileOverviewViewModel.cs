@@ -13,7 +13,7 @@ using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Emignatik.NxFileViewer.Views
+namespace Emignatik.NxFileViewer.Views.UserControls
 {
     public class FileOverviewViewModel : ViewModelBase
     {

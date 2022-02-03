@@ -10,84 +10,83 @@ using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace Emignatik.NxFileViewer.Commands
+namespace Emignatik.NxFileViewer.Commands;
+
+public class SaveTitleImageCommand : CommandBase, ISaveTitleImageCommand
 {
-    public class SaveTitleImageCommand : CommandBase, ISaveTitleImageCommand
+    private readonly IAppSettings _appSettings;
+    private readonly IFsSanitizer _fsSanitizer;
+    private readonly ILogger _logger;
+    private TitleInfo? _title;
+
+    public SaveTitleImageCommand(IAppSettings appSettings, ILoggerFactory loggerFactory, IFsSanitizer fsSanitizer)
     {
-        private readonly IAppSettings _appSettings;
-        private readonly IFsSanitizer _fsSanitizer;
-        private readonly ILogger _logger;
-        private TitleInfo? _title;
+        _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+        _fsSanitizer = fsSanitizer ?? throw new ArgumentNullException(nameof(fsSanitizer));
+        _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+    }
 
-        public SaveTitleImageCommand(IAppSettings appSettings, ILoggerFactory loggerFactory, IFsSanitizer fsSanitizer)
+    public TitleInfo? Title
+    {
+        get => _title;
+        set
         {
-            _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
-            _fsSanitizer = fsSanitizer ?? throw new ArgumentNullException(nameof(fsSanitizer));
-            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+            _title = value;
+            TriggerCanExecuteChanged();
         }
+    }
 
-        public TitleInfo? Title
+    public override void Execute(object? parameter)
+    {
+        try
         {
-            get => _title;
-            set
+            var title = Title;
+
+            var icon = title?.Icon;
+            if (title == null || icon == null)
+                return;
+
+            var fileDialog = new CommonSaveFileDialog
             {
-                _title = value;
-                TriggerCanExecuteChanged();
-            }
-        }
+                Title = LocalizationManager.Instance.Current.Keys.SaveDialog_Title,
+                InitialDirectory = _appSettings.LastSaveDir,
 
-        public override void Execute(object? parameter)
-        {
-            try
-            {
-                var title = Title;
-
-                var icon = title?.Icon;
-                if (title == null || icon == null)
-                    return;
-
-                var fileDialog = new CommonSaveFileDialog
+                Filters = { new CommonFileDialogFilter
                 {
-                    Title = LocalizationManager.Instance.Current.Keys.SaveDialog_Title,
-                    InitialDirectory = _appSettings.LastSaveDir,
-
-                    Filters = { new CommonFileDialogFilter
+                    DisplayName = LocalizationManager.Instance.Current.Keys.SaveDialog_ImageFilter,
+                    Extensions =
                     {
-                        DisplayName = LocalizationManager.Instance.Current.Keys.SaveDialog_ImageFilter,
-                        Extensions =
-                        {
-                            "jpg"
-                        },
-                        ShowExtensions = true
-                    } },
-                    DefaultFileName = _fsSanitizer.SanitizeFileName($"{title.AppName}_({title.Language}).jpg"),
-                    DefaultExtension = "jpg",
-                };
+                        "jpg"
+                    },
+                    ShowExtensions = true
+                } },
+                DefaultFileName = _fsSanitizer.SanitizeFileName($"{title.AppName}_({title.Language}).jpg"),
+                DefaultExtension = "jpg",
+            };
 
-                if (fileDialog.ShowDialog(Application.Current.MainWindow) != CommonFileDialogResult.Ok)
-                    return;
+            if (fileDialog.ShowDialog(Application.Current.MainWindow) != CommonFileDialogResult.Ok)
+                return;
 
-                var filePath = fileDialog.FileName;
-                _appSettings.LastSaveDir = Path.GetDirectoryName(filePath)!;
+            var filePath = fileDialog.FileName;
+            _appSettings.LastSaveDir = Path.GetDirectoryName(filePath)!;
 
-                File.WriteAllBytes(filePath, icon);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SaveTitleImageError.SafeFormat(ex.Message));
-            }
+            File.WriteAllBytes(filePath, icon);
         }
-
-        public override bool CanExecute(object? parameter)
+        catch (Exception ex)
         {
-            var selectedTitle = Title;
-            return selectedTitle?.Icon != null;
+            _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SaveTitleImageError.SafeFormat(ex.Message));
         }
-
     }
 
-    public interface ISaveTitleImageCommand : ICommand
+    public override bool CanExecute(object? parameter)
     {
-        TitleInfo? Title { set; }
+        var selectedTitle = Title;
+        return selectedTitle?.Icon != null;
     }
+
+}
+
+public interface ISaveTitleImageCommand : ICommand
+{
+    TitleInfo? Title { set; }
 }

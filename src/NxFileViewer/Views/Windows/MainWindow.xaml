@@ -1,16 +1,17 @@
-﻿<Window x:Class="Emignatik.NxFileViewer.Views.MainWindow"
+﻿<Window x:Class="Emignatik.NxFileViewer.Views.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
         xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
         xmlns:dragAndDrop="clr-namespace:Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions.DragAndDrop"
         xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
+        xmlns:userControls="clr-namespace:Emignatik.NxFileViewer.Views.UserControls"
+        xmlns:windows="clr-namespace:Emignatik.NxFileViewer.Views.Windows"
         mc:Ignorable="d"
         AllowDrop="True"
         Style="{StaticResource WindowStyle}"
-        Title="{Binding Path=Title}" Height="600" Width="450" d:DataContext="{d:DesignInstance views:MainWindowViewModel}"
+        Title="{Binding Path=Title}" Height="600" Width="450" d:DataContext="{d:DesignInstance windows:MainWindowViewModel}"
         dragAndDrop:DropFilesBehaviorExtension.IsEnabled="True">
 
     <Window.InputBindings>
@@ -55,9 +56,11 @@
                           Command="{Binding Path=LoadKeysCommand}" InputGestureText="F10" />             
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_OpenTitleWebPage}" 
                           Command="{Binding Path=OpenTitleWebPageCommand}" InputGestureText="F9" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_ShowBulkRenameWindow}" 
+                          Command="{Binding Path=ShowBulkRenameWindowCommand}" InputGestureText="F9" />
             </MenuItem>
             <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Options}">
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Settings}" Command="{Binding Path=ShowSettingsViewCommand}" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Settings}" Command="{Binding Path=ShowSettingsWindowCommand}" />
             </MenuItem>
         </Menu>
 
@@ -96,7 +99,7 @@
                 </Style>
             </GridSplitter.Style>
         </GridSplitter>
-        <views:LoggingView Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LogSource="{Binding LogSource, Mode=OneWay}" />
+        <userControls:LoggingView Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LogSource="{Binding LogSource, Mode=OneWay}" />
 
         <StatusBar Grid.Row="4">
             <!-- Status Text -->
@@ -108,7 +111,7 @@
             <StatusBarItem DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center"
                            Visibility="{Binding Path=OpenedFile.FileOverview.MissingKeys, FallbackValue=Collapsed, Converter={StaticResource StringNullOrEmptyToCollapsedVisibilityConverter}}">
                 <StatusBarItem.InputBindings>
-                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding ShowSettingsViewCommand}" />
+                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding ShowSettingsWindowCommand}" />
                 </StatusBarItem.InputBindings>
                 <StatusBarItem.ContextMenu>
                     <ContextMenu>

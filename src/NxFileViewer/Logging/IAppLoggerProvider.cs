@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Logging
+namespace Emignatik.NxFileViewer.Logging;
+
+public interface IAppLoggerProvider : ILoggerProvider, ILogSource
 {
-    public interface IAppLoggerProvider : ILoggerProvider, ILogSource
-    {
-    }
 }

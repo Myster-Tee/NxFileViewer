@@ -1,48 +1,47 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Emignatik.NxFileViewer.Localization
+namespace Emignatik.NxFileViewer.Localization;
+
+public static class LocalizationStringExtension
 {
-    public static class LocalizationStringExtension
+    public static event FormatExceptionHandler? FormatException;
+
+    public static string SafeFormat(this string str, params object?[] args)
     {
-        public static event FormatExceptionHandler? FormatException;
-
-        public static string SafeFormat(this string str, params object?[] args)
+        try
         {
-            try
-            {
-                return string.Format(str, args);
-            }
-            catch (Exception ex)
-            {
-                NotifyFormatException(new FormatExceptionHandlerArgs(str, args, ex));
-                return str;
-            }
+            return string.Format(str, args);
         }
-
-        private static void NotifyFormatException(FormatExceptionHandlerArgs args)
+        catch (Exception ex)
         {
-            FormatException?.Invoke(MethodBase.GetCurrentMethod()?.DeclaringType, args);
+            NotifyFormatException(new FormatExceptionHandlerArgs(str, args, ex));
+            return str;
         }
     }
 
-    public delegate void FormatExceptionHandler(object? sender, FormatExceptionHandlerArgs args);
-
-    public class FormatExceptionHandlerArgs
+    private static void NotifyFormatException(FormatExceptionHandlerArgs args)
     {
-
-        public FormatExceptionHandlerArgs(string keyValue, object?[] formatArgs, Exception ex)
-        {
-            KeyValue = keyValue;
-            FormatArgs = formatArgs;
-            Ex = ex;
-        }
-
-        public string KeyValue { get; }
-
-        public Exception Ex { get; }
-
-        public object?[] FormatArgs { get; }
-
+        FormatException?.Invoke(MethodBase.GetCurrentMethod()?.DeclaringType, args);
     }
+}
+
+public delegate void FormatExceptionHandler(object? sender, FormatExceptionHandlerArgs args);
+
+public class FormatExceptionHandlerArgs
+{
+
+    public FormatExceptionHandlerArgs(string keyValue, object?[] formatArgs, Exception ex)
+    {
+        KeyValue = keyValue;
+        FormatArgs = formatArgs;
+        Ex = ex;
+    }
+
+    public string KeyValue { get; }
+
+    public Exception Ex { get; }
+
+    public object?[] FormatArgs { get; }
+
 }
