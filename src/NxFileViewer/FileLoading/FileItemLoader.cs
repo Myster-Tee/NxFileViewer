@@ -277,7 +277,6 @@ public class FileItemLoader : IFileItemLoader
         try
         {
 
-
             var nca = parentItem.Nca;
             for (var sectionIndex = 0; sectionIndex < NcaItem.MaxSections; sectionIndex++)
             {

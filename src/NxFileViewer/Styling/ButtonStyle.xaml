@@ -23,6 +23,12 @@
         <Setter Property="Content" Value="⭳" />
     </Style>
 
+    <Style x:Key="OkCancelButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="MinWidth" Value="80" />
+        <Setter Property="Margin" Value="2,2" />
+        <Setter Property="Height" Value="26" />
+    </Style>
+
     <Style TargetType="customControls:PlayStopButton" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="BorderBrush" Value="{DynamicResource PlayStopButton.Static.Border}" />
         <Setter Property="Background" Value="{DynamicResource PlayStopButton.Static.Background}" />

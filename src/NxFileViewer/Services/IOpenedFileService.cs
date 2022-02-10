@@ -1,37 +1,34 @@
 ﻿using Emignatik.NxFileViewer.Model;
 
-namespace Emignatik.NxFileViewer.Services
+namespace Emignatik.NxFileViewer.Services;
+
+/// <summary>
+/// Service in charge of providing the currently opened file
+/// </summary>
+public interface IOpenedFileService
 {
+    /// <summary>
+    /// Fired when <see cref="OpenedFile"/> is changed
+    /// </summary>
+    event OpenedFileChangedHandler OpenedFileChanged;
 
     /// <summary>
-    /// Service in charge of providing the currently opened file
+    /// Get or set the opened file
     /// </summary>
-    public interface IOpenedFileService
-    {
-        /// <summary>
-        /// Fired when <see cref="OpenedFile"/> is changed
-        /// </summary>
-        event OpenedFileChangedHandler OpenedFileChanged;
+    NxFile? OpenedFile { get; set; }
+}
 
-        /// <summary>
-        /// Get or set the opened file
-        /// </summary>
-        NxFile? OpenedFile { get; set; }
+public delegate void OpenedFileChangedHandler(object sender, OpenedFileChangedHandlerArgs args);
+
+public class OpenedFileChangedHandlerArgs
+{
+    public OpenedFileChangedHandlerArgs(NxFile? oldFile, NxFile? newFile)
+    {
+        OldFile = oldFile;
+        NewFile = newFile;
     }
 
-    public delegate void OpenedFileChangedHandler(object sender, OpenedFileChangedHandlerArgs args);
+    public NxFile? OldFile { get; }
 
-    public class OpenedFileChangedHandlerArgs
-    {
-        public OpenedFileChangedHandlerArgs(NxFile? oldFile, NxFile? newFile)
-        {
-            OldFile = oldFile;
-            NewFile = newFile;
-        }
-
-        public NxFile? OldFile { get; }
-
-        public NxFile? NewFile { get; }
-    }
-
+    public NxFile? NewFile { get; }
 }

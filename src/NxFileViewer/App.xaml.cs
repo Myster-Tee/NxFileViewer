@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.FileLoading;
+using Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.Services;
@@ -39,6 +40,8 @@ public partial class App : Application
             .AddSingleton<IOpenedFileService, OpenedFileService>()
             .AddSingleton<ISelectedItemService, SelectedItemService>()
             .AddSingleton<IPromptService, PromptService>()
+            .AddSingleton<IPackageInfoLoader, PackageInfoLoader>()
+            .AddSingleton<IFileRenamerService, FileRenamerService>()
             .AddSingleton<BackgroundTaskService>()
             .AddSingleton<IBackgroundTaskService>(provider => provider.GetRequiredService<BackgroundTaskService>())
             .AddSingleton<IProgressReporter>(provider => provider.GetRequiredService<BackgroundTaskService>())

@@ -249,4 +249,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string BulkRenameWindow_NamingPattern => "Modèle de nommage";
     public string BulkRenameWindow_InputDirectory => "Répertoire d'entrée";
     public string BulkRenameWindow_ToolTip_NamingPattern => "Bla bla bla"; //TODO : finir de documenter
+    public string BulkRenameWindow_Button_Cancel => "Annuler";
+    public string BulkRenameWindow_Button_Rename => "Renommer";
+    public string BulkRenameWindow_GroupBoxParameters => "Paramètres";
 }

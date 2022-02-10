@@ -1,27 +1,26 @@
 ﻿using Emignatik.NxFileViewer.Model.TreeItems;
 
-namespace Emignatik.NxFileViewer.Services
+namespace Emignatik.NxFileViewer.Services;
+
+public interface ISelectedItemService
 {
-    public interface ISelectedItemService
-    {
-        IItem? SelectedItem { get; set; }
+    IItem? SelectedItem { get; set; }
 
-        event SelectedItemChangedHandler SelectedItemChanged;
+    event SelectedItemChangedHandler SelectedItemChanged;
+}
+
+public delegate void SelectedItemChangedHandler(object sender, SelectedItemChangedHandlerArgs args);
+
+public class SelectedItemChangedHandlerArgs 
+{
+
+    public SelectedItemChangedHandlerArgs(IItem? oldItem, IItem? newItem)
+    {
+        OldItem = oldItem;
+        NewItem = newItem;
     }
 
-    public delegate void SelectedItemChangedHandler(object sender, SelectedItemChangedHandlerArgs args);
+    public IItem? OldItem { get; }
+    public IItem? NewItem { get; }
 
-    public class SelectedItemChangedHandlerArgs 
-    {
-
-        public SelectedItemChangedHandlerArgs(IItem? oldItem, IItem? newItem)
-        {
-            OldItem = oldItem;
-            NewItem = newItem;
-        }
-
-        public IItem? OldItem { get; }
-        public IItem? NewItem { get; }
-
-    }
 }
