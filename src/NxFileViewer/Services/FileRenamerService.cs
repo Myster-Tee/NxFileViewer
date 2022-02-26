@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Emignatik.NxFileViewer.FileLoading;
 using Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
 using Microsoft.Extensions.Logging;
 

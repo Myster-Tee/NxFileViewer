@@ -4,6 +4,7 @@ using System.Linq;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Services;
+using Emignatik.NxFileViewer.Utils;
 using LibHac.Common;
 using LibHac.Common.Keys;
 using LibHac.Fs;
@@ -12,6 +13,7 @@ using LibHac.FsSystem;
 using LibHac.Tools.FsSystem;
 using LibHac.Tools.FsSystem.NcaUtils;
 using LibHac.Tools.Ncm;
+using ContentType = LibHac.Ncm.ContentType;
 
 namespace Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
 
@@ -55,40 +57,30 @@ public class PackageInfoLoader : IPackageInfoLoader
 
         var cnmts = new List<Cnmt>();
 
-        foreach (var partitionFileEntry in nspPartition.Files)
+        foreach (var cnmt in nspPartition.LoadCnmts(keySet))
         {
-            var fileName = partitionFileEntry.Name;
-            if (!fileName.EndsWith("cnmt.nca", StringComparison.OrdinalIgnoreCase))
-                continue;
+            var ncaControlEntry = cnmt.ContentEntries.FirstOrDefault(entry => entry.Type == ContentType.Control);
 
-            var file = nspPartition.OpenFile(partitionFileEntry, OpenMode.Read);
-
-            var nca = new Nca(keySet, new FileStorage(file));
-
-            if(nca.Header.ContentType != NcaContentType.Meta)
-                continue;
-
-            for (var sectionIndex = 0; sectionIndex < NcaItem.MaxSections; sectionIndex++)
+            if (ncaControlEntry != null)
             {
-                if (!nca.Header.IsSectionEnabled(sectionIndex))
-                    continue;
+                var ncaId = ncaControlEntry.NcaId.ToStrId();
 
-                var openFileSystem = nca.OpenFileSystem(sectionIndex, IntegrityCheckLevel.ErrorOnInvalid);
+                var nacp = nspPartition.LoadNacp(ncaId, keySet);
 
-                var cnmtFileEntries = openFileSystem.EnumerateEntries("/", "*.cnmt").ToArray();
+                if (nacp != null)
+                {
+                    var s = nacp.Value.Titles[0].Name.ToString();
 
-                var cnmtFileEntry = cnmtFileEntries[0];
 
-                using var uniqueRefFile = new UniqueRef<IFile>();
-                openFileSystem.OpenFile(ref uniqueRefFile.Ref(), cnmtFileEntry.FullPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
-                var cnmtFile = uniqueRefFile.Release();
-
-                var cnmt = new Cnmt(cnmtFile.AsStream());
-                cnmts.Add(cnmt);
+                    var valueSupportedLanguages = nacp.Value.SupportedLanguages;
+                }
 
             }
 
         }
+
+
+
 
         //TODO: à finir
         return new PackageInfo
