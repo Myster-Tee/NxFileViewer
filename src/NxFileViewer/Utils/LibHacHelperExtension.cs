@@ -15,7 +15,7 @@ using LibHac.Tools.Ncm;
 
 namespace Emignatik.NxFileViewer.Utils;
 
-public static class LibHacHelperExtensions
+public static class LibHacHelperExtension
 {
 
     public static IEnumerable<PartitionFileEntry> FindCnmtEntries(this PartitionFileSystem fileSystem)
