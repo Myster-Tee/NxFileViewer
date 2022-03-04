@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Style="{StaticResource WindowStyle}"
         Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_Title}" 
-        Height="200"
+        Height="500"
         Width="350"
         d:DataContext="{d:DesignInstance windows:BulkRenameWindowViewModel}">
     <Grid>
@@ -27,14 +27,32 @@
                     <TextBox Text="{Binding Path=InputDirectory, UpdateSourceTrigger=PropertyChanged}" />
                 </DockPanel>
 
-                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_NamingPattern}" Style="{StaticResource Title2}" />
+                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_BasePattern}" Style="{StaticResource Title2}" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding Path=NamingPattern}" />
-                    <customControls:TipLabel Grid.Column="1" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_ToolTip_NamingPattern}"/>
+                    <TextBox Grid.Column="0" Text="{Binding Path=BasePattern}" />
+                    <customControls:TipLabel Grid.Column="1" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_ToolTip_BasePattern}"/>
+                </Grid>
+                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_PatchPattern}" Style="{StaticResource Title2}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="{Binding Path=PatchPattern}" />
+                    <customControls:TipLabel Grid.Column="1" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_ToolTip_PatchPattern}"/>
+                </Grid>              
+                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_AddonPattern}" Style="{StaticResource Title2}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="{Binding Path=AddonPattern}" />
+                    <customControls:TipLabel Grid.Column="1" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_ToolTip_AddonPattern}"/>
                 </Grid>
             </StackPanel>
         </GroupBox>

@@ -217,9 +217,13 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string Log_NcaHashCanceled { get; }
 
     string BulkRenameWindow_Title { get; }
-    string BulkRenameWindow_NamingPattern { get; }
+    string BulkRenameWindow_BasePattern { get; }
+    string BulkRenameWindow_PatchPattern { get; }
+    string BulkRenameWindow_AddonPattern { get; }
     string BulkRenameWindow_InputDirectory { get; }
-    string BulkRenameWindow_ToolTip_NamingPattern { get; }
+    string BulkRenameWindow_ToolTip_BasePattern { get; }
+    string BulkRenameWindow_ToolTip_PatchPattern { get; }
+    string BulkRenameWindow_ToolTip_AddonPattern { get; }
     string BulkRenameWindow_Button_Cancel { get; }
     string BulkRenameWindow_Button_Rename { get; }
     string BulkRenameWindow_GroupBoxParameters { get; }

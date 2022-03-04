@@ -21,7 +21,9 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
     public ICommand BrowseInputDirectoryCommand { get; }
 
     private string _inputDirectory;
-    private string _namingPattern;
+    private string _basePattern;
+    private string _patchPattern;
+    private string _addonPattern;
 
     public string InputDirectory
     {
@@ -33,19 +35,39 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
         }
     }
 
-    public string NamingPattern
+    public string BasePattern
     {
-        get => _namingPattern;
+        get => _basePattern;
         set
         {
-            _namingPattern = value;
+            _basePattern = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public string PatchPattern
+    {
+        get => _patchPattern;
+        set
+        {
+            _patchPattern = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public string AddonPattern
+    {
+        get => _addonPattern;
+        set
+        {
+            _addonPattern = value;
             NotifyPropertyChanged();
         }
     }
 
     private void OnBrowseInputDirectory()
     {
-
+        //TODO: à implémenter
     }
 
 
@@ -54,7 +76,7 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
         //TODO: exposer tous les paramètres
         try
         {
-            _fileRenamerService.Rename(InputDirectory, NamingPattern, new[] { ".nsp", ".nsz", ".xci", ".xcz" }, true);
+            _fileRenamerService.Rename(InputDirectory, BasePattern, new[] { ".nsp", ".nsz", ".xci", ".xcz" }, true);
         }
         catch (Exception ex)
         {

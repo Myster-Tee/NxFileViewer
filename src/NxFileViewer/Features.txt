@@ -1,6 +1,10 @@
 ﻿TODO: ajout d'une fenêtre about dialog with credits
 TODO: historique des n derniers fichiers chargés
-TODO: feature de nommage automatique de fichiers
 TODO: vérification en masse
 TODO: ajouter des settings pour vérifier automatiquement le hash et la signature à l'ouverture
 TODO: le bouton sauvegarder dans les settings, devrait fermer la fenêtre
+
+
+TODO: feature de nommage automatique de fichiers
+
+

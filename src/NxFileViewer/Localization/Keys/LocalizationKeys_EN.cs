@@ -246,9 +246,13 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string Log_NcaHashCanceled => "NCAs hash canceled.";
 
     public string BulkRenameWindow_Title => "Bulk renaming";
-    public string BulkRenameWindow_NamingPattern => "Naming pattern";
+    public string BulkRenameWindow_BasePattern => "Base pattern";
+    public string BulkRenameWindow_PatchPattern => "Patch pattern";
+    public string BulkRenameWindow_AddonPattern => "Addon pattern";
     public string BulkRenameWindow_InputDirectory => "Input directory";
-    public string BulkRenameWindow_ToolTip_NamingPattern => "Use {{TitleID}} {{TitleName}}"; //TODO : finir de documenter
+    public string BulkRenameWindow_ToolTip_BasePattern => "Use {{TitleID}} {{TitleName}}"; //TODO : finir de documenter
+    public string BulkRenameWindow_ToolTip_PatchPattern => ""; //TODO : finir de documenter
+    public string BulkRenameWindow_ToolTip_AddonPattern => ""; //TODO : finir de documenter
     public string BulkRenameWindow_Button_Cancel => "Cancel";
     public string BulkRenameWindow_Button_Rename => "Rename";
     public string BulkRenameWindow_GroupBoxParameters => "Parameters";
