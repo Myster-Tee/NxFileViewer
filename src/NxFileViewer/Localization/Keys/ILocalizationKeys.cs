@@ -227,4 +227,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string BulkRenameWindow_Button_Cancel { get; }
     string BulkRenameWindow_Button_Rename { get; }
     string BulkRenameWindow_GroupBoxParameters { get; }
+
+    string Exception_UnexpectedDelimiter { get; }
+    string Exception_EndDelimiterMissing { get; }
 }

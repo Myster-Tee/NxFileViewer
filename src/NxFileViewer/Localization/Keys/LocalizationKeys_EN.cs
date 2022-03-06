@@ -256,4 +256,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string BulkRenameWindow_Button_Cancel => "Cancel";
     public string BulkRenameWindow_Button_Rename => "Rename";
     public string BulkRenameWindow_GroupBoxParameters => "Parameters";
+
+    public string Exception_UnexpectedDelimiter => "Unexpected delimiter {0} found at position {1}, use {2}{0} instead.";
+    public string Exception_EndDelimiterMissing => "End delimiter {0} is missing.";
 }

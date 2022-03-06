@@ -256,4 +256,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string BulkRenameWindow_Button_Cancel => "Annuler";
     public string BulkRenameWindow_Button_Rename => "Renommer";
     public string BulkRenameWindow_GroupBoxParameters => "Paramètres";
+
+    public string Exception_UnexpectedDelimiter => "Délimiteur {0} non attendu à la position {1}, utilisez {2}{0} à la place.";
+    public string Exception_EndDelimiterMissing => "Le délimiteur de fin {0} est manquant.";
 }

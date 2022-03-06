@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Emignatik.NxFileViewer.Tools.Parsing;
+using Emignatik.NxFileViewer.Tools.DelimitedTextParsing;
 using Xunit;
 
 namespace NxFileViewer.Test.Tools.Parsing;

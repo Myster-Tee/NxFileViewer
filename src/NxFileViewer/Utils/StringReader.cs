@@ -3,7 +3,7 @@
 public class StringReader
 {
     private readonly System.IO.StringReader _sr;
-    private char _lastReadChar = (char)0;
+    private char _lastReadChar = '\0';
     private int _position;
 
     public StringReader(string str)
@@ -12,7 +12,7 @@ public class StringReader
         _position = 0;
     }
 
-    public char PrevChar { get; private set; } = (char)0;
+    public char PrevChar { get; private set; } = '\0';
 
     public int Position => _position;
 

@@ -1,7 +1,8 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Emignatik.NxFileViewer.Utils;
 
-namespace Emignatik.NxFileViewer.Tools.Parsing;
+namespace Emignatik.NxFileViewer.Tools.DelimitedTextParsing;
 
 public abstract class DelimitedTextParserBase
 {
@@ -13,6 +14,8 @@ public abstract class DelimitedTextParserBase
     {
         _startDelimiter = startDelimiter;
         _endDelimiter = endDelimiter;
+        if (escapeChar == '\0')
+            throw new ArgumentException($"{nameof(escapeChar)} can't be '\0'", nameof(escapeChar));
         _escapeChar = escapeChar;
     }
 
@@ -49,7 +52,7 @@ public abstract class DelimitedTextParserBase
                 }
                 else if (c == _endDelimiter)
                 {
-                    throw new UnexpectedDelimiterException(c, stringReader.Position);
+                    throw new UnexpectedDelimiterException(c, stringReader.Position, _escapeChar);
                 }
                 else
                 {
@@ -66,7 +69,7 @@ public abstract class DelimitedTextParserBase
                 }
                 else if (c == _startDelimiter)
                 {
-                    throw new UnexpectedDelimiterException(c, stringReader.Position);
+                    throw new UnexpectedDelimiterException(c, stringReader.Position, _escapeChar);
                 }
                 else
                 {
