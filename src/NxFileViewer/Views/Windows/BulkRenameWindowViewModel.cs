@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
-using Emignatik.NxFileViewer.Services;
+using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 
@@ -9,10 +9,12 @@ namespace Emignatik.NxFileViewer.Views.Windows;
 public class BulkRenameWindowViewModel : WindowViewModelBase
 {
     private readonly IFileRenamerService _fileRenamerService;
+    private readonly INamingPatternsParser _namingPatternsParser;
 
-    public BulkRenameWindowViewModel(IFileRenamerService fileRenamerService)
+    public BulkRenameWindowViewModel(IFileRenamerService fileRenamerService, INamingPatternsParser namingPatternsParser)
     {
         _fileRenamerService = fileRenamerService ?? throw new ArgumentNullException(nameof(fileRenamerService));
+        _namingPatternsParser = namingPatternsParser ?? throw new ArgumentNullException(nameof(namingPatternsParser));
         RenameCommand = new RelayCommand(OnRename);
         BrowseInputDirectoryCommand = new RelayCommand(OnBrowseInputDirectory);
     }
@@ -21,7 +23,7 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
     public ICommand BrowseInputDirectoryCommand { get; }
 
     private string _inputDirectory;
-    private string _basePattern;
+    private string _basePattern = "Test [TitleId] [FirstTitleName].nsp";
     private string _patchPattern;
     private string _addonPattern;
 
@@ -76,7 +78,8 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
         //TODO: exposer tous les paramètres
         try
         {
-            _fileRenamerService.Rename(InputDirectory, BasePattern, new[] { ".nsp", ".nsz", ".xci", ".xcz" }, true);
+            var namingPatterns = _namingPatternsParser.Parse(BasePattern);
+            _fileRenamerService.RenameFromDirectory(InputDirectory, namingPatterns, new[] { ".nsp", ".nsz", ".xci", ".xcz" }, true);
         }
         catch (Exception ex)
         {

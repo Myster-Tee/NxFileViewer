@@ -12,6 +12,7 @@ using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
+using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Settings.Model;
 using Emignatik.NxFileViewer.Styling.Theme;
@@ -59,8 +60,9 @@ public partial class App : Application
             .AddSingleton<ILoadKeysCommand, LoadKeysCommand>()
             .AddSingleton<IOpenTitleWebPageCommand, OpenTitleWebPageCommand>()
             .AddSingleton<IShowBulkRenameWindowCommand, ShowBulkRenameWindowCommand>()
+            .AddSingleton<INamingPatternsParser, NamingPatternsParser>()
 
-            .AddSingleton<IFileTypeAnalyzer, FileTypeAnalyzer>()
+            .AddSingleton<IPackageTypeAnalyzer, PackageTypeAnalyzer>()
             .AddSingleton<MainWindowViewModel>()
             .AddTransient<BulkRenameWindowViewModel>()
             .AddSingleton<IAppSettingsWrapper<AppSettingsModel>, AppSettingsWrapper>()

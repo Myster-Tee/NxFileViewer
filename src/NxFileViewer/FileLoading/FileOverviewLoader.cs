@@ -80,21 +80,21 @@ public class FileOverviewLoader : IFileOverviewLoader
             return fileOverview;
         }
 
-        private static PackageType DeterminePackageType(FileOverview fileOverview, CnmtContainer[] cnmtContainers)
+        private static Model.Overview.PackageType DeterminePackageType(FileOverview fileOverview, CnmtContainer[] cnmtContainers)
         {
-            PackageType packageType;
+            Model.Overview.PackageType packageType;
             if (cnmtContainers.Length > 1)
             {
                 var rootItemType = fileOverview.RootItem.GetType();
                 if (rootItemType == typeof(XciItem))
-                    packageType = PackageType.SuperXCI;
+                    packageType = Model.Overview.PackageType.SuperXCI;
                 else if (rootItemType == typeof(NspItem))
-                    packageType = PackageType.SuperNSP;
+                    packageType = Model.Overview.PackageType.SuperNSP;
                 else
-                    packageType = PackageType.Unknown;
+                    packageType = Model.Overview.PackageType.Unknown;
             }
             else
-                packageType = PackageType.Normal;
+                packageType = Model.Overview.PackageType.Normal;
 
             return packageType;
         }

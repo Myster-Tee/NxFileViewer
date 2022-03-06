@@ -6,18 +6,20 @@ namespace Emignatik.NxFileViewer.Tools.DelimitedTextParsing;
 
 public abstract class DelimitedTextParserBase
 {
-    private readonly char _startDelimiter;
-    private readonly char _escapeChar;
-    private readonly char _endDelimiter;
-
     public DelimitedTextParserBase(char startDelimiter, char endDelimiter, char escapeChar)
     {
-        _startDelimiter = startDelimiter;
-        _endDelimiter = endDelimiter;
+        StartDelimiter = startDelimiter;
+        EndDelimiter = endDelimiter;
         if (escapeChar == '\0')
             throw new ArgumentException($"{nameof(escapeChar)} can't be '\0'", nameof(escapeChar));
-        _escapeChar = escapeChar;
+        EscapeChar = escapeChar;
     }
+
+    public char StartDelimiter { get; }
+
+    public char EscapeChar { get; }
+
+    public char EndDelimiter { get; }
 
     protected void ParseInternal(string inputText)
     {
@@ -27,32 +29,32 @@ public abstract class DelimitedTextParserBase
         var buffer = new StringBuilder();
         while (stringReader.ReadChar(out var c))
         {
-            if (stringReader.PrevChar == _escapeChar)
+            if (stringReader.PrevChar == EscapeChar)
             {
-                if (c == _startDelimiter)
+                if (c == StartDelimiter)
                 {
-                    buffer[^1] = _startDelimiter;
+                    buffer[^1] = StartDelimiter;
                     continue;
                 }
-                if (c == _endDelimiter)
+                if (c == EndDelimiter)
                 {
-                    buffer[^1] = _endDelimiter;
+                    buffer[^1] = EndDelimiter;
                     continue;
                 }
             }
 
             if (!isInKeyword)
             {
-                if (c == _startDelimiter)
+                if (c == StartDelimiter)
                 {
                     if (buffer.Length > 0)
                         OnOuterTextFound(buffer.ToString());
                     buffer.Clear();
                     isInKeyword = true;
                 }
-                else if (c == _endDelimiter)
+                else if (c == EndDelimiter)
                 {
-                    throw new UnexpectedDelimiterException(c, stringReader.Position, _escapeChar);
+                    throw new UnexpectedDelimiterException(c, stringReader.Position, EscapeChar);
                 }
                 else
                 {
@@ -61,15 +63,15 @@ public abstract class DelimitedTextParserBase
             }
             else// if (isInKeyword)
             {
-                if (c == _endDelimiter)
+                if (c == EndDelimiter)
                 {
                     OnDelimitedTextFound(buffer.ToString());
                     buffer.Clear();
                     isInKeyword = false;
                 }
-                else if (c == _startDelimiter)
+                else if (c == StartDelimiter)
                 {
-                    throw new UnexpectedDelimiterException(c, stringReader.Position, _escapeChar);
+                    throw new UnexpectedDelimiterException(c, stringReader.Position, EscapeChar);
                 }
                 else
                 {
@@ -79,7 +81,7 @@ public abstract class DelimitedTextParserBase
         }
 
         if (isInKeyword)
-            throw new EndDelimiterMissingException(_endDelimiter);
+            throw new EndDelimiterMissingException(EndDelimiter);
 
         if (buffer.Length > 0)
             OnOuterTextFound(buffer.ToString());

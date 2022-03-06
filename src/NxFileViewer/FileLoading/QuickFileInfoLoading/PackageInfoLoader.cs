@@ -1,64 +1,78 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Model.TreeItems.Impl;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Utils;
-using LibHac.Common;
 using LibHac.Common.Keys;
 using LibHac.Fs;
-using LibHac.Fs.Fsa;
 using LibHac.FsSystem;
-using LibHac.Tools.FsSystem;
-using LibHac.Tools.FsSystem.NcaUtils;
-using LibHac.Tools.Ncm;
 using ContentType = LibHac.Ncm.ContentType;
 
 namespace Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
 
 public class PackageInfoLoader : IPackageInfoLoader
 {
-    private readonly IFileTypeAnalyzer _fileTypeAnalyzer;
+    private readonly IPackageTypeAnalyzer _packageTypeAnalyzer;
     private readonly IKeySetProviderService _keySetProviderService;
 
-    public PackageInfoLoader(IFileTypeAnalyzer fileTypeAnalyzer, IKeySetProviderService keySetProviderService)
+    public PackageInfoLoader(IPackageTypeAnalyzer packageTypeAnalyzer, IKeySetProviderService keySetProviderService)
     {
-        _fileTypeAnalyzer = fileTypeAnalyzer ?? throw new ArgumentNullException(nameof(fileTypeAnalyzer));
+        _packageTypeAnalyzer = packageTypeAnalyzer ?? throw new ArgumentNullException(nameof(packageTypeAnalyzer));
         _keySetProviderService = keySetProviderService ?? throw new ArgumentNullException(nameof(keySetProviderService));
     }
 
     public PackageInfo GetPackageInfo(string filePath)
     {
-        _fileTypeAnalyzer.GetFileType(filePath);
         var keySet = _keySetProviderService.GetKeySet();
 
-
-        switch (_fileTypeAnalyzer.GetFileType(filePath))
+        AccuratePackageType accuratePackageType;
+        List<Content> contents;
+        switch (_packageTypeAnalyzer.GetType(filePath))
         {
-            case FileType.UNKNOWN:
+            case PackageType.UNKNOWN:
                 throw new FileNotSupportedException(filePath);
 
-            case FileType.XCI:
-                return LoadXciPackageInfo(filePath, keySet);
-            case FileType.NSP:
-                return LoadNspPackageInfo(filePath, keySet);
-
+            case PackageType.XCI:
+                contents = LoadXciPackageInfo(filePath, keySet, out accuratePackageType);
+                break;
+            case PackageType.NSP:
+                contents = LoadNspContents(filePath, keySet, out accuratePackageType);
+                
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
+
+        var packageInfo = new PackageInfo
+        {
+            PackageType = _packageTypeAnalyzer.GetType(filePath),
+            AccuratePackageType = accuratePackageType,
+            Contents = contents
+        };
+
+        return packageInfo;
+
     }
 
-    private PackageInfo LoadNspPackageInfo(string nspFilePath, KeySet keySet)
+    private static List<Content> LoadNspContents(string nspFilePath, KeySet keySet, out AccuratePackageType accuratePackageType)
     {
         using var localFile = new LocalFile(nspFilePath, OpenMode.Read);
         var fileStorage = new FileStorage(localFile);
         var nspPartition = new PartitionFileSystem(fileStorage);
 
-        var cnmts = new List<Cnmt>();
+        accuratePackageType = nspPartition.Files.Any(entry => entry.Name.EndsWith(".ncz", StringComparison.OrdinalIgnoreCase)) ? 
+            AccuratePackageType.NSZ :
+            AccuratePackageType.NSP;
+
+        var contents = new List<Content>();
 
         foreach (var cnmt in nspPartition.LoadCnmts(keySet))
         {
+
+
+            var content = new Content(cnmt);
+            contents.Add(content);
+
             var ncaControlEntry = cnmt.ContentEntries.FirstOrDefault(entry => entry.Type == ContentType.Control);
 
             if (ncaControlEntry != null)
@@ -69,30 +83,21 @@ public class PackageInfoLoader : IPackageInfoLoader
 
                 if (nacp != null)
                 {
-                    var s = nacp.Value.Titles[0].Name.ToString();
-
-
-                    var valueSupportedLanguages = nacp.Value.SupportedLanguages;
+                    content.NacpData = new NacpData(nacp.Value);
                 }
 
             }
-
         }
 
-
-
-
+        return contents;
         //TODO: à finir
-        return new PackageInfo
-        {
-            Metadata = cnmts,
-        };
     }
 
-    private PackageInfo LoadXciPackageInfo(string filePath, KeySet keySet)
+    private static List<Content> LoadXciPackageInfo(string filePath, KeySet keySet, out AccuratePackageType accuratePackageType)
     {
+        accuratePackageType = default;
+        return new List<Content>();
         //TODO: à finir
-        return new PackageInfo();
     }
 
 

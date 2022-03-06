@@ -259,4 +259,5 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
 
     public string Exception_UnexpectedDelimiter => "Unexpected delimiter {0} found at position {1}, use {2}{0} instead.";
     public string Exception_EndDelimiterMissing => "End delimiter {0} is missing.";
+    public string FileRenaming_PatternKeywordUnknown => "Keyword «{0}» is unknown, allowed keywords are «{1}».";
 }

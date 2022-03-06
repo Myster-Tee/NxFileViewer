@@ -10,14 +10,14 @@ namespace Emignatik.NxFileViewer.FileLoading;
 
 internal class FileLoader : IFileLoader
 {
-    private readonly IFileTypeAnalyzer _fileTypeAnalyzer;
+    private readonly IPackageTypeAnalyzer _packageTypeAnalyzer;
     private readonly IFileItemLoader _fileItemLoader;
     private readonly IFileOverviewLoader _fileOverviewLoader;
     private readonly ILogger _logger;
 
-    public FileLoader(ILoggerFactory loggerFactory, IFileTypeAnalyzer fileTypeAnalyzer, IFileItemLoader fileItemLoader, IFileOverviewLoader fileOverviewLoader)
+    public FileLoader(ILoggerFactory loggerFactory, IPackageTypeAnalyzer packageTypeAnalyzer, IFileItemLoader fileItemLoader, IFileOverviewLoader fileOverviewLoader)
     {
-        _fileTypeAnalyzer = fileTypeAnalyzer ?? throw new ArgumentNullException(nameof(fileTypeAnalyzer));
+        _packageTypeAnalyzer = packageTypeAnalyzer ?? throw new ArgumentNullException(nameof(packageTypeAnalyzer));
         _fileItemLoader = fileItemLoader ?? throw new ArgumentNullException(nameof(fileItemLoader));
         _fileOverviewLoader = fileOverviewLoader ?? throw new ArgumentNullException(nameof(fileOverviewLoader));
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
@@ -39,18 +39,18 @@ internal class FileLoader : IFileLoader
 
         IItem rootItem;
         FileOverview fileOverview;
-        switch (_fileTypeAnalyzer.GetFileType(filePath))
+        switch (_packageTypeAnalyzer.GetType(filePath))
         {
-            case FileType.UNKNOWN:
+            case PackageType.UNKNOWN:
                 throw new FileNotSupportedException(filePath);
 
-            case FileType.XCI:
+            case PackageType.XCI:
                 var xciItem = _fileItemLoader.LoadXci(filePath);
                 fileOverview = _fileOverviewLoader.Load(xciItem);
                 rootItem = xciItem;
 
                 break;
-            case FileType.NSP:
+            case PackageType.NSP:
                 var nspItem = _fileItemLoader.LoadNsp(filePath);
                 fileOverview = _fileOverviewLoader.Load(nspItem);
                 rootItem = nspItem;
