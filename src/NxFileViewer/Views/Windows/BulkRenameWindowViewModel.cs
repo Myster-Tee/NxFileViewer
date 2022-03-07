@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Services.FileRenaming;
+using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 
@@ -10,11 +11,13 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
 {
     private readonly IFileRenamerService _fileRenamerService;
     private readonly INamingPatternsParser _namingPatternsParser;
+    private readonly IAppSettingsManager _appSettingsManager;
 
-    public BulkRenameWindowViewModel(IFileRenamerService fileRenamerService, INamingPatternsParser namingPatternsParser)
+    public BulkRenameWindowViewModel(IFileRenamerService fileRenamerService, INamingPatternsParser namingPatternsParser, IAppSettingsManager appSettingsManager)
     {
         _fileRenamerService = fileRenamerService ?? throw new ArgumentNullException(nameof(fileRenamerService));
         _namingPatternsParser = namingPatternsParser ?? throw new ArgumentNullException(nameof(namingPatternsParser));
+        _appSettingsManager = appSettingsManager ?? throw new ArgumentNullException(nameof(appSettingsManager));
         RenameCommand = new RelayCommand(OnRename);
         BrowseInputDirectoryCommand = new RelayCommand(OnBrowseInputDirectory);
     }
@@ -23,7 +26,6 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
     public ICommand BrowseInputDirectoryCommand { get; }
 
     private string _inputDirectory;
-    private string _basePattern = "{FirstTitleName} [{TitleIdU}].{PackageTypeL}";
     private string _patchPattern;
     private string _addonPattern;
 
@@ -37,12 +39,12 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
         }
     }
 
-    public string BasePattern
+    public string ApplicationPattern
     {
-        get => _basePattern;
+        get => _appSettingsManager.Settings.ApplicationPattern;
         set
         {
-            _basePattern = value;
+            _appSettingsManager.Settings.ApplicationPattern = value;
             NotifyPropertyChanged();
         }
     }
@@ -78,7 +80,7 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
         //TODO: exposer tous les paramètres
         try
         {
-            var namingPatterns = _namingPatternsParser.Parse(BasePattern);
+            var namingPatterns = _namingPatternsParser.Parse(ApplicationPattern);
             _fileRenamerService.RenameFromDirectory(InputDirectory, namingPatterns, new[] { ".nsp", ".nsz", ".xci", ".xcz" }, true);
         }
         catch (Exception ex)

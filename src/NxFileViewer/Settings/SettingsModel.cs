@@ -30,6 +30,8 @@ namespace Emignatik.NxFileViewer.Settings
         public bool? AlwaysReloadKeysBeforeOpen { get; set; }
 
         public string? TitlePageUrl { get; set; } = "https://tinfoil.io/Title/{0}";
+
+        public string? ApplicationPattern { get; set; } = "{FirstTitleName} [{TitleIdU}].{PackageTypeL}";
     }
 }
 

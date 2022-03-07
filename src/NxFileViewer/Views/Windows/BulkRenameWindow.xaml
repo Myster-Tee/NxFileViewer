@@ -27,13 +27,13 @@
                     <TextBox Text="{Binding Path=InputDirectory, UpdateSourceTrigger=PropertyChanged}" />
                 </DockPanel>
 
-                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_BasePattern}" Style="{StaticResource Title2}" />
+                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_ApplicationPattern}" Style="{StaticResource Title2}" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding Path=BasePattern}" />
+                    <TextBox Grid.Column="0" Text="{Binding Path=ApplicationPattern}" />
                     <customControls:TipLabel Grid.Column="1" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_ToolTip_BasePattern}"/>
                 </Grid>
                 <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_PatchPattern}" Style="{StaticResource Title2}" />

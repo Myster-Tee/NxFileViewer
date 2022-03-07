@@ -217,7 +217,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string Log_NcaHashCanceled { get; }
 
     string BulkRenameWindow_Title { get; }
-    string BulkRenameWindow_BasePattern { get; }
+    string BulkRenameWindow_ApplicationPattern { get; }
     string BulkRenameWindow_PatchPattern { get; }
     string BulkRenameWindow_AddonPattern { get; }
     string BulkRenameWindow_InputDirectory { get; }

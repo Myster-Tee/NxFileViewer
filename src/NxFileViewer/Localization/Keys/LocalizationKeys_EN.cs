@@ -246,7 +246,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string Log_NcaHashCanceled => "NCAs hash canceled.";
 
     public string BulkRenameWindow_Title => "Bulk renaming";
-    public string BulkRenameWindow_BasePattern => "Base pattern";
+    public string BulkRenameWindow_ApplicationPattern => "Application pattern";
     public string BulkRenameWindow_PatchPattern => "Patch pattern";
     public string BulkRenameWindow_AddonPattern => "Addon pattern";
     public string BulkRenameWindow_InputDirectory => "Input directory";

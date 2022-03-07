@@ -27,6 +27,8 @@ namespace Emignatik.NxFileViewer.Settings
 
         string TitlePageUrl { get; set; }
 
+        string ApplicationPattern { get; set; }
+
         int ProgressBufferSize { get; set; }
     }
 }

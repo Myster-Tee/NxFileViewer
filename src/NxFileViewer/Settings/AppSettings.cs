@@ -18,6 +18,7 @@ namespace Emignatik.NxFileViewer.Settings
         private bool _alwaysReloadKeysBeforeOpen = false;
 
         private string _titlePageUrl = "";
+        private string _applicationPattern;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -128,6 +129,16 @@ namespace Emignatik.NxFileViewer.Settings
             set
             {
                 _titlePageUrl = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string ApplicationPattern
+        {
+            get => _applicationPattern;
+            set
+            {
+                _applicationPattern = value;
                 NotifyPropertyChanged();
             }
         }

@@ -12,17 +12,19 @@ namespace Emignatik.NxFileViewer.Settings
         private static readonly string _settingsFilePath;
 
         private readonly ILogger _logger;
-        private readonly AppSettings _appSettings;
+        private readonly IAppSettings _appSettings;
 
         static AppSettingsManager()
         {
             _settingsFilePath = Path.Combine(PathHelper.CurrentAppDir, $"{AppDomain.CurrentDomain.FriendlyName}.settings.json");
         }
 
-        public AppSettingsManager(ILoggerFactory loggerFactory, AppSettings appSettings)
+        public AppSettingsManager(ILoggerFactory loggerFactory, IAppSettings appSettings)
         {
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
             _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+
+            LoadDefault();
         }
 
         public IAppSettings Settings => _appSettings;
@@ -76,7 +78,9 @@ namespace Emignatik.NxFileViewer.Settings
             if (model.AlwaysReloadKeysBeforeOpen != null)
                 _appSettings.AlwaysReloadKeysBeforeOpen = model.AlwaysReloadKeysBeforeOpen.Value;
             if (model.TitlePageUrl != null)
-                _appSettings.TitlePageUrl = model.TitlePageUrl;
+                _appSettings.TitlePageUrl = model.TitlePageUrl;     
+            if (model.ApplicationPattern != null)
+                _appSettings.ApplicationPattern = model.ApplicationPattern;
         }
 
         public void SafeSave()
@@ -98,6 +102,7 @@ namespace Emignatik.NxFileViewer.Settings
                     LogLevel = appSettings.LogLevel,
                     AlwaysReloadKeysBeforeOpen = appSettings.AlwaysReloadKeysBeforeOpen,
                     TitlePageUrl = appSettings.TitlePageUrl,
+                    ApplicationPattern = appSettings.ApplicationPattern
                 };
 
                 JsonSerializer.Serialize(new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }), settingsModel);
