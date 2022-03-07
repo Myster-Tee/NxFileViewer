@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Model.TreeItems.Impl;
+using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Model.Overview;
+using Emignatik.NxFileViewer.Models.Overview;
 using LibHac.Common;
 using Microsoft.Extensions.Logging;
 

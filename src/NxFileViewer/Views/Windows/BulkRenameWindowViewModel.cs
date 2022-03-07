@@ -23,7 +23,7 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
     public ICommand BrowseInputDirectoryCommand { get; }
 
     private string _inputDirectory;
-    private string _basePattern = "Test [TitleId] [FirstTitleName].nsp";
+    private string _basePattern = "{FirstTitleName} [{TitleIdU}].{PackageTypeL}";
     private string _patchPattern;
     private string _addonPattern;
 

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
-using Emignatik.NxFileViewer.Services.FileRenaming;
+using Emignatik.NxFileViewer.Services.FileRenaming.Models;
+using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;
+using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
 using LibHac.Ncm;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Services;
+namespace Emignatik.NxFileViewer.Services.FileRenaming;
 
 public class FileRenamerService : IFileRenamerService
 {
@@ -86,23 +88,36 @@ public class FileRenamerService : IFileRenamerService
             }
             else if(patternPart is DynamicTextApplicationPatternPart dynamicText)
             {
-                switch (dynamicText.Type)
+                switch (dynamicText.Keyword)
                 {
-                    case DynamicTextBaseType.TitleId:
-                        newFileName += content.TitleId;
+                    case ApplicationKeyword.TitleIdL:
+                        newFileName += content.TitleId.ToLower();
                         break;
-                    case DynamicTextBaseType.FirstTitleName:
-
+                    case ApplicationKeyword.TitleIdU:
+                        newFileName += content.TitleId.ToUpper();
+                        break;
+                    case ApplicationKeyword.FirstTitleName:
                         var firstTitle = content.NacpData?.Titles.FirstOrDefault();
 
                         if (firstTitle != null)
                             newFileName += firstTitle.Name;
+                        else
+                            newFileName += "NO_TITLE";
 
+                        break;
+                    case ApplicationKeyword.PackageTypeL:
+                        newFileName += accuratePackageType.ToString().ToLower();
+                        break;
+                    case ApplicationKeyword.PackageTypeU:
+                        newFileName += accuratePackageType.ToString().ToUpper();
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-
+            }
+            else
+            {
+                // TODO: throw
             }
 
         }

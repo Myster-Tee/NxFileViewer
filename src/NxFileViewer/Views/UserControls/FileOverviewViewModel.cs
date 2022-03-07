@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Media;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Model.Overview;
+using Emignatik.NxFileViewer.Models.Overview;
 using Emignatik.NxFileViewer.Styling.Theme;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;

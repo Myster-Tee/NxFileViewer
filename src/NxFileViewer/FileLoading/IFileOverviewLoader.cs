@@ -1,5 +1,5 @@
-﻿using Emignatik.NxFileViewer.Model.Overview;
-using Emignatik.NxFileViewer.Model.TreeItems.Impl;
+﻿using Emignatik.NxFileViewer.Models.Overview;
+using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 
 namespace Emignatik.NxFileViewer.FileLoading;
 

@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:overview="clr-namespace:Emignatik.NxFileViewer.Model.Overview"
              xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
              xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
              xmlns:userControls="clr-namespace:Emignatik.NxFileViewer.Views.UserControls"
+             xmlns:overview="clr-namespace:Emignatik.NxFileViewer.Models.Overview"
              mc:Ignorable="d"
              Style="{StaticResource UserControlStyle}"
              d:DesignHeight="450" d:DesignWidth="400" d:DataContext="{d:DesignInstance userControls:CnmtContainerViewModel}">

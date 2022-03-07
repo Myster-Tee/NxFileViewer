@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Model.Overview;
+using Emignatik.NxFileViewer.Models.Overview;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

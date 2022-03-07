@@ -1,4 +1,4 @@
-﻿using Emignatik.NxFileViewer.Model.TreeItems;
+﻿using Emignatik.NxFileViewer.Models.TreeItems;
 
 namespace Emignatik.NxFileViewer.Views.TreeItems
 {

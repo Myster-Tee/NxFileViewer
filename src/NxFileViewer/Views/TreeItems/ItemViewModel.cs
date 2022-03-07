@@ -6,7 +6,7 @@ using System.Windows.Input;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Localization.Keys;
-using Emignatik.NxFileViewer.Model.TreeItems;
+using Emignatik.NxFileViewer.Models.TreeItems;
 using Emignatik.NxFileViewer.Utils;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;

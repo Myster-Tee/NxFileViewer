@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text.Json;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Settings.Model;
+using Emignatik.NxFileViewer.Settings.Models;
 using Emignatik.NxFileViewer.Utils;
 using Microsoft.Extensions.Logging;
 

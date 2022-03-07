@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Model.Overview;
-using Emignatik.NxFileViewer.Model.TreeItems;
-using Emignatik.NxFileViewer.Model.TreeItems.Impl;
+using Emignatik.NxFileViewer.Models.Overview;
+using Emignatik.NxFileViewer.Models.TreeItems;
+using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 using Emignatik.NxFileViewer.Utils;
 using LibHac.Common;
 using LibHac.Fs;
@@ -80,21 +80,21 @@ public class FileOverviewLoader : IFileOverviewLoader
             return fileOverview;
         }
 
-        private static Model.Overview.PackageType DeterminePackageType(FileOverview fileOverview, CnmtContainer[] cnmtContainers)
+        private static Models.Overview.PackageType DeterminePackageType(FileOverview fileOverview, CnmtContainer[] cnmtContainers)
         {
-            Model.Overview.PackageType packageType;
+            Models.Overview.PackageType packageType;
             if (cnmtContainers.Length > 1)
             {
                 var rootItemType = fileOverview.RootItem.GetType();
                 if (rootItemType == typeof(XciItem))
-                    packageType = Model.Overview.PackageType.SuperXCI;
+                    packageType = Models.Overview.PackageType.SuperXCI;
                 else if (rootItemType == typeof(NspItem))
-                    packageType = Model.Overview.PackageType.SuperNSP;
+                    packageType = Models.Overview.PackageType.SuperNSP;
                 else
-                    packageType = Model.Overview.PackageType.Unknown;
+                    packageType = Models.Overview.PackageType.Unknown;
             }
             else
-                packageType = Model.Overview.PackageType.Normal;
+                packageType = Models.Overview.PackageType.Normal;
 
             return packageType;
         }

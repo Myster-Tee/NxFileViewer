@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Model;
-using Emignatik.NxFileViewer.Model.Overview;
-using Emignatik.NxFileViewer.Model.TreeItems;
+using Emignatik.NxFileViewer.Models;
+using Emignatik.NxFileViewer.Models.Overview;
+using Emignatik.NxFileViewer.Models.TreeItems;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.FileLoading;

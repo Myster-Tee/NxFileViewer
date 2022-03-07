@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
-using Emignatik.NxFileViewer.Model.TreeItems;
+using Emignatik.NxFileViewer.Models.TreeItems;
 using Emignatik.NxFileViewer.Utils.MVVM;
 
 namespace Emignatik.NxFileViewer.Views.TreeItems

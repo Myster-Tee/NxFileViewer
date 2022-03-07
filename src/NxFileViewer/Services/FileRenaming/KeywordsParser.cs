@@ -5,7 +5,7 @@ namespace Emignatik.NxFileViewer.Services.FileRenaming;
 
 public class KeywordsParser : DelimitedTextParserBase
 {
-    public KeywordsParser() : base('[', ']', '\\')
+    public KeywordsParser() : base('{', '}', '\\')
     {
     }
     public Action<string>? OnStaticTextFound { get; set; }

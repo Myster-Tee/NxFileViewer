@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Emignatik.NxFileViewer.FileLoading;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Model;
+using Emignatik.NxFileViewer.Models;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
 using Emignatik.NxFileViewer.Settings;

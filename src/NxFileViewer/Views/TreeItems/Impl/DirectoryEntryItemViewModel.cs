@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization.Keys;
-using Emignatik.NxFileViewer.Model.TreeItems.Impl;
+using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 using Emignatik.NxFileViewer.Utils;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 using LibHac.Fs;

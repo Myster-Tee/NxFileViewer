@@ -1,6 +1,6 @@
 ﻿using System;
 using Emignatik.NxFileViewer.Commands;
-using Emignatik.NxFileViewer.Model;
+using Emignatik.NxFileViewer.Models;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
-using Emignatik.NxFileViewer.Model.TreeItems;
+using Emignatik.NxFileViewer.Models.TreeItems;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Emignatik.NxFileViewer.Views.Windows;

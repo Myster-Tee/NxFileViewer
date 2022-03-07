@@ -14,7 +14,7 @@ using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Settings;
-using Emignatik.NxFileViewer.Settings.Model;
+using Emignatik.NxFileViewer.Settings.Models;
 using Emignatik.NxFileViewer.Styling.Theme;
 using Emignatik.NxFileViewer.Tools;
 using Emignatik.NxFileViewer.Views.TreeItems;

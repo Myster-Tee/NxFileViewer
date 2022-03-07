@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using Emignatik.NxFileViewer.Model.TreeItems;
+using Emignatik.NxFileViewer.Models.TreeItems;
 using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Views.TreeItems;

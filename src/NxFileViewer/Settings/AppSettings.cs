@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Emignatik.NxFileViewer.Settings.Model;
+using Emignatik.NxFileViewer.Settings.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Settings

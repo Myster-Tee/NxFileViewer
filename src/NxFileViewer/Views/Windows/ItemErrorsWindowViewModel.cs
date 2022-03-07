@@ -1,5 +1,5 @@
 ﻿using System;
-using Emignatik.NxFileViewer.Model.TreeItems;
+using Emignatik.NxFileViewer.Models.TreeItems;
 using Emignatik.NxFileViewer.Utils;
 using Emignatik.NxFileViewer.Utils.MVVM;
 

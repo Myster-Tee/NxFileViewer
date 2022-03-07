@@ -1,4 +1,4 @@
-﻿using Emignatik.NxFileViewer.Model;
+﻿using Emignatik.NxFileViewer.Models;
 
 namespace Emignatik.NxFileViewer.FileLoading;
 

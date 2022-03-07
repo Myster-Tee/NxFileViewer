@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Model.Overview;
+using Emignatik.NxFileViewer.Models.Overview;
 using Emignatik.NxFileViewer.Utils.MVVM.Converters;
 
 namespace Emignatik.NxFileViewer.Views.Converters
