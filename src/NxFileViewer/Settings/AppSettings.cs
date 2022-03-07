@@ -1,148 +1,138 @@
-﻿using System;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Emignatik.NxFileViewer.Settings.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Settings
 {
-    public class AppSettingsWrapper : IAppSettings
+    public class AppSettings : IAppSettings
     {
+        private string? _appLanguage;
+        private string _lastSaveDir = "";
+        private string _lastOpenedFile = "";
+        private string _keysFilePath = "";
+        private string _consoleKeysFilePath = "";
+        private string _titleKeysFilePath = "";
+        private LogLevel _logLevel;
+        private string _prodKeysDownloadUrl = "";
+        private string _titleKeysDownloadUrl = "";
+        private bool _alwaysReloadKeysBeforeOpen = false;
+
+        private string _titlePageUrl = "";
+
         public event PropertyChangedEventHandler? PropertyChanged;
-
-
-        public AppSettingsModel Model { get; private set; } = new();
 
 
         public string? AppLanguage
         {
-            get => Model.AppLanguage ?? "";
+            get => _appLanguage;
             set
             {
-                Model.AppLanguage = value;
+                _appLanguage = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string LastSaveDir
         {
-            get => Model.LastSaveDir ?? "";
+            get => _lastSaveDir;
             set
             {
-                Model.LastSaveDir = value;
+                _lastSaveDir = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string LastOpenedFile
         {
-            get => Model.LastOpenedFile ?? "";
+            get => _lastOpenedFile;
             set
             {
-                Model.LastOpenedFile = value;
+                _lastOpenedFile = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string ProdKeysFilePath
         {
-            get => Model.KeysFilePath ?? "";
+            get => _keysFilePath;
             set
             {
-                Model.KeysFilePath = value;
+                _keysFilePath = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string ConsoleKeysFilePath
         {
-            get => Model.ConsoleKeysFilePath ?? "";
+            get => _consoleKeysFilePath;
             set
             {
-                Model.ConsoleKeysFilePath = value;
+                _consoleKeysFilePath = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string TitleKeysFilePath
         {
-            get => Model.TitleKeysFilePath ?? "";
+            get => _titleKeysFilePath;
             set
             {
-                Model.TitleKeysFilePath = value;
+                _titleKeysFilePath = value;
                 NotifyPropertyChanged();
             }
         }
 
         public LogLevel LogLevel
         {
-            get => Model.LogLevel;
+            get => _logLevel;
             set
             {
-                Model.LogLevel = value;
+                _logLevel = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string ProdKeysDownloadUrl
         {
-            get => Model.ProdKeysDownloadUrl ?? "";
+            get => _prodKeysDownloadUrl;
             set
             {
-                Model.ProdKeysDownloadUrl = value;
+                _prodKeysDownloadUrl = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string TitleKeysDownloadUrl
         {
-            get => Model.TitleKeysDownloadUrl ?? "";
+            get => _titleKeysDownloadUrl;
             set
             {
-                Model.TitleKeysDownloadUrl = value;
+                _titleKeysDownloadUrl = value;
                 NotifyPropertyChanged();
             }
         }
 
         public bool AlwaysReloadKeysBeforeOpen
         {
-            get => Model.AlwaysReloadKeysBeforeOpen;
+            get => _alwaysReloadKeysBeforeOpen;
             set
             {
-                Model.AlwaysReloadKeysBeforeOpen = value;
+                _alwaysReloadKeysBeforeOpen = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string TitlePageUrl
         {
-            get => Model.TitlePageUrl;
+            get => _titlePageUrl;
             set
             {
-                Model.TitlePageUrl = value;
+                _titlePageUrl = value;
                 NotifyPropertyChanged();
             }
         }
 
         public int ProgressBufferSize { get; set; } = 4 * 1024 * 1024;
-
-
-        public void Update(AppSettingsModel newModel)
-        {
-            Model = newModel ?? throw new ArgumentNullException(nameof(newModel));
-
-            NotifyAllPropertiesChanged();
-        }
-
-        private void NotifyAllPropertiesChanged()
-        {
-            var properties = typeof(IAppSettings).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var property in properties)
-            {
-                NotifyPropertyChanged(property.Name);
-            }
-        }
 
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null!)
         {

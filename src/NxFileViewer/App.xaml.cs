@@ -65,8 +65,8 @@ public partial class App : Application
             .AddSingleton<MainWindowViewModel>()
             .AddTransient<BulkRenameWindowViewModel>()
 
-            .AddSingleton<AppSettingsWrapper>()
-            .AddSingleton<IAppSettings>(provider => provider.GetRequiredService<AppSettingsWrapper>())
+            .AddSingleton<AppSettings>()
+            .AddSingleton<IAppSettings>(provider => provider.GetRequiredService<AppSettings>())
             .AddSingleton<IAppSettingsManager, AppSettingsManager>()
             .AddSingleton<IFileItemLoader, FileItemLoader>()
             .AddSingleton<IFileOverviewLoader, FileOverviewLoader>()

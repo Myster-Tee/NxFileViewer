@@ -4,7 +4,9 @@
     {
         IAppSettings Settings { get; }
 
-        public void SafeLoad();
+        public void LoadDefault();
+
+        public bool SafeLoad();
 
         public void SafeSave();
     }

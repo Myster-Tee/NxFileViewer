@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text.Json;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Settings.Models;
 using Emignatik.NxFileViewer.Utils;
 using Microsoft.Extensions.Logging;
 
@@ -13,36 +12,71 @@ namespace Emignatik.NxFileViewer.Settings
         private static readonly string _settingsFilePath;
 
         private readonly ILogger _logger;
-        private readonly AppSettingsWrapper _appSettingsWrapper;
+        private readonly AppSettings _appSettings;
 
         static AppSettingsManager()
         {
             _settingsFilePath = Path.Combine(PathHelper.CurrentAppDir, $"{AppDomain.CurrentDomain.FriendlyName}.settings.json");
         }
 
-        public AppSettingsManager(ILoggerFactory loggerFactory, AppSettingsWrapper appSettingsWrapper)
+        public AppSettingsManager(ILoggerFactory loggerFactory, AppSettings appSettings)
         {
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
-            _appSettingsWrapper = appSettingsWrapper ?? throw new ArgumentNullException(nameof(appSettingsWrapper));
+            _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
         }
 
-        public IAppSettings Settings => _appSettingsWrapper;
+        public IAppSettings Settings => _appSettings;
 
-        public void SafeLoad()
+        public void LoadDefault()
+        {
+            LoadFromModel(new SettingsModel());
+        }
+
+        public bool SafeLoad()
         {
             try
             {
                 if (!File.Exists(_settingsFilePath))
-                    return;
+                    return false;
 
                 var bytes = File.ReadAllBytes(_settingsFilePath);
-                var appSettings = JsonSerializer.Deserialize<AppSettingsModel>(new ReadOnlySpan<byte>(bytes)) ?? new AppSettingsModel();
-                _appSettingsWrapper.Update(appSettings);
+                var settingsModel = JsonSerializer.Deserialize<SettingsModel>(new ReadOnlySpan<byte>(bytes)) ?? new SettingsModel();
+
+                LoadFromModel(settingsModel);
+
+                return true;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SettingsLoadingError.SafeFormat(ex.Message));
+                return false;
             }
+        }
+
+        private void LoadFromModel(SettingsModel model)
+        {
+            if (model.AppLanguage != null)
+                _appSettings.AppLanguage = model.AppLanguage;
+            if (model.LastSaveDir != null)
+                _appSettings.LastSaveDir = model.LastSaveDir;
+            if (model.LastOpenedFile != null)
+                _appSettings.LastOpenedFile = model.LastOpenedFile;
+            if (model.ProdKeysFilePath != null)
+                _appSettings.ProdKeysFilePath = model.ProdKeysFilePath;
+            if (model.ProdKeysDownloadUrl != null)
+                _appSettings.ProdKeysDownloadUrl = model.ProdKeysDownloadUrl;
+            if (model.TitleKeysFilePath != null)
+                _appSettings.TitleKeysFilePath = model.TitleKeysFilePath;
+            if (model.TitleKeysDownloadUrl != null)
+                _appSettings.TitleKeysDownloadUrl = model.TitleKeysDownloadUrl;
+            if (model.ConsoleKeysFilePath != null)
+                _appSettings.ConsoleKeysFilePath = model.ConsoleKeysFilePath;
+            if (model.LogLevel != null)
+                _appSettings.LogLevel = model.LogLevel.Value;
+            if (model.AlwaysReloadKeysBeforeOpen != null)
+                _appSettings.AlwaysReloadKeysBeforeOpen = model.AlwaysReloadKeysBeforeOpen.Value;
+            if (model.TitlePageUrl != null)
+                _appSettings.TitlePageUrl = model.TitlePageUrl;
         }
 
         public void SafeSave()
@@ -50,7 +84,23 @@ namespace Emignatik.NxFileViewer.Settings
             try
             {
                 using var stream = File.Create(_settingsFilePath);
-                JsonSerializer.Serialize(new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }), _appSettingsWrapper.Model);
+                var appSettings = this.Settings;
+                var settingsModel = new SettingsModel
+                {
+                    AppLanguage = appSettings.AppLanguage,
+                    LastSaveDir = appSettings.LastSaveDir,
+                    LastOpenedFile = appSettings.LastOpenedFile,
+                    ProdKeysFilePath = appSettings.ProdKeysFilePath,
+                    ProdKeysDownloadUrl = appSettings.ProdKeysDownloadUrl,
+                    TitleKeysFilePath = appSettings.TitleKeysFilePath,
+                    TitleKeysDownloadUrl = appSettings.TitleKeysDownloadUrl,
+                    ConsoleKeysFilePath = appSettings.ConsoleKeysFilePath,
+                    LogLevel = appSettings.LogLevel,
+                    AlwaysReloadKeysBeforeOpen = appSettings.AlwaysReloadKeysBeforeOpen,
+                    TitlePageUrl = appSettings.TitlePageUrl,
+                };
+
+                JsonSerializer.Serialize(new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }), settingsModel);
             }
             catch (Exception ex)
             {

@@ -5,7 +5,7 @@ namespace Emignatik.NxFileViewer.Settings
 {
     public interface IAppSettings: INotifyPropertyChanged
     {
-        public string? AppLanguage { get; set; }
+        string? AppLanguage { get; set; }
 
         string LastSaveDir { get; set; }
 
@@ -13,20 +13,20 @@ namespace Emignatik.NxFileViewer.Settings
 
         string ProdKeysFilePath { get; set; }
 
-        string ConsoleKeysFilePath { get; set; }
+        string ProdKeysDownloadUrl { get; set; }
 
         string TitleKeysFilePath { get; set; }
 
-        LogLevel LogLevel { get; set; }
-
-        string ProdKeysDownloadUrl { get; set; }
-
         string TitleKeysDownloadUrl { get; set; }
+
+        string ConsoleKeysFilePath { get; set; }
+
+        LogLevel LogLevel { get; set; }
 
         bool AlwaysReloadKeysBeforeOpen { get; set; }
 
         string TitlePageUrl { get; set; }
 
-        public int ProgressBufferSize { get; set; }
+        int ProgressBufferSize { get; set; }
     }
 }
