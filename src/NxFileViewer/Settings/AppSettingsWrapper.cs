@@ -7,127 +7,130 @@ using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Settings
 {
-    public class AppSettingsWrapper : IAppSettingsWrapper<AppSettingsModel>
+    public class AppSettingsWrapper : IAppSettings
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
+
+        public AppSettingsModel Model { get; private set; } = new();
+
+
         public string? AppLanguage
         {
-            get => WrappedModel.AppLanguage ?? "";
+            get => Model.AppLanguage ?? "";
             set
             {
-                WrappedModel.AppLanguage = value;
+                Model.AppLanguage = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string LastSaveDir
         {
-            get => WrappedModel.LastSaveDir ?? "";
+            get => Model.LastSaveDir ?? "";
             set
             {
-                WrappedModel.LastSaveDir = value;
+                Model.LastSaveDir = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string LastOpenedFile
         {
-            get => WrappedModel.LastOpenedFile ?? "";
+            get => Model.LastOpenedFile ?? "";
             set
             {
-                WrappedModel.LastOpenedFile = value;
+                Model.LastOpenedFile = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string ProdKeysFilePath
         {
-            get => WrappedModel.KeysFilePath ?? "";
+            get => Model.KeysFilePath ?? "";
             set
             {
-                WrappedModel.KeysFilePath = value;
+                Model.KeysFilePath = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string ConsoleKeysFilePath
         {
-            get => WrappedModel.ConsoleKeysFilePath ?? "";
+            get => Model.ConsoleKeysFilePath ?? "";
             set
             {
-                WrappedModel.ConsoleKeysFilePath = value;
+                Model.ConsoleKeysFilePath = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string TitleKeysFilePath
         {
-            get => WrappedModel.TitleKeysFilePath ?? "";
+            get => Model.TitleKeysFilePath ?? "";
             set
             {
-                WrappedModel.TitleKeysFilePath = value;
+                Model.TitleKeysFilePath = value;
                 NotifyPropertyChanged();
             }
         }
 
         public LogLevel LogLevel
         {
-            get => WrappedModel.LogLevel;
+            get => Model.LogLevel;
             set
             {
-                WrappedModel.LogLevel = value;
+                Model.LogLevel = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string ProdKeysDownloadUrl
         {
-            get => WrappedModel.ProdKeysDownloadUrl ?? "";
+            get => Model.ProdKeysDownloadUrl ?? "";
             set
             {
-                WrappedModel.ProdKeysDownloadUrl = value;
+                Model.ProdKeysDownloadUrl = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string TitleKeysDownloadUrl
         {
-            get => WrappedModel.TitleKeysDownloadUrl ?? "";
+            get => Model.TitleKeysDownloadUrl ?? "";
             set
             {
-                WrappedModel.TitleKeysDownloadUrl = value;
+                Model.TitleKeysDownloadUrl = value;
                 NotifyPropertyChanged();
             }
         }
 
         public bool AlwaysReloadKeysBeforeOpen
         {
-            get => WrappedModel.AlwaysReloadKeysBeforeOpen;
+            get => Model.AlwaysReloadKeysBeforeOpen;
             set
             {
-                WrappedModel.AlwaysReloadKeysBeforeOpen = value;
+                Model.AlwaysReloadKeysBeforeOpen = value;
                 NotifyPropertyChanged();
             }
         }
 
         public string TitlePageUrl
         {
-            get => WrappedModel.TitlePageUrl;
+            get => Model.TitlePageUrl;
             set
             {
-                WrappedModel.TitlePageUrl = value;
+                Model.TitlePageUrl = value;
                 NotifyPropertyChanged();
             }
         }
 
         public int ProgressBufferSize { get; set; } = 4 * 1024 * 1024;
 
-        public AppSettingsModel WrappedModel { get; private set; } = new();
 
         public void Update(AppSettingsModel newModel)
         {
-            WrappedModel = newModel ?? throw new ArgumentNullException(nameof(newModel));
+            Model = newModel ?? throw new ArgumentNullException(nameof(newModel));
 
             NotifyAllPropertiesChanged();
         }

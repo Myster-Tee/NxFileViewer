@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
 using LibHac.Ncm;
 using Microsoft.Extensions.Logging;

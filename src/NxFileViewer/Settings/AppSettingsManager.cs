@@ -10,17 +10,17 @@ namespace Emignatik.NxFileViewer.Settings
 {
     public class AppSettingsManager : IAppSettingsManager
     {
-        private static readonly string SettingsFilePath;
+        private static readonly string _settingsFilePath;
 
         private readonly ILogger _logger;
-        private readonly IAppSettingsWrapper<AppSettingsModel> _appSettingsWrapper;
+        private readonly AppSettingsWrapper _appSettingsWrapper;
 
         static AppSettingsManager()
         {
-            SettingsFilePath = Path.Combine(PathHelper.CurrentAppDir, $"{AppDomain.CurrentDomain.FriendlyName}.settings.json");
+            _settingsFilePath = Path.Combine(PathHelper.CurrentAppDir, $"{AppDomain.CurrentDomain.FriendlyName}.settings.json");
         }
 
-        public AppSettingsManager(ILoggerFactory loggerFactory, IAppSettingsWrapper<AppSettingsModel> appSettingsWrapper)
+        public AppSettingsManager(ILoggerFactory loggerFactory, AppSettingsWrapper appSettingsWrapper)
         {
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
             _appSettingsWrapper = appSettingsWrapper ?? throw new ArgumentNullException(nameof(appSettingsWrapper));
@@ -28,14 +28,14 @@ namespace Emignatik.NxFileViewer.Settings
 
         public IAppSettings Settings => _appSettingsWrapper;
 
-        public void Load()
+        public void SafeLoad()
         {
             try
             {
-                if (!File.Exists(SettingsFilePath))
+                if (!File.Exists(_settingsFilePath))
                     return;
 
-                var bytes = File.ReadAllBytes(SettingsFilePath);
+                var bytes = File.ReadAllBytes(_settingsFilePath);
                 var appSettings = JsonSerializer.Deserialize<AppSettingsModel>(new ReadOnlySpan<byte>(bytes)) ?? new AppSettingsModel();
                 _appSettingsWrapper.Update(appSettings);
             }
@@ -45,12 +45,12 @@ namespace Emignatik.NxFileViewer.Settings
             }
         }
 
-        public void Save()
+        public void SafeSave()
         {
             try
             {
-                using var stream = File.Create(SettingsFilePath);
-                JsonSerializer.Serialize(new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }), _appSettingsWrapper.WrappedModel);
+                using var stream = File.Create(_settingsFilePath);
+                JsonSerializer.Serialize(new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }), _appSettingsWrapper.Model);
             }
             catch (Exception ex)
             {

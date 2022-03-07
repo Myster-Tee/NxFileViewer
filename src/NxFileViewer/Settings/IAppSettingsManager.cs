@@ -4,8 +4,8 @@
     {
         IAppSettings Settings { get; }
 
-        public void Load();
+        public void SafeLoad();
 
-        public void Save();
+        public void SafeSave();
     }
 }

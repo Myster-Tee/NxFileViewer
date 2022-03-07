@@ -14,7 +14,6 @@ using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Settings;
-using Emignatik.NxFileViewer.Settings.Models;
 using Emignatik.NxFileViewer.Styling.Theme;
 using Emignatik.NxFileViewer.Tools;
 using Emignatik.NxFileViewer.Views.TreeItems;
@@ -65,8 +64,9 @@ public partial class App : Application
             .AddSingleton<IPackageTypeAnalyzer, PackageTypeAnalyzer>()
             .AddSingleton<MainWindowViewModel>()
             .AddTransient<BulkRenameWindowViewModel>()
-            .AddSingleton<IAppSettingsWrapper<AppSettingsModel>, AppSettingsWrapper>()
-            .AddSingleton<IAppSettings>(provider => provider.GetRequiredService<IAppSettingsWrapper<AppSettingsModel>>())
+
+            .AddSingleton<AppSettingsWrapper>()
+            .AddSingleton<IAppSettings>(provider => provider.GetRequiredService<AppSettingsWrapper>())
             .AddSingleton<IAppSettingsManager, AppSettingsManager>()
             .AddSingleton<IFileItemLoader, FileItemLoader>()
             .AddSingleton<IFileOverviewLoader, FileOverviewLoader>()
@@ -105,7 +105,7 @@ public partial class App : Application
         base.OnStartup(e);
 
         // Loads the application settings
-        ServiceProvider.GetRequiredService<IAppSettingsManager>().Load();
+        ServiceProvider.GetRequiredService<IAppSettingsManager>().SafeLoad();
 
         // Initialize localization
         ServiceProvider.GetRequiredService<ILocalizationFromSettingsSynchronizerService>().Initialize();
@@ -172,6 +172,6 @@ public partial class App : Application
     protected override void OnExit(ExitEventArgs e)
     {
         base.OnExit(e);
-        ServiceProvider.GetRequiredService<IAppSettingsManager>().Save();
+        ServiceProvider.GetRequiredService<IAppSettingsManager>().SafeSave();
     }
 }
