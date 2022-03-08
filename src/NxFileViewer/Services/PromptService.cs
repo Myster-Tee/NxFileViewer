@@ -19,14 +19,14 @@ public class PromptService : IPromptService
         _fsSanitizer = fsSanitizer ?? throw new ArgumentNullException(nameof(fsSanitizer));
     }
 
-    public string? PromptSaveDir()
+    public string? PromptSelectDir(string title)
     {
         var fileDialog = new CommonOpenFileDialog
         {
-            InitialDirectory = _appSettings.LastSaveDir,
+            InitialDirectory = _appSettings.LastUsedDir,
             Multiselect = false,
             IsFolderPicker = true,
-            Title = LocalizationManager.Instance.Current.Keys.SaveDialog_Title
+            Title = title
         };
 
         if (fileDialog.ShowDialog(Application.Current.MainWindow) != CommonFileDialogResult.Ok)
@@ -34,7 +34,7 @@ public class PromptService : IPromptService
 
         var filePath = fileDialog.FileName;
 
-        _appSettings.LastSaveDir = filePath;
+        _appSettings.LastUsedDir = filePath;
 
         return filePath;
     }
@@ -46,7 +46,7 @@ public class PromptService : IPromptService
         var fileDialog = new CommonSaveFileDialog
         {
             Title = LocalizationManager.Instance.Current.Keys.SaveDialog_Title,
-            InitialDirectory = _appSettings.LastSaveDir,
+            InitialDirectory = _appSettings.LastUsedDir,
 
             Filters = { new CommonFileDialogFilter
             {
@@ -61,7 +61,7 @@ public class PromptService : IPromptService
 
         var filePath = fileDialog.FileName;
 
-        _appSettings.LastSaveDir = Path.GetDirectoryName(filePath)!;
+        _appSettings.LastUsedDir = Path.GetDirectoryName(filePath)!;
 
         return filePath;
     }

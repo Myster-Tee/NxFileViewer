@@ -19,7 +19,6 @@ public class AppSettings : IAppSettings
 
     private string _titlePageUrl = "";
     private string _applicationPattern;
-    private string _lastRenamingDirectory;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -34,7 +33,7 @@ public class AppSettings : IAppSettings
         }
     }
 
-    public string LastSaveDir
+    public string LastUsedDir
     {
         get => _lastSaveDir;
         set
@@ -50,16 +49,6 @@ public class AppSettings : IAppSettings
         set
         {
             _lastOpenedFile = value;
-            NotifyPropertyChanged();
-        }
-    }
-
-    public string LastRenamingDirectory
-    {
-        get => _lastRenamingDirectory ?? "";
-        set
-        {
-            _lastRenamingDirectory = value;
             NotifyPropertyChanged();
         }
     }

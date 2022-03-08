@@ -59,8 +59,8 @@ namespace Emignatik.NxFileViewer.Settings
         {
             if (model.AppLanguage != null)
                 _appSettings.AppLanguage = model.AppLanguage;
-            if (model.LastSaveDir != null)
-                _appSettings.LastSaveDir = model.LastSaveDir;
+            if (model.LastUsedDir != null)
+                _appSettings.LastUsedDir = model.LastUsedDir;
             if (model.LastOpenedFile != null)
                 _appSettings.LastOpenedFile = model.LastOpenedFile;
             if (model.ProdKeysFilePath != null)
@@ -81,8 +81,6 @@ namespace Emignatik.NxFileViewer.Settings
                 _appSettings.TitlePageUrl = model.TitlePageUrl;
             if (model.ApplicationPattern != null)
                 _appSettings.ApplicationPattern = model.ApplicationPattern;
-            if (model.LastRenamingDirectory != null)
-                _appSettings.LastRenamingDirectory = model.LastRenamingDirectory;
         }
 
         public void SaveSafe()
@@ -94,7 +92,7 @@ namespace Emignatik.NxFileViewer.Settings
                 var settingsModel = new SettingsModel
                 {
                     AppLanguage = appSettings.AppLanguage,
-                    LastSaveDir = appSettings.LastSaveDir,
+                    LastUsedDir = appSettings.LastUsedDir,
                     LastOpenedFile = appSettings.LastOpenedFile,
                     ProdKeysFilePath = appSettings.ProdKeysFilePath,
                     ProdKeysDownloadUrl = appSettings.ProdKeysDownloadUrl,
@@ -105,7 +103,6 @@ namespace Emignatik.NxFileViewer.Settings
                     AlwaysReloadKeysBeforeOpen = appSettings.AlwaysReloadKeysBeforeOpen,
                     TitlePageUrl = appSettings.TitlePageUrl,
                     ApplicationPattern = appSettings.ApplicationPattern,
-                    LastRenamingDirectory = appSettings.LastRenamingDirectory,
                 };
 
                 JsonSerializer.Serialize(new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }), settingsModel);

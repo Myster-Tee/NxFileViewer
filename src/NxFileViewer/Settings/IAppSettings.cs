@@ -7,11 +7,9 @@ public interface IAppSettings: INotifyPropertyChanged
 {
     string? AppLanguage { get; set; }
 
-    string LastSaveDir { get; set; }
+    string LastUsedDir { get; set; }
 
     string LastOpenedFile { get; set; }
-
-    string LastRenamingDirectory { get; set; }
 
     string ProdKeysFilePath { get; set; }
 

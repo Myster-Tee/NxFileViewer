@@ -245,17 +245,18 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string Log_SaveStorageCanceled => "Storage saving canceled.";
     public string Log_NcaHashCanceled => "NCAs hash canceled.";
 
-    public string BulkRenameWindow_Title => "Renaming tool";
-    public string BulkRenameWindow_ApplicationPattern => "Application pattern";
-    public string BulkRenameWindow_PatchPattern => "Patch pattern";
-    public string BulkRenameWindow_AddonPattern => "Addon pattern";
-    public string BulkRenameWindow_InputDirectory => "Input directory";
-    public string BulkRenameWindow_ToolTip_BasePattern => "Use {{TitleID}} {{TitleName}}"; //TODO : finir de documenter
-    public string BulkRenameWindow_ToolTip_PatchPattern => ""; //TODO : finir de documenter
-    public string BulkRenameWindow_ToolTip_AddonPattern => ""; //TODO : finir de documenter
-    public string BulkRenameWindow_Button_Cancel => "Cancel";
-    public string BulkRenameWindow_Button_Rename => "Rename";
-    public string BulkRenameWindow_GroupBoxParameters => "Parameters";
+    public string RenamingTool_WindowTitle => "Renaming tool";
+    public string RenamingTool_ApplicationPattern => "Application pattern";
+    public string RenamingTool_PatchPattern => "Patch pattern";
+    public string RenamingTool_AddonPattern => "Addon pattern";
+    public string RenamingTool_InputDirectory => "Input directory";
+    public string RenamingTool_ToolTip_BasePattern => "Use {{TitleID}} {{TitleName}}"; //TODO : finir de documenter
+    public string RenamingTool_ToolTip_PatchPattern => ""; //TODO : finir de documenter
+    public string RenamingTool_ToolTip_AddonPattern => ""; //TODO : finir de documenter
+    public string RenamingTool_Button_Cancel => "Cancel";
+    public string RenamingTool_Button_Rename => "Rename";
+    public string RenamingTool_GroupBoxParameters => "Parameters";
+    public string RenamingTool_BrowseDirTitle => "Select a directory";
 
     public string Exception_UnexpectedDelimiter => "Unexpected delimiter {0} found at position {1}, use {2}{0} instead.";
     public string Exception_EndDelimiterMissing => "End delimiter {0} is missing.";

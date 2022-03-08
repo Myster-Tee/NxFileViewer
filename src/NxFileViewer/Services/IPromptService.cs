@@ -2,7 +2,7 @@
 {
     public interface IPromptService
     {
-        string? PromptSaveDir();
+        string? PromptSelectDir(string title);
 
         string? PromptSaveFile(string proposedFileName);
     }

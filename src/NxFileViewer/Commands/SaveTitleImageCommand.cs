@@ -49,7 +49,7 @@ public class SaveTitleImageCommand : CommandBase, ISaveTitleImageCommand
             var fileDialog = new CommonSaveFileDialog
             {
                 Title = LocalizationManager.Instance.Current.Keys.SaveDialog_Title,
-                InitialDirectory = _appSettings.LastSaveDir,
+                InitialDirectory = _appSettings.LastUsedDir,
 
                 Filters = { new CommonFileDialogFilter
                 {
@@ -68,7 +68,7 @@ public class SaveTitleImageCommand : CommandBase, ISaveTitleImageCommand
                 return;
 
             var filePath = fileDialog.FileName;
-            _appSettings.LastSaveDir = Path.GetDirectoryName(filePath)!;
+            _appSettings.LastUsedDir = Path.GetDirectoryName(filePath)!;
 
             File.WriteAllBytes(filePath, icon);
         }

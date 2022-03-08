@@ -11,9 +11,8 @@ public class SettingsModel
     public string? AppLanguage { get; set; }
 
     public string? LastOpenedFile { get; set; }
-    public string? LastSaveDir { get; set; } = "";
 
-    public string? LastRenamingDirectory { get; set; }
+    public string? LastUsedDir { get; set; }
 
     public string? ProdKeysFilePath { get; set; }
 

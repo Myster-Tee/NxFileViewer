@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
@@ -14,20 +16,22 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
     private readonly IFileRenamerService _fileRenamerService;
     private readonly INamingPatternsParser _namingPatternsParser;
     private readonly IAppSettingsManager _appSettingsManager;
+    private readonly IPromptService _promptService;
 
     private string _patchPattern;
     private string _addonPattern;
     private List<ApplicationPatternPart>? _applicationPatternParts;
     private string? _applicationPatternError;
 
-    public BulkRenameWindowViewModel(IFileRenamerService fileRenamerService, INamingPatternsParser namingPatternsParser, IAppSettingsManager appSettingsManager)
+    public BulkRenameWindowViewModel(IFileRenamerService fileRenamerService, INamingPatternsParser namingPatternsParser, IAppSettingsManager appSettingsManager, IPromptService promptService)
     {
         _fileRenamerService = fileRenamerService ?? throw new ArgumentNullException(nameof(fileRenamerService));
         _namingPatternsParser = namingPatternsParser ?? throw new ArgumentNullException(nameof(namingPatternsParser));
         _appSettingsManager = appSettingsManager ?? throw new ArgumentNullException(nameof(appSettingsManager));
+        _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
         RenameCommand = new RelayCommand(Rename, CanRename);
         CancelCommand = new RelayCommand(Cancel);
-        BrowseInputDirectoryCommand = new RelayCommand(OnBrowseInputDirectory);
+        BrowseInputDirectoryCommand = new RelayCommand(BrowseInputDirectory);
 
         UpdateApplicationPatternParts();
     }
@@ -41,12 +45,12 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
 
     public string InputDirectory
     {
-        get => _appSettingsManager.Settings.LastRenamingDirectory;
+        get => _appSettingsManager.Settings.LastUsedDir;
         set
         {
-            _appSettingsManager.Settings.LastRenamingDirectory = value;
-            NotifyPropertyChanged();
+            _appSettingsManager.Settings.LastUsedDir = value;
             _appSettingsManager.SaveSafe();
+            NotifyPropertyChanged();
         }
     }
 
@@ -109,8 +113,14 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
         }
     }
 
-    private void OnBrowseInputDirectory()
+    private void BrowseInputDirectory()
     {
+        var selectedDir = _promptService.PromptSelectDir(LocalizationManager.Instance.Current.Keys.RenamingTool_BrowseDirTitle);
+
+        if (selectedDir != null)
+            InputDirectory = selectedDir;
+
+
         //TODO: à implémenter
     }
 

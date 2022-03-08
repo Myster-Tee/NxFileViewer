@@ -59,7 +59,7 @@ public class SaveDirectoryEntryCommand : CommandBase, ISaveDirectoryEntryCommand
             }
             else
             {
-                var dirPath = _promptService.PromptSaveDir();
+                var dirPath = _promptService.PromptSelectDir(LocalizationManager.Instance.Current.Keys.SaveDialog_Title);
                 if (dirPath == null)
                     return;
                 var saveDirectoryRunnable = _serviceProvider.GetRequiredService<ISaveDirectoryRunnable>();

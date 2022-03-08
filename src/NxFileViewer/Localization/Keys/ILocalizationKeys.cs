@@ -216,17 +216,18 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string Log_SaveStorageCanceled { get; }
     string Log_NcaHashCanceled { get; }
 
-    string BulkRenameWindow_Title { get; }
-    string BulkRenameWindow_ApplicationPattern { get; }
-    string BulkRenameWindow_PatchPattern { get; }
-    string BulkRenameWindow_AddonPattern { get; }
-    string BulkRenameWindow_InputDirectory { get; }
-    string BulkRenameWindow_ToolTip_BasePattern { get; }
-    string BulkRenameWindow_ToolTip_PatchPattern { get; }
-    string BulkRenameWindow_ToolTip_AddonPattern { get; }
-    string BulkRenameWindow_Button_Cancel { get; }
-    string BulkRenameWindow_Button_Rename { get; }
-    string BulkRenameWindow_GroupBoxParameters { get; }
+    string RenamingTool_WindowTitle { get; }
+    string RenamingTool_ApplicationPattern { get; }
+    string RenamingTool_PatchPattern { get; }
+    string RenamingTool_AddonPattern { get; }
+    string RenamingTool_InputDirectory { get; }
+    string RenamingTool_ToolTip_BasePattern { get; }
+    string RenamingTool_ToolTip_PatchPattern { get; }
+    string RenamingTool_ToolTip_AddonPattern { get; }
+    string RenamingTool_Button_Cancel { get; }
+    string RenamingTool_Button_Rename { get; }
+    string RenamingTool_GroupBoxParameters { get; }
+    string RenamingTool_BrowseDirTitle { get; }
 
     string Exception_UnexpectedDelimiter { get; }
     string Exception_EndDelimiterMissing { get; }

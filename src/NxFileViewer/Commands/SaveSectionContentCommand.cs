@@ -43,7 +43,7 @@ public class SaveSectionContentCommand : CommandBase, ISaveSectionContentCommand
         if (_sectionItem == null)
             return;
 
-        var selectedDir = _promptService.PromptSaveDir();
+        var selectedDir = _promptService.PromptSelectDir(LocalizationManager.Instance.Current.Keys.SaveDialog_Title);
         if (selectedDir == null)
             return;
 

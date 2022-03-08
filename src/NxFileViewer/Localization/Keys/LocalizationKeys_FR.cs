@@ -245,17 +245,18 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string Log_SaveStorageCanceled => "Sauvegarde du stockage annulé.";
     public string Log_NcaHashCanceled => "Hash des NCAs annulé.";
 
-    public string BulkRenameWindow_Title => "Outil de renommage";
-    public string BulkRenameWindow_ApplicationPattern => "Pattern d'application";
-    public string BulkRenameWindow_PatchPattern => "Pattern de patch";
-    public string BulkRenameWindow_AddonPattern => "Pattern d'add-on";
-    public string BulkRenameWindow_InputDirectory => "Répertoire d'entrée";
-    public string BulkRenameWindow_ToolTip_BasePattern => "Bla bla bla"; //TODO : finir de documenter
-    public string BulkRenameWindow_ToolTip_PatchPattern => ""; //TODO : finir de documenter
-    public string BulkRenameWindow_ToolTip_AddonPattern => ""; //TODO : finir de documenter
-    public string BulkRenameWindow_Button_Cancel => "Annuler";
-    public string BulkRenameWindow_Button_Rename => "Renommer";
-    public string BulkRenameWindow_GroupBoxParameters => "Paramètres";
+    public string RenamingTool_WindowTitle => "Outil de renommage";
+    public string RenamingTool_ApplicationPattern => "Pattern d'application";
+    public string RenamingTool_PatchPattern => "Pattern de patch";
+    public string RenamingTool_AddonPattern => "Pattern d'add-on";
+    public string RenamingTool_InputDirectory => "Répertoire d'entrée";
+    public string RenamingTool_ToolTip_BasePattern => "Bla bla bla"; //TODO : finir de documenter
+    public string RenamingTool_ToolTip_PatchPattern => ""; //TODO : finir de documenter
+    public string RenamingTool_ToolTip_AddonPattern => ""; //TODO : finir de documenter
+    public string RenamingTool_Button_Cancel => "Annuler";
+    public string RenamingTool_Button_Rename => "Renommer";
+    public string RenamingTool_GroupBoxParameters => "Paramètres";
+    public string RenamingTool_BrowseDirTitle => "Sélectionnez un répertoire";
 
     public string Exception_UnexpectedDelimiter => "Délimiteur {0} non attendu à la position {1}, utilisez {2}{0} à la place.";
     public string Exception_EndDelimiterMissing => "Le délimiteur de fin {0} est manquant.";
