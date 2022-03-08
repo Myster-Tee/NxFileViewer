@@ -16,6 +16,7 @@ using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Styling.Theme;
 using Emignatik.NxFileViewer.Tools;
+using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Emignatik.NxFileViewer.Views.TreeItems;
 using Emignatik.NxFileViewer.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,8 +60,9 @@ public partial class App : Application
             .AddSingleton<ILoadKeysCommand, LoadKeysCommand>()
             .AddSingleton<IOpenTitleWebPageCommand, OpenTitleWebPageCommand>()
             .AddSingleton<IShowRenameToolWindowCommand, ShowRenameToolToolWindowCommand>()
-            .AddSingleton<INamingPatternsParser, NamingPatternsParser>()
+            .AddSingleton<IRenameFilesCommand, RenameFilesCommand>()
 
+            .AddSingleton<INamingPatternsParser, NamingPatternsParser>()
             .AddSingleton<IPackageTypeAnalyzer, PackageTypeAnalyzer>()
             .AddSingleton<MainWindowViewModel>()
             .AddSingleton<RenameToolWindowViewModel>()

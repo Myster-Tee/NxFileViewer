@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace Emignatik.NxFileViewer.Utils.MVVM.Commands
 {
-    public abstract class CommandBase : ICommand
+    public abstract class CommandBase : NotifyPropertyChangedBase, ICommand
     {
 
         public CommandBase(bool uiThreadSafe = true)

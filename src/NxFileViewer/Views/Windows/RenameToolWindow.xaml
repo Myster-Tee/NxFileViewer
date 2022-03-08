@@ -25,7 +25,7 @@
 
                 <DockPanel LastChildFill="true">
                     <Button Command="{Binding Path=BrowseInputDirectoryCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
-                    <TextBox Text="{Binding Path=InputDirectory}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
+                    <TextBox Text="{Binding Path=RenameCommand.InputDirectory}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
                 </DockPanel>
 
                 <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ApplicationPattern}" Style="{StaticResource Title2}" />
