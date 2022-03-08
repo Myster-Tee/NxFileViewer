@@ -22,6 +22,13 @@ public class DelimitedTextParser
 
     public char EndDelimiter { get; }
 
+    /// <summary>
+    /// Parses the given string to find delimited text parts
+    /// </summary>
+    /// <param name="inputText"></param>
+    /// <returns></returns>
+    /// <exception cref="UnexpectedDelimiterException"></exception>
+    /// <exception cref="EndDelimiterMissingException"></exception>
     public IEnumerable<TextPart> Parse(string inputText)
     {
         var stringReader = new StringReader(inputText);

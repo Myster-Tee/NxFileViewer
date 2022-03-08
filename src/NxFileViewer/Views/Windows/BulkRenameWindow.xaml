@@ -6,6 +6,7 @@
         xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
         xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
         xmlns:windows="clr-namespace:Emignatik.NxFileViewer.Views.Windows"
+        xmlns:bindingExtensions="clr-namespace:Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions"
         mc:Ignorable="d"
         Style="{StaticResource WindowStyle}"
         Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_Title}" 
@@ -33,8 +34,13 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding Path=ApplicationPattern}" />
-                    <customControls:TipLabel Grid.Column="1" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_ToolTip_BasePattern}"/>
+                    <TextBox Grid.Column="0" Text="{Binding Path=ApplicationPattern}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource FieldError}"
+                                   Visibility="{Binding Path=ApplicationPatternError, Converter={StaticResource StringNullOrEmptyToCollapsedVisibilityConverter}}"
+                                   ToolTip="{Binding Path=ApplicationPatternError}" />
+                        <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_ToolTip_BasePattern}"/>
+                    </StackPanel>
                 </Grid>
                 <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_PatchPattern}" Style="{StaticResource Title2}" />
                 <Grid>
@@ -42,23 +48,23 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding Path=PatchPattern}" />
+                    <TextBox Grid.Column="0" Text="{Binding Path=PatchPattern}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
                     <customControls:TipLabel Grid.Column="1" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_ToolTip_PatchPattern}"/>
-                </Grid>              
+                </Grid>
                 <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_AddonPattern}" Style="{StaticResource Title2}" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding Path=AddonPattern}" />
+                    <TextBox Grid.Column="0" Text="{Binding Path=AddonPattern}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
                     <customControls:TipLabel Grid.Column="1" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_ToolTip_AddonPattern}"/>
                 </Grid>
             </StackPanel>
         </GroupBox>
         <StackPanel Grid.Row="1" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Margin="0,5">
             <Button Command="{Binding Path=RenameCommand}" IsDefault="True" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_Button_Rename}" Style="{StaticResource OkCancelButton}" />
-            <Button IsCancel="True" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_Button_Cancel}" Style="{StaticResource OkCancelButton}" />
+            <Button Command="{Binding Path=CancelCommand}" IsCancel="True" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.BulkRenameWindow_Button_Cancel}" Style="{StaticResource OkCancelButton}" />
         </StackPanel>
     </Grid>
 </Window>

@@ -245,7 +245,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string Log_SaveStorageCanceled => "Storage saving canceled.";
     public string Log_NcaHashCanceled => "NCAs hash canceled.";
 
-    public string BulkRenameWindow_Title => "Bulk renaming";
+    public string BulkRenameWindow_Title => "Renaming tool";
     public string BulkRenameWindow_ApplicationPattern => "Application pattern";
     public string BulkRenameWindow_PatchPattern => "Patch pattern";
     public string BulkRenameWindow_AddonPattern => "Addon pattern";
@@ -260,4 +260,6 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string Exception_UnexpectedDelimiter => "Unexpected delimiter {0} found at position {1}, use {2}{0} instead.";
     public string Exception_EndDelimiterMissing => "End delimiter {0} is missing.";
     public string FileRenaming_PatternKeywordUnknown => "Keyword «{0}» is unknown, allowed keywords are «{1}».";
+
+    public string FileRenaming_EmptyPatternNotAllowed => "Pattern can't be empty";
 }

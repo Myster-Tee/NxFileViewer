@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Emignatik.NxFileViewer.Services.FileRenaming.Exceptions;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
 using Emignatik.NxFileViewer.Tools.DelimitedTextParsing;
 
@@ -10,22 +9,19 @@ namespace Emignatik.NxFileViewer.Services.FileRenaming;
 
 public class NamingPatternsParser : INamingPatternsParser
 {
-
         
     private readonly DelimitedTextParser _keywordsParser = new('{','}', '\\');
 
-    public NamingPatterns Parse(string applicationPattern)
+    public List<ApplicationPatternPart> ParseApplicationPatterns(string pattern)
     {
-        var namingPatterns = new NamingPatterns
-        {
-            ApplicationPattern = ParseApplicationPatterns(applicationPattern).ToList(),
-        };
-
-        return namingPatterns;
+        return ParseApplicationPatternsInternal(pattern).ToList();
     }
 
-    public IEnumerable<ApplicationPatternPart> ParseApplicationPatterns(string pattern)
+    private IEnumerable<ApplicationPatternPart> ParseApplicationPatternsInternal(string pattern)
     {
+        if (string.IsNullOrWhiteSpace(pattern))
+            throw new EmptyPatternException();
+
         foreach (var (text, isDelimited) in _keywordsParser.Parse(pattern))
         {
             if (isDelimited)
@@ -34,6 +30,7 @@ public class NamingPatternsParser : INamingPatternsParser
                 {
                     var allowedKeywords = Enum.GetValues<ApplicationKeyword>().Select(type =>
                         _keywordsParser.StartDelimiter + type.ToString() + _keywordsParser.EndDelimiter);
+
                     throw new KeywordUnknownException(text, allowedKeywords);
                 }
 

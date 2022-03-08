@@ -231,4 +231,5 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string Exception_UnexpectedDelimiter { get; }
     string Exception_EndDelimiterMissing { get; }
     string FileRenaming_PatternKeywordUnknown { get; }
+    string FileRenaming_EmptyPatternNotAllowed { get; }
 }

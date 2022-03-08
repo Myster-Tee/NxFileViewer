@@ -3,16 +3,17 @@
 
 
     <Color x:Key="AccentColor">#51EBAB</Color>
+    <Color x:Key="ErrorColor">Red</Color>
 
     <SolidColorBrush x:Key="FontBrush.Default" Color="Black" />
     <SolidColorBrush x:Key="FontBrush.Success" Color="ForestGreen" />
     <SolidColorBrush x:Key="FontBrush.Warning" Color="Orange" />
-    <SolidColorBrush x:Key="FontBrush.Error" Color="Red" />
+    <SolidColorBrush x:Key="FontBrush.Error" Color="{StaticResource ErrorColor}" />
 
     <SolidColorBrush x:Key="ReadOnlyTextBox.Static.Foreground" Color="#1C1C1C" />
     <SolidColorBrush x:Key="ReadOnlyTextBox.Static.Background" Color="White" />
 
-    <SolidColorBrush x:Key="TreeViewItemIcon.Static.Error.Stroke" Color="Red" />
+    <SolidColorBrush x:Key="TreeViewItemIcon.Static.Error.Stroke" Color="{StaticResource ErrorColor}" />
 
     <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Stroke" Color="#FF818181"/>
     <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Fill" Color="Transparent"/>
@@ -20,11 +21,11 @@
     <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Stroke" Color="#FF262626"/>
     <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Fill" Color="#FF595959"/>
 
-    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.ErrorInDescendants.Stroke" Color="Red" />
+    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.ErrorInDescendants.Stroke" Color="{StaticResource ErrorColor}" />
     <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.ErrorInDescendants.Fill" Color="Transparent" />
 
-    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.ErrorInDescendants.Stroke" Color="Red" />
-    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.ErrorInDescendants.Fill" Color="Red" />
+    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.ErrorInDescendants.Stroke" Color="{StaticResource ErrorColor}" />
+    <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.ErrorInDescendants.Fill" Color="{StaticResource ErrorColor}" />
 
     <SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Fill" Color="LightGray"/>
 

@@ -245,7 +245,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string Log_SaveStorageCanceled => "Sauvegarde du stockage annulé.";
     public string Log_NcaHashCanceled => "Hash des NCAs annulé.";
 
-    public string BulkRenameWindow_Title => "Renommage en masse";
+    public string BulkRenameWindow_Title => "Outil de renommage";
     public string BulkRenameWindow_ApplicationPattern => "Pattern d'application";
     public string BulkRenameWindow_PatchPattern => "Pattern de patch";
     public string BulkRenameWindow_AddonPattern => "Pattern d'add-on";
@@ -260,4 +260,6 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string Exception_UnexpectedDelimiter => "Délimiteur {0} non attendu à la position {1}, utilisez {2}{0} à la place.";
     public string Exception_EndDelimiterMissing => "Le délimiteur de fin {0} est manquant.";
     public string FileRenaming_PatternKeywordUnknown => "Mot clé «{0}» inconnu, liste des mots clés autorisés: «{1}».";
+
+    public string FileRenaming_EmptyPatternNotAllowed => "La pattern ne peut être vide";
 }
