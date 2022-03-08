@@ -24,7 +24,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string MenuItem_Settings => "_Paramètres";
     public string MenuItem_ReloadKeys => "Recharger les clés";
     public string MenuItem_OpenTitleWebPage => "Ouvrir la page Web du titre...";
-    public string MenuItem_ShowBulkRenameWindow => "Outil de renommage...";
+    public string MenuItem_ShowRenameToolWindow => "Outil de renommage...";
 
     public string MultiContentPackage => "Package a contenu multiples";
     public string GeneralInfo => "Informations Générales";

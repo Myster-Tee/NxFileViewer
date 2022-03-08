@@ -42,7 +42,7 @@ namespace Emignatik.NxFileViewer.Views.Windows
             IServiceProvider serviceProvider,
             ILogSource logSource,
             IBackgroundTaskService backgroundTaskService,
-            IShowBulkRenameWindowCommand showBulkRenameWindowCommand)
+            IShowRenameToolWindowCommand showRenameToolWindowCommand)
         {
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
             _fileOpenerService = fileOpenerService ?? throw new ArgumentNullException(nameof(fileOpenerService));
@@ -59,7 +59,7 @@ namespace Emignatik.NxFileViewer.Views.Windows
             OpenLastFileCommand = openLastFileCommand ?? throw new ArgumentNullException(nameof(openLastFileCommand));
             CloseFileCommand = closeFileCommand ?? throw new ArgumentNullException(nameof(closeFileCommand));
             OpenTitleWebPageCommand = openTitleWebPageCommand ?? throw new ArgumentNullException(nameof(openTitleWebPageCommand));
-            ShowBulkRenameWindowCommand = showBulkRenameWindowCommand ?? throw new ArgumentNullException(nameof(showBulkRenameWindowCommand));
+            ShowRenameToolWindowCommand = showRenameToolWindowCommand ?? throw new ArgumentNullException(nameof(showRenameToolWindowCommand));
 
             var assemblyName = Assembly.GetExecutingAssembly().GetName();
             var assemblyVersion = (assemblyName.Version ?? new Version());
@@ -94,7 +94,7 @@ namespace Emignatik.NxFileViewer.Views.Windows
 
         public IOpenTitleWebPageCommand OpenTitleWebPageCommand { get; }
 
-        public IShowBulkRenameWindowCommand ShowBulkRenameWindowCommand { get; }
+        public IShowRenameToolWindowCommand ShowRenameToolWindowCommand { get; }
 
         public string Title
         {

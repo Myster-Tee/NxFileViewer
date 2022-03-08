@@ -58,12 +58,12 @@ public partial class App : Application
             .AddSingleton<ICopyImageCommand, CopyImageCommand>()
             .AddSingleton<ILoadKeysCommand, LoadKeysCommand>()
             .AddSingleton<IOpenTitleWebPageCommand, OpenTitleWebPageCommand>()
-            .AddSingleton<IShowBulkRenameWindowCommand, ShowBulkRenameWindowCommand>()
+            .AddSingleton<IShowRenameToolWindowCommand, ShowRenameToolToolWindowCommand>()
             .AddSingleton<INamingPatternsParser, NamingPatternsParser>()
 
             .AddSingleton<IPackageTypeAnalyzer, PackageTypeAnalyzer>()
             .AddSingleton<MainWindowViewModel>()
-            .AddSingleton<BulkRenameWindowViewModel>()
+            .AddSingleton<RenameToolWindowViewModel>()
 
             .AddSingleton<IAppSettings, AppSettings>()
             .AddSingleton<IAppSettingsManager, AppSettingsManager>()

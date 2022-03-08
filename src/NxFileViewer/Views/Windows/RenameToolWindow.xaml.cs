@@ -3,11 +3,11 @@
 namespace Emignatik.NxFileViewer.Views.Windows
 {
     /// <summary>
-    /// Logique d'interaction pour BulkRenameView.xaml
+    /// Logique d'interaction pour RenameToolWindow.xaml
     /// </summary>
-    public partial class BulkRenameWindow : Window
+    public partial class RenameToolWindow : Window
     {
-        public BulkRenameWindow()
+        public RenameToolWindow()
         {
             InitializeComponent();
         }

@@ -1,4 +1,4 @@
-﻿<Window x:Class="Emignatik.NxFileViewer.Views.Windows.BulkRenameWindow"
+﻿<Window x:Class="Emignatik.NxFileViewer.Views.Windows.RenameToolWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -12,7 +12,7 @@
         Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_WindowTitle}" 
         Height="500"
         Width="350"
-        d:DataContext="{d:DesignInstance windows:BulkRenameWindowViewModel}">
+        d:DataContext="{d:DesignInstance windows:RenameToolWindowViewModel}">
     <Grid>
 
         <Grid.RowDefinitions>

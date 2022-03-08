@@ -56,8 +56,8 @@
                           Command="{Binding Path=LoadKeysCommand}" InputGestureText="F10" />             
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_OpenTitleWebPage}" 
                           Command="{Binding Path=OpenTitleWebPageCommand}" InputGestureText="F9" />
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_ShowBulkRenameWindow}" 
-                          Command="{Binding Path=ShowBulkRenameWindowCommand}" InputGestureText="F9" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_ShowRenameToolWindow}" 
+                          Command="{Binding Path=ShowRenameToolWindowCommand}" InputGestureText="F9" />
             </MenuItem>
             <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Options}">
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Settings}" Command="{Binding Path=ShowSettingsWindowCommand}" />

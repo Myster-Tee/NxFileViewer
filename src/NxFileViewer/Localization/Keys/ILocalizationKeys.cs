@@ -21,7 +21,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string MenuItem_Settings { get; }
     string MenuItem_ReloadKeys { get; }
     string MenuItem_OpenTitleWebPage { get; }
-    string MenuItem_ShowBulkRenameWindow { get; }
+    string MenuItem_ShowRenameToolWindow { get; }
 
     string MultiContentPackage { get; }
     string GeneralInfo { get; }

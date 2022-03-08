@@ -11,7 +11,7 @@ using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 
 namespace Emignatik.NxFileViewer.Views.Windows;
 
-public class BulkRenameWindowViewModel : WindowViewModelBase
+public class RenameToolWindowViewModel : WindowViewModelBase
 {
     private readonly IFileRenamerService _fileRenamerService;
     private readonly INamingPatternsParser _namingPatternsParser;
@@ -23,7 +23,7 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
     private List<ApplicationPatternPart>? _applicationPatternParts;
     private string? _applicationPatternError;
 
-    public BulkRenameWindowViewModel(IFileRenamerService fileRenamerService, INamingPatternsParser namingPatternsParser, IAppSettingsManager appSettingsManager, IPromptService promptService)
+    public RenameToolWindowViewModel(IFileRenamerService fileRenamerService, INamingPatternsParser namingPatternsParser, IAppSettingsManager appSettingsManager, IPromptService promptService)
     {
         _fileRenamerService = fileRenamerService ?? throw new ArgumentNullException(nameof(fileRenamerService));
         _namingPatternsParser = namingPatternsParser ?? throw new ArgumentNullException(nameof(namingPatternsParser));
