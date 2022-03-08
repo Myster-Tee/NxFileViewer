@@ -78,9 +78,11 @@ namespace Emignatik.NxFileViewer.Settings
             if (model.AlwaysReloadKeysBeforeOpen != null)
                 _appSettings.AlwaysReloadKeysBeforeOpen = model.AlwaysReloadKeysBeforeOpen.Value;
             if (model.TitlePageUrl != null)
-                _appSettings.TitlePageUrl = model.TitlePageUrl;     
+                _appSettings.TitlePageUrl = model.TitlePageUrl;
             if (model.ApplicationPattern != null)
                 _appSettings.ApplicationPattern = model.ApplicationPattern;
+            if (model.LastRenamingDirectory != null)
+                _appSettings.LastRenamingDirectory = model.LastRenamingDirectory;
         }
 
         public void SaveSafe()
@@ -102,7 +104,8 @@ namespace Emignatik.NxFileViewer.Settings
                     LogLevel = appSettings.LogLevel,
                     AlwaysReloadKeysBeforeOpen = appSettings.AlwaysReloadKeysBeforeOpen,
                     TitlePageUrl = appSettings.TitlePageUrl,
-                    ApplicationPattern = appSettings.ApplicationPattern
+                    ApplicationPattern = appSettings.ApplicationPattern,
+                    LastRenamingDirectory = appSettings.LastRenamingDirectory,
                 };
 
                 JsonSerializer.Serialize(new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }), settingsModel);

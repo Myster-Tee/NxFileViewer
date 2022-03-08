@@ -1,34 +1,35 @@
 ﻿using System.ComponentModel;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Settings
+namespace Emignatik.NxFileViewer.Settings;
+
+public interface IAppSettings: INotifyPropertyChanged
 {
-    public interface IAppSettings: INotifyPropertyChanged
-    {
-        string? AppLanguage { get; set; }
+    string? AppLanguage { get; set; }
 
-        string LastSaveDir { get; set; }
+    string LastSaveDir { get; set; }
 
-        string LastOpenedFile { get; set; }
+    string LastOpenedFile { get; set; }
 
-        string ProdKeysFilePath { get; set; }
+    string LastRenamingDirectory { get; set; }
 
-        string ProdKeysDownloadUrl { get; set; }
+    string ProdKeysFilePath { get; set; }
 
-        string TitleKeysFilePath { get; set; }
+    string ProdKeysDownloadUrl { get; set; }
 
-        string TitleKeysDownloadUrl { get; set; }
+    string TitleKeysFilePath { get; set; }
 
-        string ConsoleKeysFilePath { get; set; }
+    string TitleKeysDownloadUrl { get; set; }
 
-        LogLevel LogLevel { get; set; }
+    string ConsoleKeysFilePath { get; set; }
 
-        bool AlwaysReloadKeysBeforeOpen { get; set; }
+    LogLevel LogLevel { get; set; }
 
-        string TitlePageUrl { get; set; }
+    bool AlwaysReloadKeysBeforeOpen { get; set; }
 
-        string ApplicationPattern { get; set; }
+    string TitlePageUrl { get; set; }
 
-        int ProgressBufferSize { get; set; }
-    }
+    string ApplicationPattern { get; set; }
+
+    int ProgressBufferSize { get; set; }
 }

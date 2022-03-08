@@ -15,7 +15,6 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
     private readonly INamingPatternsParser _namingPatternsParser;
     private readonly IAppSettingsManager _appSettingsManager;
 
-    private string _inputDirectory;
     private string _patchPattern;
     private string _addonPattern;
     private List<ApplicationPatternPart>? _applicationPatternParts;
@@ -42,11 +41,12 @@ public class BulkRenameWindowViewModel : WindowViewModelBase
 
     public string InputDirectory
     {
-        get => _inputDirectory;
+        get => _appSettingsManager.Settings.LastRenamingDirectory;
         set
         {
-            _inputDirectory = value;
+            _appSettingsManager.Settings.LastRenamingDirectory = value;
             NotifyPropertyChanged();
+            _appSettingsManager.SaveSafe();
         }
     }
 

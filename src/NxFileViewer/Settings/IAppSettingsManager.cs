@@ -1,13 +1,12 @@
-﻿namespace Emignatik.NxFileViewer.Settings
+﻿namespace Emignatik.NxFileViewer.Settings;
+
+public interface IAppSettingsManager
 {
-    public interface IAppSettingsManager
-    {
-        IAppSettings Settings { get; }
+    IAppSettings Settings { get; }
 
-        public void LoadDefault();
+    public void LoadDefault();
 
-        public bool LoadSafe();
+    public bool LoadSafe();
 
-        public void SaveSafe();
-    }
+    public void SaveSafe();
 }
