@@ -63,7 +63,7 @@ public partial class App : Application
 
             .AddSingleton<IPackageTypeAnalyzer, PackageTypeAnalyzer>()
             .AddSingleton<MainWindowViewModel>()
-            .AddTransient<BulkRenameWindowViewModel>()
+            .AddSingleton<BulkRenameWindowViewModel>()
 
             .AddSingleton<IAppSettings, AppSettings>()
             .AddSingleton<IAppSettingsManager, AppSettingsManager>()
@@ -104,7 +104,7 @@ public partial class App : Application
         base.OnStartup(e);
 
         // Loads the application settings
-        ServiceProvider.GetRequiredService<IAppSettingsManager>().SafeLoad();
+        ServiceProvider.GetRequiredService<IAppSettingsManager>().LoadSafe();
 
         // Initialize localization
         ServiceProvider.GetRequiredService<ILocalizationFromSettingsSynchronizerService>().Initialize();
@@ -171,6 +171,6 @@ public partial class App : Application
     protected override void OnExit(ExitEventArgs e)
     {
         base.OnExit(e);
-        ServiceProvider.GetRequiredService<IAppSettingsManager>().SafeSave();
+        ServiceProvider.GetRequiredService<IAppSettingsManager>().SaveSafe();
     }
 }

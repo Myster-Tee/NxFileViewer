@@ -8,7 +8,7 @@ public class NamingPatterns : INamingPatterns
 {
     IReadOnlyList<ApplicationPatternPart> INamingPatterns.ApplicationPattern => ApplicationPattern;
 
-    public List<ApplicationPatternPart> ApplicationPattern { get; } = new();
+    public List<ApplicationPatternPart> ApplicationPattern { get; set; } = new();
 
     public string PatchPattern { get; set; }
 

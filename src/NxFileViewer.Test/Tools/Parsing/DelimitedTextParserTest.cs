@@ -1,16 +1,17 @@
 using System.Collections.Generic;
+using System.Linq;
 using Emignatik.NxFileViewer.Tools.DelimitedTextParsing;
 using Xunit;
 
 namespace NxFileViewer.Test.Tools.Parsing;
 
-public class DelimitedTextParserBaseTest
+public class DelimitedTextParserTest
 {
     private readonly DelimitedTextParser _delimitedTextParser;
 
-    public DelimitedTextParserBaseTest()
+    public DelimitedTextParserTest()
     {
-        _delimitedTextParser = new DelimitedTextParser();
+        _delimitedTextParser = new DelimitedTextParser('[',']', '\\');
     }
 
     [Fact]
@@ -111,9 +112,11 @@ public class DelimitedTextParserBaseTest
         );
     }
 
-    private static void AssertTextParts(IReadOnlyList<TextPart> actualTextParts, params TextPart[] expectedTextParts)
+    private static void AssertTextParts(IEnumerable<TextPart> actualTextPartsRaw, params TextPart[] expectedTextParts)
     {
-        Assert.Equal(expectedTextParts.Length, actualTextParts.Count);
+        var actualTextParts = actualTextPartsRaw.ToArray();
+
+        Assert.Equal(expectedTextParts.Length, actualTextParts.Length);
 
         for (var index = 0; index < expectedTextParts.Length; index++)
         {
@@ -121,45 +124,6 @@ public class DelimitedTextParserBaseTest
             var actualTextPart = actualTextParts[index];
             Assert.Equal(expectedTextPart.Text, actualTextPart.Text);
             Assert.Equal(expectedTextPart.IsDelimited, actualTextPart.IsDelimited);
-        }
-    }
-
-    private class DelimitedTextParser : DelimitedTextParserBase
-    {
-        private readonly List<TextPart> _parts = new();
-        public DelimitedTextParser() : base('[', ']', '\\')
-        {
-        }
-
-        public TextPart[] Parse(string inputText)
-        {
-            _parts.Clear();
-            base.ParseInternal(inputText);
-            return _parts.ToArray();
-        }
-
-        protected override void OnOuterTextFound(string text)
-        {
-            _parts.Add(new TextPart(text, false));
-        }
-
-        protected override void OnDelimitedTextFound(string text)
-        {
-            _parts.Add(new TextPart(text, true));
-        }
-
-
-    }
-
-    private class TextPart
-    {
-        public string Text { get; }
-        public bool IsDelimited { get; }
-
-        public TextPart(string text, bool isDelimited)
-        {
-            Text = text;
-            IsDelimited = isDelimited;
         }
     }
 

@@ -34,7 +34,7 @@ namespace Emignatik.NxFileViewer.Settings
             LoadFromModel(new SettingsModel());
         }
 
-        public bool SafeLoad()
+        public bool LoadSafe()
         {
             try
             {
@@ -83,7 +83,7 @@ namespace Emignatik.NxFileViewer.Settings
                 _appSettings.ApplicationPattern = model.ApplicationPattern;
         }
 
-        public void SafeSave()
+        public void SaveSafe()
         {
             try
             {

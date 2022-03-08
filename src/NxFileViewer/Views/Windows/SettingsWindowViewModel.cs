@@ -351,7 +351,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
         _appSettings.TitlePageUrl = TitlePageUrl;
         _appSettings.AppLanguage = SelectedLanguage.CultureName;
 
-        _appSettingsManager.SafeSave();
+        _appSettingsManager.SaveSafe();
     }
 
     private void CancelSettings()

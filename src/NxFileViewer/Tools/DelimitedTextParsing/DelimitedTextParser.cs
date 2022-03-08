@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Emignatik.NxFileViewer.Utils;
 
 namespace Emignatik.NxFileViewer.Tools.DelimitedTextParsing;
 
-public abstract class DelimitedTextParserBase
+public class DelimitedTextParser
 {
-    public DelimitedTextParserBase(char startDelimiter, char endDelimiter, char escapeChar)
+    public DelimitedTextParser(char startDelimiter, char endDelimiter, char escapeChar)
     {
         StartDelimiter = startDelimiter;
         EndDelimiter = endDelimiter;
@@ -21,7 +22,7 @@ public abstract class DelimitedTextParserBase
 
     public char EndDelimiter { get; }
 
-    protected void ParseInternal(string inputText)
+    public IEnumerable<TextPart> Parse(string inputText)
     {
         var stringReader = new StringReader(inputText);
 
@@ -48,7 +49,7 @@ public abstract class DelimitedTextParserBase
                 if (c == StartDelimiter)
                 {
                     if (buffer.Length > 0)
-                        OnOuterTextFound(buffer.ToString());
+                        yield return new TextPart(buffer.ToString(), false);
                     buffer.Clear();
                     isInKeyword = true;
                 }
@@ -65,7 +66,8 @@ public abstract class DelimitedTextParserBase
             {
                 if (c == EndDelimiter)
                 {
-                    OnDelimitedTextFound(buffer.ToString());
+                    yield return new TextPart(buffer.ToString(), true);
+
                     buffer.Clear();
                     isInKeyword = false;
                 }
@@ -84,12 +86,28 @@ public abstract class DelimitedTextParserBase
             throw new EndDelimiterMissingException(EndDelimiter);
 
         if (buffer.Length > 0)
-            OnOuterTextFound(buffer.ToString());
+            yield return new TextPart(buffer.ToString(), false);
 
     }
 
-    protected abstract void OnOuterTextFound(string text);
+}
 
-    protected abstract void OnDelimitedTextFound(string text);
+public class TextPart
+{
+    public TextPart(string text, bool isDelimited)
+    {
+        Text = text;
+        IsDelimited = isDelimited;
+    }
 
+    public string Text { get; }
+
+    public bool IsDelimited { get; }
+
+    // Return the first and last name.
+    public void Deconstruct(out string text, out bool isDelimited)
+    {
+        text = Text;
+        isDelimited = IsDelimited;
+    }
 }

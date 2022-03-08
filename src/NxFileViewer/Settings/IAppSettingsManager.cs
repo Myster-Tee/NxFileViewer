@@ -6,8 +6,8 @@
 
         public void LoadDefault();
 
-        public bool SafeLoad();
+        public bool LoadSafe();
 
-        public void SafeSave();
+        public void SaveSafe();
     }
 }
