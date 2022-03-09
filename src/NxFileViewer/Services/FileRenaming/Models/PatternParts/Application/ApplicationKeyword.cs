@@ -7,4 +7,5 @@ public enum ApplicationKeyword
     FirstTitleName,
     PackageTypeL,
     PackageTypeU,
+    VersionNum
 }

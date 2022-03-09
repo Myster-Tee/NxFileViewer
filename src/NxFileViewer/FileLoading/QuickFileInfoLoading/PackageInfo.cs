@@ -25,6 +25,11 @@ public enum AccuratePackageType
     XCZ
 }
 
+/// <summary>
+/// A Nintendo Switch package (XCI, NSP, ...) can contain a single content or multiple contents (known as SuperXCI or SuperNSP).
+/// Here a <see cref="Content"/> is a model aggregating various information based on a <see cref="Cnmt"/> metadata entry.
+/// A <see cref="Content"/> is created for each <see cref="Cnmt"/> found in a Nintendo Switch package.
+/// </summary>
 public class Content
 {
     private readonly Cnmt _cnmt;
@@ -42,6 +47,7 @@ public class Content
 
     public NacpData? NacpData { get; set; }
 
+    public TitleVersion Version => _cnmt.TitleVersion;
 }
 
 public class NacpData

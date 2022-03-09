@@ -16,7 +16,6 @@ using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Styling.Theme;
 using Emignatik.NxFileViewer.Tools;
-using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Emignatik.NxFileViewer.Views.TreeItems;
 using Emignatik.NxFileViewer.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;

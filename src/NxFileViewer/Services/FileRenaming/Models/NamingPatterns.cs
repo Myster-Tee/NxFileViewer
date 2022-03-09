@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
+using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Patch;
 
 namespace Emignatik.NxFileViewer.Services.FileRenaming.Models;
 
@@ -10,7 +10,9 @@ public class NamingPatterns : INamingPatterns
 
     public List<ApplicationPatternPart> ApplicationPattern { get; set; } = new();
 
-    public string PatchPattern { get; set; }
+    IReadOnlyList<PatchPatternPart> INamingPatterns.PatchPattern => PatchPattern;
+
+    public List<PatchPatternPart> PatchPattern { get; set; } = new();
 
     public string AddonPattern { get; set; }
 }

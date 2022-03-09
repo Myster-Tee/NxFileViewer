@@ -31,6 +31,8 @@ public class SettingsModel
 
     public string? TitlePageUrl { get; set; } = "https://tinfoil.io/Title/{0}";
 
-    public string? ApplicationPattern { get; set; } = "{FirstTitleName} [{TitleIdU}].{PackageTypeL}";
+    public string? ApplicationPattern { get; set; } = "{FirstTitleName} [{TitleIdU}] [v{VersionNum}].{PackageTypeL}";
+
+    public string? PatchPattern { get; set; } = "{FirstTitleName} [{TitleIdU}] [v{VersionNum}].{PackageTypeL}";
 
 }
