@@ -15,9 +15,9 @@ public class RenameToolWindowViewModel : WindowViewModelBase
     private readonly IAppSettingsManager _appSettingsManager;
     private readonly IPromptService _promptService;
 
-    private string _addonPattern;
     private string? _applicationPatternError;
     private string? _patchPatternError;
+    private string? _addonPatternError;
 
     public RenameToolWindowViewModel(INamingPatternsParser namingPatternsParser, IAppSettingsManager appSettingsManager, IPromptService promptService, IRenameFilesCommand renameFilesCommand)
     {
@@ -49,6 +49,15 @@ public class RenameToolWindowViewModel : WindowViewModelBase
             NotifyPropertyChanged();
         }
     }
+    public string? ApplicationPatternError
+    {
+        get => _applicationPatternError;
+        set
+        {
+            _applicationPatternError = value;
+            NotifyPropertyChanged();
+        }
+    }
 
     public string PatchPattern
     {
@@ -57,16 +66,6 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         {
             _appSettingsManager.Settings.PatchPattern = value;
             UpdatePatchPatternParts();
-            NotifyPropertyChanged();
-        }
-    }
-
-    public string? ApplicationPatternError
-    {
-        get => _applicationPatternError;
-        set
-        {
-            _applicationPatternError = value;
             NotifyPropertyChanged();
         }
     }
@@ -83,13 +82,25 @@ public class RenameToolWindowViewModel : WindowViewModelBase
 
     public string AddonPattern
     {
-        get => _addonPattern;
+        get => _appSettingsManager.Settings.AddonPattern;
         set
         {
-            _addonPattern = value;
+            _appSettingsManager.Settings.AddonPattern = value;
+            UpdateAddonPatternParts();
             NotifyPropertyChanged();
         }
     }
+
+    public string? AddonPatternError
+    {
+        get => _addonPatternError;
+        set
+        {
+            _addonPatternError = value;
+            NotifyPropertyChanged();
+        }
+    }
+
     private void UpdateApplicationPatternParts()
     {
         try
@@ -117,6 +128,21 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         {
             RenameCommand.PatchPatternParts = null;
             PatchPatternError = ex.Message;
+        }
+    }
+
+    private void UpdateAddonPatternParts()
+    {
+        try
+        {
+            RenameCommand.AddonPatternParts = _namingPatternsParser.ParseAddonPattern(this.AddonPattern);
+            AddonPatternError = null;
+            _appSettingsManager.SaveSafe();
+        }
+        catch (Exception ex)
+        {
+            RenameCommand.AddonPatternParts = null;
+            AddonPatternError = ex.Message;
         }
     }
 

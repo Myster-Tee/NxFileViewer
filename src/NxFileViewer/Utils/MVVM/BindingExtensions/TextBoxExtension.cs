@@ -7,6 +7,9 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions;
 
 internal class TextBoxExtension
 {
+    /// <summary>
+    /// This attached DependencyProperty allows to refresh a TextBox Text binding to Source when Enter key is pressed.
+    /// </summary>
     public static readonly DependencyProperty FlushOnEnterKeyPressedProperty = DependencyProperty.RegisterAttached(
         "FlushOnEnterKeyPressed", typeof(bool), typeof(TextBoxExtension), new PropertyMetadata(default(bool), PropertyChangedCallback));
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Emignatik.NxFileViewer.Services.FileRenaming.Exceptions;
+using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Addon;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Patch;
 using Emignatik.NxFileViewer.Tools.DelimitedTextParsing;
@@ -21,6 +22,11 @@ public class NamingPatternsParser : INamingPatternsParser
     public List<PatchPatternPart> ParsePatchPattern(string pattern)
     {
         return ParsePatchPatternInternal(pattern).ToList();
+    }
+
+    public List<AddonPatternPart> ParseAddonPattern(string pattern)
+    {
+        return ParseAddonPatternInternal(pattern).ToList();
     }
 
     private IEnumerable<ApplicationPatternPart> ParseApplicationPatternsInternal(string pattern)
@@ -69,6 +75,31 @@ public class NamingPatternsParser : INamingPatternsParser
             else
             {
                 yield return new StaticTextPatchPatternPart(text);
+            }
+        }
+    }
+
+    private IEnumerable<AddonPatternPart> ParseAddonPatternInternal(string pattern)
+    {
+        if (string.IsNullOrWhiteSpace(pattern))
+            throw new EmptyPatternException();
+
+        foreach (var (text, isDelimited) in _keywordsParser.Parse(pattern))
+        {
+            if (isDelimited)
+            {
+                if (!Enum.TryParse<AddonKeyword>(text, true, out var addonKeyword))
+                {
+                    var allowedKeywords = Enum.GetValues<AddonKeyword>().Select(type => _keywordsParser.StartDelimiter + type.ToString() + _keywordsParser.EndDelimiter);
+
+                    throw new KeywordUnknownException(text, allowedKeywords);
+                }
+
+                yield return new DynamicTextAddonPatternPart(addonKeyword);
+            }
+            else
+            {
+                yield return new StaticTextAddonPatternPart(text);
             }
         }
     }

@@ -12,7 +12,7 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl
 
         public CnmtContentEntryItem(CnmtContentEntry cnmtContentEntry, CnmtItem parentItem, int index)
         {
-            // TODO: a utiliser au final?
+            // TODO: a utiliser au final? Ce serait sûrement plus logique de le présenter dans les propriétés du CnmtItem
             _cnmtContentEntry = cnmtContentEntry ?? throw new ArgumentNullException(nameof(cnmtContentEntry));
             _index = index;
             ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));

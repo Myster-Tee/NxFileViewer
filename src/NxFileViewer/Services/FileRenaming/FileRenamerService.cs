@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
+using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Addon;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Patch;
 using LibHac.Ncm;
@@ -22,7 +23,6 @@ public class FileRenamerService : IFileRenamerService
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
 
     }
-
 
     public void RenameFromDirectory(string inputDirectory, INamingPatterns namingPatterns, IReadOnlyCollection<string> fileExtensions, bool includeSubDirectories)
     {
@@ -62,7 +62,7 @@ public class FileRenamerService : IFileRenamerService
                     newFileName = ComputePatchPackageFileName(content, packageInfo.AccuratePackageType, namingPatterns.PatchPattern);
                     break;
                 case ContentMetaType.AddOnContent:
-                    //RenameAddOnPackage();
+                    newFileName = ComputeAddonPackageFileName(content, packageInfo.AccuratePackageType, namingPatterns.AddonPattern);
                     break;
                 default:
                     //TODO: loguer comme quoi pas supporté
@@ -83,7 +83,7 @@ public class FileRenamerService : IFileRenamerService
 
     }
 
-    private string ComputeApplicationPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<ApplicationPatternPart> patternParts)
+    private static string ComputeApplicationPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<ApplicationPatternPart> patternParts)
     {
         var newFileName = "";
 
@@ -134,7 +134,7 @@ public class FileRenamerService : IFileRenamerService
         return newFileName;
     }
 
-    private string ComputePatchPackageFileName(Content content, AccuratePackageType accuratePackageType, IReadOnlyList<PatchPatternPart> patternParts)
+    private static string ComputePatchPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<PatchPatternPart> patternParts)
     {
         var newFileName = "";
 
@@ -184,5 +184,57 @@ public class FileRenamerService : IFileRenamerService
 
         return newFileName;
     }
+
+    private static string ComputeAddonPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<AddonPatternPart> patternParts)
+    {
+        var newFileName = "";
+
+        foreach (var patternPart in patternParts)
+        {
+            switch (patternPart)
+            {
+                case StaticTextAddonPatternPart staticText:
+                    newFileName += staticText.Text;
+                    break;
+                case DynamicTextAddonPatternPart dynamicText:
+                    switch (dynamicText.Keyword)
+                    {
+                        case AddonKeyword.TitleIdL:
+                            newFileName += content.TitleId.ToLower();
+                            break;
+                        case AddonKeyword.TitleIdU:
+                            newFileName += content.TitleId.ToUpper();
+                            break;
+                        case AddonKeyword.OnlineTitleName://TODO: implémenter le service de récupération en ligne
+                            var firstTitle = content.NacpData?.Titles.FirstOrDefault();
+
+                            if (firstTitle != null)
+                                newFileName += firstTitle.Name;
+                            else
+                                newFileName += "NO_TITLE";
+
+                            break;
+                        case AddonKeyword.PackageTypeL:
+                            newFileName += accuratePackageType.ToString().ToLower();
+                            break;
+                        case AddonKeyword.PackageTypeU:
+                            newFileName += accuratePackageType.ToString().ToUpper();
+                            break;
+                        case AddonKeyword.VersionNum:
+                            newFileName += content.Version.Version.ToString();
+                            break;
+                        default:
+                            throw new NotSupportedException($"Unknown patch keyword «{dynamicText.Keyword}».");
+                    }
+
+                    break;
+                default:
+                    throw new NotSupportedException($"Unknown part of type «{patternPart.GetType().Name}».");
+            }
+        }
+
+        return newFileName;
+    }
+
 }
 

@@ -20,6 +20,7 @@ public class AppSettings : IAppSettings
     private string _titlePageUrl = "";
     private string _applicationPattern;
     private string _patchPattern;
+    private string _addonPattern;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -150,6 +151,16 @@ public class AppSettings : IAppSettings
         set
         {
             _patchPattern = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public string AddonPattern
+    {
+        get => _addonPattern;
+        set
+        {
+            _addonPattern = value;
             NotifyPropertyChanged();
         }
     }

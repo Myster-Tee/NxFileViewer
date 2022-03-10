@@ -63,7 +63,13 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" Text="{Binding Path=AddonPattern}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
-                    <customControls:TipLabel Grid.Column="1" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ToolTip_AddonPattern}"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource FieldError}"
+                                   Visibility="{Binding Path=AddonPatternError, Converter={StaticResource StringNullOrEmptyToCollapsedVisibilityConverter}}"
+                                   ToolTip="{Binding Path=AddonPatternError}" />
+                        <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ToolTip_AddonPattern}"/>
+                    </StackPanel>
+
                 </Grid>
             </StackPanel>
         </GroupBox>

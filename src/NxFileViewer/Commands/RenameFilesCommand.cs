@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
+using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Addon;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Patch;
 using Emignatik.NxFileViewer.Settings;
@@ -16,6 +17,7 @@ namespace Emignatik.NxFileViewer.Commands
         private readonly IAppSettingsManager _appSettingsManager;
         private List<ApplicationPatternPart>? _applicationPatternParts;
         private List<PatchPatternPart>? _patchPatternParts;
+        private List<AddonPatternPart>? _addonPatternParts;
 
         public RenameFilesCommand(IFileRenamerService fileRenamerService, IAppSettingsManager appSettingsManager)
         {
@@ -32,6 +34,7 @@ namespace Emignatik.NxFileViewer.Commands
                 {
                     ApplicationPattern = ApplicationPatternParts!,
                     PatchPattern = PatchPatternParts!,
+                    AddonPattern = AddonPatternParts!,
                 };
 
                 _fileRenamerService.RenameFromDirectory(InputDirectory, namingPatterns, new[] { ".nsp", ".nsz", ".xci", ".xcz" }, true);
@@ -64,6 +67,17 @@ namespace Emignatik.NxFileViewer.Commands
             }
         }
 
+        public List<AddonPatternPart>? AddonPatternParts
+        {
+            get => _addonPatternParts;
+            set
+            {
+                _addonPatternParts = value;
+                NotifyPropertyChanged();
+                TriggerCanExecuteChanged();
+            }
+        }
+
         public string InputDirectory
         {
             get => _appSettingsManager.Settings.LastUsedDir;
@@ -79,7 +93,7 @@ namespace Emignatik.NxFileViewer.Commands
 
         public override bool CanExecute(object? parameter)
         {
-            return _applicationPatternParts != null && _patchPatternParts != null;
+            return _applicationPatternParts != null && _patchPatternParts != null && _addonPatternParts != null;
         }
     }
 
@@ -88,6 +102,8 @@ namespace Emignatik.NxFileViewer.Commands
         List<ApplicationPatternPart>? ApplicationPatternParts { get; set; }
 
         List<PatchPatternPart>? PatchPatternParts { get; set; }
+
+        List<AddonPatternPart>? AddonPatternParts { get; set; }
 
         string InputDirectory { get; set; }
     }

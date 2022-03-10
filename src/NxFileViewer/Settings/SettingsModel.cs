@@ -35,4 +35,5 @@ public class SettingsModel
 
     public string? PatchPattern { get; set; } = "{FirstTitleName} [{TitleIdU}] [v{VersionNum}].{PackageTypeL}";
 
+    public string AddonPattern { get; set; } = ""; //TODO: à définir
 }

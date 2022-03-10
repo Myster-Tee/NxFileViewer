@@ -31,5 +31,7 @@ public interface IAppSettings: INotifyPropertyChanged
 
     string PatchPattern { get; set; }
 
+    string AddonPattern { get; set; }
+
     int ProgressBufferSize { get; set; }
 }
