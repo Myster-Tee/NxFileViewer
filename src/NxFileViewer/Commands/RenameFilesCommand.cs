@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
@@ -37,7 +38,8 @@ namespace Emignatik.NxFileViewer.Commands
                     AddonPattern = AddonPatternParts!,
                 };
 
-                _fileRenamerService.RenameFromDirectory(InputDirectory, namingPatterns, new[] { ".nsp", ".nsz", ".xci", ".xcz" }, true);
+                var cts = new CancellationTokenSource();
+                _fileRenamerService.RenameFromDirectoryAsync(InputDirectory, namingPatterns, new[] { ".nsp", ".nsz", ".xci", ".xcz" }, true, cts.Token);
             }
             catch (Exception ex)
             {

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using Emignatik.NxFileViewer.Models;
 
-namespace Emignatik.NxFileViewer.Services;
+namespace Emignatik.NxFileViewer.Services.FileOpening;
 
 public class OpenedFileService : IOpenedFileService
 {

@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Models;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
-using Emignatik.NxFileViewer.Services;
-using Emignatik.NxFileViewer.Settings;
+using Emignatik.NxFileViewer.Services.FileOpening;
+using Emignatik.NxFileViewer.Services.OnlineServices;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using LibHac.Ncm;
 using Microsoft.Extensions.Logging;
@@ -16,15 +15,15 @@ namespace Emignatik.NxFileViewer.Commands;
 public class OpenTitleWebPageCommand : CommandBase, IOpenTitleWebPageCommand
 {
     private readonly IOpenedFileService _openedFileService;
-    private readonly IAppSettings _appSettings;
+    private readonly IOnlineTitlePageOpenerService _onlineTitlePageOpenerService;
     private readonly ILogger _logger;
 
     private CnmtItem? _cnmtItem;
 
-    public OpenTitleWebPageCommand(IOpenedFileService openedFileService, IAppSettings appSettings, ILoggerFactory loggerFactory)
+    public OpenTitleWebPageCommand(IOpenedFileService openedFileService, ILoggerFactory loggerFactory, IOnlineTitlePageOpenerService onlineTitlePageOpenerService)
     {
         _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
-        _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+        _onlineTitlePageOpenerService = onlineTitlePageOpenerService ?? throw new ArgumentNullException(nameof(onlineTitlePageOpenerService));
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
 
         _openedFileService.OpenedFileChanged += (_, _) => // (_, _) == An ass ?
@@ -52,14 +51,7 @@ public class OpenTitleWebPageCommand : CommandBase, IOpenTitleWebPageCommand
 
         try
         {
-            var url = _appSettings.TitlePageUrl.SafeFormat(Uri.EscapeDataString(cnmtItem.ApplicationTitleId));
-
-            var processStartInfo = new ProcessStartInfo(url)
-            {
-                CreateNoWindow = true,
-                UseShellExecute = true
-            };
-            Process.Start(processStartInfo);
+            _onlineTitlePageOpenerService.OpenTitlePage(cnmtItem.TitleId);
         }
         catch (Exception ex)
         {

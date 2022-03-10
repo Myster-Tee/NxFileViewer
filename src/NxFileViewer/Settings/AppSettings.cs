@@ -18,9 +18,10 @@ public class AppSettings : IAppSettings
     private bool _alwaysReloadKeysBeforeOpen = false;
 
     private string _titlePageUrl = "";
-    private string _applicationPattern;
-    private string _patchPattern;
-    private string _addonPattern;
+    private string _applicationPattern = "";
+    private string _patchPattern = "";
+    private string _addonPattern = "";
+    private string _titleInfoApiUrl = "";
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -161,6 +162,16 @@ public class AppSettings : IAppSettings
         set
         {
             _addonPattern = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public string TitleInfoApiUrl
+    {
+        get => _titleInfoApiUrl;
+        set
+        {
+            _titleInfoApiUrl = value;
             NotifyPropertyChanged();
         }
     }

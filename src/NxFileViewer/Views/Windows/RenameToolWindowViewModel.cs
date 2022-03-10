@@ -1,8 +1,8 @@
 ﻿using System;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Services.FileRenaming;
+using Emignatik.NxFileViewer.Services.Prompting;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
@@ -30,6 +30,7 @@ public class RenameToolWindowViewModel : WindowViewModelBase
 
         UpdateApplicationPatternParts();
         UpdatePatchPatternParts();
+        UpdateAddonPatternParts();
     }
 
     public IRenameFilesCommand RenameCommand { get; }

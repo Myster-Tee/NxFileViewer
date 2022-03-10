@@ -1,6 +1,6 @@
 ﻿using Emignatik.NxFileViewer.Models.TreeItems;
 
-namespace Emignatik.NxFileViewer.Services;
+namespace Emignatik.NxFileViewer.Services.Selection;
 
 public interface ISelectedItemService
 {

@@ -8,7 +8,7 @@ using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
 using Emignatik.NxFileViewer.Settings;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Services;
+namespace Emignatik.NxFileViewer.Services.FileOpening;
 
 public class FileOpenerService : IFileOpenerService
 {

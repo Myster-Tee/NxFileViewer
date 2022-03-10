@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Emignatik.NxFileViewer.Services;
+namespace Emignatik.NxFileViewer.Services.OnlineServices;
 
 public interface IHttpDownloader
 {

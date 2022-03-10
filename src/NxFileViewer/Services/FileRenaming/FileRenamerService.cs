@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Addon;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Patch;
+using Emignatik.NxFileViewer.Services.OnlineServices;
 using LibHac.Ncm;
 using Microsoft.Extensions.Logging;
 
@@ -15,19 +18,20 @@ namespace Emignatik.NxFileViewer.Services.FileRenaming;
 public class FileRenamerService : IFileRenamerService
 {
     private readonly IPackageInfoLoader _packageInfoLoader;
+    private readonly IOnlineTitleInfoService _onlineTitleInfoService;
     private readonly ILogger _logger;
 
-    public FileRenamerService(ILoggerFactory loggerFactory, IPackageInfoLoader packageInfoLoader)
+    public FileRenamerService(ILoggerFactory loggerFactory, IPackageInfoLoader packageInfoLoader, IOnlineTitleInfoService onlineTitleInfoService)
     {
-        _packageInfoLoader = packageInfoLoader;
+        _packageInfoLoader = packageInfoLoader ?? throw new ArgumentNullException(nameof(packageInfoLoader));
+        _onlineTitleInfoService = onlineTitleInfoService ?? throw new ArgumentNullException(nameof(onlineTitleInfoService));
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
 
     }
 
-    public void RenameFromDirectory(string inputDirectory, INamingPatterns namingPatterns, IReadOnlyCollection<string> fileExtensions, bool includeSubDirectories)
+    public async Task RenameFromDirectoryAsync(string inputDirectory, INamingPatterns namingPatterns, IReadOnlyCollection<string> fileExtensions, bool includeSubDirectories, CancellationToken cancellationToken)
     {
         var searchOption = includeSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-
 
         var directoryInfo = new DirectoryInfo(inputDirectory);
 
@@ -39,13 +43,18 @@ public class FileRenamerService : IFileRenamerService
         foreach (var matchingFile in matchingFiles)
         {
             // TODO: try/catcher et loguer
-            RenameFile(matchingFile, namingPatterns, out _);
+            await RenameFileAsyncInternal(matchingFile, namingPatterns, cancellationToken);
         }
     }
 
-    public void RenameFile(FileInfo inputFile, INamingPatterns namingPatterns, out string? newFileName)
+    public Task<string?> RenameFileAsync(string inputFile, INamingPatterns namingPatterns, CancellationToken cancellationToken)
     {
-        newFileName = null;
+        return RenameFileAsyncInternal(new FileInfo(inputFile), namingPatterns, cancellationToken);
+    }
+
+    private async Task<string?> RenameFileAsyncInternal(FileInfo inputFile, INamingPatterns namingPatterns, CancellationToken cancellationToken)
+    {
+        string? newFileName = null;
 
         var packageInfo = _packageInfoLoader.GetPackageInfo(inputFile.FullName);
 
@@ -56,13 +65,13 @@ public class FileRenamerService : IFileRenamerService
             switch (content.Type)
             {
                 case ContentMetaType.Application:
-                    newFileName = ComputeApplicationPackageFileName(content, packageInfo.AccuratePackageType, namingPatterns.ApplicationPattern);
+                    newFileName = ComputeApplicationPackageFileName(content, packageInfo.AccuratePackageType, namingPatterns.ApplicationPattern, cancellationToken);
                     break;
                 case ContentMetaType.Patch:
-                    newFileName = ComputePatchPackageFileName(content, packageInfo.AccuratePackageType, namingPatterns.PatchPattern);
+                    newFileName = ComputePatchPackageFileName(content, packageInfo.AccuratePackageType, namingPatterns.PatchPattern, cancellationToken);
                     break;
                 case ContentMetaType.AddOnContent:
-                    newFileName = ComputeAddonPackageFileName(content, packageInfo.AccuratePackageType, namingPatterns.AddonPattern);
+                    newFileName = await ComputeAddonPackageFileName(content, packageInfo.AccuratePackageType, namingPatterns.AddonPattern, cancellationToken);
                     break;
                 default:
                     //TODO: loguer comme quoi pas supporté
@@ -78,12 +87,14 @@ public class FileRenamerService : IFileRenamerService
         if (newFileName != null && newFileName != inputFile.Name && inputFile.DirectoryName != null)
         {
             var destFileName = Path.Combine(inputFile.DirectoryName, newFileName);
+            // TODO: gérer le problème d'écrasement
             inputFile.MoveTo(destFileName);
         }
 
+        return newFileName;
     }
 
-    private static string ComputeApplicationPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<ApplicationPatternPart> patternParts)
+    private static string ComputeApplicationPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<ApplicationPatternPart> patternParts, CancellationToken cancellationToken)
     {
         var newFileName = "";
 
@@ -134,7 +145,7 @@ public class FileRenamerService : IFileRenamerService
         return newFileName;
     }
 
-    private static string ComputePatchPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<PatchPatternPart> patternParts)
+    private static string ComputePatchPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<PatchPatternPart> patternParts, CancellationToken cancellationToken)
     {
         var newFileName = "";
 
@@ -185,7 +196,7 @@ public class FileRenamerService : IFileRenamerService
         return newFileName;
     }
 
-    private static string ComputeAddonPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<AddonPatternPart> patternParts)
+    private async Task<string> ComputeAddonPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<AddonPatternPart> patternParts, CancellationToken cancellationToken)
     {
         var newFileName = "";
 
@@ -206,10 +217,11 @@ public class FileRenamerService : IFileRenamerService
                             newFileName += content.TitleId.ToUpper();
                             break;
                         case AddonKeyword.OnlineTitleName://TODO: implémenter le service de récupération en ligne
-                            var firstTitle = content.NacpData?.Titles.FirstOrDefault();
 
-                            if (firstTitle != null)
-                                newFileName += firstTitle.Name;
+                            var onlineTitleInfo = await _onlineTitleInfoService.GetTitleInfoAsync(content.TitleId);
+
+                            if (onlineTitleInfo != null)
+                                newFileName += onlineTitleInfo.Name;
                             else
                                 newFileName += "NO_TITLE";
 

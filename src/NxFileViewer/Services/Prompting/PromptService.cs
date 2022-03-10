@@ -6,7 +6,7 @@ using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Tools;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace Emignatik.NxFileViewer.Services;
+namespace Emignatik.NxFileViewer.Services.Prompting;
 
 public class PromptService : IPromptService
 {

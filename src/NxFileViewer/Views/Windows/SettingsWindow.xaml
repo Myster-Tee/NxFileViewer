@@ -7,6 +7,7 @@
         xmlns:services="clr-namespace:Emignatik.NxFileViewer.Services"
         xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
         xmlns:windows="clr-namespace:Emignatik.NxFileViewer.Views.Windows"
+        xmlns:keysManagement="clr-namespace:Emignatik.NxFileViewer.Services.KeysManagement"
         mc:Ignorable="d"
         Style="{StaticResource WindowStyle}"
         Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title}" 
@@ -35,7 +36,7 @@
                             <Expander>
                                 <Expander.Header>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{x:Static services:IKeySetProviderService.DefaultProdKeysFileName}" Style="{StaticResource Title1}"/>
+                                        <TextBlock Text="{x:Static keysManagement:IKeySetProviderService.DefaultProdKeysFileName}" Style="{StaticResource Title1}"/>
                                         <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_ProdKeys}"/>
                                     </StackPanel>
                                 </Expander.Header>
@@ -64,7 +65,7 @@
                             <Expander>
                                 <Expander.Header>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{x:Static services:IKeySetProviderService.DefaultTitleKeysFileName}" Style="{StaticResource Title1}"/>
+                                        <TextBlock Text="{x:Static keysManagement:IKeySetProviderService.DefaultTitleKeysFileName}" Style="{StaticResource Title1}"/>
                                         <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_TitleKeys}"/>
                                     </StackPanel>
                                 </Expander.Header>
@@ -92,7 +93,7 @@
                             <Expander>
                                 <Expander.Header>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{x:Static services:IKeySetProviderService.DefaultConsoleKeysFileName}" Style="{StaticResource Title1}"/>
+                                        <TextBlock Text="{x:Static keysManagement:IKeySetProviderService.DefaultConsoleKeysFileName}" Style="{StaticResource Title1}"/>
                                         <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_ConsoleKeys}"/>
                                     </StackPanel>
                                 </Expander.Header>

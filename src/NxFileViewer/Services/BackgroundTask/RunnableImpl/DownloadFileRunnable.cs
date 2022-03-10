@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Services.OnlineServices;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl

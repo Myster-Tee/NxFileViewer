@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Emignatik.NxFileViewer.Services;
+namespace Emignatik.NxFileViewer.Services.FileOpening;
 
 public interface IFileOpenerService   
 {

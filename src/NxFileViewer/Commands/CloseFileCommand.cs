@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
-using Emignatik.NxFileViewer.Services;
+using Emignatik.NxFileViewer.Services.FileOpening;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 
 namespace Emignatik.NxFileViewer.Commands;

@@ -9,7 +9,7 @@ using Emignatik.NxFileViewer.Utils.MVVM;
 using LibHac.Common.Keys;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Services;
+namespace Emignatik.NxFileViewer.Services.KeysManagement;
 
 public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderService
 {

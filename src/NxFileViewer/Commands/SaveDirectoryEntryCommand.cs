@@ -2,9 +2,9 @@
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
-using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
+using Emignatik.NxFileViewer.Services.Prompting;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using LibHac.Fs;
 using Microsoft.Extensions.DependencyInjection;

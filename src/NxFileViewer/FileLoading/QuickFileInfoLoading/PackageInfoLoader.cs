@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Emignatik.NxFileViewer.Services;
+using Emignatik.NxFileViewer.Services.KeysManagement;
 using Emignatik.NxFileViewer.Utils;
 using LibHac.Common.Keys;
 using LibHac.Fs;
@@ -33,7 +33,7 @@ public class PackageInfoLoader : IPackageInfoLoader
                 throw new FileNotSupportedException(filePath);
 
             case PackageType.XCI:
-                contents = LoadXciPackageInfo(filePath, keySet, out accuratePackageType);
+                contents = LoadXciContents(filePath, keySet, out accuratePackageType);
                 break;
             case PackageType.NSP:
                 contents = LoadNspContents(filePath, keySet, out accuratePackageType);
@@ -93,7 +93,7 @@ public class PackageInfoLoader : IPackageInfoLoader
         //TODO: à finir
     }
 
-    private static List<Content> LoadXciPackageInfo(string filePath, KeySet keySet, out AccuratePackageType accuratePackageType)
+    private static List<Content> LoadXciContents(string filePath, KeySet keySet, out AccuratePackageType accuratePackageType)
     {
         accuratePackageType = default;
         return new List<Content>();

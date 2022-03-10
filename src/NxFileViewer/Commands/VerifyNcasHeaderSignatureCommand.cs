@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Input;
-using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
+using Emignatik.NxFileViewer.Services.FileOpening;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Extensions.DependencyInjection;
 

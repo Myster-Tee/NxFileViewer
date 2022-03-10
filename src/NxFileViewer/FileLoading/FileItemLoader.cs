@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Models.TreeItems;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
-using Emignatik.NxFileViewer.Services;
+using Emignatik.NxFileViewer.Services.KeysManagement;
 using Emignatik.NxFileViewer.Settings;
 using LibHac;
 using LibHac.Common;

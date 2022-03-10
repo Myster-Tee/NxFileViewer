@@ -33,5 +33,7 @@ public interface IAppSettings: INotifyPropertyChanged
 
     string AddonPattern { get; set; }
 
+    string TitleInfoApiUrl { get; set; }
+
     int ProgressBufferSize { get; set; }
 }

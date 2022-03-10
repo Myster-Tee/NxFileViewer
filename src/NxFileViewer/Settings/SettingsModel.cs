@@ -29,11 +29,13 @@ public class SettingsModel
 
     public bool? AlwaysReloadKeysBeforeOpen { get; set; }
 
-    public string? TitlePageUrl { get; set; } = "https://tinfoil.io/Title/{0}";
+    public string? TitlePageUrl { get; set; } = "https://tinfoil.media/Title/{TitleId}";
 
     public string? ApplicationPattern { get; set; } = "{FirstTitleName} [{TitleIdU}] [v{VersionNum}].{PackageTypeL}";
 
     public string? PatchPattern { get; set; } = "{FirstTitleName} [{TitleIdU}] [v{VersionNum}].{PackageTypeL}";
 
-    public string AddonPattern { get; set; } = ""; //TODO: à définir
+    public string? AddonPattern { get; set; } = "DLC_{OnlineTitleName}_[v{VersionNum}].{PackageTypeL}";
+
+    public string? TitleInfoApiUrl { get; set; } = "https://tinfoil.media/api/title/{TitleId}";
 }

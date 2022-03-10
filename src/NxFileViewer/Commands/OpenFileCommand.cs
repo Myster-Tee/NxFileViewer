@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Services;
+using Emignatik.NxFileViewer.Services.FileOpening;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Win32;

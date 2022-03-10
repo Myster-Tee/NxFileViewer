@@ -9,10 +9,14 @@ using Emignatik.NxFileViewer.FileLoading;
 using Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Logging;
-using Emignatik.NxFileViewer.Services;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
+using Emignatik.NxFileViewer.Services.FileOpening;
 using Emignatik.NxFileViewer.Services.FileRenaming;
+using Emignatik.NxFileViewer.Services.KeysManagement;
+using Emignatik.NxFileViewer.Services.OnlineServices;
+using Emignatik.NxFileViewer.Services.Prompting;
+using Emignatik.NxFileViewer.Services.Selection;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Styling.Theme;
 using Emignatik.NxFileViewer.Tools;
@@ -42,6 +46,8 @@ public partial class App : Application
             .AddSingleton<IPromptService, PromptService>()
             .AddSingleton<IPackageInfoLoader, PackageInfoLoader>()
             .AddSingleton<IFileRenamerService, FileRenamerService>()
+            .AddSingleton<IOnlineTitleInfoService, OnlineTitleInfoService>()
+            .AddSingleton<IOnlineTitlePageOpenerService, OnlineTitlePageOpenerService>()
             .AddSingleton<BackgroundTaskService>()
             .AddSingleton<IBackgroundTaskService>(provider => provider.GetRequiredService<BackgroundTaskService>())
             .AddSingleton<IProgressReporter>(provider => provider.GetRequiredService<BackgroundTaskService>())

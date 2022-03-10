@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using Emignatik.NxFileViewer.Models.TreeItems;
-using Emignatik.NxFileViewer.Services;
+using Emignatik.NxFileViewer.Services.Selection;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Views.TreeItems;
 using Microsoft.Extensions.DependencyInjection;

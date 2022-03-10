@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using LibHac.Common.Keys;
 
-namespace Emignatik.NxFileViewer.Services;
+namespace Emignatik.NxFileViewer.Services.KeysManagement;
 
 /// <summary>
 /// Service in charge of providing the Key set to use for decrypting files to open

@@ -1,6 +1,6 @@
 ﻿using Emignatik.NxFileViewer.Models;
 
-namespace Emignatik.NxFileViewer.Services;
+namespace Emignatik.NxFileViewer.Services.FileOpening;
 
 /// <summary>
 /// Service in charge of providing the currently opened file
