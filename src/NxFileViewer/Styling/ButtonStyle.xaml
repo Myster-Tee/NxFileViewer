@@ -3,29 +3,29 @@
                     xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls">
 
     <Style x:Key="EditButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="Margin" Value="2,0" />
+        <Setter Property="Margin" Value="{StaticResource Control.Default.Margin}" />
         <Setter Property="Width" Value="20" />
         <Setter Property="MinWidth" Value="10" />
         <Setter Property="Content" Value="✎" />
     </Style> 
     
     <Style x:Key="BrowseButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="Margin" Value="2,0" />
+        <Setter Property="Margin" Value="{StaticResource Control.Default.Margin}" />
         <Setter Property="Width" Value="20" />
         <Setter Property="MinWidth" Value="10" />
         <Setter Property="Content" Value="..." />
     </Style>   
     
     <Style x:Key="DownloadButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="Margin" Value="2,0" />
+        <Setter Property="Margin" Value="{StaticResource Control.Default.Margin}" />
         <Setter Property="Width" Value="20" />
         <Setter Property="MinWidth" Value="10" />
         <Setter Property="Content" Value="⭳" />
     </Style>
 
     <Style x:Key="OkCancelButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Margin" Value="{StaticResource Control.Default.Margin}" />
         <Setter Property="MinWidth" Value="80" />
-        <Setter Property="Margin" Value="2,2" />
         <Setter Property="Height" Value="26" />
     </Style>
 

@@ -217,17 +217,25 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string Log_NcaHashCanceled { get; }
 
     string RenamingTool_WindowTitle { get; }
+    string RenamingTool_Patterns { get; }
     string RenamingTool_ApplicationPattern { get; }
     string RenamingTool_PatchPattern { get; }
     string RenamingTool_AddonPattern { get; }
     string RenamingTool_InputDirectory { get; }
+    string RenamingTool_FileExtensionFilters { get; }
     string RenamingTool_ToolTip_BasePattern { get; }
     string RenamingTool_ToolTip_PatchPattern { get; }
     string RenamingTool_ToolTip_AddonPattern { get; }
     string RenamingTool_Button_Cancel { get; }
     string RenamingTool_Button_Rename { get; }
-    string RenamingTool_GroupBoxParameters { get; }
+    string RenamingTool_GroupBoxInput { get; }
+    string RenamingTool_GroupBoxNamingSettings { get; }
     string RenamingTool_BrowseDirTitle { get; }
+    string RenamingTool_GroupBoxOutput { get; }
+    string RenamingTool_Miscellaneous { get; }
+    string RenamingTool_InvalidWindowsCharReplacement { get; }
+    string RenamingTool_ReplaceWhiteSpaceChars { get; }
+    string RenamingTool_ReplaceWhiteSpaceCharsWith { get; }
 
     string Exception_UnexpectedDelimiter { get; }
     string Exception_EndDelimiterMissing { get; }

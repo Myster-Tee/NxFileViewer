@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
-        xmlns:services="clr-namespace:Emignatik.NxFileViewer.Services"
         xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
         xmlns:windows="clr-namespace:Emignatik.NxFileViewer.Views.Windows"
         xmlns:keysManagement="clr-namespace:Emignatik.NxFileViewer.Services.KeysManagement"

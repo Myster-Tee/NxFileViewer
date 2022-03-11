@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
 
     <Color x:Key="AccentColor">#51EBAB</Color>
@@ -51,6 +52,7 @@
     <SolidColorBrush x:Key="PlayStopButton.Cancelling.Icon" Color="Yellow" />
 
     <Thickness x:Key="ScrollViewer.Border.Thickness">1</Thickness>
+    <Thickness x:Key="Control.Default.Margin">2,0</Thickness>
     <SolidColorBrush x:Key="ScrollViewer.Border.Brush" Color="LightGray" />
 
 </ResourceDictionary>

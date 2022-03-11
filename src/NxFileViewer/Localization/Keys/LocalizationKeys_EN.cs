@@ -246,17 +246,25 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string Log_NcaHashCanceled => "NCAs hash canceled.";
 
     public string RenamingTool_WindowTitle => "Renaming tool";
+    public string RenamingTool_Patterns => "Patterns";
     public string RenamingTool_ApplicationPattern => "Application pattern";
     public string RenamingTool_PatchPattern => "Patch pattern";
     public string RenamingTool_AddonPattern => "Addon pattern";
     public string RenamingTool_InputDirectory => "Input directory";
+    public string RenamingTool_FileExtensionFilters => "Filters";
     public string RenamingTool_ToolTip_BasePattern => "Use {{TitleID}} {{TitleName}}"; //TODO : finir de documenter
     public string RenamingTool_ToolTip_PatchPattern => ""; //TODO : finir de documenter
     public string RenamingTool_ToolTip_AddonPattern => ""; //TODO : finir de documenter
     public string RenamingTool_Button_Cancel => "Cancel";
     public string RenamingTool_Button_Rename => "Rename";
-    public string RenamingTool_GroupBoxParameters => "Parameters";
+    public string RenamingTool_GroupBoxInput => "Input";
+    public string RenamingTool_GroupBoxNamingSettings => "Naming settings";
     public string RenamingTool_BrowseDirTitle => "Select a directory";
+    public string RenamingTool_GroupBoxOutput => "Output";
+    public string RenamingTool_Miscellaneous => "Miscellaneous";
+    public string RenamingTool_InvalidWindowsCharReplacement => "Replace unauthorized Windows characters with";
+    public string RenamingTool_ReplaceWhiteSpaceChars => "Replace white space chars";
+    public string RenamingTool_ReplaceWhiteSpaceCharsWith => "Replace white space chars with";
 
     public string Exception_UnexpectedDelimiter => "Unexpected delimiter {0} found at position {1}, use {2}{0} instead.";
     public string Exception_EndDelimiterMissing => "End delimiter {0} is missing.";

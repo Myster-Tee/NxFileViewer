@@ -8,7 +8,7 @@ using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask
 {
-    public class BackgroundTaskService : ViewModelBase, IBackgroundTaskService, IProgressReporter
+    public class BackgroundTaskService : NotifyPropertyChangedBase, IBackgroundTaskService, IProgressReporter
     {
         private bool _isIndeterminate;
         private readonly RelayCommand _cancelCommand;

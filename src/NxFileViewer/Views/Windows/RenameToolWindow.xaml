@@ -7,75 +7,153 @@
         xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
         xmlns:windows="clr-namespace:Emignatik.NxFileViewer.Views.Windows"
         xmlns:bindingExtensions="clr-namespace:Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions"
+        xmlns:userControls="clr-namespace:Emignatik.NxFileViewer.Views.UserControls"
         mc:Ignorable="d"
         Style="{StaticResource WindowStyle}"
         Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_WindowTitle}" 
-        Height="500"
-        Width="350"
+        Height="400"
+        Width="380"
         d:DataContext="{d:DesignInstance windows:RenameToolWindowViewModel}">
+
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0"  Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_GroupBoxParameters}">
-            <StackPanel >
+        <GroupBox Grid.Row="0"  Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_GroupBoxInput}">
+            <StackPanel>
                 <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_InputDirectory}" Style="{StaticResource Title2}" />
-
-                <DockPanel LastChildFill="true">
-                    <Button Command="{Binding Path=BrowseInputDirectoryCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
-                    <TextBox Text="{Binding Path=RenameCommand.InputDirectory}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
-                </DockPanel>
-
-                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ApplicationPattern}" Style="{StaticResource Title2}" />
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding Path=ApplicationPattern}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
-                    <StackPanel Grid.Column="1" Orientation="Horizontal">
-                        <TextBlock Style="{StaticResource FieldError}"
-                                   Visibility="{Binding Path=ApplicationPatternError, Converter={StaticResource StringNullOrEmptyToCollapsedVisibilityConverter}}"
-                                   ToolTip="{Binding Path=ApplicationPatternError}" />
-                        <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ToolTip_BasePattern}"/>
-                    </StackPanel>
-                </Grid>
-                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_PatchPattern}" Style="{StaticResource Title2}" />
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding Path=PatchPattern}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
-                    <StackPanel Grid.Column="1" Orientation="Horizontal">
-                        <TextBlock Style="{StaticResource FieldError}"
-                                   Visibility="{Binding Path=PatchPatternError, Converter={StaticResource StringNullOrEmptyToCollapsedVisibilityConverter}}"
-                                   ToolTip="{Binding Path=PatchPatternError}" />
-                        <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ToolTip_PatchPattern}"/>
-                    </StackPanel>
-                </Grid>
-                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_AddonPattern}" Style="{StaticResource Title2}" />
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding Path=AddonPattern}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
-                    <StackPanel Grid.Column="1" Orientation="Horizontal">
-                        <TextBlock Style="{StaticResource FieldError}"
-                                   Visibility="{Binding Path=AddonPatternError, Converter={StaticResource StringNullOrEmptyToCollapsedVisibilityConverter}}"
-                                   ToolTip="{Binding Path=AddonPatternError}" />
-                        <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ToolTip_AddonPattern}"/>
-                    </StackPanel>
-
-                </Grid>
+                    <DockPanel LastChildFill="true">
+                        <Button Command="{Binding Path=BrowseInputDirectoryCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
+                        <TextBox Text="{Binding Path=RenameCommand.InputDirectory}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
+                    </DockPanel>
+                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_FileExtensionFilters}" Style="{StaticResource Title2}" />
+                <TextBox Text="{Binding Path=RenameCommand.FileExtFilters}" HorizontalAlignment="Left" MinWidth="140" />
             </StackPanel>
         </GroupBox>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Margin="0,5">
+
+
+        <GroupBox Grid.Row="1"  Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_GroupBoxNamingSettings}">
+            <StackPanel >
+
+                <Expander>
+                    <Expander.Header>
+                        <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Patterns}" Style="{StaticResource Title1}"/>
+                    </Expander.Header>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ApplicationPattern}" Style="{StaticResource Title2}" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Text="{Binding Path=ApplicationPattern}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource FieldError}"
+                                   Visibility="{Binding Path=ApplicationPatternError, Converter={StaticResource StringNullOrEmptyToCollapsedVisibilityConverter}}"
+                                   ToolTip="{Binding Path=ApplicationPatternError}" />
+                                <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ToolTip_BasePattern}"/>
+                            </StackPanel>
+                        </Grid>
+                        <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_PatchPattern}" Style="{StaticResource Title2}" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Text="{Binding Path=PatchPattern}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource FieldError}"
+                                   Visibility="{Binding Path=PatchPatternError, Converter={StaticResource StringNullOrEmptyToCollapsedVisibilityConverter}}"
+                                   ToolTip="{Binding Path=PatchPatternError}" />
+                                <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ToolTip_PatchPattern}"/>
+                            </StackPanel>
+                        </Grid>
+                        <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_AddonPattern}" Style="{StaticResource Title2}" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Text="{Binding Path=AddonPattern}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource FieldError}"
+                                   Visibility="{Binding Path=AddonPatternError, Converter={StaticResource StringNullOrEmptyToCollapsedVisibilityConverter}}"
+                                   ToolTip="{Binding Path=AddonPatternError}" />
+                                <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ToolTip_AddonPattern}"/>
+                            </StackPanel>
+
+                        </Grid>
+                    </StackPanel>
+                </Expander>
+
+                <Expander>
+                    <Expander.Header>
+                        <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Miscellaneous}" Style="{StaticResource Title1}"/>
+                    </Expander.Header>
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="2" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="2" />
+                                <RowDefinition />
+                                <RowDefinition Height="2" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_InvalidWindowsCharReplacement}" Style="{StaticResource Title2}" Margin="0" HorizontalAlignment="Right"/>
+                            <TextBox Grid.Row="0" Grid.Column="2" MinWidth="20" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ReplaceWhiteSpaceChars}" Style="{StaticResource Title2}" Margin="0" HorizontalAlignment="Right"/>
+                            <CheckBox Grid.Row="2" Grid.Column="2" />
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ReplaceWhiteSpaceCharsWith}" Style="{StaticResource Title2}" Margin="0" HorizontalAlignment="Right"/>
+                            <TextBox Grid.Row="4" Grid.Column="2" MinWidth="20" VerticalAlignment="Center"/>
+
+                        </Grid>
+                    </StackPanel>
+                </Expander>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Grid.Row="2" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_GroupBoxOutput}">
+            <userControls:LoggingView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LogSource="{Binding LogSource, Mode=OneWay}" />
+        </GroupBox>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Margin="0,5">
+            <CheckBox Content="Simulate" VerticalAlignment="Center" IsChecked="{Binding Path=IsSimulation}" />
             <Button Command="{Binding Path=RenameCommand}" IsDefault="True" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Button_Rename}" Style="{StaticResource OkCancelButton}" />
             <Button Command="{Binding Path=CancelCommand}" IsCancel="True" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Button_Cancel}" Style="{StaticResource OkCancelButton}" />
         </StackPanel>
+
+        <StatusBar Grid.Row="4">
+
+            <!-- Progress Bar -->
+            <StatusBarItem DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+
+                <customControls:ProgressBarExt Width="80" Minimum="0" Maximum="100" Height="18"
+                                           Visibility="{Binding Path=BackgroundTask.IsRunning, Mode=OneWay, Converter={StaticResource FalseToCollapseVisibilityConverter}}"
+                                           Value="{Binding Path=BackgroundTask.ProgressValue, Mode=OneWay, FallbackValue=70}" 
+                                           ValueText="{Binding Path=BackgroundTask.ProgressValueText, Mode=OneWay, FallbackValue=70%}"
+                                           IsIndeterminate="{Binding Path=BackgroundTask.IsIndeterminate, Mode=OneWay, FallbackValue=True}">
+
+                    <customControls:ProgressBarExt.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding BackgroundTask.CancelCommand}" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CancelAction}" />
+                        </ContextMenu>
+                    </customControls:ProgressBarExt.ContextMenu>
+
+                </customControls:ProgressBarExt>
+            </StatusBarItem>
+        </StatusBar>
+
     </Grid>
 </Window>

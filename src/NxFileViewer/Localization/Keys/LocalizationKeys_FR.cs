@@ -246,17 +246,25 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string Log_NcaHashCanceled => "Hash des NCAs annulé.";
 
     public string RenamingTool_WindowTitle => "Outil de renommage";
+    public string RenamingTool_Patterns => "Patterns";
     public string RenamingTool_ApplicationPattern => "Pattern d'application";
     public string RenamingTool_PatchPattern => "Pattern de patch";
     public string RenamingTool_AddonPattern => "Pattern d'add-on";
     public string RenamingTool_InputDirectory => "Répertoire d'entrée";
+    public string RenamingTool_FileExtensionFilters => "Filtres";
     public string RenamingTool_ToolTip_BasePattern => "Bla bla bla"; //TODO : finir de documenter
     public string RenamingTool_ToolTip_PatchPattern => ""; //TODO : finir de documenter
     public string RenamingTool_ToolTip_AddonPattern => ""; //TODO : finir de documenter
     public string RenamingTool_Button_Cancel => "Annuler";
     public string RenamingTool_Button_Rename => "Renommer";
-    public string RenamingTool_GroupBoxParameters => "Paramètres";
+    public string RenamingTool_GroupBoxInput => "Entrée";
+    public string RenamingTool_GroupBoxNamingSettings => "Paramètres de nommage";
     public string RenamingTool_BrowseDirTitle => "Sélectionnez un répertoire";
+    public string RenamingTool_GroupBoxOutput => "Sortie";
+    public string RenamingTool_Miscellaneous => "Divers";
+    public string RenamingTool_InvalidWindowsCharReplacement => "Remplacer les caractères Windows non autorisés avec";
+    public string RenamingTool_ReplaceWhiteSpaceChars => "Remplacer les espaces blancs";
+    public string RenamingTool_ReplaceWhiteSpaceCharsWith => "Remplacer les espaces blancs avec";
 
     public string Exception_UnexpectedDelimiter => "Délimiteur {0} non attendu à la position {1}, utilisez {2}{0} à la place.";
     public string Exception_EndDelimiterMissing => "Le délimiteur de fin {0} est manquant.";

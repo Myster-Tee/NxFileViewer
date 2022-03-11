@@ -12,7 +12,7 @@
         AllowDrop="True"
         Style="{StaticResource WindowStyle}"
         Title="{Binding Path=Title}" Height="600" Width="450" d:DataContext="{d:DesignInstance windows:MainWindowViewModel}"
-        dragAndDrop:DropFilesBehaviorExtension.IsEnabled="True" ResizeMode="CanResize">
+        dragAndDrop:DropFilesBehaviorExtension.IsEnabled="True">
 
     <Window.InputBindings>
         <KeyBinding Gesture="Ctrl+O" Command="{Binding Path=OpenFileCommand}" />
