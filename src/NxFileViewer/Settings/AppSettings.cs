@@ -24,6 +24,7 @@ public class AppSettings : IAppSettings
     private string _titleInfoApiUrl = "";
     private string? _renamingFileFilters;
     private bool _renameIncludeSubdirectories;
+    private bool _renameSimulation = false;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -194,6 +195,16 @@ public class AppSettings : IAppSettings
         set
         {
             _renameIncludeSubdirectories = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public bool RenameSimulation
+    {
+        get => _renameSimulation;
+        set
+        {
+            _renameSimulation = value;
             NotifyPropertyChanged();
         }
     }

@@ -42,4 +42,6 @@ public class SettingsModel
     public string? RenamingFileFilters { get; set; } = "*.nsp;*.nsz;*.xci;*.xcz";
 
     public bool? RenameIncludeSubdirectories { get; set; } = true;
+
+    public bool? RenameSimulation { get; set; }
 }

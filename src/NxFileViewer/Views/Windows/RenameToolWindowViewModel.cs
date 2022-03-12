@@ -80,7 +80,7 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         get => _patchPatternError;
         set
         {
-            _patchPatternError = value; 
+            _patchPatternError = value;
             NotifyPropertyChanged();
         }
     }
@@ -102,6 +102,16 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         set
         {
             _addonPatternError = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public bool IsSimulation
+    {
+        get => RenameCommand.IsSimulation;
+        set
+        {
+            RenameCommand.IsSimulation = value;
             NotifyPropertyChanged();
         }
     }

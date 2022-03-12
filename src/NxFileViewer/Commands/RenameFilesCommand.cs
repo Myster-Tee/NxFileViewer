@@ -47,7 +47,7 @@ namespace Emignatik.NxFileViewer.Commands
 
                 var filesRenamerRunnable = _serviceProvider.GetRequiredService<IFilesRenamerRunnable>();
 
-                filesRenamerRunnable.Setup(InputDirectory, namingPatterns, FileFilters, IncludeSubdirectories);
+                filesRenamerRunnable.Setup(InputDirectory, namingPatterns, FileFilters, IncludeSubdirectories, IsSimulation);
 
                 _backgroundTaskRunner?.RunAsync(filesRenamerRunnable);
             }
@@ -108,6 +108,12 @@ namespace Emignatik.NxFileViewer.Commands
             set => _appSettingsManager.Settings.RenameIncludeSubdirectories = value;
         }
 
+        public bool IsSimulation
+        {
+            get => _appSettingsManager.Settings.RenameSimulation;
+            set => _appSettingsManager.Settings.RenameSimulation = value;
+        }
+
         public IBackgroundTaskRunner? BackgroundTaskRunner
         {
             get => _backgroundTaskRunner;
@@ -136,6 +142,9 @@ namespace Emignatik.NxFileViewer.Commands
                     break;
                 case nameof(IAppSettings.RenameIncludeSubdirectories):
                     NotifyPropertyChanged(nameof(IncludeSubdirectories));
+                    break;          
+                case nameof(IAppSettings.RenameSimulation):
+                    NotifyPropertyChanged(nameof(IsSimulation));
                     break;
             }
         }
@@ -152,7 +161,7 @@ namespace Emignatik.NxFileViewer.Commands
         }
     }
 
-    public interface IRenameFilesCommand : ICommand
+    public interface IRenameFilesCommand : ICommand, INotifyPropertyChanged
     {
         List<ApplicationPatternPart>? ApplicationPatternParts { get; set; }
 
@@ -167,5 +176,7 @@ namespace Emignatik.NxFileViewer.Commands
         IBackgroundTaskRunner? BackgroundTaskRunner { get; set; }
 
         public bool IncludeSubdirectories { get; set; }
+
+        bool IsSimulation { get; set; }
     }
 }

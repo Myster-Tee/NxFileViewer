@@ -39,5 +39,8 @@ public interface IAppSettings: INotifyPropertyChanged
 
     bool RenameIncludeSubdirectories { get; set; }
 
+    bool RenameSimulation { get; set; }
+
     int ProgressBufferSize { get; set; }
+
 }

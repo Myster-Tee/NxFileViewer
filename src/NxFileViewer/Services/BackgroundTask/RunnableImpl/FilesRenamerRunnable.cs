@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
@@ -28,31 +27,33 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
         _fileRenamerService.RenameFromDirectoryAsync(_renameSettings.InputDirectory, _renameSettings.NamingPatterns, _renameSettings.FileFilters, true, progressReporter, cancellationToken);
     }
 
-    public void Setup(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubDirectories)
+    public void Setup(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubdirectories, bool simulation)
     {
         if (inputDirectory == null) throw new ArgumentNullException(nameof(inputDirectory));
         if (namingPatterns == null) throw new ArgumentNullException(nameof(namingPatterns));
         if (fileFilters == null) throw new ArgumentNullException(nameof(fileFilters));
         _renameSettings = new RenameSettings
         {
-            IncludeSubDirectories = includeSubDirectories,
+            IncludeSubdirectories = includeSubdirectories,
             FileFilters = fileFilters,
             NamingPatterns = namingPatterns,
             InputDirectory = inputDirectory,
+            Simulation = simulation,
         };
     }
 
     private class RenameSettings
     {
-        public bool IncludeSubDirectories { get; init; }
+        public bool IncludeSubdirectories { get; init; }
         public string? FileFilters { get; init; }
         public INamingPatterns NamingPatterns { get; init; } = null!;
         public string InputDirectory { get; init; } = null!;
+        public bool Simulation { get; set; }
     }
 }
 
 public interface IFilesRenamerRunnable : IRunnable
 {
-    void Setup(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubDirectories);
+    void Setup(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubdirectories, bool includeSubDirectories);
 }
 
