@@ -224,8 +224,8 @@ public class FileRenamerService : IFileRenamerService
                         case AddonKeyword.TitleIdU:
                             newFileName += content.TitleId.ToUpper();
                             break;
-                        case AddonKeyword.OnlineTitleName://TODO: implémenter le service de récupération en ligne
-
+                        case AddonKeyword.OnlineTitleName:
+                            //TODO: ne pas appeler à chaque fois
                             var onlineTitleInfo = await _onlineTitleInfoService.GetTitleInfoAsync(content.TitleId);
 
                             if (onlineTitleInfo != null)

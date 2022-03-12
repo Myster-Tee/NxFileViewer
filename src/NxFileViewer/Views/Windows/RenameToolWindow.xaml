@@ -157,7 +157,7 @@
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Margin="0,5">
             <CheckBox Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Simulation}" VerticalAlignment="Center" IsChecked="{Binding Path=IsSimulation}" 
-                      FlowDirection="RightToLeft" />
+                      Style="{StaticResource TextOnLeft}" />
 
             <Button Command="{Binding Path=RenameCommand}" IsDefault="True" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Button_Rename}" Style="{StaticResource OkCancelButton}" />
             <Button Command="{Binding Path=CancelCommand}" IsCancel="True" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Button_Cancel}" Style="{StaticResource OkCancelButton}" />
