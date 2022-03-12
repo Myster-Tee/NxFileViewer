@@ -38,4 +38,6 @@ public class SettingsModel
     public string? AddonPattern { get; set; } = "DLC_{OnlineTitleName}_[v{VersionNum}].{PackageTypeL}";
 
     public string? TitleInfoApiUrl { get; set; } = "https://tinfoil.media/api/title/{TitleId}";
+
+    public string? RenamingFileFilters { get; set; } = "*.nsp;*.nsz;*.xci;*.xcz";
 }

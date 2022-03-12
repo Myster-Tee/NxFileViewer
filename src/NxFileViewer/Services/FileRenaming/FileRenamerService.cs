@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
+using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Addon;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
@@ -29,15 +31,17 @@ public class FileRenamerService : IFileRenamerService
 
     }
 
-    public async Task RenameFromDirectoryAsync(string inputDirectory, INamingPatterns namingPatterns, IReadOnlyCollection<string> fileExtensions, bool includeSubDirectories, CancellationToken cancellationToken)
+    public async Task RenameFromDirectoryAsync(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubDirectories, IProgressReporter progressReporter, CancellationToken cancellationToken)
     {
         var searchOption = includeSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
         var directoryInfo = new DirectoryInfo(inputDirectory);
 
+        var fileFiltersRegex = fileFilters?.Split(';').Select(filter => new Regex(filter.Replace("*", ".*"), RegexOptions.IgnoreCase | RegexOptions.Singleline)).ToArray();
+
         var matchingFiles = directoryInfo.GetFiles("*", searchOption).Where(file =>
         {
-            return fileExtensions.Any(fileExtension => string.Equals(file.Extension, fileExtension, StringComparison.OrdinalIgnoreCase));
+            return fileFiltersRegex == null || fileFiltersRegex.Any(regex => regex.IsMatch(file.Name));
         }).ToArray();
 
         foreach (var matchingFile in matchingFiles)

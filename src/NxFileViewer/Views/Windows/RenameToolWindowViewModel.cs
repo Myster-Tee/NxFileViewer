@@ -1,6 +1,7 @@
 ﻿using System;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.Prompting;
 using Emignatik.NxFileViewer.Settings;
@@ -19,12 +20,15 @@ public class RenameToolWindowViewModel : WindowViewModelBase
     private string? _patchPatternError;
     private string? _addonPatternError;
 
-    public RenameToolWindowViewModel(INamingPatternsParser namingPatternsParser, IAppSettingsManager appSettingsManager, IPromptService promptService, IRenameFilesCommand renameFilesCommand)
+    public RenameToolWindowViewModel(INamingPatternsParser namingPatternsParser, IAppSettingsManager appSettingsManager, IPromptService promptService, IRenameFilesCommand renameFilesCommand, IBackgroundTaskRunner backgroundTaskRunner)
     {
         _namingPatternsParser = namingPatternsParser ?? throw new ArgumentNullException(nameof(namingPatternsParser));
         _appSettingsManager = appSettingsManager ?? throw new ArgumentNullException(nameof(appSettingsManager));
         _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
+        BackgroundTask = backgroundTaskRunner ?? throw new ArgumentNullException(nameof(backgroundTaskRunner));
         RenameCommand = renameFilesCommand ?? throw new ArgumentNullException(nameof(renameFilesCommand));
+        RenameCommand.BackgroundTaskRunner = BackgroundTask;
+
         CancelCommand = new RelayCommand(Cancel);
         BrowseInputDirectoryCommand = new RelayCommand(BrowseInputDirectory);
 
@@ -101,6 +105,8 @@ public class RenameToolWindowViewModel : WindowViewModelBase
             NotifyPropertyChanged();
         }
     }
+
+    public IBackgroundTaskRunner BackgroundTask { get; }
 
     private void UpdateApplicationPatternParts()
     {

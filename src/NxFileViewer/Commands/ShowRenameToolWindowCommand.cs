@@ -7,12 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Emignatik.NxFileViewer.Commands;
 
-public class ShowRenameToolToolWindowCommand : CommandBase, IShowRenameToolWindowCommand
+public class ShowRenameToolWindowCommand : CommandBase, IShowRenameToolWindowCommand
 {
     private readonly IServiceProvider _serviceProvider;
     private RenameToolWindow? _renameToolWindow;
 
-    public ShowRenameToolToolWindowCommand(IServiceProvider serviceProvider)
+    public ShowRenameToolWindowCommand(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     }

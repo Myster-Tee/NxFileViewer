@@ -86,6 +86,7 @@ public partial class App : Application
             .AddTransient<ISaveDirectoryRunnable, SaveDirectoryRunnable>()
             .AddTransient<IVerifyNcasHashRunnable, VerifyNcasHashRunnable>()
             .AddTransient<IVerifyNcasHeaderSignatureRunnable, VerifyNcasHeaderSignatureRunnable>()
+            .AddTransient<IFilesRenamerRunnable, FilesRenamerRunnable>()
             .AddTransient<IOpenFileLocationCommand, OpenFileLocationCommand>()
             .AddTransient<ISaveDirectoryEntryCommand, SaveDirectoryEntryCommand>()
             .AddTransient<ISavePartitionFileCommand, SavePartitionFileCommand>()

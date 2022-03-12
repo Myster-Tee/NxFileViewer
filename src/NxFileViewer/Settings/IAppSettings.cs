@@ -35,5 +35,7 @@ public interface IAppSettings: INotifyPropertyChanged
 
     string TitleInfoApiUrl { get; set; }
 
+    string? RenamingFileFilters { get; set; }
+
     int ProgressBufferSize { get; set; }
 }

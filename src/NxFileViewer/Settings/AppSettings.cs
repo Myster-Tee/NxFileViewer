@@ -22,6 +22,7 @@ public class AppSettings : IAppSettings
     private string _patchPattern = "";
     private string _addonPattern = "";
     private string _titleInfoApiUrl = "";
+    private string? _renamingFileFilters;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -172,6 +173,16 @@ public class AppSettings : IAppSettings
         set
         {
             _titleInfoApiUrl = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public string? RenamingFileFilters
+    {
+        get => _renamingFileFilters;
+        set
+        {
+            _renamingFileFilters = value;
             NotifyPropertyChanged();
         }
     }

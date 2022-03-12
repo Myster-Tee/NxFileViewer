@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
 
 namespace Emignatik.NxFileViewer.Services.FileRenaming;
 
 public interface IFileRenamerService
 {
-    Task RenameFromDirectoryAsync(string inputDirectory, INamingPatterns namingPatterns, IReadOnlyCollection<string> fileExtensions, bool includeSubDirectories, CancellationToken cancellationToken);
+    Task RenameFromDirectoryAsync(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubDirectories, IProgressReporter progressReporter, CancellationToken cancellationToken);
 
 
     /// <summary>

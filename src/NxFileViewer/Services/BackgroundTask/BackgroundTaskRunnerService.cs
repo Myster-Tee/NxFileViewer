@@ -107,6 +107,7 @@ namespace Emignatik.NxFileViewer.Services.BackgroundTask
             }
 
             public bool SupportsCancellation => _realRunnable.SupportsCancellation;
+
             public bool SupportProgress => _realRunnable.SupportProgress;
         }
 

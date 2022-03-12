@@ -31,8 +31,8 @@
                         <Button Command="{Binding Path=BrowseInputDirectoryCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
                         <TextBox Text="{Binding Path=RenameCommand.InputDirectory}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
                     </DockPanel>
-                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_FileExtensionFilters}" Style="{StaticResource Title2}" />
-                <TextBox Text="{Binding Path=RenameCommand.FileExtFilters}" HorizontalAlignment="Left" MinWidth="140" />
+                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_FileFilters}" Style="{StaticResource Title2}" />
+                <TextBox Text="{Binding Path=RenameCommand.FileFilters}" HorizontalAlignment="Left" MinWidth="140" />
             </StackPanel>
         </GroupBox>
 

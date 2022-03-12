@@ -86,7 +86,9 @@ namespace Emignatik.NxFileViewer.Settings
             if (model.AddonPattern != null)
                 _appSettings.AddonPattern = model.AddonPattern;  
             if (model.TitleInfoApiUrl != null)
-                _appSettings.TitleInfoApiUrl = model.TitleInfoApiUrl;
+                _appSettings.TitleInfoApiUrl = model.TitleInfoApiUrl;      
+            if (model.RenamingFileFilters != null)
+                _appSettings.RenamingFileFilters = model.RenamingFileFilters;
         }
 
         public void SaveSafe()
@@ -112,6 +114,7 @@ namespace Emignatik.NxFileViewer.Settings
                     PatchPattern = appSettings.PatchPattern,
                     AddonPattern = appSettings.AddonPattern,
                     TitleInfoApiUrl = appSettings.TitleInfoApiUrl,
+                    RenamingFileFilters = appSettings.RenamingFileFilters,
                 };
 
                 JsonSerializer.Serialize(new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }), settingsModel);
