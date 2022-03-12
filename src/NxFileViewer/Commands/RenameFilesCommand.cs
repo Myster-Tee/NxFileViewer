@@ -11,6 +11,7 @@ using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Patch;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Commands
 {
@@ -32,30 +33,6 @@ namespace Emignatik.NxFileViewer.Commands
             _appSettingsManager.Settings.PropertyChanged += OnSettingsPropertyChanged;
         }
 
-
-        public override void Execute(object? parameter)
-        {
-            //TODO: exposer tous les paramètres
-            try
-            {
-                var namingPatterns = new NamingPatterns
-                {
-                    ApplicationPattern = ApplicationPatternParts!,
-                    PatchPattern = PatchPatternParts!,
-                    AddonPattern = AddonPatternParts!,
-                };
-
-                var filesRenamerRunnable = _serviceProvider.GetRequiredService<IFilesRenamerRunnable>();
-
-                filesRenamerRunnable.Setup(InputDirectory, namingPatterns, FileFilters, IncludeSubdirectories, IsSimulation);
-
-                _backgroundTaskRunner?.RunAsync(filesRenamerRunnable);
-            }
-            catch (Exception ex)
-            {
-                //TODO: gérer l'exception
-            }
-        }
 
         public List<ApplicationPatternPart>? ApplicationPatternParts
         {
@@ -114,6 +91,8 @@ namespace Emignatik.NxFileViewer.Commands
             set => _appSettingsManager.Settings.RenameSimulation = value;
         }
 
+        public ILogger? Logger { get; set; }
+
         public IBackgroundTaskRunner? BackgroundTaskRunner
         {
             get => _backgroundTaskRunner;
@@ -126,6 +105,29 @@ namespace Emignatik.NxFileViewer.Commands
 
                 NotifyPropertyChanged();
                 TriggerCanExecuteChanged();
+            }
+        }
+        public override void Execute(object? parameter)
+        {
+            //TODO: exposer tous les paramètres
+            try
+            {
+                var namingPatterns = new NamingPatterns
+                {
+                    ApplicationPattern = ApplicationPatternParts!,
+                    PatchPattern = PatchPatternParts!,
+                    AddonPattern = AddonPatternParts!,
+                };
+
+                var filesRenamerRunnable = _serviceProvider.GetRequiredService<IFilesRenamerRunnable>();
+
+                filesRenamerRunnable.Setup(InputDirectory, namingPatterns, FileFilters, IncludeSubdirectories, IsSimulation, Logger);
+
+                _backgroundTaskRunner?.RunAsync(filesRenamerRunnable);
+            }
+            catch (Exception ex)
+            {
+                //TODO: gérer l'exception
             }
         }
 
@@ -178,5 +180,7 @@ namespace Emignatik.NxFileViewer.Commands
         public bool IncludeSubdirectories { get; set; }
 
         bool IsSimulation { get; set; }
+
+        ILogger? Logger { get; set; }
     }
 }

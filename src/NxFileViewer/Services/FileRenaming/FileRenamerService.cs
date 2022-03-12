@@ -31,9 +31,11 @@ public class FileRenamerService : IFileRenamerService
 
     }
 
-    public async Task RenameFromDirectoryAsync(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubDirectories, IProgressReporter progressReporter, CancellationToken cancellationToken)
+    public async Task RenameFromDirectoryAsync(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
     {
-        var searchOption = includeSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+        var searchOption = simulation ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+        logger?.LogWarning("Hello World!");
 
         var directoryInfo = new DirectoryInfo(inputDirectory);
 
@@ -47,7 +49,9 @@ public class FileRenamerService : IFileRenamerService
         foreach (var matchingFile in matchingFiles)
         {
             // TODO: try/catcher et loguer
-            await RenameFileAsyncInternal(matchingFile, namingPatterns, cancellationToken);
+            var newFileName = await RenameFileAsyncInternal(matchingFile, namingPatterns, cancellationToken);
+            logger?.LogInformation(newFileName);
+            Thread.Sleep(5000);
         }
     }
 

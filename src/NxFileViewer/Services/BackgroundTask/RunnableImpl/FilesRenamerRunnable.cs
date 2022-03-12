@@ -2,6 +2,7 @@
 using System.Threading;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
 
@@ -24,10 +25,20 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
     {
         if (_renameSettings == null)
             throw new InvalidOperationException($"{nameof(Setup)} method should be invoked first.");
-        _fileRenamerService.RenameFromDirectoryAsync(_renameSettings.InputDirectory, _renameSettings.NamingPatterns, _renameSettings.FileFilters, true, progressReporter, cancellationToken);
+
+        _fileRenamerService.RenameFromDirectoryAsync(
+            _renameSettings.InputDirectory,
+            _renameSettings.NamingPatterns,
+            _renameSettings.FileFilters,
+            _renameSettings.IncludeSubdirectories,
+            _renameSettings.Simulation,
+            _renameSettings.Logger,
+            progressReporter,
+            cancellationToken
+        ).Wait(cancellationToken);
     }
 
-    public void Setup(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubdirectories, bool simulation)
+    public void Setup(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger)
     {
         if (inputDirectory == null) throw new ArgumentNullException(nameof(inputDirectory));
         if (namingPatterns == null) throw new ArgumentNullException(nameof(namingPatterns));
@@ -39,6 +50,7 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
             NamingPatterns = namingPatterns,
             InputDirectory = inputDirectory,
             Simulation = simulation,
+            Logger = logger,
         };
     }
 
@@ -48,12 +60,14 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
         public string? FileFilters { get; init; }
         public INamingPatterns NamingPatterns { get; init; } = null!;
         public string InputDirectory { get; init; } = null!;
-        public bool Simulation { get; set; }
+        public bool Simulation { get; init; }
+        public ILogger? Logger { get; init; }
+        public CancellationToken CancellationToken { get; set; }
     }
 }
 
 public interface IFilesRenamerRunnable : IRunnable
 {
-    void Setup(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubdirectories, bool includeSubDirectories);
+    void Setup(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger);
 }
 

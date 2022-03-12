@@ -1,6 +1,7 @@
 ﻿using System;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.Prompting;
@@ -19,6 +20,7 @@ public class RenameToolWindowViewModel : WindowViewModelBase
     private string? _applicationPatternError;
     private string? _patchPatternError;
     private string? _addonPatternError;
+    private readonly LoggerSource _loggerSource = new();
 
     public RenameToolWindowViewModel(INamingPatternsParser namingPatternsParser, IAppSettingsManager appSettingsManager, IPromptService promptService, IRenameFilesCommand renameFilesCommand, IBackgroundTaskRunner backgroundTaskRunner)
     {
@@ -28,6 +30,7 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         BackgroundTask = backgroundTaskRunner ?? throw new ArgumentNullException(nameof(backgroundTaskRunner));
         RenameCommand = renameFilesCommand ?? throw new ArgumentNullException(nameof(renameFilesCommand));
         RenameCommand.BackgroundTaskRunner = BackgroundTask;
+        RenameCommand.Logger = _loggerSource;
 
         CancelCommand = new RelayCommand(Cancel);
         BrowseInputDirectoryCommand = new RelayCommand(BrowseInputDirectory);
@@ -36,6 +39,8 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         UpdatePatchPatternParts();
         UpdateAddonPatternParts();
     }
+
+    public ILogSource LogSource => _loggerSource;
 
     public IRenameFilesCommand RenameCommand { get; }
 
