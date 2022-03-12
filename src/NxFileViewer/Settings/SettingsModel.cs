@@ -40,4 +40,6 @@ public class SettingsModel
     public string? TitleInfoApiUrl { get; set; } = "https://tinfoil.media/api/title/{TitleId}";
 
     public string? RenamingFileFilters { get; set; } = "*.nsp;*.nsz;*.xci;*.xcz";
+
+    public bool? RenameIncludeSubdirectories { get; set; } = true;
 }

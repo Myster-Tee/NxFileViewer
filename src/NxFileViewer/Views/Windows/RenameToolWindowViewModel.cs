@@ -114,7 +114,6 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         {
             RenameCommand.ApplicationPatternParts = _namingPatternsParser.ParseApplicationPattern(this.ApplicationPattern);
             ApplicationPatternError = null;
-            _appSettingsManager.SaveSafe();
         }
         catch (Exception ex)
         {
@@ -129,7 +128,6 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         {
             RenameCommand.PatchPatternParts = _namingPatternsParser.ParsePatchPattern(this.PatchPattern);
             PatchPatternError = null;
-            _appSettingsManager.SaveSafe();
         }
         catch (Exception ex)
         {
@@ -144,7 +142,6 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         {
             RenameCommand.AddonPatternParts = _namingPatternsParser.ParseAddonPattern(this.AddonPattern);
             AddonPatternError = null;
-            _appSettingsManager.SaveSafe();
         }
         catch (Exception ex)
         {

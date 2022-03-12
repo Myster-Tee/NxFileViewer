@@ -23,6 +23,7 @@ public class AppSettings : IAppSettings
     private string _addonPattern = "";
     private string _titleInfoApiUrl = "";
     private string? _renamingFileFilters;
+    private bool _renameIncludeSubdirectories;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -183,6 +184,16 @@ public class AppSettings : IAppSettings
         set
         {
             _renamingFileFilters = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public bool RenameIncludeSubdirectories
+    {
+        get => _renameIncludeSubdirectories;
+        set
+        {
+            _renameIncludeSubdirectories = value;
             NotifyPropertyChanged();
         }
     }

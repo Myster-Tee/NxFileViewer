@@ -37,5 +37,7 @@ public interface IAppSettings: INotifyPropertyChanged
 
     string? RenamingFileFilters { get; set; }
 
+    bool RenameIncludeSubdirectories { get; set; }
+
     int ProgressBufferSize { get; set; }
 }

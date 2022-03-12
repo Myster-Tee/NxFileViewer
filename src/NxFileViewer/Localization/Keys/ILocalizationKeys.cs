@@ -236,6 +236,8 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string RenamingTool_InvalidWindowsCharReplacement { get; }
     string RenamingTool_ReplaceWhiteSpaceChars { get; }
     string RenamingTool_ReplaceWhiteSpaceCharsWith { get; }
+    string RenamingTool_Simulation { get; }
+    string RenamingTool_IncludeSubDirectories { get; }
 
     string Exception_UnexpectedDelimiter { get; }
     string Exception_EndDelimiterMissing { get; }

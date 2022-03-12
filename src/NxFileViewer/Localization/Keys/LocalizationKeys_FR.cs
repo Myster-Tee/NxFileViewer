@@ -265,6 +265,8 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_InvalidWindowsCharReplacement => "Remplacer les caractères Windows non autorisés avec";
     public string RenamingTool_ReplaceWhiteSpaceChars => "Remplacer les espaces blancs";
     public string RenamingTool_ReplaceWhiteSpaceCharsWith => "Remplacer les espaces blancs avec";
+    public string RenamingTool_Simulation => "Simulation";
+    public string RenamingTool_IncludeSubDirectories => "Inclure les sous répertoires";
 
     public string Exception_UnexpectedDelimiter => "Délimiteur {0} non attendu à la position {1}, utilisez {2}{0} à la place.";
     public string Exception_EndDelimiterMissing => "Le délimiteur de fin {0} est manquant.";

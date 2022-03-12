@@ -27,7 +27,11 @@ namespace Emignatik.NxFileViewer.Commands
         {
             _appSettingsManager = appSettingsManager ?? throw new ArgumentNullException(nameof(appSettingsManager));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+
+
+            _appSettingsManager.Settings.PropertyChanged += OnSettingsPropertyChanged;
         }
+
 
         public override void Execute(object? parameter)
         {
@@ -43,7 +47,7 @@ namespace Emignatik.NxFileViewer.Commands
 
                 var filesRenamerRunnable = _serviceProvider.GetRequiredService<IFilesRenamerRunnable>();
 
-                filesRenamerRunnable.Setup(InputDirectory, namingPatterns, FileFilters, true);
+                filesRenamerRunnable.Setup(InputDirectory, namingPatterns, FileFilters, IncludeSubdirectories);
 
                 _backgroundTaskRunner?.RunAsync(filesRenamerRunnable);
             }
@@ -89,23 +93,19 @@ namespace Emignatik.NxFileViewer.Commands
         public string InputDirectory
         {
             get => _appSettingsManager.Settings.LastUsedDir;
-            set
-            {
-                _appSettingsManager.Settings.LastUsedDir = value;
-                _appSettingsManager.SaveSafe();
-                NotifyPropertyChanged();
-                TriggerCanExecuteChanged();
-            }
+            set => _appSettingsManager.Settings.LastUsedDir = value;
         }
 
         public string? FileFilters
         {
             get => _appSettingsManager.Settings.RenamingFileFilters;
-            set
-            {
-                _appSettingsManager.Settings.RenamingFileFilters = value;
-                NotifyPropertyChanged();
-            }
+            set => _appSettingsManager.Settings.RenamingFileFilters = value;
+        }
+
+        public bool IncludeSubdirectories
+        {
+            get => _appSettingsManager.Settings.RenameIncludeSubdirectories;
+            set => _appSettingsManager.Settings.RenameIncludeSubdirectories = value;
         }
 
         public IBackgroundTaskRunner? BackgroundTaskRunner
@@ -123,12 +123,28 @@ namespace Emignatik.NxFileViewer.Commands
             }
         }
 
+        private void OnSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(IAppSettings.RenamingFileFilters):
+                    NotifyPropertyChanged(nameof(FileFilters));
+                    break;
+                case nameof(IAppSettings.LastUsedDir):
+                    NotifyPropertyChanged(nameof(InputDirectory));
+                    TriggerCanExecuteChanged();
+                    break;
+                case nameof(IAppSettings.RenameIncludeSubdirectories):
+                    NotifyPropertyChanged(nameof(IncludeSubdirectories));
+                    break;
+            }
+        }
+
         private void OnBackgroundTaskRunnerPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(IBackgroundTaskRunner.IsRunning))
                 TriggerCanExecuteChanged();
         }
-
 
         public override bool CanExecute(object? parameter)
         {
@@ -149,5 +165,7 @@ namespace Emignatik.NxFileViewer.Commands
         string? FileFilters { get; set; }
 
         IBackgroundTaskRunner? BackgroundTaskRunner { get; set; }
+
+        public bool IncludeSubdirectories { get; set; }
     }
 }

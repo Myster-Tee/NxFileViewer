@@ -94,6 +94,7 @@
                 <ResourceDictionary Source="Styling/TreeViewStyle.xaml" />
                 <ResourceDictionary Source="Styling/TreeViewItemStyle.xaml" />
                 <ResourceDictionary Source="Styling/ProgressBar.xaml" />
+                <ResourceDictionary Source="Styling/CheckBoxStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
