@@ -14,17 +14,17 @@ namespace Emignatik.NxFileViewer.Commands;
 public class SavePlaintextNcaFileCommand : CommandBase, ISavePlaintextNcaFileCommand
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly IBackgroundTaskService _backgroundTaskService;
+    private readonly IMainBackgroundTaskRunnerService _backgroundTaskRunnerService;
     private readonly ILogger _logger;
     private readonly IPromptService _promptService;
 
     private NcaItem? _ncaItem;
 
 
-    public SavePlaintextNcaFileCommand(ILoggerFactory loggerFactory, IBackgroundTaskService backgroundTaskService, IServiceProvider serviceProvider, IPromptService promptService)
+    public SavePlaintextNcaFileCommand(ILoggerFactory loggerFactory, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, IServiceProvider serviceProvider, IPromptService promptService)
     {
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
-        _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
+        _backgroundTaskRunnerService = backgroundTaskRunnerService ?? throw new ArgumentNullException(nameof(backgroundTaskRunnerService));
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
     }
@@ -52,7 +52,7 @@ public class SavePlaintextNcaFileCommand : CommandBase, ISavePlaintextNcaFileCom
             var saveStorageRunnable = _serviceProvider.GetRequiredService<ISaveStorageRunnable>();
             saveStorageRunnable.Setup(openDecryptedNca, filePath);
 
-            await _backgroundTaskService.RunAsync(saveStorageRunnable);
+            await _backgroundTaskRunnerService.RunAsync(saveStorageRunnable);
         }
         catch (Exception ex)
         {
@@ -62,7 +62,7 @@ public class SavePlaintextNcaFileCommand : CommandBase, ISavePlaintextNcaFileCom
 
     public override bool CanExecute(object? parameter)
     {
-        return _ncaItem != null && !_backgroundTaskService.IsRunning;
+        return _ncaItem != null && !_backgroundTaskRunnerService.IsRunning;
     }
 }
 

@@ -48,9 +48,8 @@ public partial class App : Application
             .AddSingleton<IFileRenamerService, FileRenamerService>()
             .AddSingleton<IOnlineTitleInfoService, OnlineTitleInfoService>()
             .AddSingleton<IOnlineTitlePageOpenerService, OnlineTitlePageOpenerService>()
-            .AddSingleton<BackgroundTaskService>()
-            .AddSingleton<IBackgroundTaskService>(provider => provider.GetRequiredService<BackgroundTaskService>())
-            .AddSingleton<IProgressReporter>(provider => provider.GetRequiredService<BackgroundTaskService>())
+            .AddSingleton<MainBackgroundTaskRunnerService>()
+            .AddSingleton<IMainBackgroundTaskRunnerService>(provider => provider.GetRequiredService<MainBackgroundTaskRunnerService>())
 
             .AddSingleton<IOpenFileCommand, OpenFileCommand>()
             .AddSingleton<IExitAppCommand, ExitAppCommand>()
@@ -64,7 +63,7 @@ public partial class App : Application
             .AddSingleton<ICopyImageCommand, CopyImageCommand>()
             .AddSingleton<ILoadKeysCommand, LoadKeysCommand>()
             .AddSingleton<IOpenTitleWebPageCommand, OpenTitleWebPageCommand>()
-            .AddSingleton<IShowRenameToolWindowCommand, ShowRenameToolToolWindowCommand>()
+            .AddSingleton<IShowRenameToolWindowCommand, ShowRenameToolWindowCommand>()
             .AddSingleton<IRenameFilesCommand, RenameFilesCommand>()
 
             .AddSingleton<INamingPatternsParser, NamingPatternsParser>()
@@ -96,6 +95,7 @@ public partial class App : Application
             .AddTransient<ISaveStorageRunnable, SaveStorageRunnable>()
             .AddTransient<IFsSanitizer, FsSanitizer>()
             .AddTransient<IHttpDownloader, HttpDownloader>()
+            .AddTransient<IBackgroundTaskRunner, BackgroundTaskRunner>()
 
             .AddLogging(builder => builder.AddAppLoggerProvider())
 
@@ -140,7 +140,7 @@ public partial class App : Application
     {
         var keySetProviderService = ServiceProvider.GetRequiredService<IKeySetProviderService>();
         var appSettings = ServiceProvider.GetRequiredService<IAppSettings>();
-        var backgroundTaskService = ServiceProvider.GetRequiredService<IBackgroundTaskService>();
+        var backgroundTaskService = ServiceProvider.GetRequiredService<IMainBackgroundTaskRunnerService>();
 
         var prodKeysDownloadUrl = appSettings.ProdKeysDownloadUrl;
 

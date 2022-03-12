@@ -11,22 +11,22 @@ namespace Emignatik.NxFileViewer.Commands;
 public class VerifyNcasHeaderSignatureCommand : CommandBase, IVerifyNcasHeaderSignatureCommand
 {
     private readonly IOpenedFileService _openedFileService;
-    private readonly IBackgroundTaskService _backgroundTaskService;
+    private readonly IMainBackgroundTaskRunnerService _backgroundTaskRunnerService;
     private readonly IServiceProvider _serviceProvider;
 
-    public VerifyNcasHeaderSignatureCommand(IOpenedFileService openedFileService, IBackgroundTaskService backgroundTaskService, IServiceProvider serviceProvider)
+    public VerifyNcasHeaderSignatureCommand(IOpenedFileService openedFileService, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, IServiceProvider serviceProvider)
     {
         _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
-        _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
+        _backgroundTaskRunnerService = backgroundTaskRunnerService ?? throw new ArgumentNullException(nameof(backgroundTaskRunnerService));
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _openedFileService.OpenedFileChanged += (sender, args) =>
         {
             TriggerCanExecuteChanged();
         };
 
-        _backgroundTaskService.PropertyChanged += (sender, args) =>
+        _backgroundTaskRunnerService.PropertyChanged += (sender, args) =>
         {
-            if (args.PropertyName == nameof(IBackgroundTaskService.IsRunning))
+            if (args.PropertyName == nameof(IMainBackgroundTaskRunnerService.IsRunning))
                 TriggerCanExecuteChanged();
         };
     }
@@ -34,7 +34,7 @@ public class VerifyNcasHeaderSignatureCommand : CommandBase, IVerifyNcasHeaderSi
     public override bool CanExecute(object? parameter)
     {
         var openedFile = _openedFileService.OpenedFile;
-        return openedFile != null && openedFile.Overview.NcaItems.Count > 0 && !_backgroundTaskService.IsRunning;
+        return openedFile != null && openedFile.Overview.NcaItems.Count > 0 && !_backgroundTaskRunnerService.IsRunning;
     }
 
     public override void Execute(object? parameter)
@@ -49,7 +49,7 @@ public class VerifyNcasHeaderSignatureCommand : CommandBase, IVerifyNcasHeaderSi
 
         var verifyNcasHeaderSignatureRunnable = _serviceProvider.GetRequiredService<IVerifyNcasHeaderSignatureRunnable>();
         verifyNcasHeaderSignatureRunnable.Setup(fileOverview);
-        _backgroundTaskService.RunAsync(verifyNcasHeaderSignatureRunnable);
+        _backgroundTaskRunnerService.RunAsync(verifyNcasHeaderSignatureRunnable);
     }
 }
 

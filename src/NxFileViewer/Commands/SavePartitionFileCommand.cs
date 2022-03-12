@@ -13,16 +13,16 @@ namespace Emignatik.NxFileViewer.Commands;
 
 public class SavePartitionFileCommand : CommandBase, ISavePartitionFileCommand
 {
-    private readonly IBackgroundTaskService _backgroundTaskService;
+    private readonly IMainBackgroundTaskRunnerService _backgroundTaskRunnerService;
     private readonly IServiceProvider _serviceProvider;
     private readonly IPromptService _promptService;
     private readonly ILogger _logger;
     private PartitionFileEntryItemBase? _partitionFileItem;
 
-    public SavePartitionFileCommand(ILoggerFactory loggerFactory, IBackgroundTaskService backgroundTaskService, IServiceProvider serviceProvider, IPromptService promptService)
+    public SavePartitionFileCommand(ILoggerFactory loggerFactory, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, IServiceProvider serviceProvider, IPromptService promptService)
     {
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
-        _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
+        _backgroundTaskRunnerService = backgroundTaskRunnerService ?? throw new ArgumentNullException(nameof(backgroundTaskRunnerService));
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
     }
@@ -51,7 +51,7 @@ public class SavePartitionFileCommand : CommandBase, ISavePartitionFileCommand
             var runnable = _serviceProvider.GetRequiredService<ISaveFileRunnable>();
             runnable.Setup(file, filePath);
 
-            await _backgroundTaskService.RunAsync(runnable);
+            await _backgroundTaskRunnerService.RunAsync(runnable);
         }
         catch (Exception ex)
         {
@@ -61,7 +61,7 @@ public class SavePartitionFileCommand : CommandBase, ISavePartitionFileCommand
 
     public override bool CanExecute(object? parameter)
     {
-        return _partitionFileItem != null && !_backgroundTaskService.IsRunning;
+        return _partitionFileItem != null && !_backgroundTaskRunnerService.IsRunning;
     }
 
 }

@@ -104,7 +104,7 @@
         <StatusBar Grid.Row="4">
             <!-- Status Text -->
             <StatusBarItem VerticalAlignment="Center">
-                <TextBlock Text="{Binding Path=BackgroundTask.ProgressText, FallbackValue=Ready.}" ToolTip="{Binding Path=BackgroundTask.ProgressText, FallbackValue=Ready.}" />
+                <TextBlock Text="{Binding Path=BackgroundTaskRunner.ProgressText, FallbackValue=Ready.}" ToolTip="{Binding Path=BackgroundTaskRunner.ProgressText, FallbackValue=Ready.}" />
             </StatusBarItem>
 
             <!-- Missing Keys Icon -->
@@ -126,14 +126,14 @@
             <!-- Progress Bar -->
             <StatusBarItem DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <customControls:ProgressBarExt Width="80" Minimum="0" Maximum="100" Height="18"
-                                               Visibility="{Binding Path=BackgroundTask.IsRunning, Mode=OneWay, Converter={StaticResource FalseToCollapseVisibilityConverter}}"
-                                               Value="{Binding Path=BackgroundTask.ProgressValue, Mode=OneWay, FallbackValue=70}" 
-                                               ValueText="{Binding Path=BackgroundTask.ProgressValueText, Mode=OneWay, FallbackValue=70%}"
-                                               IsIndeterminate="{Binding Path=BackgroundTask.IsIndeterminate, Mode=OneWay, FallbackValue=True}">
+                                               Visibility="{Binding Path=BackgroundTaskRunner.IsRunning, Mode=OneWay, Converter={StaticResource FalseToCollapseVisibilityConverter}}"
+                                               Value="{Binding Path=BackgroundTaskRunner.ProgressValue, Mode=OneWay, FallbackValue=70}" 
+                                               ValueText="{Binding Path=BackgroundTaskRunner.ProgressValueText, Mode=OneWay, FallbackValue=70%}"
+                                               IsIndeterminate="{Binding Path=BackgroundTaskRunner.IsIndeterminate, Mode=OneWay, FallbackValue=True}">
 
                     <customControls:ProgressBarExt.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding BackgroundTask.CancelCommand}" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CancelAction}" />
+                            <MenuItem Command="{Binding BackgroundTaskRunner.CancelCommand}" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CancelAction}" />
                         </ContextMenu>
                     </customControls:ProgressBarExt.ContextMenu>
 

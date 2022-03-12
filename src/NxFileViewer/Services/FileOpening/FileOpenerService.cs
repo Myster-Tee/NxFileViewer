@@ -15,15 +15,15 @@ public class FileOpenerService : IFileOpenerService
     private readonly IOpenedFileService _openedFileService;
     private readonly IAppSettings _appSettings;
     private readonly IFileLoader _fileLoader;
-    private readonly IBackgroundTaskService _backgroundTaskService;
+    private readonly IMainBackgroundTaskRunnerService _backgroundTaskRunnerService;
     private readonly ILogger _logger;
 
-    public FileOpenerService(IOpenedFileService openedFileService, ILoggerFactory loggerFactory, IAppSettings appSettings, IFileLoader fileLoader, IBackgroundTaskService backgroundTaskService)
+    public FileOpenerService(IOpenedFileService openedFileService, ILoggerFactory loggerFactory, IAppSettings appSettings, IFileLoader fileLoader, IMainBackgroundTaskRunnerService backgroundTaskRunnerService)
     {
         _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
         _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
         _fileLoader = fileLoader ?? throw new ArgumentNullException(nameof(fileLoader));
-        _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
+        _backgroundTaskRunnerService = backgroundTaskRunnerService ?? throw new ArgumentNullException(nameof(backgroundTaskRunnerService));
         _logger = loggerFactory.CreateLogger(this.GetType());
     }
 
@@ -44,7 +44,7 @@ public class FileOpenerService : IFileOpenerService
                 SupportsCancellation = false
             };
 
-            var nxFile = await _backgroundTaskService.RunAsync(runnableRelay);
+            var nxFile = await _backgroundTaskRunnerService.RunAsync(runnableRelay);
 
             _openedFileService.OpenedFile = nxFile;
         }

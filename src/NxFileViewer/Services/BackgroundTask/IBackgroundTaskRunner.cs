@@ -5,9 +5,9 @@ using System.Windows.Input;
 namespace Emignatik.NxFileViewer.Services.BackgroundTask
 {
     /// <summary>
-    /// The service in charge of launching tasks in background
+    /// Exposes a logic for launching a task in background and reporting progress
     /// </summary>
-    public interface IBackgroundTaskService : INotifyPropertyChanged
+    public interface IBackgroundTaskRunner : INotifyPropertyChanged
     {
         /// <summary>
         /// The progress text

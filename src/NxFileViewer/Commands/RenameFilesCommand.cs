@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Input;
+using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Addon;
@@ -19,6 +20,7 @@ namespace Emignatik.NxFileViewer.Commands
         private List<ApplicationPatternPart>? _applicationPatternParts;
         private List<PatchPatternPart>? _patchPatternParts;
         private List<AddonPatternPart>? _addonPatternParts;
+        private IBackgroundTaskRunner? _backgroundTaskRunner;
 
         public RenameFilesCommand(IFileRenamerService fileRenamerService, IAppSettingsManager appSettingsManager)
         {
@@ -39,6 +41,10 @@ namespace Emignatik.NxFileViewer.Commands
                 };
 
                 var cts = new CancellationTokenSource();
+
+                //_backgroundTaskRunner.RunAsync()
+
+
                 _fileRenamerService.RenameFromDirectoryAsync(InputDirectory, namingPatterns, new[] { ".nsp", ".nsz", ".xci", ".xcz" }, true, cts.Token);
             }
             catch (Exception ex)
@@ -92,10 +98,21 @@ namespace Emignatik.NxFileViewer.Commands
             }
         }
 
+        public IBackgroundTaskRunner? BackgroundTaskRunner
+        {
+            get => _backgroundTaskRunner;
+            set
+            {
+                _backgroundTaskRunner = value;
+                NotifyPropertyChanged();
+                TriggerCanExecuteChanged();
+            }
+        }
+
 
         public override bool CanExecute(object? parameter)
         {
-            return _applicationPatternParts != null && _patchPatternParts != null && _addonPatternParts != null;
+            return _applicationPatternParts != null && _patchPatternParts != null && _addonPatternParts != null && _backgroundTaskRunner != null;
         }
     }
 
@@ -108,5 +125,7 @@ namespace Emignatik.NxFileViewer.Commands
         List<AddonPatternPart>? AddonPatternParts { get; set; }
 
         string InputDirectory { get; set; }
+
+        IBackgroundTaskRunner? BackgroundTaskRunner { get; set; }
     }
 }

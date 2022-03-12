@@ -41,7 +41,7 @@ namespace Emignatik.NxFileViewer.Views.Windows
             IFileOpenerService fileOpenerService,
             IServiceProvider serviceProvider,
             ILogSource logSource,
-            IBackgroundTaskService backgroundTaskService,
+            IMainBackgroundTaskRunnerService backgroundTaskRunnerService,
             IShowRenameToolWindowCommand showRenameToolWindowCommand)
         {
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
@@ -55,7 +55,7 @@ namespace Emignatik.NxFileViewer.Views.Windows
             LoadKeysCommand = loadKeysCommand ?? throw new ArgumentNullException(nameof(loadKeysCommand));
             ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             LogSource = logSource ?? throw new ArgumentNullException(nameof(logSource));
-            BackgroundTask = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
+            BackgroundTaskRunner = backgroundTaskRunnerService ?? throw new ArgumentNullException(nameof(backgroundTaskRunnerService));
             OpenLastFileCommand = openLastFileCommand ?? throw new ArgumentNullException(nameof(openLastFileCommand));
             CloseFileCommand = closeFileCommand ?? throw new ArgumentNullException(nameof(closeFileCommand));
             OpenTitleWebPageCommand = openTitleWebPageCommand ?? throw new ArgumentNullException(nameof(openTitleWebPageCommand));
@@ -118,7 +118,7 @@ namespace Emignatik.NxFileViewer.Views.Windows
 
         public ILogSource LogSource { get; }
 
-        public IBackgroundTaskService BackgroundTask { get; }
+        public IMainBackgroundTaskRunnerService BackgroundTaskRunner { get; }
 
         public bool ErrorAnimationEnabled
         {

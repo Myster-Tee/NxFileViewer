@@ -11,14 +11,14 @@ namespace Emignatik.NxFileViewer.Commands;
 public class VerifyNcasHashCommand : CommandBase, IVerifyNcasHashCommand
 {
     private readonly IOpenedFileService _openedFileService;
-    private readonly IBackgroundTaskService _backgroundTaskService;
+    private readonly IMainBackgroundTaskRunnerService _backgroundTaskRunnerService;
     private readonly IServiceProvider _serviceProvider;
 
 
-    public VerifyNcasHashCommand(IOpenedFileService openedFileService, IBackgroundTaskService backgroundTaskService, IServiceProvider serviceProvider)
+    public VerifyNcasHashCommand(IOpenedFileService openedFileService, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, IServiceProvider serviceProvider)
     {
         _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
-        _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
+        _backgroundTaskRunnerService = backgroundTaskRunnerService ?? throw new ArgumentNullException(nameof(backgroundTaskRunnerService));
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
         _openedFileService.OpenedFileChanged += (sender, args) =>
@@ -26,9 +26,9 @@ public class VerifyNcasHashCommand : CommandBase, IVerifyNcasHashCommand
             TriggerCanExecuteChanged();
         };
 
-        _backgroundTaskService.PropertyChanged += (sender, args) =>
+        _backgroundTaskRunnerService.PropertyChanged += (sender, args) =>
         {
-            if (args.PropertyName == nameof(IBackgroundTaskService.IsRunning))
+            if (args.PropertyName == nameof(IMainBackgroundTaskRunnerService.IsRunning))
                 TriggerCanExecuteChanged();
         };
     }
@@ -36,7 +36,7 @@ public class VerifyNcasHashCommand : CommandBase, IVerifyNcasHashCommand
     public override bool CanExecute(object? parameter)
     {
         var openedFile = _openedFileService.OpenedFile;
-        return openedFile != null && openedFile.Overview.NcaItems.Count > 0 && !_backgroundTaskService.IsRunning;
+        return openedFile != null && openedFile.Overview.NcaItems.Count > 0 && !_backgroundTaskRunnerService.IsRunning;
     }
 
     public override void Execute(object? parameter)
@@ -51,7 +51,7 @@ public class VerifyNcasHashCommand : CommandBase, IVerifyNcasHashCommand
 
         var verifyNcasHashRunnable = _serviceProvider.GetRequiredService<IVerifyNcasHashRunnable>();
         verifyNcasHashRunnable.Setup(fileOverview);
-        _backgroundTaskService.RunAsync(verifyNcasHashRunnable);
+        _backgroundTaskRunnerService.RunAsync(verifyNcasHashRunnable);
     }
 }
 

@@ -16,17 +16,17 @@ public class SaveSectionContentCommand : CommandBase, ISaveSectionContentCommand
 {
     private readonly IPromptService _promptService;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IBackgroundTaskService _backgroundTaskService;
+    private readonly IMainBackgroundTaskRunnerService _backgroundTaskRunnerService;
     private readonly ILogger _logger;
 
     private SectionItem? _sectionItem;
 
-    public SaveSectionContentCommand(IPromptService promptService, IServiceProvider serviceProvider, IBackgroundTaskService backgroundTaskService, ILoggerFactory loggerFactory)
+    public SaveSectionContentCommand(IPromptService promptService, IServiceProvider serviceProvider, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, ILoggerFactory loggerFactory)
     {
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-        _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
+        _backgroundTaskRunnerService = backgroundTaskRunnerService ?? throw new ArgumentNullException(nameof(backgroundTaskRunnerService));
     }
 
     public SectionItem SectionItem
@@ -54,7 +54,7 @@ public class SaveSectionContentCommand : CommandBase, ISaveSectionContentCommand
             var runnable = _serviceProvider.GetRequiredService<ISaveDirectoryRunnable>();
             runnable.Setup(_sectionItem.ChildItems, targetDirPath);
 
-            await _backgroundTaskService.RunAsync(runnable);
+            await _backgroundTaskRunnerService.RunAsync(runnable);
         }
         catch (Exception ex)
         {
@@ -65,7 +65,7 @@ public class SaveSectionContentCommand : CommandBase, ISaveSectionContentCommand
 
     public override bool CanExecute(object? parameter)
     {
-        return _sectionItem != null && !_backgroundTaskService.IsRunning;
+        return _sectionItem != null && !_backgroundTaskRunnerService.IsRunning;
     }
 }
 

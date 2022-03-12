@@ -22,7 +22,7 @@ namespace Emignatik.NxFileViewer.Views.Windows;
 public class SettingsWindowViewModel : WindowViewModelBase
 {
     private readonly IAppSettingsManager _appSettingsManager;
-    private readonly IBackgroundTaskService _backgroundTaskService;
+    private readonly IMainBackgroundTaskRunnerService _backgroundTaskRunnerService;
     private readonly IServiceProvider _serviceProvider;
     private readonly IKeySetProviderService _keySetProviderService;
     private readonly IAppSettings _appSettings;
@@ -39,15 +39,11 @@ public class SettingsWindowViewModel : WindowViewModelBase
     private bool _alwaysReloadKeysBeforeOpen;
 
 
-    public SettingsWindowViewModel(
-        IAppSettingsManager appSettingsManager,
-        IBackgroundTaskService backgroundTaskService,
-        IServiceProvider serviceProvider,
-        IKeySetProviderService keySetProviderService,
-        ILoggerFactory loggerFactory)
+    public SettingsWindowViewModel(IAppSettingsManager appSettingsManager, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, IServiceProvider serviceProvider,
+        IKeySetProviderService keySetProviderService, ILoggerFactory loggerFactory)
     {
         _appSettingsManager = appSettingsManager ?? throw new ArgumentNullException(nameof(appSettingsManager));
-        _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
+        _backgroundTaskRunnerService = backgroundTaskRunnerService ?? throw new ArgumentNullException(nameof(backgroundTaskRunnerService));
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _keySetProviderService = keySetProviderService ?? throw new ArgumentNullException(nameof(keySetProviderService));
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
@@ -75,9 +71,9 @@ public class SettingsWindowViewModel : WindowViewModelBase
         TitlePageUrl = _appSettings.TitlePageUrl;
         this.SelectedLanguage = LocalizationManager.Instance.Current;
 
-        _backgroundTaskService.PropertyChanged += (_, args) =>
+        _backgroundTaskRunnerService.PropertyChanged += (_, args) =>
         {
-            if (args.PropertyName == nameof(IBackgroundTaskService.IsRunning))
+            if (args.PropertyName == nameof(IMainBackgroundTaskRunnerService.IsRunning))
             {
                 DownloadProdKeysCommand.TriggerCanExecuteChanged();
                 DownloadTitleKeysCommand.TriggerCanExecuteChanged();
@@ -237,7 +233,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
     {
         var downloadFileRunnable = _serviceProvider.GetRequiredService<IDownloadFileRunnable>();
         downloadFileRunnable.Setup(ProdKeysDownloadUrl, _keySetProviderService.AppDirProdKeysFilePath);
-        await _backgroundTaskService.RunAsync(downloadFileRunnable);
+        await _backgroundTaskRunnerService.RunAsync(downloadFileRunnable);
         _keySetProviderService.Reset();
     }
 
@@ -245,18 +241,18 @@ public class SettingsWindowViewModel : WindowViewModelBase
     {
         var downloadFileRunnable = _serviceProvider.GetRequiredService<IDownloadFileRunnable>();
         downloadFileRunnable.Setup(TitleKeysDownloadUrl, _keySetProviderService.AppDirTitleKeysFilePath);
-        await _backgroundTaskService.RunAsync(downloadFileRunnable);
+        await _backgroundTaskRunnerService.RunAsync(downloadFileRunnable);
         _keySetProviderService.Reset();
     }
 
     private bool CanDownloadTitleKeys()
     {
-        return !_backgroundTaskService.IsRunning;
+        return !_backgroundTaskRunnerService.IsRunning;
     }
 
     private bool CanDownloadProdKeys()
     {
-        return !_backgroundTaskService.IsRunning;
+        return !_backgroundTaskRunnerService.IsRunning;
     }
 
 
