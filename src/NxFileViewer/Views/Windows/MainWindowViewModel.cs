@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using System.Timers;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Logging;
@@ -24,7 +23,6 @@ namespace Emignatik.NxFileViewer.Views.Windows
         private string _title = "";
         private readonly IOpenedFileService _openedFileService;
         private bool _errorAnimationEnabled;
-        private readonly Timer _animationDurationTimer;
 
         public MainWindowViewModel(
             ILoggerFactory loggerFactory,
@@ -69,8 +67,7 @@ namespace Emignatik.NxFileViewer.Views.Windows
             _openedFileService.OpenedFileChanged += OnOpenedFileChanged;
             LogSource.Log += OnLog;
 
-            _animationDurationTimer = new Timer(3000);
-            _animationDurationTimer.Elapsed += OnAnimationDurationTimerElapsed;
+
 
         }
 
@@ -130,18 +127,11 @@ namespace Emignatik.NxFileViewer.Views.Windows
             }
         }
 
-        private void OnAnimationDurationTimerElapsed(object? sender, ElapsedEventArgs e)
-        {
-            this.ErrorAnimationEnabled = false;
-        }
-
         private void OnLog(LogLevel logLevel, string message)
         {
             if (logLevel == LogLevel.Error)
             {
                 this.ErrorAnimationEnabled = true;
-                _animationDurationTimer.Stop();
-                _animationDurationTimer.Start();
             }
         }
 

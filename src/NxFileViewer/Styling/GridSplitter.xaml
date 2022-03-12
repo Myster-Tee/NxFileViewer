@@ -1,15 +1,16 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime"
+                    xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls">
 
 
-    <Style x:Key="HorizontalGridSplitterStyle" TargetType="GridSplitter">
+    <Style TargetType="customControls:GridSplitterEx">
         <Setter Property="Background" Value="Gainsboro" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Foreground" Value="Gray" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate>
+                <ControlTemplate TargetType="customControls:GridSplitterEx">
                     <ControlTemplate.Resources>
                         <system:Double x:Key="DotSize">4</system:Double>
                         <Thickness x:Key="Spacing">0,0,2,0</Thickness>
@@ -22,9 +23,36 @@
                             <Ellipse Width="{StaticResource DotSize}" Height="{StaticResource DotSize}" Fill="{TemplateBinding Foreground}" Margin="{StaticResource Spacing}" />
                         </StackPanel>
                     </Border>
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <DataTrigger Value="True">
+                <DataTrigger.Binding>
+                    <Binding RelativeSource="{RelativeSource Self}" Path="TriggerAnimation" />
+                </DataTrigger.Binding>
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard FillBehavior="Stop">
+                            <ColorAnimation To="Red"
+                                            Storyboard.TargetProperty="(GridSplitter.Foreground).(SolidColorBrush.Color)"
+                                            AutoReverse="True" 
+                                            Duration="0:0:0.3"
+                                            RepeatBehavior="Forever" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+                <DataTrigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard FillBehavior="Stop">
+                            <ColorAnimation Storyboard.TargetProperty="(GridSplitter.Foreground).(SolidColorBrush.Color)"
+                                            Duration="0:0:0.3" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.ExitActions>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>

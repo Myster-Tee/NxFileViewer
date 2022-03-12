@@ -35,7 +35,7 @@
                 </cc:ErrorTreeView.ItemTemplate>
             </cc:ErrorTreeView>
         </GroupBox>
-        <GridSplitter Grid.Row="1" ResizeDirection="Rows" Style="{StaticResource HorizontalGridSplitterStyle}" />
+        <cc:GridSplitterEx Grid.Row="1" ResizeDirection="Rows"/>
         <GroupBox Grid.Row="2" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.GroupBoxProperties}">
             <objectPropertyViewer:PropertiesView DataContext="{Binding Path=SelectedItem}" />
         </GroupBox>

@@ -53,7 +53,7 @@
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_VerifyNcasHeaderSignature}" 
                           Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" InputGestureText="Ctrl+F5" />
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_ReloadKeys}" 
-                          Command="{Binding Path=LoadKeysCommand}" InputGestureText="F10" />             
+                          Command="{Binding Path=LoadKeysCommand}" InputGestureText="F10" />
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_OpenTitleWebPage}" 
                           Command="{Binding Path=OpenTitleWebPageCommand}" InputGestureText="F9" />
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_ShowRenameToolWindow}" 
@@ -68,37 +68,7 @@
         <ContentControl Grid.Row="1" Content="{Binding Path=OpenedFile, Mode=TwoWay}"
                             ContentTemplateSelector="{StaticResource OpenedFileDataTemplateSelector}" />
 
-        <GridSplitter Grid.Row="2" ResizeDirection="Rows">
-            <GridSplitter.Style>
-                <Style TargetType="GridSplitter" BasedOn="{StaticResource HorizontalGridSplitterStyle}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ErrorAnimationEnabled}" Value="True">
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard FillBehavior="Stop">
-                                        <ColorAnimation  
-                                                To="Red"
-                                                Storyboard.TargetProperty="(GridSplitter.Foreground).(SolidColorBrush.Color)"
-                                                AutoReverse="True" 
-                                                Duration="0:0:0.3"
-                                                RepeatBehavior="Forever" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-                            <DataTrigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard FillBehavior="Stop">
-                                        <ColorAnimation  
-                                                Storyboard.TargetProperty="(GridSplitter.Foreground).(SolidColorBrush.Color)"
-                                                Duration="0:0:0.3" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.ExitActions>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </GridSplitter.Style>
-        </GridSplitter>
+        <customControls:GridSplitterEx Grid.Row="2" ResizeDirection="Rows" TriggerAnimation="{Binding Path=ErrorAnimationEnabled, Mode=TwoWay}" />
         <userControls:LoggingView Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LogSource="{Binding LogSource, Mode=OneWay}" />
 
         <StatusBar Grid.Row="4">
