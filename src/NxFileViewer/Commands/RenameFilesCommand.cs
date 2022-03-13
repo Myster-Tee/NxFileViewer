@@ -33,7 +33,6 @@ namespace Emignatik.NxFileViewer.Commands
             _appSettingsManager.Settings.PropertyChanged += OnSettingsPropertyChanged;
         }
 
-
         public List<ApplicationPatternPart>? ApplicationPatternParts
         {
             get => _applicationPatternParts;
