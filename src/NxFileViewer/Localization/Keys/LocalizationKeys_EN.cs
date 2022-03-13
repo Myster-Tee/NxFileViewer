@@ -270,6 +270,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_FailedToRenameFile => "Failed to rename file «{0}»: {1}";
     public string RenamingTool_ContentTypeNotSupported => "Content type «{0}» not supported.";
     public string RenamingTool_SuperPackageNotSupported => "Super package not supported.";
+    public string RenamingTool_LogNbFilesToRename => ">>> {0} file(s) to rename...";
     public string RenamingTool_LogSimulationMode => $"[SIMULATION] ";
     public string RenamingTool_LogFileRenamed => $"• {{0}}File renamed from{Environment.NewLine}\t«{{1}}» to{Environment.NewLine}\t«{{2}}».";
     public string RenamingTool_LogFileAlreadyNamedProperly => "• {0}«{1}» already named correctly.";

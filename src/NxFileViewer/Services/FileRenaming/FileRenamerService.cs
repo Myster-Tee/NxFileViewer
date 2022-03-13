@@ -43,8 +43,10 @@ public class FileRenamerService : IFileRenamerService
             return fileFiltersRegex == null || fileFiltersRegex.Any(regex => regex.IsMatch(file.Name));
         }).ToArray();
 
-        var logPrefix = isSimulation ? $"{LocalizationManager.Instance.Current.Keys.RenamingTool_LogSimulationMode}" : "";
 
+        logger?.LogInformation(LocalizationManager.Instance.Current.Keys.RenamingTool_LogNbFilesToRename.SafeFormat(matchingFiles.Length));
+
+        var logPrefix = isSimulation ? $"{LocalizationManager.Instance.Current.Keys.RenamingTool_LogSimulationMode}" : "";
 
         for (var index = 0; index < matchingFiles.Length; index++)
         {
@@ -56,7 +58,6 @@ public class FileRenamerService : IFileRenamerService
             try
             {
                 var renamingResult = await RenameFileAsyncInternal(matchingFile, namingPatterns, isSimulation, cancellationToken);
-
 
                 if (renamingResult.IsRenamed)
                 {

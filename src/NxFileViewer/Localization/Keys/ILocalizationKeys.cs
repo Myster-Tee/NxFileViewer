@@ -241,6 +241,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string RenamingTool_FailedToRenameFile { get; }
     string RenamingTool_ContentTypeNotSupported { get; }
     string RenamingTool_SuperPackageNotSupported { get; }
+    string RenamingTool_LogNbFilesToRename { get; }
     string RenamingTool_LogSimulationMode { get; }
     string RenamingTool_LogFileRenamed { get; }
     string RenamingTool_LogFileAlreadyNamedProperly { get; }
