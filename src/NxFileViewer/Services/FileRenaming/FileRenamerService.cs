@@ -6,7 +6,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
+using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
+using Emignatik.NxFileViewer.Services.FileRenaming.Exceptions;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Addon;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
@@ -21,21 +23,16 @@ public class FileRenamerService : IFileRenamerService
 {
     private readonly IPackageInfoLoader _packageInfoLoader;
     private readonly IOnlineTitleInfoService _onlineTitleInfoService;
-    private readonly ILogger _logger;
 
-    public FileRenamerService(ILoggerFactory loggerFactory, IPackageInfoLoader packageInfoLoader, IOnlineTitleInfoService onlineTitleInfoService)
+    public FileRenamerService(IPackageInfoLoader packageInfoLoader, IOnlineTitleInfoService onlineTitleInfoService)
     {
         _packageInfoLoader = packageInfoLoader ?? throw new ArgumentNullException(nameof(packageInfoLoader));
         _onlineTitleInfoService = onlineTitleInfoService ?? throw new ArgumentNullException(nameof(onlineTitleInfoService));
-        _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
-
     }
 
-    public async Task RenameFromDirectoryAsync(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
+    public async Task RenameFromDirectoryAsync(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubdirectories, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
     {
-        var searchOption = simulation ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-
-        logger?.LogWarning("Hello World!");
+        var searchOption = includeSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
         var directoryInfo = new DirectoryInfo(inputDirectory);
 
@@ -46,25 +43,45 @@ public class FileRenamerService : IFileRenamerService
             return fileFiltersRegex == null || fileFiltersRegex.Any(regex => regex.IsMatch(file.Name));
         }).ToArray();
 
+        var logPrefix = isSimulation ? $"{LocalizationManager.Instance.Current.Keys.RenamingTool_LogSimulationMode}" : "";
+
+
         foreach (var matchingFile in matchingFiles)
         {
-            // TODO: try/catcher et loguer
-            var newFileName = await RenameFileAsyncInternal(matchingFile, namingPatterns, cancellationToken);
-            logger?.LogInformation(newFileName);
-            Thread.Sleep(5000);
+            try
+            {
+                var renamingResult = await RenameFileAsyncInternal(matchingFile, namingPatterns, isSimulation, cancellationToken);
+
+
+                if (renamingResult.IsRenamed)
+                {
+                    var message = LocalizationManager.Instance.Current.Keys.RenamingTool_LogFileRenamed.SafeFormat(logPrefix, renamingResult.OldFileName, renamingResult.NewFileName);
+                    logger?.LogWarning(message);
+                }
+                else
+                {
+                    logger?.LogInformation(LocalizationManager.Instance.Current.Keys.RenamingTool_LogFileAlreadyNamedProperly.SafeFormat(logPrefix, renamingResult.OldFileName));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger?.LogError(ex, LocalizationManager.Instance.Current.Keys.RenamingTool_FailedToRenameFile.SafeFormat(matchingFile.FullName, ex.Message));
+            }
         }
     }
 
-    public Task<string?> RenameFileAsync(string inputFile, INamingPatterns namingPatterns, CancellationToken cancellationToken)
+    public Task<RenamingResult> RenameFileAsync(string inputFile, INamingPatterns namingPatterns, bool isSimulation, CancellationToken cancellationToken)
     {
-        return RenameFileAsyncInternal(new FileInfo(inputFile), namingPatterns, cancellationToken);
+        return RenameFileAsyncInternal(new FileInfo(inputFile), namingPatterns, isSimulation, cancellationToken);
     }
 
-    private async Task<string?> RenameFileAsyncInternal(FileInfo inputFile, INamingPatterns namingPatterns, CancellationToken cancellationToken)
+    private async Task<RenamingResult> RenameFileAsyncInternal(FileInfo inputFile, INamingPatterns namingPatterns, bool isSimulation, CancellationToken cancellationToken)
     {
-        string? newFileName = null;
+        string newFileName;
 
         var packageInfo = _packageInfoLoader.GetPackageInfo(inputFile.FullName);
+        var oldFileName = inputFile.Name;
 
         if (packageInfo.Contents.Count == 1)
         {
@@ -82,24 +99,29 @@ public class FileRenamerService : IFileRenamerService
                     newFileName = await ComputeAddonPackageFileName(content, packageInfo.AccuratePackageType, namingPatterns.AddonPattern, cancellationToken);
                     break;
                 default:
-                    //TODO: loguer comme quoi pas supporté
-                    break;
+                    throw new ContentTypeNotSupportedException(content.Type);
             }
-
         }
         else
         {
-            //TODO: gérer les super NSP/XCI
+            //TODO: supporter les super NSP/XCI
+            throw new SuperPackageNotSupportedException();
         }
 
-        if (newFileName != null && newFileName != inputFile.Name && inputFile.DirectoryName != null)
+        var shouldBeRenamed = !string.Equals(newFileName, oldFileName);
+        if (!isSimulation && shouldBeRenamed)
         {
-            var destFileName = Path.Combine(inputFile.DirectoryName, newFileName);
-            // TODO: gérer le problème d'écrasement
-            inputFile.MoveTo(destFileName);
+            var destFileName = Path.Combine(inputFile.DirectoryName!, newFileName);
+            inputFile.MoveTo(destFileName, false);
         }
 
-        return newFileName;
+        return new RenamingResult
+        {
+            IsSimulation = isSimulation,
+            IsRenamed = shouldBeRenamed,
+            OldFileName = oldFileName,
+            NewFileName = newFileName,
+        };
     }
 
     private static string ComputeApplicationPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<ApplicationPatternPart> patternParts, CancellationToken cancellationToken)
@@ -257,4 +279,3 @@ public class FileRenamerService : IFileRenamerService
     }
 
 }
-

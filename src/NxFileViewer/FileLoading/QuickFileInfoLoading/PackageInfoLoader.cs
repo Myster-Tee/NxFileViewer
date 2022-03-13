@@ -6,6 +6,7 @@ using Emignatik.NxFileViewer.Utils;
 using LibHac.Common.Keys;
 using LibHac.Fs;
 using LibHac.FsSystem;
+using LibHac.Tools.Fs;
 using ContentType = LibHac.Ncm.ContentType;
 
 namespace Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
@@ -37,7 +38,7 @@ public class PackageInfoLoader : IPackageInfoLoader
                 break;
             case PackageType.NSP:
                 contents = LoadNspContents(filePath, keySet, out accuratePackageType);
-                
+
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -60,16 +61,46 @@ public class PackageInfoLoader : IPackageInfoLoader
         var fileStorage = new FileStorage(localFile);
         var nspPartition = new PartitionFileSystem(fileStorage);
 
-        accuratePackageType = nspPartition.Files.Any(entry => entry.Name.EndsWith(".ncz", StringComparison.OrdinalIgnoreCase)) ? 
-            AccuratePackageType.NSZ :
-            AccuratePackageType.NSP;
+        var contents = LoadContentsFromPartition(nspPartition, keySet, out var containsNcz);
+
+        accuratePackageType = containsNcz ? AccuratePackageType.NSZ : AccuratePackageType.NSP;
+
+        return contents;
+    }
+
+    private static List<Content> LoadXciContents(string filePath, KeySet keySet, out AccuratePackageType accuratePackageType)
+    {
+        accuratePackageType = AccuratePackageType.XCI;
+
+        using var localFile = new LocalFile(filePath, OpenMode.Read);
+
+        var fileStorage = new FileStorage(localFile);
+        var xci = new Xci(keySet, fileStorage);
 
         var contents = new List<Content>();
 
-        foreach (var cnmt in nspPartition.LoadCnmts(keySet))
+        if (xci.HasPartition(XciPartitionType.Secure))
         {
+            var xciPartition = xci.OpenPartition(XciPartitionType.Secure);
 
+            var partitionContents = LoadContentsFromPartition(xciPartition, keySet, out var containsNcz);
+            contents.AddRange(partitionContents);
 
+            if (accuratePackageType == AccuratePackageType.XCI && containsNcz)
+                accuratePackageType = AccuratePackageType.XCZ;
+        }
+
+        return contents;
+    }
+
+    private static List<Content> LoadContentsFromPartition(PartitionFileSystem partition, KeySet keySet, out bool containsNcz)
+    {
+        containsNcz = partition.Files.Any(entry => entry.Name.EndsWith(".ncz", StringComparison.OrdinalIgnoreCase));
+
+        var contents = new List<Content>();
+
+        foreach (var cnmt in partition.LoadCnmts(keySet))
+        {
             var content = new Content(cnmt);
             contents.Add(content);
 
@@ -79,27 +110,16 @@ public class PackageInfoLoader : IPackageInfoLoader
             {
                 var ncaId = ncaControlEntry.NcaId.ToStrId();
 
-                var nacp = nspPartition.LoadNacp(ncaId, keySet);
+                var nacp = partition.LoadNacp(ncaId, keySet);
 
                 if (nacp != null)
                 {
                     content.NacpData = new NacpData(nacp.Value);
                 }
-
             }
         }
 
         return contents;
-        //TODO: à finir
     }
-
-    private static List<Content> LoadXciContents(string filePath, KeySet keySet, out AccuratePackageType accuratePackageType)
-    {
-        accuratePackageType = default;
-        return new List<Content>();
-        //TODO: à finir
-    }
-
-
 
 }
