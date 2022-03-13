@@ -46,8 +46,13 @@ public class FileRenamerService : IFileRenamerService
         var logPrefix = isSimulation ? $"{LocalizationManager.Instance.Current.Keys.RenamingTool_LogSimulationMode}" : "";
 
 
-        foreach (var matchingFile in matchingFiles)
+        for (var index = 0; index < matchingFiles.Length; index++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var matchingFile = matchingFiles[index];
+            progressReporter.SetText(matchingFile.Name);
+
             try
             {
                 var renamingResult = await RenameFileAsyncInternal(matchingFile, namingPatterns, isSimulation, cancellationToken);
@@ -62,13 +67,15 @@ public class FileRenamerService : IFileRenamerService
                 {
                     logger?.LogInformation(LocalizationManager.Instance.Current.Keys.RenamingTool_LogFileAlreadyNamedProperly.SafeFormat(logPrefix, renamingResult.OldFileName));
                 }
-
             }
             catch (Exception ex)
             {
                 logger?.LogError(ex, LocalizationManager.Instance.Current.Keys.RenamingTool_FailedToRenameFile.SafeFormat(matchingFile.FullName, ex.Message));
             }
+
+            progressReporter.SetPercentage((index + 1) / (double)matchingFiles.Length);
         }
+        progressReporter.SetText("");
     }
 
     public Task<RenamingResult> RenameFileAsync(string inputFile, INamingPatterns namingPatterns, bool isSimulation, CancellationToken cancellationToken)
@@ -130,6 +137,7 @@ public class FileRenamerService : IFileRenamerService
 
         foreach (var patternPart in patternParts)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             switch (patternPart)
             {
                 case StaticTextApplicationPatternPart staticText:
@@ -181,6 +189,8 @@ public class FileRenamerService : IFileRenamerService
 
         foreach (var patternPart in patternParts)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             switch (patternPart)
             {
                 case StaticTextPatchPatternPart staticText:
@@ -232,6 +242,8 @@ public class FileRenamerService : IFileRenamerService
 
         foreach (var patternPart in patternParts)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             switch (patternPart)
             {
                 case StaticTextAddonPatternPart staticText:
