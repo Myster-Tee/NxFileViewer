@@ -100,8 +100,14 @@ namespace Emignatik.NxFileViewer.Commands
 
         public bool ReplaceWhiteSpaceChars
         {
-            get => _appSettingsManager.Settings.ReplaceWhiteSpaceChars;
-            set => _appSettingsManager.Settings.ReplaceWhiteSpaceChars = value;
+            get => _appSettingsManager.Settings.RenameReplaceWhiteSpaceChars;
+            set => _appSettingsManager.Settings.RenameReplaceWhiteSpaceChars = value;
+        }
+
+        public string WhiteSpaceCharsReplacement
+        {
+            get => _appSettingsManager.Settings.RenameWhiteSpaceCharsReplacement;
+            set => _appSettingsManager.Settings.RenameWhiteSpaceCharsReplacement = value;
         }
 
         public IBackgroundTaskRunner? BackgroundTaskRunner
@@ -129,6 +135,8 @@ namespace Emignatik.NxFileViewer.Commands
                     PatchPattern = PatchPatternParts!,
                     AddonPattern = AddonPatternParts!,
                     InvalidWindowsCharsReplacement = InvalidWindowsCharsReplacement,
+                    ReplaceWhiteSpaceChars = ReplaceWhiteSpaceChars,
+                    WhiteSpaceCharsReplacement = WhiteSpaceCharsReplacement,
                 };
 
                 var filesRenamerRunnable = _serviceProvider.GetRequiredService<IFilesRenamerRunnable>();
@@ -162,6 +170,9 @@ namespace Emignatik.NxFileViewer.Commands
                     break;            
                 case nameof(IAppSettings.RenameInvalidWindowsCharsReplacement):
                     NotifyPropertyChanged(nameof(InvalidWindowsCharsReplacement));
+                    break;               
+                case nameof(IAppSettings.RenameWhiteSpaceCharsReplacement):
+                    NotifyPropertyChanged(nameof(WhiteSpaceCharsReplacement));
                     break;
             }
         }
@@ -201,5 +212,7 @@ namespace Emignatik.NxFileViewer.Commands
         string InvalidWindowsCharsReplacement { get; set; }
 
         bool ReplaceWhiteSpaceChars { get; set; }
+
+        string WhiteSpaceCharsReplacement { get; set; }
     }
 }

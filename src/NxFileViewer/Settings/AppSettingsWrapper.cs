@@ -217,16 +217,25 @@ public class AppSettingsWrapper : NotifyPropertyChangedBase, IAppSettingsWrapper
         }
     }
 
-    public bool ReplaceWhiteSpaceChars
+    public bool RenameReplaceWhiteSpaceChars
     {
-        get => _serializedModel.ReplaceWhiteSpaceChars;
+        get => _serializedModel.RenameReplaceWhiteSpaceChars;
         set
         {
-            _serializedModel.ReplaceWhiteSpaceChars = value;
+            _serializedModel.RenameReplaceWhiteSpaceChars = value;
             NotifyPropertyChanged();
         }
     }
 
+    public string RenameWhiteSpaceCharsReplacement
+    {
+        get => _serializedModel.RenameWhiteSpaceCharsReplacement;
+        set
+        {
+            _serializedModel.RenameWhiteSpaceCharsReplacement = value;
+            NotifyPropertyChanged();
+        }
+    }
 
     public int ProgressBufferSize { get; set; } = 4 * 1024 * 1024;
 

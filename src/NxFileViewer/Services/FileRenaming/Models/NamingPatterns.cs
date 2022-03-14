@@ -20,4 +20,9 @@ public class NamingSettings : INamingSettings
     public List<AddonPatternPart> AddonPattern { get; set; } = new();
 
     public string? InvalidWindowsCharsReplacement { get; set; }
+
+    public bool ReplaceWhiteSpaceChars { get; set; }
+
+    public string? WhiteSpaceCharsReplacement { get; set; }
+
 }

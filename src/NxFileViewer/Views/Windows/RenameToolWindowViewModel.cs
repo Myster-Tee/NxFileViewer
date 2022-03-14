@@ -144,6 +144,16 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         }
     }
 
+    public string WhiteSpaceCharsReplacement
+    {
+        get => RenameCommand.WhiteSpaceCharsReplacement;
+        set
+        {
+            RenameCommand.WhiteSpaceCharsReplacement = value;
+            NotifyPropertyChanged();
+        }
+    }
+
     private void UpdateApplicationPatternParts()
     {
         try

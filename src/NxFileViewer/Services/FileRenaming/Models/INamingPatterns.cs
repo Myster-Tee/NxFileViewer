@@ -26,4 +26,14 @@ public interface INamingSettings
     /// Get the string to use for replacing invalid Windows chars
     /// </summary>
     public string? InvalidWindowsCharsReplacement { get; }
+
+    /// <summary>
+    /// Get a boolean indicating if white space chars should be replaced with the value defined by <see cref="WhiteSpaceCharsReplacement"/>
+    /// </summary>
+    public bool ReplaceWhiteSpaceChars { get; }
+
+    /// <summary>
+    /// Get the string to use for replacing white space chars
+    /// </summary>
+    string? WhiteSpaceCharsReplacement { get; }
 }
