@@ -98,6 +98,12 @@ namespace Emignatik.NxFileViewer.Commands
             set => _appSettingsManager.Settings.RenameInvalidWindowsCharsReplacement = value;
         }
 
+        public bool ReplaceWhiteSpaceChars
+        {
+            get => _appSettingsManager.Settings.ReplaceWhiteSpaceChars;
+            set => _appSettingsManager.Settings.ReplaceWhiteSpaceChars = value;
+        }
+
         public IBackgroundTaskRunner? BackgroundTaskRunner
         {
             get => _backgroundTaskRunner;
@@ -194,5 +200,6 @@ namespace Emignatik.NxFileViewer.Commands
 
         string InvalidWindowsCharsReplacement { get; set; }
 
+        bool ReplaceWhiteSpaceChars { get; set; }
     }
 }

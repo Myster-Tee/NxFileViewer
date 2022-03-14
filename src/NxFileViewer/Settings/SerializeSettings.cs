@@ -48,4 +48,5 @@ public class SerializeSettings : ISerializedSettings
 
     public string RenameInvalidWindowsCharsReplacement { get; set; } = ",";
 
+    public bool ReplaceWhiteSpaceChars { get; set; } = false;
 }

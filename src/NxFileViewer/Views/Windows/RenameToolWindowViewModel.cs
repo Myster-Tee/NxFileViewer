@@ -40,6 +40,8 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         UpdateAddonPatternParts();
     }
 
+    public IBackgroundTaskRunner BackgroundTask { get; }
+
     public ILogSource LogSource => _loggerSource;
 
     public IRenameFilesCommand RenameCommand { get; }
@@ -132,7 +134,15 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         }
     }
 
-    public IBackgroundTaskRunner BackgroundTask { get; }
+    public bool ReplaceWhiteSpaceChars
+    {
+        get => RenameCommand.ReplaceWhiteSpaceChars;
+        set
+        {
+            RenameCommand.ReplaceWhiteSpaceChars = value;
+            NotifyPropertyChanged();
+        }
+    }
 
     private void UpdateApplicationPatternParts()
     {
