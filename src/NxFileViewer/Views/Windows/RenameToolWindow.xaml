@@ -136,7 +136,7 @@
 
                                     <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_InvalidWindowsCharReplacement}" Style="{StaticResource Title2}" Margin="0" HorizontalAlignment="Right"/>
                                     <TextBox Grid.Row="0" Grid.Column="2"
-                                             Text="{Binding Path=InvalidWindowsCharReplacement}"
+                                             Text="{Binding Path=InvalidWindowsCharsReplacement}"
                                              MinWidth="20" VerticalAlignment="Center"/>
                                     <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ReplaceWhiteSpaceChars}" Style="{StaticResource Title2}" Margin="0" HorizontalAlignment="Right"/>
                                     <CheckBox Grid.Row="2" Grid.Column="2" x:Name="ReplaceWhiteSpacesCheckBox"

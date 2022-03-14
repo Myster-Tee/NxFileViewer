@@ -69,6 +69,17 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         }
     }
 
+    public string InvalidWindowsCharsReplacement
+    {
+        get => RenameCommand.InvalidWindowsCharsReplacement;
+        set
+        {
+            RenameCommand.InvalidWindowsCharsReplacement = value;
+            NotifyPropertyChanged();
+        }
+
+    }
+
     public string PatchPattern
     {
         get => _appSettingsManager.Settings.PatchPattern;

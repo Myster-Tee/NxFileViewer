@@ -92,6 +92,16 @@ namespace Emignatik.NxFileViewer.Commands
 
         public ILogger? Logger { get; set; }
 
+        public string InvalidWindowsCharsReplacement
+        {
+            get => _appSettingsManager.Settings.RenameInvalidWindowsCharsReplacement;
+            set
+            {
+                _appSettingsManager.Settings.RenameInvalidWindowsCharsReplacement = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public IBackgroundTaskRunner? BackgroundTaskRunner
         {
             get => _backgroundTaskRunner;
@@ -143,7 +153,7 @@ namespace Emignatik.NxFileViewer.Commands
                     break;
                 case nameof(IAppSettings.RenameIncludeSubdirectories):
                     NotifyPropertyChanged(nameof(IncludeSubdirectories));
-                    break;          
+                    break;
                 case nameof(IAppSettings.RenameSimulation):
                     NotifyPropertyChanged(nameof(IsSimulation));
                     break;
@@ -181,5 +191,8 @@ namespace Emignatik.NxFileViewer.Commands
         bool IsSimulation { get; set; }
 
         ILogger? Logger { get; set; }
+
+        string InvalidWindowsCharsReplacement { get; set; }
+
     }
 }

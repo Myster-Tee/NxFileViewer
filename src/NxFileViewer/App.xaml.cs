@@ -70,8 +70,8 @@ public partial class App : Application
             .AddSingleton<IPackageTypeAnalyzer, PackageTypeAnalyzer>()
             .AddSingleton<MainWindowViewModel>()
             .AddSingleton<RenameToolWindowViewModel>()
-
-            .AddSingleton<IAppSettings, AppSettings>()
+            .AddSingleton<IAppSettingsWrapper, AppSettingsWrapper>()
+            .AddSingleton<IAppSettings>(provider => provider.GetRequiredService<IAppSettingsWrapper>())
             .AddSingleton<IAppSettingsManager, AppSettingsManager>()
             .AddSingleton<IFileItemLoader, FileItemLoader>()
             .AddSingleton<IFileOverviewLoader, FileOverviewLoader>()
