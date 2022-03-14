@@ -28,9 +28,9 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
 
         _fileRenamerService.RenameFromDirectoryAsync(
             _renameSettings.InputDirectory,
-            _renameSettings.NamingPatterns,
             _renameSettings.FileFilters,
             _renameSettings.IncludeSubdirectories,
+            _renameSettings.NamingSettings,
             _renameSettings.Simulation,
             _renameSettings.Logger,
             progressReporter,
@@ -38,16 +38,16 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
         ).Wait(cancellationToken);
     }
 
-    public void Setup(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger)
+    public void Setup(string inputDirectory, INamingSettings namingSettings, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger)
     {
         if (inputDirectory == null) throw new ArgumentNullException(nameof(inputDirectory));
-        if (namingPatterns == null) throw new ArgumentNullException(nameof(namingPatterns));
+        if (namingSettings == null) throw new ArgumentNullException(nameof(namingSettings));
         if (fileFilters == null) throw new ArgumentNullException(nameof(fileFilters));
         _renameSettings = new RenameSettings
         {
             IncludeSubdirectories = includeSubdirectories,
             FileFilters = fileFilters,
-            NamingPatterns = namingPatterns,
+            NamingSettings = namingSettings,
             InputDirectory = inputDirectory,
             Simulation = simulation,
             Logger = logger,
@@ -58,7 +58,7 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
     {
         public bool IncludeSubdirectories { get; init; }
         public string? FileFilters { get; init; }
-        public INamingPatterns NamingPatterns { get; init; } = null!;
+        public INamingSettings NamingSettings { get; init; } = null!;
         public string InputDirectory { get; init; } = null!;
         public bool Simulation { get; init; }
         public ILogger? Logger { get; init; }
@@ -68,6 +68,6 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
 
 public interface IFilesRenamerRunnable : IRunnable
 {
-    void Setup(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger);
+    void Setup(string inputDirectory, INamingSettings namingSettings, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger);
 }
 

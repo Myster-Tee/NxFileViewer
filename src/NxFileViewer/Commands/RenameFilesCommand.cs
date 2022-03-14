@@ -95,11 +95,7 @@ namespace Emignatik.NxFileViewer.Commands
         public string InvalidWindowsCharsReplacement
         {
             get => _appSettingsManager.Settings.RenameInvalidWindowsCharsReplacement;
-            set
-            {
-                _appSettingsManager.Settings.RenameInvalidWindowsCharsReplacement = value;
-                NotifyPropertyChanged();
-            }
+            set => _appSettingsManager.Settings.RenameInvalidWindowsCharsReplacement = value;
         }
 
         public IBackgroundTaskRunner? BackgroundTaskRunner
@@ -121,11 +117,12 @@ namespace Emignatik.NxFileViewer.Commands
             //TODO: exposer tous les paramètres
             try
             {
-                var namingPatterns = new NamingPatterns
+                var namingPatterns = new NamingSettings
                 {
                     ApplicationPattern = ApplicationPatternParts!,
                     PatchPattern = PatchPatternParts!,
                     AddonPattern = AddonPatternParts!,
+                    InvalidWindowsCharsReplacement = InvalidWindowsCharsReplacement,
                 };
 
                 var filesRenamerRunnable = _serviceProvider.GetRequiredService<IFilesRenamerRunnable>();
@@ -156,6 +153,9 @@ namespace Emignatik.NxFileViewer.Commands
                     break;
                 case nameof(IAppSettings.RenameSimulation):
                     NotifyPropertyChanged(nameof(IsSimulation));
+                    break;            
+                case nameof(IAppSettings.RenameInvalidWindowsCharsReplacement):
+                    NotifyPropertyChanged(nameof(InvalidWindowsCharsReplacement));
                     break;
             }
         }

@@ -5,7 +5,7 @@ using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Patch;
 
 namespace Emignatik.NxFileViewer.Services.FileRenaming.Models;
 
-public interface INamingPatterns
+public interface INamingSettings
 {
     /// <summary>
     /// Pattern for a package with a single content of «Application» type
@@ -21,4 +21,9 @@ public interface INamingPatterns
     /// Pattern for a package with a single content of «Addon» type
     /// </summary>
     public IEnumerable<AddonPatternPart> AddonPattern { get; }
+
+    /// <summary>
+    /// Get the string to use for replacing invalid Windows chars
+    /// </summary>
+    public string? InvalidWindowsCharsReplacement { get; }
 }

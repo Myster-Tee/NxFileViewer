@@ -12,25 +12,25 @@ public interface IFileRenamerService
     /// Rename all supported files found in the specified directory
     /// </summary>
     /// <param name="inputDirectory"></param>
-    /// <param name="namingPatterns"></param>
     /// <param name="fileFilters"></param>
     /// <param name="includeSubdirectories"></param>
+    /// <param name="namingSettings"></param>
     /// <param name="isSimulation"></param>
     /// <param name="logger"></param>
     /// <param name="progressReporter"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task RenameFromDirectoryAsync(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubdirectories, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken);
+    Task RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken);
 
     /// <summary>
     /// Rename the specified file
     /// </summary>
     /// <param name="inputFile"></param>
-    /// <param name="namingPatterns"></param>
+    /// <param name="namingSettings"></param>
     /// <param name="isSimulation"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The new file name</returns>
-    Task<RenamingResult> RenameFileAsync(string inputFile, INamingPatterns namingPatterns, bool isSimulation, CancellationToken cancellationToken);
+    Task<RenamingResult> RenameFileAsync(string inputFile, INamingSettings namingSettings, bool isSimulation, CancellationToken cancellationToken);
 }
 
 public class RenamingResult

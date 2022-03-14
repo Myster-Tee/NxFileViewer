@@ -30,7 +30,7 @@ public class FileRenamerService : IFileRenamerService
         _onlineTitleInfoService = onlineTitleInfoService ?? throw new ArgumentNullException(nameof(onlineTitleInfoService));
     }
 
-    public async Task RenameFromDirectoryAsync(string inputDirectory, INamingPatterns namingPatterns, string? fileFilters, bool includeSubdirectories, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
+    public async Task RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
     {
         var searchOption = includeSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
@@ -57,7 +57,7 @@ public class FileRenamerService : IFileRenamerService
 
             try
             {
-                var renamingResult = await RenameFileAsyncInternal(matchingFile, namingPatterns, isSimulation, cancellationToken);
+                var renamingResult = await RenameFileAsyncInternal(matchingFile, namingSettings, isSimulation, cancellationToken);
 
                 if (renamingResult.IsRenamed)
                 {
@@ -79,12 +79,12 @@ public class FileRenamerService : IFileRenamerService
         progressReporter.SetText("");
     }
 
-    public Task<RenamingResult> RenameFileAsync(string inputFile, INamingPatterns namingPatterns, bool isSimulation, CancellationToken cancellationToken)
+    public Task<RenamingResult> RenameFileAsync(string inputFile, INamingSettings namingSettings, bool isSimulation, CancellationToken cancellationToken)
     {
-        return RenameFileAsyncInternal(new FileInfo(inputFile), namingPatterns, isSimulation, cancellationToken);
+        return RenameFileAsyncInternal(new FileInfo(inputFile), namingSettings, isSimulation, cancellationToken);
     }
 
-    private async Task<RenamingResult> RenameFileAsyncInternal(FileInfo inputFile, INamingPatterns namingPatterns, bool isSimulation, CancellationToken cancellationToken)
+    private async Task<RenamingResult> RenameFileAsyncInternal(FileInfo inputFile, INamingSettings namingSettings, bool isSimulation, CancellationToken cancellationToken)
     {
         string newFileName;
 
@@ -98,13 +98,13 @@ public class FileRenamerService : IFileRenamerService
             switch (content.Type)
             {
                 case ContentMetaType.Application:
-                    newFileName = ComputeApplicationPackageFileName(content, packageInfo.AccuratePackageType, namingPatterns.ApplicationPattern, cancellationToken);
+                    newFileName = ComputeApplicationPackageFileName(content, packageInfo.AccuratePackageType, namingSettings.ApplicationPattern, cancellationToken);
                     break;
                 case ContentMetaType.Patch:
-                    newFileName = ComputePatchPackageFileName(content, packageInfo.AccuratePackageType, namingPatterns.PatchPattern, cancellationToken);
+                    newFileName = ComputePatchPackageFileName(content, packageInfo.AccuratePackageType, namingSettings.PatchPattern, cancellationToken);
                     break;
                 case ContentMetaType.AddOnContent:
-                    newFileName = await ComputeAddonPackageFileName(content, packageInfo.AccuratePackageType, namingPatterns.AddonPattern, cancellationToken);
+                    newFileName = await ComputeAddonPackageFileName(content, packageInfo.AccuratePackageType, namingSettings.AddonPattern, cancellationToken);
                     break;
                 default:
                     throw new ContentTypeNotSupportedException(content.Type);

@@ -5,17 +5,19 @@ using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Patch;
 
 namespace Emignatik.NxFileViewer.Services.FileRenaming.Models;
 
-public class NamingPatterns : INamingPatterns
+public class NamingSettings : INamingSettings
 {
-    IEnumerable<ApplicationPatternPart> INamingPatterns.ApplicationPattern => ApplicationPattern;
+    IEnumerable<ApplicationPatternPart> INamingSettings.ApplicationPattern => ApplicationPattern;
 
     public List<ApplicationPatternPart> ApplicationPattern { get; set; } = new();
 
-    IEnumerable<PatchPatternPart> INamingPatterns.PatchPattern => PatchPattern;
+    IEnumerable<PatchPatternPart> INamingSettings.PatchPattern => PatchPattern;
 
     public List<PatchPatternPart> PatchPattern { get; set; } = new();
 
-    IEnumerable<AddonPatternPart> INamingPatterns.AddonPattern => AddonPattern;
+    IEnumerable<AddonPatternPart> INamingSettings.AddonPattern => AddonPattern;
 
     public List<AddonPatternPart> AddonPattern { get; set; } = new();
+
+    public string? InvalidWindowsCharsReplacement { get; set; }
 }
