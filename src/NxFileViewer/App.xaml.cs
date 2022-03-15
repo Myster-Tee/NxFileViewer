@@ -13,6 +13,7 @@ using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
 using Emignatik.NxFileViewer.Services.FileOpening;
 using Emignatik.NxFileViewer.Services.FileRenaming;
+using Emignatik.NxFileViewer.Services.GlobalEvents;
 using Emignatik.NxFileViewer.Services.KeysManagement;
 using Emignatik.NxFileViewer.Services.OnlineServices;
 using Emignatik.NxFileViewer.Services.Prompting;
@@ -30,13 +31,16 @@ namespace Emignatik.NxFileViewer;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : Application
+public partial class App : Application, IAppEvents
 {
     private static readonly ILogger _logger;
+
+    public event Action? AppShuttingDown;
 
     static App()
     {
         ServiceProvider = new ServiceCollection()
+            .AddSingleton<IAppEvents>(_ => (App)Current)
             .AddSingleton<ILoggerFactory, LoggerFactory>()
 
             .AddSingleton<IKeySetProviderService, KeySetProviderService>()
@@ -137,7 +141,7 @@ public partial class App : Application
         mainWindow.Show();
     }
 
-    private static async void Initialize(IReadOnlyList<string> cmdLineArgs)
+    private async void Initialize(IReadOnlyList<string> cmdLineArgs)
     {
         var keySetProviderService = ServiceProvider.GetRequiredService<IKeySetProviderService>();
         var appSettings = ServiceProvider.GetRequiredService<IAppSettings>();
@@ -179,6 +183,12 @@ public partial class App : Application
     protected override void OnExit(ExitEventArgs e)
     {
         base.OnExit(e);
-        ServiceProvider.GetRequiredService<IAppSettingsManager>().SaveSafe();
+        NotifyAppShuttingDown();
     }
+
+    protected virtual void NotifyAppShuttingDown()
+    {
+        AppShuttingDown?.Invoke();
+    }
+
 }

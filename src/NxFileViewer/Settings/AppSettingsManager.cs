@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Services.GlobalEvents;
 using Emignatik.NxFileViewer.Utils;
 using Microsoft.Extensions.Logging;
 
@@ -20,10 +21,11 @@ namespace Emignatik.NxFileViewer.Settings
             _settingsFilePath = Path.Combine(PathHelper.CurrentAppDir, $"{AppDomain.CurrentDomain.FriendlyName}.settings.json");
         }
 
-        public AppSettingsManager(ILoggerFactory loggerFactory, AppSettings appSettings)
+        public AppSettingsManager(ILoggerFactory loggerFactory, AppSettings appSettings, IAppEvents appEvents)
         {
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
             _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+            (appEvents ?? throw new ArgumentNullException(nameof(appEvents))).AppShuttingDown += OnAppShuttingDown;
 
             RestoreDefaultSettings();
         }
@@ -57,7 +59,6 @@ namespace Emignatik.NxFileViewer.Settings
                 return false;
             }
         }
-
 
         private static void RecopyPropertyValues(IReflect type, object? source, object? dest)
         {
@@ -124,6 +125,11 @@ namespace Emignatik.NxFileViewer.Settings
             {
                 _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SettingsSavingError.SafeFormat(ex.Message));
             }
+        }
+
+        private void OnAppShuttingDown()
+        {
+            SaveSafe();
         }
     }
 }
