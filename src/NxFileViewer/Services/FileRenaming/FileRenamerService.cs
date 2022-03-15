@@ -21,12 +21,12 @@ namespace Emignatik.NxFileViewer.Services.FileRenaming;
 public class FileRenamerService : IFileRenamerService
 {
     private readonly IPackageInfoLoader _packageInfoLoader;
-    private readonly IOnlineTitleInfoService _onlineTitleInfoService;
+    private readonly ICachedOnlineTitleInfoService _cachedOnlineTitleInfoService;
 
-    public FileRenamerService(IPackageInfoLoader packageInfoLoader, IOnlineTitleInfoService onlineTitleInfoService)
+    public FileRenamerService(IPackageInfoLoader packageInfoLoader, ICachedOnlineTitleInfoService cachedOnlineTitleInfoService)
     {
         _packageInfoLoader = packageInfoLoader ?? throw new ArgumentNullException(nameof(packageInfoLoader));
-        _onlineTitleInfoService = onlineTitleInfoService ?? throw new ArgumentNullException(nameof(onlineTitleInfoService));
+        _cachedOnlineTitleInfoService = cachedOnlineTitleInfoService ?? throw new ArgumentNullException(nameof(cachedOnlineTitleInfoService));
     }
 
     public async Task RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
@@ -233,8 +233,7 @@ public class FileRenamerService : IFileRenamerService
                             newFileName += content.Version.Version.ToString();
                             break;
                         case PatternKeyword.OnlineTitleName:
-                            //TODO: ne pas appeler à chaque fois
-                            var onlineTitleInfo = await _onlineTitleInfoService.GetTitleInfoAsync(content.TitleId);
+                            var onlineTitleInfo = await _cachedOnlineTitleInfoService.GetTitleInfoAsync(content.TitleId);
 
                             if (onlineTitleInfo != null)
                                 newFileName += onlineTitleInfo.Name;

@@ -51,6 +51,7 @@ public partial class App : Application, IAppEvents
             .AddSingleton<IPackageInfoLoader, PackageInfoLoader>()
             .AddSingleton<IFileRenamerService, FileRenamerService>()
             .AddSingleton<IOnlineTitleInfoService, OnlineTitleInfoService>()
+            .AddSingleton<ICachedOnlineTitleInfoService, CachedOnlineTitleInfoService>()
             .AddSingleton<IOnlineTitlePageOpenerService, OnlineTitlePageOpenerService>()
             .AddSingleton<MainBackgroundTaskRunnerService>()
             .AddSingleton<IMainBackgroundTaskRunnerService>(provider => provider.GetRequiredService<MainBackgroundTaskRunnerService>())
