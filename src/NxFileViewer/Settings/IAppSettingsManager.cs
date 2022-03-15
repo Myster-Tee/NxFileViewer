@@ -9,7 +9,7 @@ public interface IAppSettingsManager
     IAppSettings Settings { get; }
 
     // TODO: utiliser cette méthode
-    public void LoadDefault();
+    public void RestoreDefaultSettings();
 
     public bool LoadSafe();
 

@@ -30,8 +30,11 @@ namespace Emignatik.NxFileViewer.Commands
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
 
-            _appSettingsManager.Settings.PropertyChanged += OnSettingsPropertyChanged;
+            _appSettingsManager.Settings.PropertyChanged += OnAppSettingsPropertyChanged;
+            _appSettingsManager.Settings.RenamingOptions.PropertyChanged += OnRenamingOptionsPropertyChanged;
         }
+
+
 
         public List<ApplicationPatternPart>? ApplicationPatternParts
         {
@@ -74,40 +77,40 @@ namespace Emignatik.NxFileViewer.Commands
 
         public string? FileFilters
         {
-            get => _appSettingsManager.Settings.RenamingFileFilters;
-            set => _appSettingsManager.Settings.RenamingFileFilters = value;
+            get => _appSettingsManager.Settings.RenamingOptions.FileFilters;
+            set => _appSettingsManager.Settings.RenamingOptions.FileFilters = value;
         }
 
         public bool IncludeSubdirectories
         {
-            get => _appSettingsManager.Settings.RenameIncludeSubdirectories;
-            set => _appSettingsManager.Settings.RenameIncludeSubdirectories = value;
+            get => _appSettingsManager.Settings.RenamingOptions.IncludeSubdirectories;
+            set => _appSettingsManager.Settings.RenamingOptions.IncludeSubdirectories = value;
         }
 
         public bool IsSimulation
         {
-            get => _appSettingsManager.Settings.RenameSimulation;
-            set => _appSettingsManager.Settings.RenameSimulation = value;
+            get => _appSettingsManager.Settings.RenamingOptions.IsSimulation;
+            set => _appSettingsManager.Settings.RenamingOptions.IsSimulation = value;
         }
 
         public ILogger? Logger { get; set; }
 
         public string InvalidWindowsCharsReplacement
         {
-            get => _appSettingsManager.Settings.RenameInvalidFileNameCharsReplacement;
-            set => _appSettingsManager.Settings.RenameInvalidFileNameCharsReplacement = value;
+            get => _appSettingsManager.Settings.RenamingOptions.InvalidFileNameCharsReplacement;
+            set => _appSettingsManager.Settings.RenamingOptions.InvalidFileNameCharsReplacement = value;
         }
 
         public bool ReplaceWhiteSpaceChars
         {
-            get => _appSettingsManager.Settings.RenameReplaceWhiteSpaceChars;
-            set => _appSettingsManager.Settings.RenameReplaceWhiteSpaceChars = value;
+            get => _appSettingsManager.Settings.RenamingOptions.ReplaceWhiteSpaceChars;
+            set => _appSettingsManager.Settings.RenamingOptions.ReplaceWhiteSpaceChars = value;
         }
 
         public string WhiteSpaceCharsReplacement
         {
-            get => _appSettingsManager.Settings.RenameWhiteSpaceCharsReplacement;
-            set => _appSettingsManager.Settings.RenameWhiteSpaceCharsReplacement = value;
+            get => _appSettingsManager.Settings.RenamingOptions.WhiteSpaceCharsReplacement;
+            set => _appSettingsManager.Settings.RenamingOptions.WhiteSpaceCharsReplacement = value;
         }
 
         public IBackgroundTaskRunner? BackgroundTaskRunner
@@ -150,27 +153,34 @@ namespace Emignatik.NxFileViewer.Commands
             }
         }
 
-        private void OnSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        private void OnAppSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
-                case nameof(IAppSettings.RenamingFileFilters):
-                    NotifyPropertyChanged(nameof(FileFilters));
-                    break;
                 case nameof(IAppSettings.LastUsedDir):
                     NotifyPropertyChanged(nameof(InputDirectory));
                     TriggerCanExecuteChanged();
                     break;
-                case nameof(IAppSettings.RenameIncludeSubdirectories):
+            }
+        }
+
+        private void OnRenamingOptionsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(IRenamingOptions.FileFilters):
+                    NotifyPropertyChanged(nameof(FileFilters));
+                    break;
+                case nameof(IRenamingOptions.IncludeSubdirectories):
                     NotifyPropertyChanged(nameof(IncludeSubdirectories));
                     break;
-                case nameof(IAppSettings.RenameSimulation):
+                case nameof(IRenamingOptions.IsSimulation):
                     NotifyPropertyChanged(nameof(IsSimulation));
-                    break;            
-                case nameof(IAppSettings.RenameInvalidFileNameCharsReplacement):
+                    break;
+                case nameof(IRenamingOptions.InvalidFileNameCharsReplacement):
                     NotifyPropertyChanged(nameof(InvalidWindowsCharsReplacement));
-                    break;               
-                case nameof(IAppSettings.RenameWhiteSpaceCharsReplacement):
+                    break;
+                case nameof(IRenamingOptions.WhiteSpaceCharsReplacement):
                     NotifyPropertyChanged(nameof(WhiteSpaceCharsReplacement));
                     break;
             }

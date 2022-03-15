@@ -61,6 +61,7 @@ public class RenameToolWindowViewModel : WindowViewModelBase
             NotifyPropertyChanged();
         }
     }
+
     public string? ApplicationPatternError
     {
         get => _applicationPatternError;
