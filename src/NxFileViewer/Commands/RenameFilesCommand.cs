@@ -124,9 +124,8 @@ namespace Emignatik.NxFileViewer.Commands
                 TriggerCanExecuteChanged();
             }
         }
-        public override void Execute(object? parameter)
+        public override async void Execute(object? parameter)
         {
-            //TODO: exposer tous les paramètres
             try
             {
                 var namingPatterns = new NamingSettings
@@ -143,7 +142,7 @@ namespace Emignatik.NxFileViewer.Commands
 
                 filesRenamerRunnable.Setup(InputDirectory, namingPatterns, FileFilters, IncludeSubdirectories, IsSimulation, Logger);
 
-                _backgroundTaskRunner?.RunAsync(filesRenamerRunnable);
+                await _backgroundTaskRunner!.RunAsync(filesRenamerRunnable);
             }
             catch (Exception ex)
             {

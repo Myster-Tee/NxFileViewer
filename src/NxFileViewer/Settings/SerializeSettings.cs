@@ -46,7 +46,7 @@ public class SerializeSettings : ISerializedSettings
 
     public bool RenameSimulation { get; set; } = false;
 
-    public string RenameInvalidFileNameCharsReplacement { get; set; } = ",";
+    public string RenameInvalidFileNameCharsReplacement { get; set; } = "꞉";
 
     public bool RenameReplaceWhiteSpaceChars { get; set; } = false;
 
