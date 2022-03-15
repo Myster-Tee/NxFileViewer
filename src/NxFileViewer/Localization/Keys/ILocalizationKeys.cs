@@ -245,9 +245,11 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string RenamingTool_LogSimulationMode { get; }
     string RenamingTool_LogFileRenamed { get; }
     string RenamingTool_LogFileAlreadyNamedProperly { get; }
+    string RenamingTool_BadInvalidFileNameCharReplacement { get; }
 
     string Exception_UnexpectedDelimiter { get; }
     string Exception_EndDelimiterMissing { get; }
     string FileRenaming_PatternKeywordUnknown { get; }
     string FileRenaming_EmptyPatternNotAllowed { get; }
+
 }

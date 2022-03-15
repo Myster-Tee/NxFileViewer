@@ -44,7 +44,7 @@ public interface ISerializedSettings
 
     bool RenameSimulation { get; set; }
 
-    string RenameInvalidWindowsCharsReplacement { get; set; }
+    string RenameInvalidFileNameCharsReplacement { get; set; }
 
     bool RenameReplaceWhiteSpaceChars { get; set; }
 

@@ -207,12 +207,12 @@ public class AppSettingsWrapper : NotifyPropertyChangedBase, IAppSettingsWrapper
         }
     }
 
-    public string RenameInvalidWindowsCharsReplacement
+    public string RenameInvalidFileNameCharsReplacement
     {
-        get => _serializedModel.RenameInvalidWindowsCharsReplacement;
+        get => _serializedModel.RenameInvalidFileNameCharsReplacement;
         set
         {
-            _serializedModel.RenameInvalidWindowsCharsReplacement = value;
+            _serializedModel.RenameInvalidFileNameCharsReplacement = value;
             NotifyPropertyChanged();
         }
     }

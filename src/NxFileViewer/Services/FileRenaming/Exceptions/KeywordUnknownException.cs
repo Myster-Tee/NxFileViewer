@@ -12,8 +12,6 @@ public class KeywordUnknownException : Exception
     public KeywordUnknownException(string unknownKeyword, IEnumerable<string> allowedKeywords)
     {
         _unknownKeyword = unknownKeyword;
-
-
         _allowedKeywords = string.Join(", ", allowedKeywords);
     }
 

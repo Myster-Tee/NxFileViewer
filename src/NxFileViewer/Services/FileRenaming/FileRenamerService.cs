@@ -32,6 +32,8 @@ public class FileRenamerService : IFileRenamerService
 
     public async Task RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
     {
+        CheckInvalidWindowsFileNameChar(namingSettings.InvalidFileNameCharsReplacement);
+
         var searchOption = includeSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
         var directoryInfo = new DirectoryInfo(inputDirectory);
@@ -81,7 +83,21 @@ public class FileRenamerService : IFileRenamerService
 
     public Task<RenamingResult> RenameFileAsync(string inputFile, INamingSettings namingSettings, bool isSimulation, CancellationToken cancellationToken)
     {
+        CheckInvalidWindowsFileNameChar(namingSettings.InvalidFileNameCharsReplacement);
         return RenameFileAsyncInternal(new FileInfo(inputFile), namingSettings, isSimulation, cancellationToken);
+    }
+
+    private static void CheckInvalidWindowsFileNameChar(string? invalidFileNameCharsReplacement)
+    {
+        if (invalidFileNameCharsReplacement == null)
+            return;
+
+        var invalidChars = Path.GetInvalidFileNameChars();
+        foreach (var invalidChar in invalidChars)
+        {
+            if (invalidFileNameCharsReplacement.Contains(invalidChar))
+                throw new BadInvalidFileNameCharReplacementException(invalidFileNameCharsReplacement, invalidChar);
+        }
     }
 
     private async Task<RenamingResult> RenameFileAsyncInternal(FileInfo inputFile, INamingSettings namingSettings, bool isSimulation, CancellationToken cancellationToken)
@@ -114,6 +130,23 @@ public class FileRenamerService : IFileRenamerService
         {
             //TODO: supporter les super NSP/XCI
             throw new SuperPackageNotSupportedException();
+        }
+
+        if (namingSettings.ReplaceWhiteSpaceChars)
+        {
+            var replacement = namingSettings.WhiteSpaceCharsReplacement ?? "";
+            var whiteSpaceCharsToRemove = newFileName.Where(char.IsWhiteSpace).Distinct().ToArray();
+            foreach (var whiteSpaceChar in whiteSpaceCharsToRemove)
+            {
+                newFileName = newFileName.Replace(whiteSpaceChar.ToString(), replacement);
+            }
+        }
+
+        var invalidFileNameChars = Path.GetInvalidFileNameChars();
+        var invalidCharReplacement = namingSettings.InvalidFileNameCharsReplacement ?? "";
+        foreach (var invalidFileNameChar in invalidFileNameChars)
+        {
+            newFileName = newFileName.Replace(invalidFileNameChar.ToString(), invalidCharReplacement);
         }
 
         var shouldBeRenamed = !string.Equals(newFileName, oldFileName);

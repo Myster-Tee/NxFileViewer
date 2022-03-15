@@ -94,8 +94,8 @@ namespace Emignatik.NxFileViewer.Commands
 
         public string InvalidWindowsCharsReplacement
         {
-            get => _appSettingsManager.Settings.RenameInvalidWindowsCharsReplacement;
-            set => _appSettingsManager.Settings.RenameInvalidWindowsCharsReplacement = value;
+            get => _appSettingsManager.Settings.RenameInvalidFileNameCharsReplacement;
+            set => _appSettingsManager.Settings.RenameInvalidFileNameCharsReplacement = value;
         }
 
         public bool ReplaceWhiteSpaceChars
@@ -134,7 +134,7 @@ namespace Emignatik.NxFileViewer.Commands
                     ApplicationPattern = ApplicationPatternParts!,
                     PatchPattern = PatchPatternParts!,
                     AddonPattern = AddonPatternParts!,
-                    InvalidWindowsCharsReplacement = InvalidWindowsCharsReplacement,
+                    InvalidFileNameCharsReplacement = InvalidWindowsCharsReplacement,
                     ReplaceWhiteSpaceChars = ReplaceWhiteSpaceChars,
                     WhiteSpaceCharsReplacement = WhiteSpaceCharsReplacement,
                 };
@@ -168,7 +168,7 @@ namespace Emignatik.NxFileViewer.Commands
                 case nameof(IAppSettings.RenameSimulation):
                     NotifyPropertyChanged(nameof(IsSimulation));
                     break;            
-                case nameof(IAppSettings.RenameInvalidWindowsCharsReplacement):
+                case nameof(IAppSettings.RenameInvalidFileNameCharsReplacement):
                     NotifyPropertyChanged(nameof(InvalidWindowsCharsReplacement));
                     break;               
                 case nameof(IAppSettings.RenameWhiteSpaceCharsReplacement):

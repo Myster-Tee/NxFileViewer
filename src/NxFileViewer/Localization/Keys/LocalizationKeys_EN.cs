@@ -274,6 +274,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_LogSimulationMode => $"[SIMULATION] ";
     public string RenamingTool_LogFileRenamed => $"• {{0}}File renamed from{Environment.NewLine}\t«{{1}}» to{Environment.NewLine}\t«{{2}}».";
     public string RenamingTool_LogFileAlreadyNamedProperly => "• {0}«{1}» already named correctly.";
+    public string RenamingTool_BadInvalidFileNameCharReplacement => "The replacement string «{0}» (for invalid file name chars), can't contain invalid char «{1}».";
 
     public string Exception_UnexpectedDelimiter => "Unexpected delimiter {0} found at position {1}, use {2}{0} instead.";
     public string Exception_EndDelimiterMissing => "End delimiter {0} is missing.";

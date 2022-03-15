@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
+using Emignatik.NxFileViewer.Services.FileRenaming.Exceptions;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
 using Microsoft.Extensions.Logging;
 
@@ -20,6 +21,10 @@ public interface IFileRenamerService
     /// <param name="progressReporter"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    /// <exception cref="BadInvalidFileNameCharReplacementException"></exception>
+    /// <exception cref="ContentTypeNotSupportedException"></exception>
+    /// <exception cref="EmptyPatternException"></exception>
+    /// <exception cref="SuperPackageNotSupportedException"></exception>
     Task RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken);
 
     /// <summary>
@@ -30,6 +35,10 @@ public interface IFileRenamerService
     /// <param name="isSimulation"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The new file name</returns>
+    /// <exception cref="BadInvalidFileNameCharReplacementException"></exception>
+    /// <exception cref="ContentTypeNotSupportedException"></exception>
+    /// <exception cref="EmptyPatternException"></exception>
+    /// <exception cref="SuperPackageNotSupportedException"></exception>
     Task<RenamingResult> RenameFileAsync(string inputFile, INamingSettings namingSettings, bool isSimulation, CancellationToken cancellationToken);
 }
 
