@@ -40,6 +40,15 @@ public class NamingPatternsParser : INamingPatternsParser
         {
             if (isDelimited)
             {
+                var parts = text.Split(':', 2);
+                var keyword = parts[0];
+
+                var stringOperation = StringOperation.Untouched;
+                if (parts.Length == 2)
+                {
+                    stringOperation = ParseStringOperation(parts[1]);
+                }
+
                 if (!Enum.TryParse<PatternKeyword>(text, true, out var patternKeyword))
                 {
                     var allowedKeywordFormatted = allowedKeywords.Select(type => _keywordsParser.StartDelimiter + type.ToString() + _keywordsParser.EndDelimiter);
@@ -50,7 +59,7 @@ public class NamingPatternsParser : INamingPatternsParser
                 if (!allowedKeywords.Contains(patternKeyword))
                     throw new KeywordNotAllowedException(patternKeyword, patternType);
 
-                yield return new DynamicTextPatternPart(patternKeyword);
+                yield return new DynamicTextPatternPart(patternKeyword, stringOperation);
             }
             else
             {
@@ -59,4 +68,15 @@ public class NamingPatternsParser : INamingPatternsParser
         }
     }
 
+    private static StringOperation ParseStringOperation(string operation)
+    {
+        var operationCleaned = operation.Trim().ToUpper();
+        if (operationCleaned == "L")
+            return StringOperation.ToLower;
+        else if (operationCleaned == "U")
+            return StringOperation.ToUpper;
+
+        //TODO: à finir d'implémenter
+        throw new NotImplementedException();
+    }
 }

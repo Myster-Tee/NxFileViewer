@@ -139,21 +139,13 @@ public class FileRenamerService : IFileRenamerService
         {
             var content = packageInfo.Contents[0];
 
-            IEnumerable<PatternPart> patternParts;
-            switch (content.Type)
+            var patternParts = content.Type switch
             {
-                case ContentMetaType.Application:
-                    patternParts = namingSettings.ApplicationPattern;
-                    break;
-                case ContentMetaType.Patch:
-                    patternParts = namingSettings.PatchPattern;
-                    break;
-                case ContentMetaType.AddOnContent:
-                    patternParts = namingSettings.AddonPattern;
-                    break;
-                default:
-                    throw new ContentTypeNotSupportedException(content.Type);
-            }
+                ContentMetaType.Application => namingSettings.ApplicationPattern,
+                ContentMetaType.Patch => namingSettings.PatchPattern,
+                ContentMetaType.AddOnContent => namingSettings.AddonPattern,
+                _ => throw new ContentTypeNotSupportedException(content.Type)
+            };
             newFileName = await ComputePackageFileName(content, packageInfo.AccuratePackageType, patternParts, cancellationToken);
         }
         else
