@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using Emignatik.NxFileViewer.Services.FileRenaming.Exceptions;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Addon;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Patch;
+using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;
 using Emignatik.NxFileViewer.Tools.DelimitedTextParsing;
 
 namespace Emignatik.NxFileViewer.Services.FileRenaming;
@@ -18,7 +16,7 @@ public interface INamingPatternsParser
     /// <exception cref="UnexpectedDelimiterException"></exception>
     /// <exception cref="EndDelimiterMissingException"></exception>
     /// <exception cref="EmptyPatternException"></exception>
-    List<ApplicationPatternPart> ParseApplicationPattern(string pattern);
+    List<PatternPart> ParseApplicationPattern(string pattern);
 
     /// <summary>
     /// 
@@ -29,7 +27,7 @@ public interface INamingPatternsParser
     /// <exception cref="UnexpectedDelimiterException"></exception>
     /// <exception cref="EndDelimiterMissingException"></exception>
     /// <exception cref="EmptyPatternException"></exception>
-    List<PatchPatternPart> ParsePatchPattern(string pattern);
+    List<PatternPart> ParsePatchPattern(string pattern);
 
     /// <summary>
     /// 
@@ -40,5 +38,5 @@ public interface INamingPatternsParser
     /// <exception cref="UnexpectedDelimiterException"></exception>
     /// <exception cref="EndDelimiterMissingException"></exception>
     /// <exception cref="EmptyPatternException"></exception>
-    List<AddonPatternPart> ParseAddonPattern(string pattern);
+    List<PatternPart> ParseAddonPattern(string pattern);
 }

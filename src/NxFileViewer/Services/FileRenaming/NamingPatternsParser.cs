@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Emignatik.NxFileViewer.Services.FileRenaming.Exceptions;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Addon;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Patch;
+using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;
 using Emignatik.NxFileViewer.Tools.DelimitedTextParsing;
 
 namespace Emignatik.NxFileViewer.Services.FileRenaming;
@@ -14,22 +12,26 @@ public class NamingPatternsParser : INamingPatternsParser
 
     private readonly DelimitedTextParser _keywordsParser = new('{', '}', '\\');
 
-    public List<ApplicationPatternPart> ParseApplicationPattern(string pattern)
+    public List<PatternPart> ParseApplicationPattern(string pattern)
     {
-        return ParseApplicationPatternsInternal(pattern).ToList();
+        var allowedApplicationKeywords = PatternKeywords.GetAllowedApplicationKeywords();
+
+        return ParsePatternsInternal(pattern, allowedApplicationKeywords, PatternType.Application).ToList();
     }
 
-    public List<PatchPatternPart> ParsePatchPattern(string pattern)
+    public List<PatternPart> ParsePatchPattern(string pattern)
     {
-        return ParsePatchPatternInternal(pattern).ToList();
+        var allowedPatchKeywords = PatternKeywords.GetAllowedPatchKeywords();
+        return ParsePatternsInternal(pattern, allowedPatchKeywords, PatternType.Patch).ToList();
     }
 
-    public List<AddonPatternPart> ParseAddonPattern(string pattern)
+    public List<PatternPart> ParseAddonPattern(string pattern)
     {
-        return ParseAddonPatternInternal(pattern).ToList();
+        var allowedAddonKeywords = PatternKeywords.GetAllowedAddonKeywords();
+        return ParsePatternsInternal(pattern, allowedAddonKeywords, PatternType.Addon).ToList();
     }
 
-    private IEnumerable<ApplicationPatternPart> ParseApplicationPatternsInternal(string pattern)
+    private IEnumerable<PatternPart> ParsePatternsInternal(string pattern, IReadOnlyList<PatternKeyword> allowedKeywords, PatternType patternType)
     {
         if (string.IsNullOrWhiteSpace(pattern))
             throw new EmptyPatternException();
@@ -38,68 +40,21 @@ public class NamingPatternsParser : INamingPatternsParser
         {
             if (isDelimited)
             {
-                if (!Enum.TryParse<ApplicationKeyword>(text, true, out var applicationKeyword))
+                if (!Enum.TryParse<PatternKeyword>(text, true, out var patternKeyword))
                 {
-                    var allowedKeywords = Enum.GetValues<ApplicationKeyword>().Select(type => _keywordsParser.StartDelimiter + type.ToString() + _keywordsParser.EndDelimiter);
+                    var allowedKeywordFormatted = allowedKeywords.Select(type => _keywordsParser.StartDelimiter + type.ToString() + _keywordsParser.EndDelimiter);
 
-                    throw new KeywordUnknownException(text, allowedKeywords);
+                    throw new KeywordUnknownException(text, allowedKeywordFormatted);
                 }
 
-                yield return new DynamicTextApplicationPatternPart(applicationKeyword);
+                if (!allowedKeywords.Contains(patternKeyword))
+                    throw new KeywordNotAllowedException(patternKeyword, patternType);
+
+                yield return new DynamicTextPatternPart(patternKeyword);
             }
             else
             {
-                yield return new StaticTextApplicationPatternPart(text);
-            }
-        }
-    }
-
-    private IEnumerable<PatchPatternPart> ParsePatchPatternInternal(string pattern)
-    {
-        if (string.IsNullOrWhiteSpace(pattern))
-            throw new EmptyPatternException();
-
-        foreach (var (text, isDelimited) in _keywordsParser.Parse(pattern))
-        {
-            if (isDelimited)
-            {
-                if (!Enum.TryParse<PatchKeyword>(text, true, out var patchKeyword))
-                {
-                    var allowedKeywords = Enum.GetValues<PatchKeyword>().Select(type => _keywordsParser.StartDelimiter + type.ToString() + _keywordsParser.EndDelimiter);
-
-                    throw new KeywordUnknownException(text, allowedKeywords);
-                }
-
-                yield return new DynamicTextPatchPatternPart(patchKeyword);
-            }
-            else
-            {
-                yield return new StaticTextPatchPatternPart(text);
-            }
-        }
-    }
-
-    private IEnumerable<AddonPatternPart> ParseAddonPatternInternal(string pattern)
-    {
-        if (string.IsNullOrWhiteSpace(pattern))
-            throw new EmptyPatternException();
-
-        foreach (var (text, isDelimited) in _keywordsParser.Parse(pattern))
-        {
-            if (isDelimited)
-            {
-                if (!Enum.TryParse<AddonKeyword>(text, true, out var addonKeyword))
-                {
-                    var allowedKeywords = Enum.GetValues<AddonKeyword>().Select(type => _keywordsParser.StartDelimiter + type.ToString() + _keywordsParser.EndDelimiter);
-
-                    throw new KeywordUnknownException(text, allowedKeywords);
-                }
-
-                yield return new DynamicTextAddonPatternPart(addonKeyword);
-            }
-            else
-            {
-                yield return new StaticTextAddonPatternPart(text);
+                yield return new StaticTextPatternPart(text);
             }
         }
     }

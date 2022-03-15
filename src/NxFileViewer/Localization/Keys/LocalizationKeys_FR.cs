@@ -280,6 +280,6 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string Exception_UnexpectedDelimiter => "Délimiteur {0} non attendu à la position {1}, utilisez {2}{0} à la place.";
     public string Exception_EndDelimiterMissing => "Le délimiteur de fin {0} est manquant.";
     public string FileRenaming_PatternKeywordUnknown => "Mot clé «{0}» inconnu, liste des mots clés autorisés: «{1}».";
-
-    public string FileRenaming_EmptyPatternNotAllowed => "La pattern ne peut être vide";
+    public string FileRenaming_EmptyPatternNotAllowed => "La pattern ne peut être vide.";
+    public string FileRenaming_PatternKeywordNotAllowed => "Le mot clé «{0}» n'est pas autorisé pour les patterns de type «{1}».";
 }

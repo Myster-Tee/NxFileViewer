@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -10,9 +11,7 @@ using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.FileRenaming.Exceptions;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Addon;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Patch;
+using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;
 using Emignatik.NxFileViewer.Services.OnlineServices;
 using LibHac.Ncm;
 using Microsoft.Extensions.Logging;
@@ -32,7 +31,7 @@ public class FileRenamerService : IFileRenamerService
 
     public async Task RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
     {
-        CheckInvalidWindowsFileNameChar(namingSettings.InvalidFileNameCharsReplacement);
+        ValidateNamingSettings(namingSettings);
 
         var searchOption = includeSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
@@ -81,13 +80,42 @@ public class FileRenamerService : IFileRenamerService
         progressReporter.SetText("");
     }
 
+
     public Task<RenamingResult> RenameFileAsync(string inputFile, INamingSettings namingSettings, bool isSimulation, CancellationToken cancellationToken)
     {
-        CheckInvalidWindowsFileNameChar(namingSettings.InvalidFileNameCharsReplacement);
+        ValidateNamingSettings(namingSettings);
         return RenameFileAsyncInternal(new FileInfo(inputFile), namingSettings, isSimulation, cancellationToken);
     }
 
-    private static void CheckInvalidWindowsFileNameChar(string? invalidFileNameCharsReplacement)
+    private static void ValidateNamingSettings(INamingSettings namingSettings)
+    {
+        ValidateInvalidWindowsFileNameChar(namingSettings.InvalidFileNameCharsReplacement);
+        ValidateAllowedKeywords(namingSettings.ApplicationPattern, namingSettings.PatchPattern, namingSettings.AddonPattern);
+    }
+
+    private static void ValidateAllowedKeywords(IEnumerable<PatternPart> applicationPattern, IEnumerable<PatternPart> patchPattern, IEnumerable<PatternPart> addonPattern)
+    {
+        if (HasNotAllowedKeyword(applicationPattern, PatternKeywords.GetAllowedApplicationKeywords(), out var firstNotAllowedApplicationKeyword))
+            throw new KeywordNotAllowedException(firstNotAllowedApplicationKeyword.Value, PatternType.Application);
+
+        if (HasNotAllowedKeyword(patchPattern, PatternKeywords.GetAllowedPatchKeywords(), out var firstNotAllowedPatchKeyword))
+            throw new KeywordNotAllowedException(firstNotAllowedPatchKeyword.Value, PatternType.Patch);
+
+        if (HasNotAllowedKeyword(addonPattern, PatternKeywords.GetAllowedAddonKeywords(), out var firstNotAllowedAddonKeyword))
+            throw new KeywordNotAllowedException(firstNotAllowedAddonKeyword.Value, PatternType.Addon);
+    }
+
+    private static bool HasNotAllowedKeyword(IEnumerable<PatternPart> patternParts, IEnumerable<PatternKeyword> allowedKeywords, [NotNullWhen(true)] out PatternKeyword? firstNotAllowedKeyword)
+    {
+        firstNotAllowedKeyword = patternParts
+            .OfType<DynamicTextPatternPart>()
+            .Select(part => (PatternKeyword?)part.Keyword)
+            .FirstOrDefault(keyword => !allowedKeywords.Contains(keyword!.Value));
+
+        return firstNotAllowedKeyword != null;
+    }
+
+    private static void ValidateInvalidWindowsFileNameChar(string? invalidFileNameCharsReplacement)
     {
         if (invalidFileNameCharsReplacement == null)
             return;
@@ -111,20 +139,22 @@ public class FileRenamerService : IFileRenamerService
         {
             var content = packageInfo.Contents[0];
 
+            IEnumerable<PatternPart> patternParts;
             switch (content.Type)
             {
                 case ContentMetaType.Application:
-                    newFileName = ComputeApplicationPackageFileName(content, packageInfo.AccuratePackageType, namingSettings.ApplicationPattern, cancellationToken);
+                    patternParts = namingSettings.ApplicationPattern;
                     break;
                 case ContentMetaType.Patch:
-                    newFileName = ComputePatchPackageFileName(content, packageInfo.AccuratePackageType, namingSettings.PatchPattern, cancellationToken);
+                    patternParts = namingSettings.PatchPattern;
                     break;
                 case ContentMetaType.AddOnContent:
-                    newFileName = await ComputeAddonPackageFileName(content, packageInfo.AccuratePackageType, namingSettings.AddonPattern, cancellationToken);
+                    patternParts = namingSettings.AddonPattern;
                     break;
                 default:
                     throw new ContentTypeNotSupportedException(content.Type);
             }
+            newFileName = await ComputePackageFileName(content, packageInfo.AccuratePackageType, patternParts, cancellationToken);
         }
         else
         {
@@ -165,7 +195,7 @@ public class FileRenamerService : IFileRenamerService
         };
     }
 
-    private static string ComputeApplicationPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<ApplicationPatternPart> patternParts, CancellationToken cancellationToken)
+    private async Task<string> ComputePackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<PatternPart> patternParts, CancellationToken cancellationToken)
     {
         var newFileName = "";
 
@@ -174,35 +204,42 @@ public class FileRenamerService : IFileRenamerService
             cancellationToken.ThrowIfCancellationRequested();
             switch (patternPart)
             {
-                case StaticTextApplicationPatternPart staticText:
+                case StaticTextPatternPart staticText:
                     newFileName += staticText.Text;
                     break;
-                case DynamicTextApplicationPatternPart dynamicText:
+                case DynamicTextPatternPart dynamicText:
                     switch (dynamicText.Keyword)
                     {
-                        case ApplicationKeyword.TitleIdL:
+                        case PatternKeyword.TitleIdL:
                             newFileName += content.TitleId.ToLower();
                             break;
-                        case ApplicationKeyword.TitleIdU:
+                        case PatternKeyword.TitleIdU:
                             newFileName += content.TitleId.ToUpper();
                             break;
-                        case ApplicationKeyword.FirstTitleName:
+                        case PatternKeyword.FirstTitleName:
                             var firstTitle = content.NacpData?.Titles.FirstOrDefault();
-
                             if (firstTitle != null)
                                 newFileName += firstTitle.Name;
                             else
                                 newFileName += "NO_TITLE";
-
                             break;
-                        case ApplicationKeyword.PackageTypeL:
+                        case PatternKeyword.PackageTypeL:
                             newFileName += accuratePackageType.ToString().ToLower();
                             break;
-                        case ApplicationKeyword.PackageTypeU:
+                        case PatternKeyword.PackageTypeU:
                             newFileName += accuratePackageType.ToString().ToUpper();
                             break;
-                        case ApplicationKeyword.VersionNum:
+                        case PatternKeyword.VersionNum:
                             newFileName += content.Version.Version.ToString();
+                            break;
+                        case PatternKeyword.OnlineTitleName:
+                            //TODO: ne pas appeler à chaque fois
+                            var onlineTitleInfo = await _onlineTitleInfoService.GetTitleInfoAsync(content.TitleId);
+
+                            if (onlineTitleInfo != null)
+                                newFileName += onlineTitleInfo.Name;
+                            else
+                                newFileName += "NO_TITLE";
                             break;
                         default:
                             throw new NotSupportedException($"Unknown application keyword «{dynamicText.Keyword}».");
@@ -217,111 +254,5 @@ public class FileRenamerService : IFileRenamerService
         return newFileName;
     }
 
-    private static string ComputePatchPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<PatchPatternPart> patternParts, CancellationToken cancellationToken)
-    {
-        var newFileName = "";
-
-        foreach (var patternPart in patternParts)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            switch (patternPart)
-            {
-                case StaticTextPatchPatternPart staticText:
-                    newFileName += staticText.Text;
-                    break;
-                case DynamicTextPatchPatternPart dynamicText:
-                    switch (dynamicText.Keyword)
-                    {
-                        case PatchKeyword.TitleIdL:
-                            newFileName += content.TitleId.ToLower();
-                            break;
-                        case PatchKeyword.TitleIdU:
-                            newFileName += content.TitleId.ToUpper();
-                            break;
-                        case PatchKeyword.FirstTitleName:
-                            var firstTitle = content.NacpData?.Titles.FirstOrDefault();
-
-                            if (firstTitle != null)
-                                newFileName += firstTitle.Name;
-                            else
-                                newFileName += "NO_TITLE";
-
-                            break;
-                        case PatchKeyword.PackageTypeL:
-                            newFileName += accuratePackageType.ToString().ToLower();
-                            break;
-                        case PatchKeyword.PackageTypeU:
-                            newFileName += accuratePackageType.ToString().ToUpper();
-                            break;
-                        case PatchKeyword.VersionNum:
-                            newFileName += content.Version.Version.ToString();
-                            break;
-                        default:
-                            throw new NotSupportedException($"Unknown patch keyword «{dynamicText.Keyword}».");
-                    }
-
-                    break;
-                default:
-                    throw new NotSupportedException($"Unknown part of type «{patternPart.GetType().Name}».");
-            }
-        }
-
-        return newFileName;
-    }
-
-    private async Task<string> ComputeAddonPackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<AddonPatternPart> patternParts, CancellationToken cancellationToken)
-    {
-        var newFileName = "";
-
-        foreach (var patternPart in patternParts)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            switch (patternPart)
-            {
-                case StaticTextAddonPatternPart staticText:
-                    newFileName += staticText.Text;
-                    break;
-                case DynamicTextAddonPatternPart dynamicText:
-                    switch (dynamicText.Keyword)
-                    {
-                        case AddonKeyword.TitleIdL:
-                            newFileName += content.TitleId.ToLower();
-                            break;
-                        case AddonKeyword.TitleIdU:
-                            newFileName += content.TitleId.ToUpper();
-                            break;
-                        case AddonKeyword.OnlineTitleName:
-                            //TODO: ne pas appeler à chaque fois
-                            var onlineTitleInfo = await _onlineTitleInfoService.GetTitleInfoAsync(content.TitleId);
-
-                            if (onlineTitleInfo != null)
-                                newFileName += onlineTitleInfo.Name;
-                            else
-                                newFileName += "NO_TITLE";
-
-                            break;
-                        case AddonKeyword.PackageTypeL:
-                            newFileName += accuratePackageType.ToString().ToLower();
-                            break;
-                        case AddonKeyword.PackageTypeU:
-                            newFileName += accuratePackageType.ToString().ToUpper();
-                            break;
-                        case AddonKeyword.VersionNum:
-                            newFileName += content.Version.Version.ToString();
-                            break;
-                        default:
-                            throw new NotSupportedException($"Unknown patch keyword «{dynamicText.Keyword}».");
-                    }
-
-                    break;
-                default:
-                    throw new NotSupportedException($"Unknown part of type «{patternPart.GetType().Name}».");
-            }
-        }
-
-        return newFileName;
-    }
 
 }

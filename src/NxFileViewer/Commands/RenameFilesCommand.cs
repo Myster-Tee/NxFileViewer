@@ -5,9 +5,7 @@ using System.Windows.Input;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Addon;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Application;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts.Patch;
+using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,9 +17,9 @@ namespace Emignatik.NxFileViewer.Commands
     {
         private readonly IAppSettingsManager _appSettingsManager;
         private readonly IServiceProvider _serviceProvider;
-        private List<ApplicationPatternPart>? _applicationPatternParts;
-        private List<PatchPatternPart>? _patchPatternParts;
-        private List<AddonPatternPart>? _addonPatternParts;
+        private List<PatternPart>? _applicationPatternParts;
+        private List<PatternPart>? _patchPatternParts;
+        private List<PatternPart>? _addonPatternParts;
         private IBackgroundTaskRunner? _backgroundTaskRunner;
 
         public RenameFilesCommand(IAppSettingsManager appSettingsManager, IServiceProvider serviceProvider)
@@ -36,7 +34,7 @@ namespace Emignatik.NxFileViewer.Commands
 
 
 
-        public List<ApplicationPatternPart>? ApplicationPatternParts
+        public List<PatternPart>? ApplicationPatternParts
         {
             get => _applicationPatternParts;
             set
@@ -47,7 +45,7 @@ namespace Emignatik.NxFileViewer.Commands
             }
         }
 
-        public List<PatchPatternPart>? PatchPatternParts
+        public List<PatternPart>? PatchPatternParts
         {
             get => _patchPatternParts;
             set
@@ -58,7 +56,7 @@ namespace Emignatik.NxFileViewer.Commands
             }
         }
 
-        public List<AddonPatternPart>? AddonPatternParts
+        public List<PatternPart>? AddonPatternParts
         {
             get => _addonPatternParts;
             set
@@ -200,11 +198,11 @@ namespace Emignatik.NxFileViewer.Commands
 
     public interface IRenameFilesCommand : ICommand, INotifyPropertyChanged
     {
-        List<ApplicationPatternPart>? ApplicationPatternParts { get; set; }
+        List<PatternPart>? ApplicationPatternParts { get; set; }
 
-        List<PatchPatternPart>? PatchPatternParts { get; set; }
+        List<PatternPart>? PatchPatternParts { get; set; }
 
-        List<AddonPatternPart>? AddonPatternParts { get; set; }
+        List<PatternPart>? AddonPatternParts { get; set; }
 
         string InputDirectory { get; set; }
 
