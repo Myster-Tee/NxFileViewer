@@ -13,6 +13,8 @@ public interface IAppSettings : INotifyPropertyChanged
 
     string LastUsedDir { get; set; }
 
+    string LastRenamePath { get; set; }
+
     string LastOpenedFile { get; set; }
 
     string ProdKeysFilePath { get; set; }
@@ -42,12 +44,11 @@ public interface IAppSettings : INotifyPropertyChanged
     IRenamingOptions RenamingOptions { get; }
 
     int ProgressBufferSize { get; }
-
 }
 
 public interface IRenamingOptions : INotifyPropertyChanged
 {
-    string FileFilters { get; set; }
+    string? FileFilters { get; set; }
 
     bool IncludeSubdirectories { get; set; }
 

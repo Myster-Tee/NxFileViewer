@@ -86,19 +86,20 @@ public partial class App : Application, IAppEvents
             .AddSingleton<ILocalizationFromSettingsSynchronizerService, LocalizationFromSettingsSynchronizerService>()
 
             .AddTransient<SettingsWindowViewModel>() // Important to let transient so that real actual settings are displayed when settings view is shown
-            .AddTransient<IStreamToFileHelper, StreamToFileHelper>()
             .AddTransient<ISaveFileRunnable, SaveFileRunnable>()
             .AddTransient<ISaveDirectoryRunnable, SaveDirectoryRunnable>()
             .AddTransient<IVerifyNcasHashRunnable, VerifyNcasHashRunnable>()
             .AddTransient<IVerifyNcasHeaderSignatureRunnable, VerifyNcasHeaderSignatureRunnable>()
             .AddTransient<IFilesRenamerRunnable, FilesRenamerRunnable>()
+            .AddTransient<IDownloadFileRunnable, DownloadFileRunnable>()
+            .AddTransient<ISaveStorageRunnable, SaveStorageRunnable>()
+
+            .AddTransient<IStreamToFileHelper, StreamToFileHelper>()
             .AddTransient<IOpenFileLocationCommand, OpenFileLocationCommand>()
             .AddTransient<ISaveDirectoryEntryCommand, SaveDirectoryEntryCommand>()
             .AddTransient<ISavePartitionFileCommand, SavePartitionFileCommand>()
             .AddTransient<ISaveSectionContentCommand, SaveSectionContentCommand>()
             .AddTransient<ISavePlaintextNcaFileCommand, SavePlaintextNcaFileCommand>()
-            .AddTransient<IDownloadFileRunnable, DownloadFileRunnable>()
-            .AddTransient<ISaveStorageRunnable, SaveStorageRunnable>()
             .AddTransient<IFsSanitizer, FsSanitizer>()
             .AddTransient<IHttpDownloader, HttpDownloader>()
             .AddTransient<IBackgroundTaskRunner, BackgroundTaskRunner>()

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Windows;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Models.Overview;
-using Emignatik.NxFileViewer.Settings;
-using Emignatik.NxFileViewer.Tools;
+using Emignatik.NxFileViewer.Services.Prompting;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -14,15 +12,13 @@ namespace Emignatik.NxFileViewer.Commands;
 
 public class SaveTitleImageCommand : CommandBase, ISaveTitleImageCommand
 {
-    private readonly IAppSettings _appSettings;
-    private readonly IFsSanitizer _fsSanitizer;
+    private readonly IPromptService _promptService;
     private readonly ILogger _logger;
     private TitleInfo? _title;
 
-    public SaveTitleImageCommand(IAppSettings appSettings, ILoggerFactory loggerFactory, IFsSanitizer fsSanitizer)
+    public SaveTitleImageCommand(ILoggerFactory loggerFactory, IPromptService promptService)
     {
-        _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
-        _fsSanitizer = fsSanitizer ?? throw new ArgumentNullException(nameof(fsSanitizer));
+        _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
     }
 
@@ -46,12 +42,11 @@ public class SaveTitleImageCommand : CommandBase, ISaveTitleImageCommand
             if (title == null || icon == null)
                 return;
 
-            var fileDialog = new CommonSaveFileDialog
-            {
-                Title = LocalizationManager.Instance.Current.Keys.SaveDialog_Title,
-                InitialDirectory = _appSettings.LastUsedDir,
 
-                Filters = { new CommonFileDialogFilter
+            var defaultFileName = $"{title.AppName}_({title.Language}).jpg";
+            var filters = new CommonFileDialogFilter[]
+            {
+                new()
                 {
                     DisplayName = LocalizationManager.Instance.Current.Keys.SaveDialog_ImageFilter,
                     Extensions =
@@ -59,16 +54,13 @@ public class SaveTitleImageCommand : CommandBase, ISaveTitleImageCommand
                         "jpg"
                     },
                     ShowExtensions = true
-                } },
-                DefaultFileName = _fsSanitizer.SanitizeFileName($"{title.AppName}_({title.Language}).jpg"),
-                DefaultExtension = "jpg",
+                }
             };
 
-            if (fileDialog.ShowDialog(Application.Current.MainWindow) != CommonFileDialogResult.Ok)
-                return;
+            var filePath = _promptService.PromptSaveFile(defaultFileName, LocalizationManager.Instance.Current.Keys.SaveDialog_Title, filters);
 
-            var filePath = fileDialog.FileName;
-            _appSettings.LastUsedDir = Path.GetDirectoryName(filePath)!;
+            if (filePath == null)
+                return;
 
             File.WriteAllBytes(filePath, icon);
         }

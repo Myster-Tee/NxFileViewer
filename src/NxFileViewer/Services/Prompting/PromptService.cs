@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using Emignatik.NxFileViewer.Localization;
@@ -32,29 +33,42 @@ public class PromptService : IPromptService
         if (fileDialog.ShowDialog(Application.Current.MainWindow) != CommonFileDialogResult.Ok)
             return null;
 
-        var filePath = fileDialog.FileName;
+        var dirPath = fileDialog.FileName;
 
-        _appSettings.LastUsedDir = filePath;
+        _appSettings.LastUsedDir = dirPath;
 
-        return filePath;
+        return dirPath;
     }
 
-    public string? PromptSaveFile(string proposedFileName)
+    public string? PromptSaveFile(string defaultFileName, string? title = null, IEnumerable<CommonFileDialogFilter>? filters = null)
     {
-        var sanitizedFileName = _fsSanitizer.SanitizeFileName(proposedFileName);
+        title ??= LocalizationManager.Instance.Current.Keys.SaveDialog_Title;
+        var sanitizedFileName = _fsSanitizer.SanitizeFileName(defaultFileName);
 
         var fileDialog = new CommonSaveFileDialog
         {
-            Title = LocalizationManager.Instance.Current.Keys.SaveDialog_Title,
+            Title = title,
             InitialDirectory = _appSettings.LastUsedDir,
+            DefaultFileName = sanitizedFileName,
+        };
 
-            Filters = { new CommonFileDialogFilter
+        if (filters == null)
+        {
+
+            fileDialog.Filters.Add(new CommonFileDialogFilter
             {
                 DisplayName = LocalizationManager.Instance.Current.Keys.SaveDialog_AnyFileFilter,
                 ShowExtensions = false
-            } },
-            DefaultFileName = sanitizedFileName,
-        };
+            });
+        }
+        else
+        {
+            foreach (var filter in filters)
+            {
+                fileDialog.Filters.Add(filter);
+            }
+        }
+
 
         if (fileDialog.ShowDialog(Application.Current.MainWindow) != CommonFileDialogResult.Ok)
             return null;

@@ -250,7 +250,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_ApplicationPattern => "Application pattern";
     public string RenamingTool_PatchPattern => "Patch pattern";
     public string RenamingTool_AddonPattern => "Addon pattern";
-    public string RenamingTool_InputDirectory => "Input directory";
+    public string RenamingTool_InputPath => "Input path";
     public string RenamingTool_FileFilters => "Filters";
     public string RenamingTool_ToolTip_BasePattern => "Use {{TitleID}} {{TitleName}}"; //TODO : finir de documenter
     public string RenamingTool_ToolTip_PatchPattern => ""; //TODO : finir de documenter

@@ -8,6 +8,7 @@
         xmlns:windows="clr-namespace:Emignatik.NxFileViewer.Views.Windows"
         xmlns:bindingExtensions="clr-namespace:Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions"
         xmlns:userControls="clr-namespace:Emignatik.NxFileViewer.Views.UserControls"
+        xmlns:dragAndDrop="clr-namespace:Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions.DragAndDrop"
         mc:Ignorable="d"
         Style="{StaticResource WindowStyle}"
         Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_WindowTitle}" 
@@ -33,14 +34,13 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <GroupBox Grid.Row="0" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_GroupBoxInput}">
+                <GroupBox Grid.Row="0" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_GroupBoxInput}" dragAndDrop:DropFilesBehaviorExtension.IsEnabled="True" Background="Transparent">
                     <StackPanel>
-                        <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_InputDirectory}" Style="{StaticResource Title2}" />
+                        <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_InputPath}" Style="{StaticResource Title2}" />
                         <DockPanel LastChildFill="true">
                             <Button Command="{Binding Path=BrowseInputDirectoryCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
-                            <TextBox Text="{Binding Path=RenameCommand.InputDirectory}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
+                            <TextBox Text="{Binding Path=RenameCommand.InputPath}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
                         </DockPanel>
-
 
                         <Grid>
                             <Grid.ColumnDefinitions>

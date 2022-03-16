@@ -22,6 +22,7 @@
         <KeyBinding Gesture="Ctrl+F5" Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" />
         <KeyBinding Gesture="F10" Command="{Binding Path=LoadKeysCommand}" />
         <KeyBinding Gesture="F9" Command="{Binding Path=OpenTitleWebPageCommand}" />
+        <KeyBinding Gesture="F2" Command="{Binding Path=ShowRenameToolWindowCommand}" />
     </Window.InputBindings>
 
     <Grid>

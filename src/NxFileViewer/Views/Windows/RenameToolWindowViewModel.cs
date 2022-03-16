@@ -7,25 +7,26 @@ using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.Prompting;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM;
+using Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions.DragAndDrop;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 
 namespace Emignatik.NxFileViewer.Views.Windows;
 
-public class RenameToolWindowViewModel : WindowViewModelBase
+public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
 {
     private readonly INamingPatternsParser _namingPatternsParser;
-    private readonly IAppSettingsManager _appSettingsManager;
     private readonly IPromptService _promptService;
 
     private string? _applicationPatternError;
     private string? _patchPatternError;
     private string? _addonPatternError;
     private readonly LoggerSource _loggerSource = new();
+    private readonly IAppSettings _appSettings;
 
-    public RenameToolWindowViewModel(INamingPatternsParser namingPatternsParser, IAppSettingsManager appSettingsManager, IPromptService promptService, IRenameFilesCommand renameFilesCommand, IBackgroundTaskRunner backgroundTaskRunner)
+    public RenameToolWindowViewModel(INamingPatternsParser namingPatternsParser, IAppSettings appSettings, IPromptService promptService, IRenameFilesCommand renameFilesCommand, IBackgroundTaskRunner backgroundTaskRunner)
     {
         _namingPatternsParser = namingPatternsParser ?? throw new ArgumentNullException(nameof(namingPatternsParser));
-        _appSettingsManager = appSettingsManager ?? throw new ArgumentNullException(nameof(appSettingsManager));
+        _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
         _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
         BackgroundTask = backgroundTaskRunner ?? throw new ArgumentNullException(nameof(backgroundTaskRunner));
         RenameCommand = renameFilesCommand ?? throw new ArgumentNullException(nameof(renameFilesCommand));
@@ -52,10 +53,10 @@ public class RenameToolWindowViewModel : WindowViewModelBase
 
     public string ApplicationPattern
     {
-        get => _appSettingsManager.Settings.ApplicationPattern;
+        get => _appSettings.ApplicationPattern;
         set
         {
-            _appSettingsManager.Settings.ApplicationPattern = value;
+            _appSettings.ApplicationPattern = value;
 
             UpdateApplicationPatternParts();
             NotifyPropertyChanged();
@@ -85,10 +86,10 @@ public class RenameToolWindowViewModel : WindowViewModelBase
 
     public string PatchPattern
     {
-        get => _appSettingsManager.Settings.PatchPattern;
+        get => _appSettings.PatchPattern;
         set
         {
-            _appSettingsManager.Settings.PatchPattern = value;
+            _appSettings.PatchPattern = value;
             UpdatePatchPatternParts();
             NotifyPropertyChanged();
         }
@@ -106,10 +107,10 @@ public class RenameToolWindowViewModel : WindowViewModelBase
 
     public string AddonPattern
     {
-        get => _appSettingsManager.Settings.AddonPattern;
+        get => _appSettings.AddonPattern;
         set
         {
-            _appSettingsManager.Settings.AddonPattern = value;
+            _appSettings.AddonPattern = value;
             UpdateAddonPatternParts();
             NotifyPropertyChanged();
         }
@@ -202,7 +203,7 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         var selectedDir = _promptService.PromptSelectDir(LocalizationManager.Instance.Current.Keys.RenamingTool_BrowseDirTitle);
 
         if (selectedDir != null)
-            RenameCommand.InputDirectory = selectedDir;
+            RenameCommand.InputPath = selectedDir;
     }
 
     private void Cancel()
@@ -210,4 +211,8 @@ public class RenameToolWindowViewModel : WindowViewModelBase
         this.Window?.Close();
     }
 
+    public void OnFilesDropped(string[] files)
+    {
+        
+    }
 }

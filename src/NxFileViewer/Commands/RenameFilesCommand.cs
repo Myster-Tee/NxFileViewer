@@ -15,24 +15,22 @@ namespace Emignatik.NxFileViewer.Commands
 {
     public class RenameFilesCommand : CommandBase, IRenameFilesCommand
     {
-        private readonly IAppSettingsManager _appSettingsManager;
+        private readonly IAppSettings _appSettings;
         private readonly IServiceProvider _serviceProvider;
         private List<PatternPart>? _applicationPatternParts;
         private List<PatternPart>? _patchPatternParts;
         private List<PatternPart>? _addonPatternParts;
         private IBackgroundTaskRunner? _backgroundTaskRunner;
 
-        public RenameFilesCommand(IAppSettingsManager appSettingsManager, IServiceProvider serviceProvider)
+        public RenameFilesCommand(IAppSettings appSettings, IServiceProvider serviceProvider)
         {
-            _appSettingsManager = appSettingsManager ?? throw new ArgumentNullException(nameof(appSettingsManager));
+            _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
 
-            _appSettingsManager.Settings.PropertyChanged += OnAppSettingsPropertyChanged;
-            _appSettingsManager.Settings.RenamingOptions.PropertyChanged += OnRenamingOptionsPropertyChanged;
+            _appSettings.PropertyChanged += OnAppSettingsPropertyChanged;
+            _appSettings.RenamingOptions.PropertyChanged += OnRenamingOptionsPropertyChanged;
         }
-
-
 
         public List<PatternPart>? ApplicationPatternParts
         {
@@ -67,48 +65,48 @@ namespace Emignatik.NxFileViewer.Commands
             }
         }
 
-        public string InputDirectory
+        public string InputPath
         {
-            get => _appSettingsManager.Settings.LastUsedDir;
-            set => _appSettingsManager.Settings.LastUsedDir = value;
+            get => _appSettings.LastRenamePath;
+            set => _appSettings.LastRenamePath = value;
         }
 
         public string? FileFilters
         {
-            get => _appSettingsManager.Settings.RenamingOptions.FileFilters;
-            set => _appSettingsManager.Settings.RenamingOptions.FileFilters = value;
+            get => _appSettings.RenamingOptions.FileFilters;
+            set => _appSettings.RenamingOptions.FileFilters = value;
         }
 
         public bool IncludeSubdirectories
         {
-            get => _appSettingsManager.Settings.RenamingOptions.IncludeSubdirectories;
-            set => _appSettingsManager.Settings.RenamingOptions.IncludeSubdirectories = value;
+            get => _appSettings.RenamingOptions.IncludeSubdirectories;
+            set => _appSettings.RenamingOptions.IncludeSubdirectories = value;
         }
 
         public bool IsSimulation
         {
-            get => _appSettingsManager.Settings.RenamingOptions.IsSimulation;
-            set => _appSettingsManager.Settings.RenamingOptions.IsSimulation = value;
+            get => _appSettings.RenamingOptions.IsSimulation;
+            set => _appSettings.RenamingOptions.IsSimulation = value;
         }
 
         public ILogger? Logger { get; set; }
 
         public string InvalidWindowsCharsReplacement
         {
-            get => _appSettingsManager.Settings.RenamingOptions.InvalidFileNameCharsReplacement;
-            set => _appSettingsManager.Settings.RenamingOptions.InvalidFileNameCharsReplacement = value;
+            get => _appSettings.RenamingOptions.InvalidFileNameCharsReplacement;
+            set => _appSettings.RenamingOptions.InvalidFileNameCharsReplacement = value;
         }
 
         public bool ReplaceWhiteSpaceChars
         {
-            get => _appSettingsManager.Settings.RenamingOptions.ReplaceWhiteSpaceChars;
-            set => _appSettingsManager.Settings.RenamingOptions.ReplaceWhiteSpaceChars = value;
+            get => _appSettings.RenamingOptions.ReplaceWhiteSpaceChars;
+            set => _appSettings.RenamingOptions.ReplaceWhiteSpaceChars = value;
         }
 
         public string WhiteSpaceCharsReplacement
         {
-            get => _appSettingsManager.Settings.RenamingOptions.WhiteSpaceCharsReplacement;
-            set => _appSettingsManager.Settings.RenamingOptions.WhiteSpaceCharsReplacement = value;
+            get => _appSettings.RenamingOptions.WhiteSpaceCharsReplacement;
+            set => _appSettings.RenamingOptions.WhiteSpaceCharsReplacement = value;
         }
 
         public IBackgroundTaskRunner? BackgroundTaskRunner
@@ -139,9 +137,11 @@ namespace Emignatik.NxFileViewer.Commands
                     WhiteSpaceCharsReplacement = WhiteSpaceCharsReplacement,
                 };
 
+                //TODO: gérer si l'input path est un dossier ou un fichier (créer le Runnable pour un renommage de fichier?)
+
                 var filesRenamerRunnable = _serviceProvider.GetRequiredService<IFilesRenamerRunnable>();
 
-                filesRenamerRunnable.Setup(InputDirectory, namingPatterns, FileFilters, IncludeSubdirectories, IsSimulation, Logger);
+                filesRenamerRunnable.Setup(InputPath, namingPatterns, FileFilters, IncludeSubdirectories, IsSimulation, Logger);
 
                 await _backgroundTaskRunner!.RunAsync(filesRenamerRunnable);
             }
@@ -155,8 +155,8 @@ namespace Emignatik.NxFileViewer.Commands
         {
             switch (e.PropertyName)
             {
-                case nameof(IAppSettings.LastUsedDir):
-                    NotifyPropertyChanged(nameof(InputDirectory));
+                case nameof(IAppSettings.LastRenamePath):
+                    NotifyPropertyChanged(nameof(InputPath));
                     TriggerCanExecuteChanged();
                     break;
             }
@@ -204,7 +204,7 @@ namespace Emignatik.NxFileViewer.Commands
 
         List<PatternPart>? AddonPatternParts { get; set; }
 
-        string InputDirectory { get; set; }
+        string InputPath { get; set; }
 
         string? FileFilters { get; set; }
 

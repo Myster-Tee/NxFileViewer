@@ -221,7 +221,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string RenamingTool_ApplicationPattern { get; }
     string RenamingTool_PatchPattern { get; }
     string RenamingTool_AddonPattern { get; }
-    string RenamingTool_InputDirectory { get; }
+    string RenamingTool_InputPath { get; }
     string RenamingTool_FileFilters { get; }
     string RenamingTool_ToolTip_BasePattern { get; }
     string RenamingTool_ToolTip_PatchPattern { get; }

@@ -62,7 +62,6 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
         public string InputDirectory { get; init; } = null!;
         public bool Simulation { get; init; }
         public ILogger? Logger { get; init; }
-        public CancellationToken CancellationToken { get; set; }
     }
 }
 

@@ -7,7 +7,7 @@ namespace Emignatik.NxFileViewer.Settings;
 public class AppSettings : NotifyPropertyChangedBase, IAppSettings
 {
     private string _appLanguage = "";
-    private string _lastUsedDir = "";
+    private string _lastRenamePath = "";
     private string _lastOpenedFile = "";
     private string _prodKeysFilePath = "";
     private string _consoleKeysFilePath = "";
@@ -22,6 +22,7 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
     private string _applicationPattern = "{Title} [{TitleId:U}] [v{VerNum}].{Ext:L}";
     private string _patchPattern = "{Title} [{TitleId:U}] [v{VerNum}].{Ext:L}";
     private string _addonPattern = "DLC_{WTitle}_[v{VerNum}].{Ext:L}";
+    private string _lastUsedDir = "";
 
 
     public string AppLanguage
@@ -40,6 +41,16 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
         set
         {
             _lastUsedDir = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public string LastRenamePath
+    {
+        get => _lastRenamePath;
+        set
+        {
+            _lastRenamePath = value;
             NotifyPropertyChanged();
         }
     }
