@@ -18,10 +18,10 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
     private bool _alwaysReloadKeysBeforeOpen = false;
 
     private string _titlePageUrl = "https://tinfoil.media/Title/{TitleId}";
-    private string _applicationPattern = "{FirstTitleName} [{TitleIdU}] [v{VersionNum}].{PackageTypeL}";
-    private string _patchPattern = "{FirstTitleName} [{TitleIdU}] [v{VersionNum}].{PackageTypeL}";
-    private string _addonPattern = "DLC_{OnlineTitleName}_[v{VersionNum}].{PackageTypeL}";
     private string _titleInfoApiUrl = "https://tinfoil.media/api/title/{TitleId}";
+    private string _applicationPattern = "{Title} [{TitleId:U}] [v{VerNum}].{Ext:L}";
+    private string _patchPattern = "{Title} [{TitleId:U}] [v{VerNum}].{Ext:L}";
+    private string _addonPattern = "DLC_{WTitle}_[v{VerNum}].{Ext:L}";
 
 
     public string AppLanguage

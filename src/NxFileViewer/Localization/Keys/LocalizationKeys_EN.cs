@@ -281,4 +281,6 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string FileRenaming_PatternKeywordUnknown => "Keyword «{0}» is unknown, allowed keywords are «{1}».";
     public string FileRenaming_EmptyPatternNotAllowed => "Pattern can't be empty.";
     public string FileRenaming_PatternKeywordNotAllowed => "Keyword «{0}» not allowed for patters of type «{1}».";
+    public string FileRenaming_StringOperatorUnknown => "Operator «{0}» is not recognized, allowed operators are «{1}».";
+
 }

@@ -252,5 +252,5 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string FileRenaming_PatternKeywordUnknown { get; }
     string FileRenaming_EmptyPatternNotAllowed { get; }
     string FileRenaming_PatternKeywordNotAllowed { get; }
-
+    string FileRenaming_StringOperatorUnknown { get; }
 }

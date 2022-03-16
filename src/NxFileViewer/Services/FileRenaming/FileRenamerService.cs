@@ -95,13 +95,13 @@ public class FileRenamerService : IFileRenamerService
 
     private static void ValidateAllowedKeywords(IEnumerable<PatternPart> applicationPattern, IEnumerable<PatternPart> patchPattern, IEnumerable<PatternPart> addonPattern)
     {
-        if (HasNotAllowedKeyword(applicationPattern, PatternKeywords.GetAllowedApplicationKeywords(), out var firstNotAllowedApplicationKeyword))
+        if (HasNotAllowedKeyword(applicationPattern, PatternKeywordHelper.GetAllowedApplicationKeywords(), out var firstNotAllowedApplicationKeyword))
             throw new KeywordNotAllowedException(firstNotAllowedApplicationKeyword.Value, PatternType.Application);
 
-        if (HasNotAllowedKeyword(patchPattern, PatternKeywords.GetAllowedPatchKeywords(), out var firstNotAllowedPatchKeyword))
+        if (HasNotAllowedKeyword(patchPattern, PatternKeywordHelper.GetAllowedPatchKeywords(), out var firstNotAllowedPatchKeyword))
             throw new KeywordNotAllowedException(firstNotAllowedPatchKeyword.Value, PatternType.Patch);
 
-        if (HasNotAllowedKeyword(addonPattern, PatternKeywords.GetAllowedAddonKeywords(), out var firstNotAllowedAddonKeyword))
+        if (HasNotAllowedKeyword(addonPattern, PatternKeywordHelper.GetAllowedAddonKeywords(), out var firstNotAllowedAddonKeyword))
             throw new KeywordNotAllowedException(firstNotAllowedAddonKeyword.Value, PatternType.Addon);
     }
 
@@ -194,47 +194,53 @@ public class FileRenamerService : IFileRenamerService
         foreach (var patternPart in patternParts)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
+
             switch (patternPart)
             {
                 case StaticTextPatternPart staticText:
                     newFileName += staticText.Text;
                     break;
                 case DynamicTextPatternPart dynamicText:
+                    string partValue;
                     switch (dynamicText.Keyword)
                     {
-                        case PatternKeyword.TitleIdL:
-                            newFileName += content.TitleId.ToLower();
+                        case PatternKeyword.TitleId:
+                            partValue = content.TitleId;
                             break;
-                        case PatternKeyword.TitleIdU:
-                            newFileName += content.TitleId.ToUpper();
-                            break;
-                        case PatternKeyword.FirstTitleName:
+                        case PatternKeyword.TitleName:
                             var firstTitle = content.NacpData?.Titles.FirstOrDefault();
-                            if (firstTitle != null)
-                                newFileName += firstTitle.Name;
-                            else
-                                newFileName += "NO_TITLE";
+                            partValue = firstTitle != null ? firstTitle.Name : "NO_TITLE";
                             break;
-                        case PatternKeyword.PackageTypeL:
-                            newFileName += accuratePackageType.ToString().ToLower();
+                        case PatternKeyword.PackageType:
+                            partValue = accuratePackageType.ToString();
                             break;
-                        case PatternKeyword.PackageTypeU:
-                            newFileName += accuratePackageType.ToString().ToUpper();
-                            break;
-                        case PatternKeyword.VersionNum:
-                            newFileName += content.Version.Version.ToString();
+                        case PatternKeyword.VersionNumber:
+                            partValue = content.Version.Version.ToString();
                             break;
                         case PatternKeyword.OnlineTitleName:
                             var onlineTitleInfo = await _cachedOnlineTitleInfoService.GetTitleInfoAsync(content.TitleId);
-
-                            if (onlineTitleInfo != null)
-                                newFileName += onlineTitleInfo.Name;
-                            else
-                                newFileName += "NO_TITLE";
+                            partValue = onlineTitleInfo != null ? onlineTitleInfo.Name : "NO_TITLE";
                             break;
                         default:
                             throw new NotSupportedException($"Unknown application keyword «{dynamicText.Keyword}».");
                     }
+
+                    switch (dynamicText.StringOperator)
+                    {
+                        case StringOperator.Untouched:
+                            break;
+                        case StringOperator.ToLower:
+                            partValue = partValue.ToLower();
+                            break;
+                        case StringOperator.ToUpper:
+                            partValue = partValue.ToUpper();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException($"Unknown operator «{dynamicText.StringOperator}».");
+                    }
+
+                    newFileName += partValue;
 
                     break;
                 default:

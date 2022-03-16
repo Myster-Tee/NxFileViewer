@@ -282,4 +282,5 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string FileRenaming_PatternKeywordUnknown => "Mot clé «{0}» inconnu, liste des mots clés autorisés: «{1}».";
     public string FileRenaming_EmptyPatternNotAllowed => "La pattern ne peut être vide.";
     public string FileRenaming_PatternKeywordNotAllowed => "Le mot clé «{0}» n'est pas autorisé pour les patterns de type «{1}».";
+    public string FileRenaming_StringOperatorUnknown => "L'opérateur «{0}» n'est pas reconnu, les opérateurs autorisés sont «{1}».";
 }

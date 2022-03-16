@@ -14,20 +14,20 @@ public class NamingPatternsParser : INamingPatternsParser
 
     public List<PatternPart> ParseApplicationPattern(string pattern)
     {
-        var allowedApplicationKeywords = PatternKeywords.GetAllowedApplicationKeywords();
+        var allowedApplicationKeywords = PatternKeywordHelper.GetAllowedApplicationKeywords();
 
         return ParsePatternsInternal(pattern, allowedApplicationKeywords, PatternType.Application).ToList();
     }
 
     public List<PatternPart> ParsePatchPattern(string pattern)
     {
-        var allowedPatchKeywords = PatternKeywords.GetAllowedPatchKeywords();
+        var allowedPatchKeywords = PatternKeywordHelper.GetAllowedPatchKeywords();
         return ParsePatternsInternal(pattern, allowedPatchKeywords, PatternType.Patch).ToList();
     }
 
     public List<PatternPart> ParseAddonPattern(string pattern)
     {
-        var allowedAddonKeywords = PatternKeywords.GetAllowedAddonKeywords();
+        var allowedAddonKeywords = PatternKeywordHelper.GetAllowedAddonKeywords();
         return ParsePatternsInternal(pattern, allowedAddonKeywords, PatternType.Addon).ToList();
     }
 
@@ -38,45 +38,47 @@ public class NamingPatternsParser : INamingPatternsParser
 
         foreach (var (text, isDelimited) in _keywordsParser.Parse(pattern))
         {
-            if (isDelimited)
+            if (!isDelimited)
             {
+                // Static part
+                yield return new StaticTextPatternPart(text);
+            }
+            else
+            {
+                // Dynamic part
                 var parts = text.Split(':', 2);
-                var keyword = parts[0];
+                var keywordRaw = parts[0];
+                var operatorRaw = parts.Length == 2 ? parts[1] : null;
 
-                var stringOperation = StringOperation.Untouched;
-                if (parts.Length == 2)
+                if (!PatternKeywordHelper.TryParse(keywordRaw, out var nullablePatternKeyword))
                 {
-                    stringOperation = ParseStringOperation(parts[1]);
-                }
+                    var allowedKeywordsStr = PatternKeywordHelper.GetCorrespondingSerializedValues(allowedKeywords)
+                        .Select(type => _keywordsParser.StartDelimiter + type.ToString() + _keywordsParser.EndDelimiter);
 
-                if (!Enum.TryParse<PatternKeyword>(text, true, out var patternKeyword))
-                {
-                    var allowedKeywordFormatted = allowedKeywords.Select(type => _keywordsParser.StartDelimiter + type.ToString() + _keywordsParser.EndDelimiter);
-
-                    throw new KeywordUnknownException(text, allowedKeywordFormatted);
+                    throw new KeywordUnknownException(keywordRaw, allowedKeywordsStr);
                 }
+                var patternKeyword = nullablePatternKeyword.Value;
 
                 if (!allowedKeywords.Contains(patternKeyword))
                     throw new KeywordNotAllowedException(patternKeyword, patternType);
 
-                yield return new DynamicTextPatternPart(patternKeyword, stringOperation);
-            }
-            else
-            {
-                yield return new StaticTextPatternPart(text);
+
+                StringOperator stringOperator;
+                if (operatorRaw != null)
+                {
+                    if (!StringOperatorHelper.TryParse(operatorRaw, out var nullableStringOperator))
+                        throw new StringOperatorUnknownException(operatorRaw);
+
+                    stringOperator = nullableStringOperator.Value;
+                }
+                else
+                {
+                    stringOperator = StringOperator.Untouched;
+                }
+
+                yield return new DynamicTextPatternPart(patternKeyword, stringOperator);
             }
         }
     }
 
-    private static StringOperation ParseStringOperation(string operation)
-    {
-        var operationCleaned = operation.Trim().ToUpper();
-        if (operationCleaned == "L")
-            return StringOperation.ToLower;
-        else if (operationCleaned == "U")
-            return StringOperation.ToUpper;
-
-        //TODO: à finir d'implémenter
-        throw new NotImplementedException();
-    }
 }
