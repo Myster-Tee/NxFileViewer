@@ -213,6 +213,7 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
 
     public void OnFilesDropped(string[] files)
     {
-        
+        if (files.Length > 0)
+            this.RenameCommand.InputPath = files[0];
     }
 }

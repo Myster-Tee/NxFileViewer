@@ -38,7 +38,7 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
         ).Wait(cancellationToken);
     }
 
-    public void Setup(string inputDirectory, INamingSettings namingSettings, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger)
+    public IFilesRenamerRunnable Setup(string inputDirectory, INamingSettings namingSettings, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger)
     {
         if (inputDirectory == null) throw new ArgumentNullException(nameof(inputDirectory));
         if (namingSettings == null) throw new ArgumentNullException(nameof(namingSettings));
@@ -52,6 +52,8 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
             Simulation = simulation,
             Logger = logger,
         };
+
+        return this;
     }
 
     private class RenameSettings
@@ -67,6 +69,6 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
 
 public interface IFilesRenamerRunnable : IRunnable
 {
-    void Setup(string inputDirectory, INamingSettings namingSettings, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger);
+    IFilesRenamerRunnable Setup(string inputDirectory, INamingSettings namingSettings, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger);
 }
 

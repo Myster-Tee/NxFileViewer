@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
@@ -127,6 +128,8 @@ namespace Emignatik.NxFileViewer.Commands
         {
             try
             {
+                var inputPath = InputPath;
+
                 var namingPatterns = new NamingSettings
                 {
                     ApplicationPattern = ApplicationPatternParts!,
@@ -138,12 +141,19 @@ namespace Emignatik.NxFileViewer.Commands
                 };
 
                 //TODO: gérer si l'input path est un dossier ou un fichier (créer le Runnable pour un renommage de fichier?)
+                IRunnable runnable;
+                if (File.Exists(inputPath))
+                {
+                    runnable = _serviceProvider.GetRequiredService<IFileRenamerRunnable>()
+                        .Setup(inputPath, namingPatterns, IsSimulation, Logger);
+                }
+                else
+                {
+                    runnable = _serviceProvider.GetRequiredService<IFilesRenamerRunnable>()
+                        .Setup(inputPath, namingPatterns, FileFilters, IncludeSubdirectories, IsSimulation, Logger);
+                }
 
-                var filesRenamerRunnable = _serviceProvider.GetRequiredService<IFilesRenamerRunnable>();
-
-                filesRenamerRunnable.Setup(InputPath, namingPatterns, FileFilters, IncludeSubdirectories, IsSimulation, Logger);
-
-                await _backgroundTaskRunner!.RunAsync(filesRenamerRunnable);
+                await _backgroundTaskRunner!.RunAsync(runnable);
             }
             catch (Exception ex)
             {
