@@ -29,7 +29,6 @@ namespace Emignatik.NxFileViewer.Commands
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
 
-            _appSettings.PropertyChanged += OnAppSettingsPropertyChanged;
             _appSettings.RenamingOptions.PropertyChanged += OnRenamingOptionsPropertyChanged;
         }
 
@@ -68,8 +67,8 @@ namespace Emignatik.NxFileViewer.Commands
 
         public string InputPath
         {
-            get => _appSettings.LastRenamePath;
-            set => _appSettings.LastRenamePath = value;
+            get => _appSettings.RenamingOptions.LastRenamePath;
+            set => _appSettings.RenamingOptions.LastRenamePath = value;
         }
 
         public string? FileFilters
@@ -161,17 +160,6 @@ namespace Emignatik.NxFileViewer.Commands
             }
         }
 
-        private void OnAppSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(IAppSettings.LastRenamePath):
-                    NotifyPropertyChanged(nameof(InputPath));
-                    TriggerCanExecuteChanged();
-                    break;
-            }
-        }
-
         private void OnRenamingOptionsPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -190,7 +178,14 @@ namespace Emignatik.NxFileViewer.Commands
                     break;
                 case nameof(IRenamingOptions.WhiteSpaceCharsReplacement):
                     NotifyPropertyChanged(nameof(WhiteSpaceCharsReplacement));
+                    break;          
+                case nameof(IRenamingOptions.ReplaceWhiteSpaceChars):
+                    NotifyPropertyChanged(nameof(ReplaceWhiteSpaceChars));
                     break;
+                case nameof(IRenamingOptions.LastRenamePath):
+                    NotifyPropertyChanged(nameof(InputPath));
+                    break;
+
             }
         }
 

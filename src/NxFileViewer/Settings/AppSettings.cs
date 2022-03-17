@@ -19,9 +19,6 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
 
     private string _titlePageUrl = "https://tinfoil.media/Title/{TitleId}";
     private string _titleInfoApiUrl = "https://tinfoil.media/api/title/{TitleId}";
-    private string _applicationPattern = "{Title} [{TitleId:U}] [v{VerNum}].{Ext:L}";
-    private string _patchPattern = "{Title} [{TitleId:U}] [v{VerNum}].{Ext:L}";
-    private string _addonPattern = "DLC_{WTitle}_[v{VerNum}].{Ext:L}";
     private string _lastUsedDir = "";
 
 
@@ -146,6 +143,66 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
         }
     }
 
+    public string TitleInfoApiUrl
+    {
+        get => _titleInfoApiUrl;
+        set
+        {
+            _titleInfoApiUrl = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public IRenamingOptions RenamingOptions { get; } = new RenamingOptions();
+
+    [JsonIgnore]
+    public int ProgressBufferSize { get; } = 4 * 1024 * 1024;
+
+}
+
+public class RenamingOptions : NotifyPropertyChangedBase, IRenamingOptions
+{
+    private string? _fileFilters = "*.nsp;*.nsz;*.xci;*.xcz";
+    private bool _includeSubdirectories = true;
+    private string _applicationPattern = "{Title} [{TitleId:U}] [v{VerNum}].{Ext:L}";
+    private string _patchPattern = "{Title} [{TitleId:U}] [v{VerNum}].{Ext:L}";
+    private string _addonPattern = "DLC_{WTitle}_[v{VerNum}].{Ext:L}";
+    private bool _isSimulation = true;
+    private string _invalidFileNameCharsReplacement = "꞉";
+    private bool _replaceWhiteSpaceChars = false;
+    private string _whiteSpaceCharsReplacement = "_";
+    private string _lastRenamePath = "";
+
+    public string LastRenamePath
+    {
+        get => _lastRenamePath;
+        set
+        {
+            _lastRenamePath = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public string? FileFilters
+    {
+        get => _fileFilters;
+        set
+        {
+            _fileFilters = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public bool IncludeSubdirectories
+    {
+        get => _includeSubdirectories;
+        set
+        {
+            _includeSubdirectories = value;
+            NotifyPropertyChanged();
+        }
+    }
+
     public string ApplicationPattern
     {
         get => _applicationPattern;
@@ -172,52 +229,6 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
         set
         {
             _addonPattern = value;
-            NotifyPropertyChanged();
-        }
-    }
-
-    public string TitleInfoApiUrl
-    {
-        get => _titleInfoApiUrl;
-        set
-        {
-            _titleInfoApiUrl = value;
-            NotifyPropertyChanged();
-        }
-    }
-
-    public IRenamingOptions RenamingOptions { get; } = new RenamingOptions();
-
-    [JsonIgnore]
-    public int ProgressBufferSize { get; } = 4 * 1024 * 1024;
-
-}
-
-public class RenamingOptions : NotifyPropertyChangedBase, IRenamingOptions
-{
-    private string? _fileFilters = "*.nsp;*.nsz;*.xci;*.xcz";
-    private bool _includeSubdirectories = true;
-    private bool _isSimulation = true;
-    private string _invalidFileNameCharsReplacement = "꞉";
-    private bool _replaceWhiteSpaceChars = false;
-    private string _whiteSpaceCharsReplacement = "_";
-
-    public string? FileFilters
-    {
-        get => _fileFilters;
-        set
-        {
-            _fileFilters = value;
-            NotifyPropertyChanged();
-        }
-    }
-
-    public bool IncludeSubdirectories
-    {
-        get => _includeSubdirectories;
-        set
-        {
-            _includeSubdirectories = value;
             NotifyPropertyChanged();
         }
     }

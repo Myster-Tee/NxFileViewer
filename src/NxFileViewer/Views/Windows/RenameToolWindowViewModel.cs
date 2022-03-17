@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Logging;
@@ -36,6 +37,8 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
         CancelCommand = new RelayCommand(Cancel);
         BrowseInputDirectoryCommand = new RelayCommand(BrowseInputDirectory);
 
+        _appSettings.RenamingOptions.PropertyChanged += OnRenamingOptionsPropertyChanged;
+
         UpdateApplicationPatternParts();
         UpdatePatchPatternParts();
         UpdateAddonPatternParts();
@@ -53,10 +56,10 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
 
     public string ApplicationPattern
     {
-        get => _appSettings.ApplicationPattern;
+        get => _appSettings.RenamingOptions.ApplicationPattern;
         set
         {
-            _appSettings.ApplicationPattern = value;
+            _appSettings.RenamingOptions.ApplicationPattern = value;
 
             UpdateApplicationPatternParts();
             NotifyPropertyChanged();
@@ -73,23 +76,12 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
         }
     }
 
-    public string InvalidWindowsCharsReplacement
-    {
-        get => RenameCommand.InvalidWindowsCharsReplacement;
-        set
-        {
-            RenameCommand.InvalidWindowsCharsReplacement = value;
-            NotifyPropertyChanged();
-        }
-
-    }
-
     public string PatchPattern
     {
-        get => _appSettings.PatchPattern;
+        get => _appSettings.RenamingOptions.PatchPattern;
         set
         {
-            _appSettings.PatchPattern = value;
+            _appSettings.RenamingOptions.PatchPattern = value;
             UpdatePatchPatternParts();
             NotifyPropertyChanged();
         }
@@ -107,10 +99,10 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
 
     public string AddonPattern
     {
-        get => _appSettings.AddonPattern;
+        get => _appSettings.RenamingOptions.AddonPattern;
         set
         {
-            _appSettings.AddonPattern = value;
+            _appSettings.RenamingOptions.AddonPattern = value;
             UpdateAddonPatternParts();
             NotifyPropertyChanged();
         }
@@ -126,34 +118,14 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
         }
     }
 
-    public bool IsSimulation
+    private void OnRenamingOptionsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        get => RenameCommand.IsSimulation;
-        set
-        {
-            RenameCommand.IsSimulation = value;
-            NotifyPropertyChanged();
-        }
-    }
-
-    public bool ReplaceWhiteSpaceChars
-    {
-        get => RenameCommand.ReplaceWhiteSpaceChars;
-        set
-        {
-            RenameCommand.ReplaceWhiteSpaceChars = value;
-            NotifyPropertyChanged();
-        }
-    }
-
-    public string WhiteSpaceCharsReplacement
-    {
-        get => RenameCommand.WhiteSpaceCharsReplacement;
-        set
-        {
-            RenameCommand.WhiteSpaceCharsReplacement = value;
-            NotifyPropertyChanged();
-        }
+        if(e.PropertyName == nameof(IRenamingOptions.ApplicationPattern))
+            NotifyPropertyChanged(nameof(ApplicationPattern));
+        else if(e.PropertyName == nameof(IRenamingOptions.PatchPattern))
+            NotifyPropertyChanged(nameof(PatchPattern));     
+        else if(e.PropertyName == nameof(IRenamingOptions.AddonPattern))
+            NotifyPropertyChanged(nameof(AddonPattern));
     }
 
     private void UpdateApplicationPatternParts()

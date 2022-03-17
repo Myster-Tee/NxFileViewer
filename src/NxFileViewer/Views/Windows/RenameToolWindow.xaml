@@ -136,11 +136,11 @@
 
                                     <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_InvalidWindowsCharReplacement}" Style="{StaticResource Title2}" Margin="0" HorizontalAlignment="Right"/>
                                     <TextBox Grid.Row="0" Grid.Column="2"
-                                             Text="{Binding Path=InvalidWindowsCharsReplacement}"
+                                             Text="{Binding Path=RenameCommand.InvalidWindowsCharsReplacement}"
                                              MinWidth="20" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                     <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ReplaceWhiteSpaceChars}" Style="{StaticResource Title2}" Margin="0" HorizontalAlignment="Right"/>
                                     <CheckBox Grid.Row="2" Grid.Column="2" x:Name="ReplaceWhiteSpacesCheckBox"
-                                              IsChecked="{Binding Path=ReplaceWhiteSpaceChars}"/>
+                                              IsChecked="{Binding Path=RenameCommand.ReplaceWhiteSpaceChars}"/>
 
                                     <TextBlock Grid.Row="4" Grid.Column="0" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ReplaceWhiteSpaceCharsWith}" Margin="0" HorizontalAlignment="Right">
                                         <TextBlock.Style>
@@ -153,7 +153,7 @@
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
-                                    <TextBox Grid.Row="4" Grid.Column="2" MinWidth="20" VerticalAlignment="Center" Text="{Binding Path=WhiteSpaceCharsReplacement}" HorizontalAlignment="Left">
+                                    <TextBox Grid.Row="4" Grid.Column="2" MinWidth="20" VerticalAlignment="Center" Text="{Binding Path=RenameCommand.WhiteSpaceCharsReplacement}" HorizontalAlignment="Left">
                                         <TextBox.Style>
                                             <Style TargetType="TextBox">
                                                 <Style.Triggers>
@@ -180,7 +180,7 @@
         </GroupBox>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Margin="0,5">
-            <CheckBox Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Simulation}" VerticalAlignment="Center" IsChecked="{Binding Path=IsSimulation}" 
+            <CheckBox Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Simulation}" VerticalAlignment="Center" IsChecked="{Binding Path=RenameCommand.IsSimulation}" 
                       Style="{StaticResource TextOnLeft}" />
 
             <Button Command="{Binding Path=RenameCommand}" IsDefault="True" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Button_Rename}" Style="{StaticResource OkCancelButton}" />

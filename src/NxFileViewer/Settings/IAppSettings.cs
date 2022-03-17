@@ -13,8 +13,6 @@ public interface IAppSettings : INotifyPropertyChanged
 
     string LastUsedDir { get; set; }
 
-    string LastRenamePath { get; set; }
-
     string LastOpenedFile { get; set; }
 
     string ProdKeysFilePath { get; set; }
@@ -33,12 +31,6 @@ public interface IAppSettings : INotifyPropertyChanged
 
     string TitlePageUrl { get; set; }
 
-    string ApplicationPattern { get; set; }
-
-    string PatchPattern { get; set; }
-
-    string AddonPattern { get; set; }
-
     string TitleInfoApiUrl { get; set; }
 
     IRenamingOptions RenamingOptions { get; }
@@ -48,9 +40,18 @@ public interface IAppSettings : INotifyPropertyChanged
 
 public interface IRenamingOptions : INotifyPropertyChanged
 {
+
+    string LastRenamePath { get; set; }
+
     string? FileFilters { get; set; }
 
     bool IncludeSubdirectories { get; set; }
+
+    string ApplicationPattern { get; set; }
+
+    string PatchPattern { get; set; }
+
+    string AddonPattern { get; set; }
 
     bool IsSimulation { get; set; }
 
