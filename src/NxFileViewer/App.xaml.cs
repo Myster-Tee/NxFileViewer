@@ -90,9 +90,10 @@ public partial class App : Application, IAppEvents
             .AddTransient<ISaveDirectoryRunnable, SaveDirectoryRunnable>()
             .AddTransient<IVerifyNcasHashRunnable, VerifyNcasHashRunnable>()
             .AddTransient<IVerifyNcasHeaderSignatureRunnable, VerifyNcasHeaderSignatureRunnable>()
-            .AddTransient<IFilesRenamerRunnable, FilesRenamerRunnable>()
             .AddTransient<IDownloadFileRunnable, DownloadFileRunnable>()
             .AddTransient<ISaveStorageRunnable, SaveStorageRunnable>()
+            .AddTransient<IFilesRenamerRunnable, FilesRenamerRunnable>()
+            .AddTransient<IFileRenamerRunnable, FileRenamerRunnable>()
 
             .AddTransient<IStreamToFileHelper, StreamToFileHelper>()
             .AddTransient<IOpenFileLocationCommand, OpenFileLocationCommand>()

@@ -238,13 +238,13 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string RenamingTool_ReplaceWhiteSpaceCharsWith { get; }
     string RenamingTool_Simulation { get; }
     string RenamingTool_IncludeSubDirectories { get; }
-    string RenamingTool_FailedToRenameFile { get; }
     string RenamingTool_ContentTypeNotSupported { get; }
     string RenamingTool_SuperPackageNotSupported { get; }
     string RenamingTool_LogNbFilesToRename { get; }
     string RenamingTool_LogSimulationMode { get; }
     string RenamingTool_LogFileRenamed { get; }
     string RenamingTool_LogFileAlreadyNamedProperly { get; }
+    string RenamingTool_LogFailedToRenameFile { get; }
     string RenamingTool_BadInvalidFileNameCharReplacement { get; }
 
     string Exception_UnexpectedDelimiter { get; }

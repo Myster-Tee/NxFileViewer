@@ -267,7 +267,6 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_ReplaceWhiteSpaceCharsWith => "Remplacer les espaces blancs avec";
     public string RenamingTool_Simulation => "Simulation";
     public string RenamingTool_IncludeSubDirectories => "Inclure les sous répertoires";
-    public string RenamingTool_FailedToRenameFile => "Echec de renommage du fichier «{0}»: {1}";
     public string RenamingTool_ContentTypeNotSupported => "Type de contenu «{0}» non supporté.";
     public string RenamingTool_SuperPackageNotSupported => "Super package non supporté.";
     public string RenamingTool_LogNbFilesToRename => ">>> {0} fichier(s) à renommer...";
@@ -275,6 +274,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_LogSimulationMode => "[SIMULATION] ";
     public string RenamingTool_LogFileRenamed => $"• {{0}}Ficher renommé de{Environment.NewLine}\t«{{1}}» à{Environment.NewLine}\t«{{2}}».";
     public string RenamingTool_LogFileAlreadyNamedProperly => "• {0}«{1}» déjà nommé correctement.";
+    public string RenamingTool_LogFailedToRenameFile => "• {0}«{1}»Echec de renommage: {2}";
     public string RenamingTool_BadInvalidFileNameCharReplacement => "La chaine de remplacement «{0}» (caractères interdits dans les noms de fichiers), ne peut contenir le caractère interdit «{1}».";
 
     public string Exception_UnexpectedDelimiter => "Délimiteur {0} non attendu à la position {1}, utilisez {2}{0} à la place.";

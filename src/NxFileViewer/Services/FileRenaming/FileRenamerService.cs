@@ -29,7 +29,7 @@ public class FileRenamerService : IFileRenamerService
         _cachedOnlineTitleInfoService = cachedOnlineTitleInfoService ?? throw new ArgumentNullException(nameof(cachedOnlineTitleInfoService));
     }
 
-    public async Task RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
+    public async Task<IList<RenamingResult>> RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
     {
         ValidateNamingSettings(namingSettings);
 
@@ -44,10 +44,10 @@ public class FileRenamerService : IFileRenamerService
             return fileFiltersRegex == null || fileFiltersRegex.Any(regex => regex.IsMatch(file.Name));
         }).ToArray();
 
+        var renamingResults = new List<RenamingResult>();
 
         logger?.LogInformation(LocalizationManager.Instance.Current.Keys.RenamingTool_LogNbFilesToRename.SafeFormat(matchingFiles.Length));
 
-        var logPrefix = isSimulation ? $"{LocalizationManager.Instance.Current.Keys.RenamingTool_LogSimulationMode}" : "";
 
         for (var index = 0; index < matchingFiles.Length; index++)
         {
@@ -56,35 +56,21 @@ public class FileRenamerService : IFileRenamerService
             var matchingFile = matchingFiles[index];
             progressReporter.SetText(matchingFile.Name);
 
-            try
-            {
-                var renamingResult = await RenameFileAsyncInternal(matchingFile, namingSettings, isSimulation, cancellationToken);
-
-                if (renamingResult.IsRenamed)
-                {
-                    var message = LocalizationManager.Instance.Current.Keys.RenamingTool_LogFileRenamed.SafeFormat(logPrefix, renamingResult.OldFileName, renamingResult.NewFileName);
-                    logger?.LogWarning(message);
-                }
-                else
-                {
-                    logger?.LogInformation(LocalizationManager.Instance.Current.Keys.RenamingTool_LogFileAlreadyNamedProperly.SafeFormat(logPrefix, renamingResult.OldFileName));
-                }
-            }
-            catch (Exception ex)
-            {
-                logger?.LogError(ex, LocalizationManager.Instance.Current.Keys.RenamingTool_FailedToRenameFile.SafeFormat(matchingFile.FullName, ex.Message));
-            }
+            var renamingResult = await RenameFileAsyncInternalSafe(matchingFile, namingSettings, isSimulation, logger, cancellationToken);
+            renamingResults.Add(renamingResult);
 
             progressReporter.SetPercentage((index + 1) / (double)matchingFiles.Length);
         }
         progressReporter.SetText("");
+        return renamingResults;
     }
 
-
-    public Task<RenamingResult> RenameFileAsync(string inputFile, INamingSettings namingSettings, bool isSimulation, CancellationToken cancellationToken)
+    public async Task<RenamingResult> RenameFileAsync(string inputFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, CancellationToken cancellationToken)
     {
         ValidateNamingSettings(namingSettings);
-        return RenameFileAsyncInternal(new FileInfo(inputFile), namingSettings, isSimulation, cancellationToken);
+        var renamingResult = await RenameFileAsyncInternalSafe(new FileInfo(inputFile), namingSettings, isSimulation, logger, cancellationToken);
+
+        return renamingResult;
     }
 
     private static void ValidateNamingSettings(INamingSettings namingSettings)
@@ -128,12 +114,55 @@ public class FileRenamerService : IFileRenamerService
         }
     }
 
-    private async Task<RenamingResult> RenameFileAsyncInternal(FileInfo inputFile, INamingSettings namingSettings, bool isSimulation, CancellationToken cancellationToken)
+    private async Task<RenamingResult> RenameFileAsyncInternalSafe(FileInfo inputFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, CancellationToken cancellationToken)
+    {
+        var oldFileName = inputFile.Name;
+        var logPrefix = isSimulation ? $"{LocalizationManager.Instance.Current.Keys.RenamingTool_LogSimulationMode}" : "";
+
+        try
+        {
+            var newFileName = await ComputeFileName(inputFile.FullName, namingSettings, cancellationToken);
+
+            var shouldBeRenamed = !string.Equals(newFileName, oldFileName);
+            if (!isSimulation && shouldBeRenamed)
+            {
+                var destFileName = Path.Combine(inputFile.DirectoryName!, newFileName);
+                inputFile.MoveTo(destFileName, false);
+            }
+
+            if (shouldBeRenamed)
+                logger?.LogWarning(LocalizationManager.Instance.Current.Keys.RenamingTool_LogFileRenamed.SafeFormat(logPrefix, oldFileName, newFileName));
+            else
+                logger?.LogInformation(LocalizationManager.Instance.Current.Keys.RenamingTool_LogFileAlreadyNamedProperly.SafeFormat(logPrefix, oldFileName));
+
+            return new RenamingResult
+            {
+                IsSimulation = isSimulation,
+                IsRenamed = shouldBeRenamed,
+                OldFileName = oldFileName,
+                NewFileName = newFileName,
+            };
+        }
+        catch (Exception ex)
+        {
+            logger?.LogError(ex, LocalizationManager.Instance.Current.Keys.RenamingTool_LogFailedToRenameFile.SafeFormat(logPrefix, oldFileName, ex.Message));
+
+            return new RenamingResult
+            {
+                IsSimulation = isSimulation,
+                IsRenamed = false,
+                OldFileName = oldFileName,
+                NewFileName = null,
+                Exception = ex,
+            };
+        }
+    }
+
+    private async Task<string> ComputeFileName(string filePath, INamingSettings namingSettings, CancellationToken cancellationToken)
     {
         string newFileName;
 
-        var packageInfo = _packageInfoLoader.GetPackageInfo(inputFile.FullName);
-        var oldFileName = inputFile.Name;
+        var packageInfo = _packageInfoLoader.GetPackageInfo(filePath);
 
         if (packageInfo.Contents.Count == 1)
         {
@@ -166,25 +195,13 @@ public class FileRenamerService : IFileRenamerService
 
         var invalidFileNameChars = Path.GetInvalidFileNameChars();
         var invalidCharReplacement = namingSettings.InvalidFileNameCharsReplacement ?? "";
+
         foreach (var invalidFileNameChar in invalidFileNameChars)
         {
             newFileName = newFileName.Replace(invalidFileNameChar.ToString(), invalidCharReplacement);
         }
 
-        var shouldBeRenamed = !string.Equals(newFileName, oldFileName);
-        if (!isSimulation && shouldBeRenamed)
-        {
-            var destFileName = Path.Combine(inputFile.DirectoryName!, newFileName);
-            inputFile.MoveTo(destFileName, false);
-        }
-
-        return new RenamingResult
-        {
-            IsSimulation = isSimulation,
-            IsRenamed = shouldBeRenamed,
-            OldFileName = oldFileName,
-            NewFileName = newFileName,
-        };
+        return newFileName;
     }
 
     private async Task<string> ComputePackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<PatternPart> patternParts, CancellationToken cancellationToken)

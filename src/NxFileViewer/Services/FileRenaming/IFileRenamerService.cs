@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.FileRenaming.Exceptions;
@@ -25,7 +27,8 @@ public interface IFileRenamerService
     /// <exception cref="ContentTypeNotSupportedException"></exception>
     /// <exception cref="EmptyPatternException"></exception>
     /// <exception cref="SuperPackageNotSupportedException"></exception>
-    Task RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken);
+    /// <exception cref="KeywordNotAllowedException"></exception>
+    Task<IList<RenamingResult>> RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken);
 
     /// <summary>
     /// Rename the specified file
@@ -33,23 +36,26 @@ public interface IFileRenamerService
     /// <param name="inputFile"></param>
     /// <param name="namingSettings"></param>
     /// <param name="isSimulation"></param>
+    /// <param name="logger"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The new file name</returns>
     /// <exception cref="BadInvalidFileNameCharReplacementException"></exception>
     /// <exception cref="ContentTypeNotSupportedException"></exception>
     /// <exception cref="EmptyPatternException"></exception>
     /// <exception cref="SuperPackageNotSupportedException"></exception>
-    Task<RenamingResult> RenameFileAsync(string inputFile, INamingSettings namingSettings, bool isSimulation, CancellationToken cancellationToken);
+    /// <exception cref="KeywordNotAllowedException"></exception>
+    Task<RenamingResult> RenameFileAsync(string inputFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, CancellationToken cancellationToken);
 }
 
 public class RenamingResult
 {
     public string OldFileName { get; set; } = "";
 
-    public string NewFileName { get; set; } = "";
+    public string? NewFileName { get; set; }
 
     public bool IsSimulation { get; set; }
 
     public bool IsRenamed { get; set; }
 
+    public Exception? Exception { get; set; }
 }
