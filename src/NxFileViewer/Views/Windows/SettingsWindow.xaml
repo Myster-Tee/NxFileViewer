@@ -16,16 +16,12 @@
         WindowStartupLocation="CenterOwner">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="261*"/>
-            <ColumnDefinition Width="139*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" BorderBrush="{DynamicResource ScrollViewer.Border.Brush}" BorderThickness="{DynamicResource ScrollViewer.Border.Thickness}" Grid.ColumnSpan="2">
+        <Border Grid.Row="0" BorderBrush="{DynamicResource ScrollViewer.Border.Brush}" BorderThickness="{DynamicResource ScrollViewer.Border.Thickness}">
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <StackPanel>
                     <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_GroupBoxKeys}">
@@ -139,10 +135,21 @@
                 </StackPanel>
             </ScrollViewer>
         </Border>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="116,5,0,5" Grid.ColumnSpan="2">
-            <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Save}" IsDefault="True" Command="{Binding Path=SaveSettingsCommand}" Style="{StaticResource OkCancelButton}" />
-            <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Cancel}" IsCancel="True" Command="{Binding Path=CancelSettingsCommand}" Style="{StaticResource OkCancelButton}"/>
-        </StackPanel>
+
+        <Grid Grid.Row="1" Margin="0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Reset}" Command="{Binding Path=ResetSettingsCommand}" Style="{StaticResource OkCancelButton}" />
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" >
+                <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Save}" IsDefault="True" Command="{Binding Path=SaveSettingsCommand}" Style="{StaticResource OkCancelButton}" />
+                <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Cancel}" IsCancel="True" Command="{Binding Path=CancelSettingsCommand}" Style="{StaticResource OkCancelButton}"/>
+            </StackPanel>
+        </Grid>
+
+
     </Grid>
 
 </Window>

@@ -27,6 +27,7 @@
         <Setter Property="Margin" Value="{StaticResource Control.Default.Margin}" />
         <Setter Property="MinWidth" Value="80" />
         <Setter Property="Height" Value="26" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
 
     <Style TargetType="customControls:PlayStopButton" BasedOn="{StaticResource {x:Type Button}}">

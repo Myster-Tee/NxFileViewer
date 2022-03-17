@@ -55,6 +55,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
         BrowseTitleKeysCommand = new RelayCommand(BrowseTitleKeys);
         SaveSettingsCommand = new RelayCommand(SaveSettings);
         CancelSettingsCommand = new RelayCommand(CancelSettings);
+        ResetSettingsCommand = new RelayCommand(ResetSettings);
         DownloadProdKeysCommand = new RelayCommand(DownloadProdKeys, CanDownloadProdKeys);
         DownloadTitleKeysCommand = new RelayCommand(DownloadTitleKeys, CanDownloadTitleKeys);
         EditProdKeysCommand = new RelayCommand(EditProdKeys, CanEditProdKeys);
@@ -101,6 +102,8 @@ public class SettingsWindowViewModel : WindowViewModelBase
     public ICommand SaveSettingsCommand { get; }
 
     public ICommand CancelSettingsCommand { get; }
+
+    public ICommand ResetSettingsCommand { get; }
 
     public RelayCommand DownloadProdKeysCommand { get; }
 
@@ -355,4 +358,8 @@ public class SettingsWindowViewModel : WindowViewModelBase
         this.Window?.Close();
     }
 
+    private void ResetSettings()
+    {
+        _appSettingsManager.RestoreDefaultSettings();
+    }
 }
