@@ -34,6 +34,13 @@ namespace Emignatik.NxFileViewer.Settings
 
         public IAppSettings Settings => _appSettings;
 
+        public IAppSettings Clone()
+        {
+            var clone = new AppSettings();
+            _shallowCopier.Copy(this.Settings, clone);
+            return clone;
+        }
+
         public void RestoreDefaultSettings()
         {
             _shallowCopier.Copy(new AppSettings(), _appSettings);

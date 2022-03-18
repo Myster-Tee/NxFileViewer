@@ -25,18 +25,9 @@ public class SettingsWindowViewModel : WindowViewModelBase
     private readonly IMainBackgroundTaskRunnerService _backgroundTaskRunnerService;
     private readonly IServiceProvider _serviceProvider;
     private readonly IKeySetProviderService _keySetProviderService;
-    private readonly IAppSettings _appSettings;
     private readonly ILogger _logger;
 
-    private string _prodKeysFilePath = "";
-    private string _consoleKeysFilePath = "";
-    private string _titleKeysFilePath = "";
-    private string _prodKeysDownloadUrl = "";
-    private string _titleKeysDownloadUrl = "";
-    private string _titlePageUrl = "";
-
-    private LogLevel _selectedLogLevel;
-    private bool _alwaysReloadKeysBeforeOpen;
+    private IAppSettings _clonedSettings;
 
 
     public SettingsWindowViewModel(IAppSettingsManager appSettingsManager, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, IServiceProvider serviceProvider,
@@ -47,8 +38,6 @@ public class SettingsWindowViewModel : WindowViewModelBase
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _keySetProviderService = keySetProviderService ?? throw new ArgumentNullException(nameof(keySetProviderService));
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
-
-        _appSettings = appSettingsManager.Settings;
 
         BrowseProdKeysCommand = new RelayCommand(BrowseProdKeys);
         BrowseConsoleKeysCommand = new RelayCommand(BrowseConsoleKeys);
@@ -62,14 +51,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
         EditTitleKeysCommand = new RelayCommand(EditTitleKeys, CanEditTitleKeys);
         EditConsoleKeysCommand = new RelayCommand(EditConsoleKeys, CanEditConsoleKeys);
 
-        ProdKeysFilePath = _appSettings.ProdKeysFilePath;
-        ConsoleKeysFilePath = _appSettings.ConsoleKeysFilePath;
-        TitleKeysFilePath = _appSettings.TitleKeysFilePath;
-        SelectedLogLevel = _appSettings.LogLevel;
-        ProdKeysDownloadUrl = _appSettings.ProdKeysDownloadUrl;
-        TitleKeysDownloadUrl = _appSettings.TitleKeysDownloadUrl;
-        AlwaysReloadKeysBeforeOpen = _appSettings.AlwaysReloadKeysBeforeOpen;
-        TitlePageUrl = _appSettings.TitlePageUrl;
+        ClonedSettings = appSettingsManager.Clone();
         this.SelectedLanguage = LocalizationManager.Instance.Current;
 
         _backgroundTaskRunnerService.PropertyChanged += (_, args) =>
@@ -91,6 +73,16 @@ public class SettingsWindowViewModel : WindowViewModelBase
                 NotifyPropertyChanged(nameof(ActualConsoleKeysFilePath));
         };
 
+    }
+
+    public IAppSettings ClonedSettings
+    {
+        get => _clonedSettings;
+        set
+        {
+            _clonedSettings = value;
+            NotifyPropertyChanged();
+        }
     }
 
     public ICommand BrowseProdKeysCommand { get; }
@@ -115,77 +107,8 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     public RelayCommand EditConsoleKeysCommand { get; }
 
-    public bool AlwaysReloadKeysBeforeOpen
-    {
-        get => _alwaysReloadKeysBeforeOpen;
-        set
-        {
-            _alwaysReloadKeysBeforeOpen = value;
-            NotifyPropertyChanged();
-        }
-    }
-
-    public string ProdKeysFilePath
-    {
-        get => _prodKeysFilePath;
-        set
-        {
-            _prodKeysFilePath = value;
-            NotifyPropertyChanged(nameof(ProdKeysFilePath));
-        }
-    }
-
-    public string ConsoleKeysFilePath
-    {
-        get => _consoleKeysFilePath;
-        set
-        {
-            _consoleKeysFilePath = value;
-            NotifyPropertyChanged(nameof(ConsoleKeysFilePath));
-        }
-    }
-
-    public string TitleKeysFilePath
-    {
-        get => _titleKeysFilePath;
-        set
-        {
-            _titleKeysFilePath = value;
-            NotifyPropertyChanged(nameof(TitleKeysFilePath));
-        }
-    }
 
     public IEnumerable<LogLevel> LogLevels => Enum.GetValues<LogLevel>();
-
-    public LogLevel SelectedLogLevel
-    {
-        get => _selectedLogLevel;
-        set
-        {
-            _selectedLogLevel = value;
-            NotifyPropertyChanged();
-        }
-    }
-
-    public string ProdKeysDownloadUrl
-    {
-        get => _prodKeysDownloadUrl;
-        set
-        {
-            _prodKeysDownloadUrl = value;
-            NotifyPropertyChanged();
-        }
-    }
-
-    public string TitleKeysDownloadUrl
-    {
-        get => _titleKeysDownloadUrl;
-        set
-        {
-            _titleKeysDownloadUrl = value;
-            NotifyPropertyChanged();
-        }
-    }
 
     public string ActualProdKeysFilePath => _keySetProviderService.ActualProdKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile;
 
@@ -193,57 +116,52 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     public string ActualConsoleKeysFilePath => _keySetProviderService.ActualConsoleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile;
 
-    public string TitlePageUrl
-    {
-        get => _titlePageUrl;
-        set
-        {
-            _titlePageUrl = value;
-            NotifyPropertyChanged();
-        }
-    }
-
     public IEnumerable<ILocalization<ILocalizationKeys>> AvailableLanguages => LocalizationManager.Instance.AvailableLocalizations;
 
     public ILocalization<ILocalizationKeys> SelectedLanguage { get; set; }
 
     private void BrowseProdKeys()
     {
-        if (BrowseKeysFilePath(ProdKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ProdTitle, out var selectedFilePath))
+        var clonedSettings = ClonedSettings;
+        if (BrowseKeysFilePath(clonedSettings.ProdKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ProdTitle, out var selectedFilePath))
         {
-            ProdKeysFilePath = selectedFilePath;
+            clonedSettings.ProdKeysFilePath = selectedFilePath;
         }
     }
 
     private void BrowseConsoleKeys()
     {
-        if (BrowseKeysFilePath(ConsoleKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ConsoleTitle, out var selectedFilePath))
+        var clonedSettings = ClonedSettings;
+        if (BrowseKeysFilePath(clonedSettings.ConsoleKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ConsoleTitle, out var selectedFilePath))
         {
-            ConsoleKeysFilePath = selectedFilePath;
+            clonedSettings.ConsoleKeysFilePath = selectedFilePath;
         }
     }
 
     private void BrowseTitleKeys()
     {
-        if (BrowseKeysFilePath(TitleKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_TitleTitle, out var selectedFilePath))
+        var clonedSettings = ClonedSettings;
+        if (BrowseKeysFilePath(clonedSettings.TitleKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_TitleTitle, out var selectedFilePath))
         {
-            TitleKeysFilePath = selectedFilePath;
+            clonedSettings.TitleKeysFilePath = selectedFilePath;
         }
     }
 
 
     private async void DownloadProdKeys()
     {
+        var clonedSettings = ClonedSettings;
         var downloadFileRunnable = _serviceProvider.GetRequiredService<IDownloadFileRunnable>();
-        downloadFileRunnable.Setup(ProdKeysDownloadUrl, _keySetProviderService.AppDirProdKeysFilePath);
+        downloadFileRunnable.Setup(clonedSettings.ProdKeysDownloadUrl, _keySetProviderService.AppDirProdKeysFilePath);
         await _backgroundTaskRunnerService.RunAsync(downloadFileRunnable);
         _keySetProviderService.Reset();
     }
 
     private async void DownloadTitleKeys()
     {
+        var clonedSettings = ClonedSettings;
         var downloadFileRunnable = _serviceProvider.GetRequiredService<IDownloadFileRunnable>();
-        downloadFileRunnable.Setup(TitleKeysDownloadUrl, _keySetProviderService.AppDirTitleKeysFilePath);
+        downloadFileRunnable.Setup(clonedSettings.TitleKeysDownloadUrl, _keySetProviderService.AppDirTitleKeysFilePath);
         await _backgroundTaskRunnerService.RunAsync(downloadFileRunnable);
         _keySetProviderService.Reset();
     }
@@ -340,15 +258,17 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     private void SaveSettings()
     {
-        _appSettings.ProdKeysFilePath = ProdKeysFilePath;
-        _appSettings.ConsoleKeysFilePath = ConsoleKeysFilePath;
-        _appSettings.TitleKeysFilePath = TitleKeysFilePath;
-        _appSettings.LogLevel = SelectedLogLevel;
-        _appSettings.ProdKeysDownloadUrl = ProdKeysDownloadUrl;
-        _appSettings.TitleKeysDownloadUrl = TitleKeysDownloadUrl;
-        _appSettings.AlwaysReloadKeysBeforeOpen = AlwaysReloadKeysBeforeOpen;
-        _appSettings.TitlePageUrl = TitlePageUrl;
-        _appSettings.AppLanguage = SelectedLanguage.CultureName;
+        var clonedSettings = ClonedSettings;
+
+        _appSettingsManager.Settings.ProdKeysFilePath = clonedSettings.ProdKeysFilePath;
+        _appSettingsManager.Settings.ConsoleKeysFilePath = clonedSettings.ConsoleKeysFilePath;
+        _appSettingsManager.Settings.TitleKeysFilePath = clonedSettings.TitleKeysFilePath;
+        _appSettingsManager.Settings.LogLevel = clonedSettings.LogLevel;
+        _appSettingsManager.Settings.ProdKeysDownloadUrl = clonedSettings.ProdKeysDownloadUrl;
+        _appSettingsManager.Settings.TitleKeysDownloadUrl = clonedSettings.TitleKeysDownloadUrl;
+        _appSettingsManager.Settings.AlwaysReloadKeysBeforeOpen = clonedSettings.AlwaysReloadKeysBeforeOpen;
+        _appSettingsManager.Settings.TitlePageUrl = clonedSettings.TitlePageUrl;
+        _appSettingsManager.Settings.AppLanguage = SelectedLanguage.CultureName;
 
         _appSettingsManager.SaveSafe();
     }

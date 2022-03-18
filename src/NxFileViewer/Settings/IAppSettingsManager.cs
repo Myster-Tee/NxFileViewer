@@ -8,10 +8,13 @@ public interface IAppSettingsManager
     /// </summary>
     IAppSettings Settings { get; }
 
+
+    IAppSettings Clone();
+
     // TODO: utiliser cette méthode
-    public void RestoreDefaultSettings();
+    void RestoreDefaultSettings();
 
-    public bool LoadSafe();
+    bool LoadSafe();
 
-    public void SaveSafe();
+    void SaveSafe();
 }
