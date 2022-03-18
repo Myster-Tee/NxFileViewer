@@ -1,12 +1,13 @@
 ﻿using System.Text.Json.Serialization;
 using Emignatik.NxFileViewer.Utils.MVVM;
+using Emignatik.NxFileViewer.Utils.MVVM.Localization;
 using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Settings;
 
 public class AppSettings : NotifyPropertyChangedBase, IAppSettings
 {
-    private string _appLanguage = "";
+    private string _appLanguage = IAutoLocalization<ILocalizationKeysBase>.CULTURE_NAME;
     private string _lastRenamePath = "";
     private string _lastOpenedFile = "";
     private string _prodKeysFilePath = "";

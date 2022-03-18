@@ -1,10 +1,10 @@
 ﻿namespace Emignatik.NxFileViewer.Utils.MVVM.Localization;
 
 /// <summary>
-/// Represents a localization associated with a model exposing localization keys (<see cref="T"/>)
+/// Represents a localization associated with a model exposing localization keys (<see cref="TKeys"/>)
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public interface ILocalization<out T> where T: ILocalizationKeysBase
+/// <typeparam name="TKeys"></typeparam>
+public interface ILocalization<out TKeys> where TKeys: ILocalizationKeysBase
 {
     /// <summary>
     /// The localized language name (<see cref="ILocalizationKeysBase.DisplayName"/>)
@@ -12,17 +12,13 @@ public interface ILocalization<out T> where T: ILocalizationKeysBase
     string DisplayName { get; }
 
     /// <summary>
-    /// The Culture name from <see cref="ILocalizationKeysBase.CultureName"/> or "Auto" when <see cref="IsAuto"/> is true
+    /// The Culture name from <see cref="ILocalizationKeysBase.CultureName"/> or "Auto"
     /// </summary>
     string CultureName { get; }
 
     /// <summary>
     /// The localized keys
     /// </summary>
-    T Keys { get; }
+    TKeys Keys { get; }
 
-    /// <summary>
-    /// True when this localization is dynamically corresponding to the system culture or corresponding to the fallback localization
-    /// </summary>
-    bool IsAuto { get; }
 }

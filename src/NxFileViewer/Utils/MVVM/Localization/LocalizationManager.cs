@@ -15,19 +15,19 @@ public class LocalizationManager<TKeys> : ILocalizationManager<TKeys> where TKey
 {
     private readonly string _defaultSystemCultureName = Thread.CurrentThread.CurrentUICulture.Name;
 
-    private ILocalization<TKeys> _current;
 
     private readonly RealLocalization<TKeys>[] _realLocalizations;
     private readonly ILocalization<TKeys> _fallbackLocalization;
     private readonly RealLocalization<TKeys>? _systemLocalization;
-    private readonly Localizations<TKeys> _localizations;
+    private readonly LocalizationCollection<TKeys> _localizationCollection;
+
     private AutoLocalization<TKeys>? _autoLocalization;
+    private ILocalization<TKeys> _current;
 
     private bool _useAutoLocalization;
 
     public event EventHandler<LocalizationChangedHandlerArgs<TKeys>>? LocalizationChanged;
     public event PropertyChangedEventHandler? PropertyChanged;
-
 
     public LocalizationManager(bool useAutoLocalization = true) : this(new[] { Assembly.GetEntryAssembly()!, Assembly.GetExecutingAssembly() }, useAutoLocalization)
     {
@@ -49,7 +49,7 @@ public class LocalizationManager<TKeys> : ILocalizationManager<TKeys> where TKey
         _useAutoLocalization = useAutoLocalization;
 
         InitializeAutoLocalization();
-        _localizations = new Localizations<TKeys>(this);
+        _localizationCollection = new LocalizationCollection<TKeys>(this);
 
         _current = AvailableLocalizations.First();
     }
@@ -92,11 +92,11 @@ public class LocalizationManager<TKeys> : ILocalizationManager<TKeys> where TKey
         return realLocalizations;
     }
 
-    public ILocalization<TKeys>? AutoLocalization => _autoLocalization;
+    public IAutoLocalization<TKeys>? AutoLocalization => _autoLocalization;
 
     public IEnumerable<ILocalization<TKeys>> RealLocalizations => _realLocalizations;
 
-    public ILocalizations<TKeys> AvailableLocalizations => _localizations;
+    public ILocalizationCollection<TKeys> AvailableLocalizations => _localizationCollection;
 
     public ILocalization<TKeys> FallbackLocalization => _fallbackLocalization;
 
@@ -179,11 +179,11 @@ public class LocalizationManager<TKeys> : ILocalizationManager<TKeys> where TKey
     }
 }
 
-public class Localizations<TKeys> : ILocalizations<TKeys> where TKeys : ILocalizationKeysBase
+public class LocalizationCollection<TKeys> : ILocalizationCollection<TKeys> where TKeys : ILocalizationKeysBase
 {
-    private readonly LocalizationManager<TKeys> _localizationManager;
+    private readonly ILocalizationManager<TKeys> _localizationManager;
 
-    public Localizations(LocalizationManager<TKeys> localizationManager)
+    public LocalizationCollection(ILocalizationManager<TKeys> localizationManager)
     {
         _localizationManager = localizationManager;
     }

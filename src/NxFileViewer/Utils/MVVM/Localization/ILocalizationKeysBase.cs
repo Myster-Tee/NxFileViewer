@@ -23,7 +23,7 @@ public interface ILocalizationKeysBase
     string CultureName { get; }
 
     /// <summary>
-    /// Localization of «Automatic»
+    /// Localization of «Automatic» word
     /// </summary>
     string LanguageAuto { get; }
 

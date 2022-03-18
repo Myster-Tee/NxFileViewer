@@ -11,8 +11,6 @@ public class RealLocalization<T> : ILocalization<T> where T : ILocalizationKeysB
 
     public T Keys { get; }
 
-    public bool IsAuto => false;
-
     public string DisplayName => Keys.DisplayName;
 
     public string CultureName => Keys.CultureName;

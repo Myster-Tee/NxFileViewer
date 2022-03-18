@@ -4,15 +4,17 @@ using System.Runtime.CompilerServices;
 
 namespace Emignatik.NxFileViewer.Utils.MVVM.Localization;
 
-public class AutoLocalization<T> : ILocalization<T>, INotifyPropertyChanged where T : ILocalizationKeysBase
+public class AutoLocalization<TKeys> : IAutoLocalization<TKeys> where TKeys : ILocalizationKeysBase
 {
     private string _displayName = string.Empty;
 
-    public AutoLocalization(T keys)
+    public AutoLocalization(TKeys keys)
     {
         Keys = keys ?? throw new ArgumentNullException(nameof(keys));
         DisplayName = keys.LanguageAuto;
     }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public string DisplayName
     {
@@ -24,13 +26,9 @@ public class AutoLocalization<T> : ILocalization<T>, INotifyPropertyChanged wher
         }
     }
 
-    public string CultureName => "Auto";
+    public string CultureName => IAutoLocalization<TKeys>.CULTURE_NAME;
 
-    public T Keys { get; }
-
-    public bool IsAuto => true;
-
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public TKeys Keys { get; }
 
     protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null!)
     {

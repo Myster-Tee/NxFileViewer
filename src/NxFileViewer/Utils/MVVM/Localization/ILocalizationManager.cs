@@ -14,7 +14,7 @@ public interface ILocalizationManager<TKeys> : INotifyPropertyChanged where TKey
     /// <summary>
     /// List of available localizations
     /// </summary>
-    ILocalizations<TKeys> AvailableLocalizations { get; }
+    ILocalizationCollection<TKeys> AvailableLocalizations { get; }
 
     /// <summary>
     /// The fallback localization
@@ -27,12 +27,24 @@ public interface ILocalizationManager<TKeys> : INotifyPropertyChanged where TKey
     ILocalization<TKeys>? SystemLocalization { get; }
 
     /// <summary>
-    /// The current localization (can't be null)
+    /// Get or set the current localization, can't be null.
     /// </summary>
     ILocalization<TKeys> Current { get; set; }
 
     /// <summary>
-    /// Get or set a boolean indicating if automatic localization should be added to the list of <see cref="AvailableLocalizations"/>
+    /// Get the automatic localization <see cref="UseAutoLocalization"/>.
+    /// </summary>
+    IAutoLocalization<TKeys>? AutoLocalization { get; }
+
+    /// <summary>
+    /// Get the real declared available localizations
+    /// </summary>
+    IEnumerable<ILocalization<TKeys>> RealLocalizations { get; }
+
+    /// <summary>
+    /// Get or set a boolean indicating if an automatic localization should be added to the list of <see cref="AvailableLocalizations"/>.
+    /// When set to true, a <see cref="IAutoLocalization{T}"/> is added to the list of <see cref="AvailableLocalizations"/>
+    /// with the available <see cref="TKeys"/> best matching the current thread culture.
     /// </summary>
     bool UseAutoLocalization { get; set; }
 
@@ -60,7 +72,11 @@ public class LocalizationChangedHandlerArgs<TKeys> : EventArgs where TKeys : ILo
 }
 
 
-public interface ILocalizations<TKeys> : IEnumerable<ILocalization<TKeys>> where TKeys : ILocalizationKeysBase
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="TKeys"></typeparam>
+public interface ILocalizationCollection<out TKeys> : IEnumerable<ILocalization<TKeys>> where TKeys : ILocalizationKeysBase
 {
     ILocalization<TKeys>? FindByCultureName(string cultureName);
 }

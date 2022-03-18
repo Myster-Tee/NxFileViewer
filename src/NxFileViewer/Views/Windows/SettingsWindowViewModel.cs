@@ -125,6 +125,8 @@ public class SettingsWindowViewModel : WindowViewModelBase
         set
         {
             _selectedLanguage = value;
+            if (value != null)
+                EditedSettings.AppLanguage = value.CultureName;
             NotifyPropertyChanged();
         }
     }
