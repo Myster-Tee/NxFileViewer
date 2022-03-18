@@ -26,7 +26,7 @@
                 <StackPanel>
                     <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_GroupBoxKeys}">
                         <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-                            <CheckBox IsChecked="{Binding ClonedSettings.AlwaysReloadKeysBeforeOpen}"
+                            <CheckBox IsChecked="{Binding EditedSettings.AlwaysReloadKeysBeforeOpen}"
                                         Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen}" />
                             <Expander>
                                 <Expander.Header>
@@ -45,14 +45,14 @@
                                     <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysCustomFilePath}" />
                                     <DockPanel LastChildFill="true">
                                         <Button Command="{Binding Path=BrowseProdKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
-                                        <TextBox Text="{Binding Path=ClonedSettings.ProdKeysFilePath}" HorizontalAlignment="Stretch" />
+                                        <TextBox Text="{Binding Path=EditedSettings.ProdKeysFilePath}" HorizontalAlignment="Stretch" />
                                     </DockPanel>
 
                                     <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysDownloadUrl}" />
                                     <DockPanel LastChildFill="true">
                                         <Button Style="{StaticResource DownloadButton}" DockPanel.Dock="Right" 
                                                 Command="{Binding Path=DownloadProdKeysCommand}"/>
-                                        <TextBox Text="{Binding Path=ClonedSettings.ProdKeysDownloadUrl}" />
+                                        <TextBox Text="{Binding Path=EditedSettings.ProdKeysDownloadUrl}" />
                                     </DockPanel>
                                 </StackPanel>
                             </Expander>
@@ -74,13 +74,13 @@
                                     <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysCustomFilePath}" />
                                     <DockPanel LastChildFill="True">
                                         <Button Command="{Binding Path=BrowseTitleKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
-                                        <TextBox Text="{Binding Path=ClonedSettings.TitleKeysFilePath, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox Text="{Binding Path=EditedSettings.TitleKeysFilePath, UpdateSourceTrigger=PropertyChanged}"/>
                                     </DockPanel>
                                     <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysDownloadUrl}" />
                                     <DockPanel LastChildFill="true">
                                         <Button Style="{StaticResource DownloadButton}" DockPanel.Dock="Right"
                                                 Command="{Binding Path=DownloadTitleKeysCommand}"/>
-                                        <TextBox Text="{Binding Path=ClonedSettings.TitleKeysDownloadUrl}" />
+                                        <TextBox Text="{Binding Path=EditedSettings.TitleKeysDownloadUrl}" />
                                     </DockPanel>
                                 </StackPanel>
                             </Expander>
@@ -102,7 +102,7 @@
                                     <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysCustomFilePath}" />
                                     <DockPanel LastChildFill="True">
                                         <Button Command="{Binding Path=BrowseConsoleKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
-                                        <TextBox Text="{Binding Path=ClonedSettings.ConsoleKeysFilePath}"/>
+                                        <TextBox Text="{Binding Path=EditedSettings.ConsoleKeysFilePath}"/>
                                     </DockPanel>
                                 </StackPanel>
                             </Expander>
@@ -122,12 +122,12 @@
                                     <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_LogLevel}" />
                                     <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_LogLevel}"/>
                                 </StackPanel>
-                                <ComboBox ItemsSource="{Binding Path=LogLevels}" SelectedItem="{Binding Path=ClonedSettings.LogLevel}" MinWidth="100" HorizontalAlignment="Left" />
+                                <ComboBox ItemsSource="{Binding Path=LogLevels}" SelectedItem="{Binding Path=EditedSettings.LogLevel}" MinWidth="100" HorizontalAlignment="Left" />
                             </StackPanel>
 
                             <StackPanel>
                                 <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_TitlePageUrl}" />
-                                <TextBox Text="{Binding Path=ClonedSettings.TitlePageUrl}" />
+                                <TextBox Text="{Binding Path=EditedSettings.TitlePageUrl}" />
                             </StackPanel>
 
                         </StackPanel>
@@ -144,7 +144,7 @@
             <Button Grid.Column="0" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Reset}" Command="{Binding Path=ResetSettingsCommand}" Style="{StaticResource OkCancelButton}" />
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" >
-                <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Save}" IsDefault="True" Command="{Binding Path=SaveSettingsCommand}" Style="{StaticResource OkCancelButton}" />
+                <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Save}" IsDefault="True" Command="{Binding Path=ApplySettingsCommand}" Style="{StaticResource OkCancelButton}" />
                 <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Cancel}" IsCancel="True" Command="{Binding Path=CancelSettingsCommand}" Style="{StaticResource OkCancelButton}"/>
             </StackPanel>
         </Grid>

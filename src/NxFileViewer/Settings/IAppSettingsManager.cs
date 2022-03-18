@@ -8,13 +8,27 @@ public interface IAppSettingsManager
     /// </summary>
     IAppSettings Settings { get; }
 
-
+    /// <summary>
+    /// Returns a copy of actual settings
+    /// </summary>
+    /// <returns></returns>
     IAppSettings Clone();
 
-    // TODO: utiliser cette méthode
-    void RestoreDefaultSettings();
+    /// <summary>
+    /// Returns a copy default settings
+    /// </summary>
+    /// <returns></returns>
+    IAppSettings GetDefault();
+
+    /// <summary>
+    /// Loads the settings from the specified settings.
+    /// (Updates <see cref="Settings"/>( with the geven)
+    /// </summary>
+    /// <param name="appSettings"></param>
+    void Load(IAppSettings appSettings);
 
     bool LoadSafe();
 
     void SaveSafe();
+
 }

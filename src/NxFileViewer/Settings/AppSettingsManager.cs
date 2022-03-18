@@ -29,7 +29,7 @@ namespace Emignatik.NxFileViewer.Settings
             _shallowCopier = shallowCopier ?? throw new ArgumentNullException(nameof(shallowCopier));
             (appEvents ?? throw new ArgumentNullException(nameof(appEvents))).AppShuttingDown += OnAppShuttingDown;
 
-            RestoreDefaultSettings();
+            Load(new AppSettings());
         }
 
         public IAppSettings Settings => _appSettings;
@@ -41,9 +41,12 @@ namespace Emignatik.NxFileViewer.Settings
             return clone;
         }
 
-        public void RestoreDefaultSettings()
+        public void Load(IAppSettings appSettings)
         {
-            _shallowCopier.Copy(new AppSettings(), _appSettings);
+            if (appSettings == null) 
+                throw new ArgumentNullException(nameof(appSettings));
+
+            _shallowCopier.Copy(appSettings, _appSettings);
         }
 
         public bool LoadSafe()
@@ -82,6 +85,11 @@ namespace Emignatik.NxFileViewer.Settings
             {
                 _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SettingsSavingError.SafeFormat(ex.Message));
             }
+        }
+
+        public IAppSettings GetDefault()
+        {
+            return new AppSettings();
         }
 
         private void OnAppShuttingDown()

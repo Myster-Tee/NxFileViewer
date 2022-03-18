@@ -27,7 +27,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
     private readonly IKeySetProviderService _keySetProviderService;
     private readonly ILogger _logger;
 
-    private IAppSettings _clonedSettings;
+    private IAppSettings _editedSettings;
 
 
     public SettingsWindowViewModel(IAppSettingsManager appSettingsManager, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, IServiceProvider serviceProvider,
@@ -42,7 +42,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
         BrowseProdKeysCommand = new RelayCommand(BrowseProdKeys);
         BrowseConsoleKeysCommand = new RelayCommand(BrowseConsoleKeys);
         BrowseTitleKeysCommand = new RelayCommand(BrowseTitleKeys);
-        SaveSettingsCommand = new RelayCommand(SaveSettings);
+        ApplySettingsCommand = new RelayCommand(ApplySettings);
         CancelSettingsCommand = new RelayCommand(CancelSettings);
         ResetSettingsCommand = new RelayCommand(ResetSettings);
         DownloadProdKeysCommand = new RelayCommand(DownloadProdKeys, CanDownloadProdKeys);
@@ -51,7 +51,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
         EditTitleKeysCommand = new RelayCommand(EditTitleKeys, CanEditTitleKeys);
         EditConsoleKeysCommand = new RelayCommand(EditConsoleKeys, CanEditConsoleKeys);
 
-        ClonedSettings = appSettingsManager.Clone();
+        EditedSettings = appSettingsManager.Clone();
         this.SelectedLanguage = LocalizationManager.Instance.Current;
 
         _backgroundTaskRunnerService.PropertyChanged += (_, args) =>
@@ -75,12 +75,12 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     }
 
-    public IAppSettings ClonedSettings
+    public IAppSettings EditedSettings
     {
-        get => _clonedSettings;
+        get => _editedSettings;
         set
         {
-            _clonedSettings = value;
+            _editedSettings = value;
             NotifyPropertyChanged();
         }
     }
@@ -91,7 +91,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     public ICommand BrowseTitleKeysCommand { get; }
 
-    public ICommand SaveSettingsCommand { get; }
+    public ICommand ApplySettingsCommand { get; }
 
     public ICommand CancelSettingsCommand { get; }
 
@@ -122,7 +122,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     private void BrowseProdKeys()
     {
-        var clonedSettings = ClonedSettings;
+        var clonedSettings = EditedSettings;
         if (BrowseKeysFilePath(clonedSettings.ProdKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ProdTitle, out var selectedFilePath))
         {
             clonedSettings.ProdKeysFilePath = selectedFilePath;
@@ -131,7 +131,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     private void BrowseConsoleKeys()
     {
-        var clonedSettings = ClonedSettings;
+        var clonedSettings = EditedSettings;
         if (BrowseKeysFilePath(clonedSettings.ConsoleKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ConsoleTitle, out var selectedFilePath))
         {
             clonedSettings.ConsoleKeysFilePath = selectedFilePath;
@@ -140,7 +140,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     private void BrowseTitleKeys()
     {
-        var clonedSettings = ClonedSettings;
+        var clonedSettings = EditedSettings;
         if (BrowseKeysFilePath(clonedSettings.TitleKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_TitleTitle, out var selectedFilePath))
         {
             clonedSettings.TitleKeysFilePath = selectedFilePath;
@@ -150,7 +150,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     private async void DownloadProdKeys()
     {
-        var clonedSettings = ClonedSettings;
+        var clonedSettings = EditedSettings;
         var downloadFileRunnable = _serviceProvider.GetRequiredService<IDownloadFileRunnable>();
         downloadFileRunnable.Setup(clonedSettings.ProdKeysDownloadUrl, _keySetProviderService.AppDirProdKeysFilePath);
         await _backgroundTaskRunnerService.RunAsync(downloadFileRunnable);
@@ -159,7 +159,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     private async void DownloadTitleKeys()
     {
-        var clonedSettings = ClonedSettings;
+        var clonedSettings = EditedSettings;
         var downloadFileRunnable = _serviceProvider.GetRequiredService<IDownloadFileRunnable>();
         downloadFileRunnable.Setup(clonedSettings.TitleKeysDownloadUrl, _keySetProviderService.AppDirTitleKeysFilePath);
         await _backgroundTaskRunnerService.RunAsync(downloadFileRunnable);
@@ -256,21 +256,9 @@ public class SettingsWindowViewModel : WindowViewModelBase
         }
     }
 
-    private void SaveSettings()
+    private void ApplySettings()
     {
-        var clonedSettings = ClonedSettings;
-
-        _appSettingsManager.Settings.ProdKeysFilePath = clonedSettings.ProdKeysFilePath;
-        _appSettingsManager.Settings.ConsoleKeysFilePath = clonedSettings.ConsoleKeysFilePath;
-        _appSettingsManager.Settings.TitleKeysFilePath = clonedSettings.TitleKeysFilePath;
-        _appSettingsManager.Settings.LogLevel = clonedSettings.LogLevel;
-        _appSettingsManager.Settings.ProdKeysDownloadUrl = clonedSettings.ProdKeysDownloadUrl;
-        _appSettingsManager.Settings.TitleKeysDownloadUrl = clonedSettings.TitleKeysDownloadUrl;
-        _appSettingsManager.Settings.AlwaysReloadKeysBeforeOpen = clonedSettings.AlwaysReloadKeysBeforeOpen;
-        _appSettingsManager.Settings.TitlePageUrl = clonedSettings.TitlePageUrl;
-        _appSettingsManager.Settings.AppLanguage = SelectedLanguage.CultureName;
-
-        _appSettingsManager.SaveSafe();
+        _appSettingsManager.Load(EditedSettings);
     }
 
     private void CancelSettings()
@@ -280,6 +268,6 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     private void ResetSettings()
     {
-        _appSettingsManager.RestoreDefaultSettings();
+        EditedSettings = _appSettingsManager.GetDefault();
     }
 }
