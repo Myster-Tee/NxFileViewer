@@ -58,7 +58,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_Button_Cancel => "Cancel";
     public string SettingsView_Button_Reset => "Reset";
     public string SettingsView_GroupBoxKeys => "Keys";
-    public string SettingsView_Title_ActualKeysFilePath => "Actual path";
+    public string SettingsView_Title_UsedKeysFilePath => "Used path";
     public string SettingsView_Title_KeysCustomFilePath => "Custom path";
     public string SettingsView_Title_KeysDownloadUrl => "Download URL";
 
@@ -93,6 +93,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_ToolTip_LogLevel => "The log level specifies the minimum level to log.";
     public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Always reload keys before opening a file";
     public string SettingsView_Title_Language => "Language";
+    public string SettingsView_ToolTip_OpenKeysLocation => "Open keys file location.";
 
     public string BrowseKeysFile_ProdTitle => "Select \"prod\" keys file";
     public string BrowseKeysFile_ConsoleTitle => "Select \"console\" keys file";
@@ -232,7 +233,6 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
 
     public string ToolTip_KeyMissing => "Key «{0}» of type «{1}» is missing.";
 
-    public string EditFile_Failed_Log => "Failed to edit file «{0}»: {1}";
     public string MenuItem_CopyTextToClipboard => "Copy";
     public string ContextMenu_OpenFileLocation => "Open location...";
     public string OpenFileLocation_Failed_Log => "Failed to open location of file «{0}»: {1}";

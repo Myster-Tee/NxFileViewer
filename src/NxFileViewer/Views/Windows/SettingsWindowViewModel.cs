@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Localization.Keys;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
+using Emignatik.NxFileViewer.Services.FileLocationOpening;
 using Emignatik.NxFileViewer.Services.KeysManagement;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM;
@@ -26,20 +25,20 @@ public class SettingsWindowViewModel : WindowViewModelBase
     private readonly IMainBackgroundTaskRunnerService _backgroundTaskRunnerService;
     private readonly IServiceProvider _serviceProvider;
     private readonly IKeySetProviderService _keySetProviderService;
-    private readonly ILogger _logger;
+    private readonly IFileLocationOpenerService _fileLocationOpenerService;
 
-    private IAppSettings _editedSettings;
+    private IAppSettings _editedSettings = null!;
     private ILocalization<ILocalizationKeys>? _selectedLanguage;
 
 
     public SettingsWindowViewModel(IAppSettingsManager appSettingsManager, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, IServiceProvider serviceProvider,
-        IKeySetProviderService keySetProviderService, ILoggerFactory loggerFactory)
+        IKeySetProviderService keySetProviderService, IFileLocationOpenerService fileLocationOpenerService)
     {
         _appSettingsManager = appSettingsManager ?? throw new ArgumentNullException(nameof(appSettingsManager));
         _backgroundTaskRunnerService = backgroundTaskRunnerService ?? throw new ArgumentNullException(nameof(backgroundTaskRunnerService));
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _keySetProviderService = keySetProviderService ?? throw new ArgumentNullException(nameof(keySetProviderService));
-        _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+        _fileLocationOpenerService = fileLocationOpenerService ?? throw new ArgumentNullException(nameof(fileLocationOpenerService));
 
         BrowseProdKeysCommand = new RelayCommand(BrowseProdKeys);
         BrowseConsoleKeysCommand = new RelayCommand(BrowseConsoleKeys);
@@ -49,9 +48,9 @@ public class SettingsWindowViewModel : WindowViewModelBase
         ResetSettingsCommand = new RelayCommand(ResetSettings);
         DownloadProdKeysCommand = new RelayCommand(DownloadProdKeys, CanDownloadProdKeys);
         DownloadTitleKeysCommand = new RelayCommand(DownloadTitleKeys, CanDownloadTitleKeys);
-        EditProdKeysCommand = new RelayCommand(EditProdKeys, CanEditProdKeys);
-        EditTitleKeysCommand = new RelayCommand(EditTitleKeys, CanEditTitleKeys);
-        EditConsoleKeysCommand = new RelayCommand(EditConsoleKeys, CanEditConsoleKeys);
+        EditProdKeysCommand = new RelayCommand(OpenProdKeysLocation, CanOpenProdKeysLocation);
+        EditTitleKeysCommand = new RelayCommand(OpenTitleKeysLocation, CanOpenTitleKeysLocation);
+        EditConsoleKeysCommand = new RelayCommand(OpenConsoleKeysLocation, CanOpenConsoleKeysLocation);
 
         InitializeFromSettings(appSettingsManager.Clone());
 
@@ -194,37 +193,37 @@ public class SettingsWindowViewModel : WindowViewModelBase
     }
 
 
-    private bool CanEditProdKeys()
+    private bool CanOpenProdKeysLocation()
     {
-        return SafeCheckFileExists(_keySetProviderService.ActualProdKeysFilePath!);
+        return SafeCheckFileExists(ActualProdKeysFilePath);
     }
 
-    private void EditProdKeys()
+    private void OpenProdKeysLocation()
     {
-        SafeOpenFile(ActualProdKeysFilePath);
+        _fileLocationOpenerService.OpenFileLocationSafe(ActualProdKeysFilePath);
     }
 
-    private bool CanEditTitleKeys()
+    private bool CanOpenTitleKeysLocation()
     {
-        return SafeCheckFileExists(_keySetProviderService.ActualTitleKeysFilePath!);
+        return SafeCheckFileExists(ActualTitleKeysFilePath);
     }
 
-    private void EditTitleKeys()
+    private void OpenTitleKeysLocation()
     {
-        SafeOpenFile(_keySetProviderService.ActualTitleKeysFilePath!);
+        _fileLocationOpenerService.OpenFileLocationSafe(ActualTitleKeysFilePath);
     }
 
-    private bool CanEditConsoleKeys()
+    private bool CanOpenConsoleKeysLocation()
     {
-        return SafeCheckFileExists(_keySetProviderService.ActualConsoleKeysFilePath!);
+        return SafeCheckFileExists(ActualConsoleKeysFilePath);
     }
 
-    private void EditConsoleKeys()
+    private void OpenConsoleKeysLocation()
     {
-        SafeOpenFile(_keySetProviderService.ActualConsoleKeysFilePath!);
+        _fileLocationOpenerService.OpenFileLocationSafe(ActualConsoleKeysFilePath);
     }
 
-    private bool SafeCheckFileExists(string filePath)
+    private static bool SafeCheckFileExists(string? filePath)
     {
         try
         {
@@ -238,17 +237,6 @@ public class SettingsWindowViewModel : WindowViewModelBase
         }
     }
 
-    private void SafeOpenFile(string filePath)
-    {
-        try
-        {
-            Process.Start("explorer", filePath);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.EditFile_Failed_Log.SafeFormat(filePath, ex.Message));
-        }
-    }
 
     private static bool BrowseKeysFilePath(string initialFilePath, string title, [NotNullWhen(true)] out string? selectedFilePath)
     {

@@ -31,6 +31,9 @@ public class FileRenamerService : IFileRenamerService
 
     public async Task<IList<RenamingResult>> RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
     {
+        if(string.IsNullOrWhiteSpace(inputDirectory))
+            throw new ArgumentNullException(nameof(inputDirectory)); //TODO: faire un message 
+
         ValidateNamingSettings(namingSettings);
 
         var searchOption = includeSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;

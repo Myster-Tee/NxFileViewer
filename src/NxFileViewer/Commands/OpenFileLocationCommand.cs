@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Services.FileLocationOpening;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Extensions.Logging;
 
@@ -10,11 +11,13 @@ namespace Emignatik.NxFileViewer.Commands;
 
 public class OpenFileLocationCommand : CommandBase, IOpenFileLocationCommand
 {
+    private readonly IFileLocationOpenerService _fileLocationOpenerService;
     private readonly ILogger _logger;
     private string? _filePath;
 
-    public OpenFileLocationCommand(ILoggerFactory loggerFactory)
+    public OpenFileLocationCommand(ILoggerFactory loggerFactory, IFileLocationOpenerService fileLocationOpenerService)
     {
+        _fileLocationOpenerService = fileLocationOpenerService ?? throw new ArgumentNullException(nameof(fileLocationOpenerService));
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
     }
 
@@ -30,17 +33,7 @@ public class OpenFileLocationCommand : CommandBase, IOpenFileLocationCommand
 
     public override void Execute(object? parameter)
     {
-        var filePath = FilePath;
-        try
-        {
-
-            var argument = $"/select, \"{filePath}\"";
-            Process.Start("explorer.exe", argument);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.OpenFileLocation_Failed_Log.SafeFormat(filePath, ex.Message));
-        }
+        _fileLocationOpenerService.OpenFileLocationSafe(FilePath);
     }
 
     public override bool CanExecute(object? parameter)

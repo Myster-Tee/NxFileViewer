@@ -11,6 +11,7 @@ using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
+using Emignatik.NxFileViewer.Services.FileLocationOpening;
 using Emignatik.NxFileViewer.Services.FileOpening;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.GlobalEvents;
@@ -50,6 +51,7 @@ public partial class App : Application, IAppEvents
             .AddSingleton<IPromptService, PromptService>()
             .AddSingleton<IPackageInfoLoader, PackageInfoLoader>()
             .AddSingleton<IFileRenamerService, FileRenamerService>()
+            .AddSingleton<IFileLocationOpenerService, FileLocationOpenerService>()
             .AddSingleton<IOnlineTitleInfoService, OnlineTitleInfoService>()
             .AddSingleton<ICachedOnlineTitleInfoService, CachedOnlineTitleInfoService>()
             .AddSingleton<IOnlineTitlePageOpenerService, OnlineTitlePageOpenerService>()

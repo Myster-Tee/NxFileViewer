@@ -36,10 +36,11 @@
                                     </StackPanel>
                                 </Expander.Header>
                                 <StackPanel>
-                                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_ActualKeysFilePath}" />
+                                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_UsedKeysFilePath}" />
                                     <DockPanel LastChildFill="true">
-                                        <Button Command="{Binding Path=EditProdKeysCommand}" Style="{StaticResource EditButton}" DockPanel.Dock="Right"/>
-                                        <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=ActualProdKeysFilePath, Mode=OneWay}" />
+                                        <Button Command="{Binding Path=EditProdKeysCommand}" Style="{StaticResource EditButton}" DockPanel.Dock="Right" 
+                                                ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_OpenKeysLocation}"/>
+                                        <TextBox Style="{StaticResource ReadOnlyTextBoxShaded}" Text="{Binding Path=ActualProdKeysFilePath, Mode=OneWay}" />
                                     </DockPanel>
 
                                     <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysCustomFilePath}" />
@@ -65,10 +66,11 @@
                                     </StackPanel>
                                 </Expander.Header>
                                 <StackPanel>
-                                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_ActualKeysFilePath}" />
+                                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_UsedKeysFilePath}" />
                                     <DockPanel LastChildFill="true">
-                                        <Button Command="{Binding Path=EditTitleKeysCommand}" Style="{StaticResource EditButton}" DockPanel.Dock="Right"/>
-                                        <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=ActualTitleKeysFilePath, Mode=OneWay}" />
+                                        <Button Command="{Binding Path=EditTitleKeysCommand}" Style="{StaticResource EditButton}" DockPanel.Dock="Right"
+                                                ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_OpenKeysLocation}"/>
+                                        <TextBox Style="{StaticResource ReadOnlyTextBoxShaded}" Text="{Binding Path=ActualTitleKeysFilePath, Mode=OneWay}" />
                                     </DockPanel>
 
                                     <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysCustomFilePath}" />
@@ -93,10 +95,11 @@
                                     </StackPanel>
                                 </Expander.Header>
                                 <StackPanel>
-                                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_ActualKeysFilePath}" />
+                                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_UsedKeysFilePath}" />
                                     <DockPanel LastChildFill="true">
-                                        <Button Command="{Binding Path=EditConsoleKeysCommand}" Style="{StaticResource EditButton}" DockPanel.Dock="Right"/>
-                                        <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=ActualConsoleKeysFilePath, Mode=OneWay}" />
+                                        <Button Command="{Binding Path=EditConsoleKeysCommand}" Style="{StaticResource EditButton}" DockPanel.Dock="Right"
+                                                ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_OpenKeysLocation}"/>
+                                        <TextBox Style="{StaticResource ReadOnlyTextBoxShaded}" Text="{Binding Path=ActualConsoleKeysFilePath, Mode=OneWay}" />
                                     </DockPanel>
 
                                     <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysCustomFilePath}" />

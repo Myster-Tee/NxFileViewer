@@ -55,7 +55,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string SettingsView_Button_Cancel { get; }
     string SettingsView_Button_Reset { get; }
     string SettingsView_GroupBoxKeys { get; }
-    string SettingsView_Title_ActualKeysFilePath { get; }
+    string SettingsView_Title_UsedKeysFilePath { get; }
     string SettingsView_Title_KeysCustomFilePath { get; }
     string SettingsView_Title_KeysDownloadUrl { get; }
     string SettingsView_ToolTip_ProdKeys { get; }
@@ -65,6 +65,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string SettingsView_ToolTip_LogLevel { get; }
     string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen { get; }
     string SettingsView_Title_Language { get; }
+    string SettingsView_ToolTip_OpenKeysLocation { get; }
 
     string BrowseKeysFile_ProdTitle { get; }
     string BrowseKeysFile_ConsoleTitle { get; }
@@ -203,7 +204,6 @@ public interface ILocalizationKeys : ILocalizationKeysBase
 
     string ToolTip_KeyMissing { get; }
 
-    string EditFile_Failed_Log { get; }
     string MenuItem_CopyTextToClipboard { get; }
 
     string ContextMenu_OpenFileLocation { get; }
