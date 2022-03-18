@@ -84,6 +84,7 @@ public partial class App : Application, IAppEvents
             .AddSingleton<IFileLoader, FileLoader>()
             .AddSingleton<IBrushesProvider, BrushesProvider>()
             .AddSingleton<ILocalizationFromSettingsSynchronizerService, LocalizationFromSettingsSynchronizerService>()
+            .AddSingleton<IShallowCopier, ShallowCopier>()
 
             .AddTransient<SettingsWindowViewModel>() // Important to let transient so that real actual settings are displayed when settings view is shown
             .AddTransient<ISaveFileRunnable, SaveFileRunnable>()

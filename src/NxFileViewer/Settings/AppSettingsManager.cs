@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Text.Json;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Services.GlobalEvents;
+using Emignatik.NxFileViewer.Tools;
 using Emignatik.NxFileViewer.Utils;
 using Microsoft.Extensions.Logging;
 
@@ -15,16 +15,18 @@ namespace Emignatik.NxFileViewer.Settings
 
         private readonly ILogger _logger;
         private readonly AppSettings _appSettings;
+        private readonly IShallowCopier _shallowCopier;
 
         static AppSettingsManager()
         {
             _settingsFilePath = Path.Combine(PathHelper.CurrentAppDir, $"{AppDomain.CurrentDomain.FriendlyName}.settings.json");
         }
 
-        public AppSettingsManager(ILoggerFactory loggerFactory, AppSettings appSettings, IAppEvents appEvents)
+        public AppSettingsManager(ILoggerFactory loggerFactory, AppSettings appSettings, IAppEvents appEvents, IShallowCopier shallowCopier)
         {
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
             _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+            _shallowCopier = shallowCopier ?? throw new ArgumentNullException(nameof(shallowCopier));
             (appEvents ?? throw new ArgumentNullException(nameof(appEvents))).AppShuttingDown += OnAppShuttingDown;
 
             RestoreDefaultSettings();
@@ -34,7 +36,7 @@ namespace Emignatik.NxFileViewer.Settings
 
         public void RestoreDefaultSettings()
         {
-            RecopyPropertyValues(typeof(IAppSettings), new AppSettings(), _appSettings);
+            _shallowCopier.Copy(new AppSettings(), _appSettings);
         }
 
         public bool LoadSafe()
@@ -49,7 +51,7 @@ namespace Emignatik.NxFileViewer.Settings
                 if (settingsModel == null)
                     return false;
 
-                RecopyPropertyValues(typeof(IAppSettings), settingsModel, _appSettings);
+                _shallowCopier.Copy(settingsModel, _appSettings);
 
                 return true;
             }
@@ -60,58 +62,6 @@ namespace Emignatik.NxFileViewer.Settings
             }
         }
 
-        private static void RecopyPropertyValues(IReflect type, object? source, object? dest)
-        {
-            if (source == null || dest == null)
-                return;
-
-            var propertyInfos = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var propertyInfo in propertyInfos)
-            {
-                // Simple properties copy
-                var propType = propertyInfo.PropertyType;
-                if (IsSimpleType(propType))
-                {
-                    var getMethod = propertyInfo.GetGetMethod();
-                    var setMethod = propertyInfo.GetSetMethod();
-                    if (getMethod == null || setMethod == null) // Property should have both a getter and a setter to be copied
-                        continue;
-
-                    // Get source property value
-                    var propValue = getMethod.Invoke(source, null);
-
-                    if (propValue != null)
-                        // Recopy property value to destination
-                        setMethod.Invoke(dest, new[] { propValue });
-                }
-                else
-                {
-                    // Deep copy
-                    var getMethod = propertyInfo.GetGetMethod();
-                    if(getMethod == null)
-                        continue;
-
-                    var newSource = getMethod.Invoke(source, null);
-                    var newDest = getMethod.Invoke(dest, null);
-
-                    RecopyPropertyValues(propType, newSource, newDest);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns true if type is a value type (int, bool, etc.), a nullable value type (int?, bool?, etc.) or is string
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private static bool IsSimpleType(Type type)
-        {
-            if (type.IsValueType || type == typeof(string))
-                return true;
-
-            var underlyingType = Nullable.GetUnderlyingType(type);
-            return underlyingType is { IsValueType: true };
-        }
 
         public void SaveSafe()
         {
