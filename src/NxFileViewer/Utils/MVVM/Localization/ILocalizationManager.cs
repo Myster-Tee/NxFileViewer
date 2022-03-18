@@ -14,7 +14,7 @@ public interface ILocalizationManager<TKeys> : INotifyPropertyChanged where TKey
     /// <summary>
     /// List of available localizations
     /// </summary>
-    IEnumerable<ILocalization<TKeys>> AvailableLocalizations { get; }
+    ILocalizations<TKeys> AvailableLocalizations { get; }
 
     /// <summary>
     /// The fallback localization
@@ -57,4 +57,10 @@ public class LocalizationChangedHandlerArgs<TKeys> : EventArgs where TKeys : ILo
     }
 
     public ILocalization<TKeys> NewLocalization { get; }
+}
+
+
+public interface ILocalizations<TKeys> : IEnumerable<ILocalization<TKeys>> where TKeys : ILocalizationKeysBase
+{
+    ILocalization<TKeys>? FindByCultureName(string cultureName);
 }

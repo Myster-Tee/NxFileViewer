@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -15,11 +16,13 @@ public class LocalizationManager<TKeys> : ILocalizationManager<TKeys> where TKey
     private readonly string _defaultSystemCultureName = Thread.CurrentThread.CurrentUICulture.Name;
 
     private ILocalization<TKeys> _current;
-    private readonly RealLocalization<TKeys>[] _realLocalizations;
 
-    private AutoLocalization<TKeys>? _autoLocalization;
+    private readonly RealLocalization<TKeys>[] _realLocalizations;
     private readonly ILocalization<TKeys> _fallbackLocalization;
     private readonly RealLocalization<TKeys>? _systemLocalization;
+    private readonly Localizations<TKeys> _localizations;
+    private AutoLocalization<TKeys>? _autoLocalization;
+
     private bool _useAutoLocalization;
 
     public event EventHandler<LocalizationChangedHandlerArgs<TKeys>>? LocalizationChanged;
@@ -41,11 +44,12 @@ public class LocalizationManager<TKeys> : ILocalizationManager<TKeys> where TKey
             throw new ArgumentException($"At least one localization should be specified.", nameof(realLocalizations));
 
         _fallbackLocalization = _realLocalizations.FirstOrDefault(loc => loc.Keys.IsFallback) ?? _realLocalizations.First();
-
         _systemLocalization = _realLocalizations.FirstOrDefault(localization => localization.CultureName == _defaultSystemCultureName);
 
         _useAutoLocalization = useAutoLocalization;
+
         InitializeAutoLocalization();
+        _localizations = new Localizations<TKeys>(this);
 
         _current = AvailableLocalizations.First();
     }
@@ -88,17 +92,11 @@ public class LocalizationManager<TKeys> : ILocalizationManager<TKeys> where TKey
         return realLocalizations;
     }
 
-    public IEnumerable<ILocalization<TKeys>> AvailableLocalizations
-    {
-        get
-        {
-            if (_autoLocalization != null)
-                yield return _autoLocalization;
+    public ILocalization<TKeys>? AutoLocalization => _autoLocalization;
 
-            foreach (var localization in _realLocalizations)
-                yield return localization;
-        }
-    }
+    public IEnumerable<ILocalization<TKeys>> RealLocalizations => _realLocalizations;
+
+    public ILocalizations<TKeys> AvailableLocalizations => _localizations;
 
     public ILocalization<TKeys> FallbackLocalization => _fallbackLocalization;
 
@@ -139,6 +137,7 @@ public class LocalizationManager<TKeys> : ILocalizationManager<TKeys> where TKey
     }
 
 
+
     public void AddWeakLocalizationChangedHandler(EventHandler<LocalizationChangedHandlerArgs<TKeys>> localizationChangedHandler)
     {
         WeakEventManager<LocalizationManager<TKeys>, LocalizationChangedHandlerArgs<TKeys>>.AddHandler(this, nameof(LocalizationChanged), localizationChangedHandler);
@@ -177,5 +176,35 @@ public class LocalizationManager<TKeys> : ILocalizationManager<TKeys> where TKey
     protected virtual void NotifyLocalizationChanged(ILocalization<TKeys> localization)
     {
         LocalizationChanged?.Invoke(this, new LocalizationChangedHandlerArgs<TKeys>(localization));
+    }
+}
+
+public class Localizations<TKeys> : ILocalizations<TKeys> where TKeys : ILocalizationKeysBase
+{
+    private readonly LocalizationManager<TKeys> _localizationManager;
+
+    public Localizations(LocalizationManager<TKeys> localizationManager)
+    {
+        _localizationManager = localizationManager;
+    }
+
+    public ILocalization<TKeys>? FindByCultureName(string cultureName)
+    {
+        return this.FirstOrDefault(localization => localization.CultureName == cultureName);
+    }
+
+    public IEnumerator<ILocalization<TKeys>> GetEnumerator()
+    {
+        var autoLocalization = _localizationManager.AutoLocalization;
+        if (autoLocalization != null)
+            yield return autoLocalization;
+
+        foreach (var localization in _localizationManager.RealLocalizations)
+            yield return localization;
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

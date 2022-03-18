@@ -51,7 +51,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string Lng_TraditionalChinese { get; }
 
     string SettingsView_Title { get; }
-    string SettingsView_Button_Save { get; }
+    string SettingsView_Button_Apply { get; }
     string SettingsView_Button_Cancel { get; }
     string SettingsView_Button_Reset { get; }
     string SettingsView_GroupBoxKeys { get; }

@@ -144,7 +144,7 @@
             <Button Grid.Column="0" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Reset}" Command="{Binding Path=ResetSettingsCommand}" Style="{StaticResource OkCancelButton}" />
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" >
-                <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Save}" IsDefault="True" Command="{Binding Path=ApplySettingsCommand}" Style="{StaticResource OkCancelButton}" />
+                <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Apply}" IsDefault="True" Command="{Binding Path=ApplySettingsCommand}" Style="{StaticResource OkCancelButton}" />
                 <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Cancel}" IsCancel="True" Command="{Binding Path=CancelSettingsCommand}" Style="{StaticResource OkCancelButton}"/>
             </StackPanel>
         </Grid>

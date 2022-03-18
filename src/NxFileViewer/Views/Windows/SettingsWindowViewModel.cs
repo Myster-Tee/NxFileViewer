@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Localization.Keys;
@@ -28,6 +29,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
     private readonly ILogger _logger;
 
     private IAppSettings _editedSettings;
+    private ILocalization<ILocalizationKeys>? _selectedLanguage;
 
 
     public SettingsWindowViewModel(IAppSettingsManager appSettingsManager, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, IServiceProvider serviceProvider,
@@ -51,8 +53,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
         EditTitleKeysCommand = new RelayCommand(EditTitleKeys, CanEditTitleKeys);
         EditConsoleKeysCommand = new RelayCommand(EditConsoleKeys, CanEditConsoleKeys);
 
-        EditedSettings = appSettingsManager.Clone();
-        this.SelectedLanguage = LocalizationManager.Instance.Current;
+        InitializeFromSettings(appSettingsManager.Clone());
 
         _backgroundTaskRunnerService.PropertyChanged += (_, args) =>
         {
@@ -118,7 +119,21 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     public IEnumerable<ILocalization<ILocalizationKeys>> AvailableLanguages => LocalizationManager.Instance.AvailableLocalizations;
 
-    public ILocalization<ILocalizationKeys> SelectedLanguage { get; set; }
+    public ILocalization<ILocalizationKeys>? SelectedLanguage
+    {
+        get => _selectedLanguage;
+        set
+        {
+            _selectedLanguage = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    private void InitializeFromSettings(IAppSettings appSettings)
+    {
+        EditedSettings = appSettings;
+        this.SelectedLanguage = LocalizationManager.Instance.AvailableLocalizations.FindByCultureName(appSettings.AppLanguage);
+    }
 
     private void BrowseProdKeys()
     {
@@ -259,6 +274,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
     private void ApplySettings()
     {
         _appSettingsManager.Load(EditedSettings);
+        this.Window?.Close();
     }
 
     private void CancelSettings()
@@ -268,6 +284,6 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     private void ResetSettings()
     {
-        EditedSettings = _appSettingsManager.GetDefault();
+        InitializeFromSettings(_appSettingsManager.GetDefault());
     }
 }

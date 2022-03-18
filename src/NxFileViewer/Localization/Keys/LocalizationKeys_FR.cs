@@ -54,7 +54,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string Lng_TraditionalChinese => "Chinois Traditionnel";
 
     public string SettingsView_Title => "Paramètres";
-    public string SettingsView_Button_Save => "Sauvegarder";
+    public string SettingsView_Button_Apply => "Appliquer";
     public string SettingsView_Button_Cancel => "Annuler";
     public string SettingsView_Button_Reset => "Réinitialiser";
     public string SettingsView_GroupBoxKeys => "Clés";
