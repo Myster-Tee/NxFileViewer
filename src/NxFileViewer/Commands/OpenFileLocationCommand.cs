@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Input;
-using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Services.FileLocationOpening;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Extensions.Logging;

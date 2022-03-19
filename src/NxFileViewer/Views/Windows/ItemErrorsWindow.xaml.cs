@@ -1,25 +1,24 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 
-namespace Emignatik.NxFileViewer.Views.Windows
+namespace Emignatik.NxFileViewer.Views.Windows;
+
+/// <summary>
+/// Logique d'interaction pour ItemsErrorsWindow.xaml
+/// </summary>
+public partial class ItemErrorsWindow : Window
 {
-    /// <summary>
-    /// Logique d'interaction pour ItemsErrorsWindow.xaml
-    /// </summary>
-    public partial class ItemErrorsWindow : Window
+
+
+    public ItemErrorsWindow()
     {
-
-
-        public ItemErrorsWindow()
-        {
-            InitializeComponent();
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            e.Cancel = true;
-            this.Hide();
-        }
-
+        InitializeComponent();
     }
+
+    protected override void OnClosing(CancelEventArgs e)
+    {
+        e.Cancel = true;
+        this.Hide();
+    }
+
 }

@@ -7,29 +7,28 @@ using Emignatik.NxFileViewer.Utils;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
+namespace Emignatik.NxFileViewer.Views.TreeItems.Impl;
+
+public class PartitionFileEntryItemViewModel : ItemViewModel
 {
-    public class PartitionFileEntryItemViewModel : ItemViewModel
+    private readonly PartitionFileEntryItemBase _partitionFileEntryItem;
+    private readonly IMenuItemViewModel _menuItemSavePartitionFile;
+
+    public PartitionFileEntryItemViewModel(PartitionFileEntryItemBase partitionFileEntryItem, IServiceProvider serviceProvider)
+        : base(partitionFileEntryItem, serviceProvider)
     {
-        private readonly PartitionFileEntryItemBase _partitionFileEntryItem;
-        private readonly IMenuItemViewModel _menuItemSavePartitionFile;
+        _partitionFileEntryItem = partitionFileEntryItem;
 
-        public PartitionFileEntryItemViewModel(PartitionFileEntryItemBase partitionFileEntryItem, IServiceProvider serviceProvider)
-            : base(partitionFileEntryItem, serviceProvider)
-        {
-            _partitionFileEntryItem = partitionFileEntryItem;
-
-            var savePartitionFileItemCommand = serviceProvider.GetRequiredService<ISavePartitionFileCommand>();
-            savePartitionFileItemCommand.PartitionFileItem = partitionFileEntryItem;
-            _menuItemSavePartitionFile = CreateLocalizedMenuItem(nameof(ILocalizationKeys.ContextMenu_SavePartitionFileItem), savePartitionFileItemCommand);
-        }
-
-        public override IEnumerable<IMenuItemViewModel> GetOtherContextMenuItems()
-        {
-            yield return _menuItemSavePartitionFile;
-        }
-
-        [PropertyView]
-        public string Size => _partitionFileEntryItem.Size.ToFileSize();
+        var savePartitionFileItemCommand = serviceProvider.GetRequiredService<ISavePartitionFileCommand>();
+        savePartitionFileItemCommand.PartitionFileItem = partitionFileEntryItem;
+        _menuItemSavePartitionFile = CreateLocalizedMenuItem(nameof(ILocalizationKeys.ContextMenu_SavePartitionFileItem), savePartitionFileItemCommand);
     }
+
+    public override IEnumerable<IMenuItemViewModel> GetOtherContextMenuItems()
+    {
+        yield return _menuItemSavePartitionFile;
+    }
+
+    [PropertyView]
+    public string Size => _partitionFileEntryItem.Size.ToFileSize();
 }

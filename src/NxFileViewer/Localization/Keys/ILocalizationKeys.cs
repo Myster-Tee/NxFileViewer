@@ -66,6 +66,8 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen { get; }
     string SettingsView_Title_Language { get; }
     string SettingsView_ToolTip_OpenKeysLocation { get; }
+    string SettingsView_ToolTip_BrowseKeys { get; }
+    string SettingsView_ToolTip_DownloadKeys { get; }
 
     string BrowseKeysFile_ProdTitle { get; }
     string BrowseKeysFile_ConsoleTitle { get; }
@@ -246,6 +248,8 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string RenamingTool_LogFileRenamed { get; }
     string RenamingTool_LogFileAlreadyNamedProperly { get; }
     string RenamingTool_LogFailedToRenameFile { get; }
+    string RenamingTool_LogRenamingFailed { get; }
+
     string RenamingTool_BadInvalidFileNameCharReplacement { get; }
 
     string Exception_UnexpectedDelimiter { get; }

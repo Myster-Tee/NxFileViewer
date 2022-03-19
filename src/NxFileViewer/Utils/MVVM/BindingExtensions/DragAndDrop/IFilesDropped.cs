@@ -1,7 +1,6 @@
-﻿namespace Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions.DragAndDrop
+﻿namespace Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions.DragAndDrop;
+
+public interface IFilesDropped
 {
-    public interface IFilesDropped
-    {
-        void OnFilesDropped(string[] files);
-    }
+    void OnFilesDropped(string[] files);
 }

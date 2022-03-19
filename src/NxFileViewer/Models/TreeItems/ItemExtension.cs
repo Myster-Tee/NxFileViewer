@@ -4,62 +4,61 @@ using System.Linq;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 using LibHac.FsSystem;
 
-namespace Emignatik.NxFileViewer.Models.TreeItems
+namespace Emignatik.NxFileViewer.Models.TreeItems;
+
+public static class ItemExtension
 {
-    public static class ItemExtension
+    public static IEnumerable<NcaItem> FindAllNcaItems(this IItem? itemRoot)
     {
-        public static IEnumerable<NcaItem> FindAllNcaItems(this IItem? itemRoot)
+        var remainingItemsToVisit = new List<IItem?> { itemRoot };
+
+        while (remainingItemsToVisit.Count > 0)
         {
-            var remainingItemsToVisit = new List<IItem?> { itemRoot };
+            var item = remainingItemsToVisit[0];
+            remainingItemsToVisit.RemoveAt(0);
 
-            while (remainingItemsToVisit.Count > 0)
+            if (item == null)
+                continue;
+
+            if (item is NcaItem ncaItem)
+                yield return ncaItem;
+
+            remainingItemsToVisit.AddRange(item.ChildItems);
+        }
+    }
+
+    public static NcaItem? FindNcaItem(this PartitionFileSystemItemBase partitionItem, string ncaId)
+    {
+        var expectedFileName = ncaId;
+        return partitionItem.NcaChildItems.FirstOrDefault(ncaItem => string.Equals(ncaItem.Id, expectedFileName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public static NacpItem? FindNacpItem(this NcaItem ncaItem)
+    {
+        foreach (var sectionItem in ncaItem.ChildItems)
+        {
+            foreach (var dirEntry in sectionItem.ChildItems)
             {
-                var item = remainingItemsToVisit[0];
-                remainingItemsToVisit.RemoveAt(0);
-
-                if (item == null)
-                    continue;
-
-                if (item is NcaItem ncaItem)
-                    yield return ncaItem;
-
-                remainingItemsToVisit.AddRange(item.ChildItems);
+                if (dirEntry is NacpItem nacpItem)
+                    return nacpItem;
             }
         }
 
-        public static NcaItem? FindNcaItem(this PartitionFileSystemItemBase partitionItem, string ncaId)
-        {
-            var expectedFileName = ncaId;
-            return partitionItem.NcaChildItems.FirstOrDefault(ncaItem => string.Equals(ncaItem.Id, expectedFileName, StringComparison.OrdinalIgnoreCase));
-        }
+        return null;
+    }
 
-        public static NacpItem? FindNacpItem(this NcaItem ncaItem)
+    public static IEnumerable<CnmtItem> FindAllCnmtItems(this PartitionFileSystemItemBase partitionItem)
+    {
+        foreach (var ncaItem in partitionItem.NcaChildItems)
         {
+            if (ncaItem.ContentType != NcaContentType.Meta)
+                continue;
             foreach (var sectionItem in ncaItem.ChildItems)
             {
-                foreach (var dirEntry in sectionItem.ChildItems)
+                foreach (var child in sectionItem.ChildItems)
                 {
-                    if (dirEntry is NacpItem nacpItem)
-                        return nacpItem;
-                }
-            }
-
-            return null;
-        }
-
-        public static IEnumerable<CnmtItem> FindAllCnmtItems(this PartitionFileSystemItemBase partitionItem)
-        {
-            foreach (var ncaItem in partitionItem.NcaChildItems)
-            {
-                if (ncaItem.ContentType != NcaContentType.Meta)
-                    continue;
-                foreach (var sectionItem in ncaItem.ChildItems)
-                {
-                    foreach (var child in sectionItem.ChildItems)
-                    {
-                        if (child is CnmtItem cnmtItem)
-                            yield return cnmtItem;
-                    }
+                    if (child is CnmtItem cnmtItem)
+                        yield return cnmtItem;
                 }
             }
         }

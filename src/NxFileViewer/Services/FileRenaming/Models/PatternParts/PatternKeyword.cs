@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Emignatik.NxFileViewer.Utils;
 using Emignatik.NxFileViewer.Utils.CustomAttributes;
 
 namespace Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;

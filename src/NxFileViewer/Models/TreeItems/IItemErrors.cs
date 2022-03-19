@@ -1,23 +1,22 @@
 ﻿using System.Collections.Generic;
 
-namespace Emignatik.NxFileViewer.Models.TreeItems
+namespace Emignatik.NxFileViewer.Models.TreeItems;
+
+public interface IItemErrors : IEnumerable<string>
 {
-    public interface IItemErrors : IEnumerable<string>
-    {
-        event ErrorsChangedHandler? ErrorsChanged;
+    event ErrorsChangedHandler? ErrorsChanged;
 
-        public int Count { get; }
+    public int Count { get; }
 
-        void Add(string message);
+    void Add(string message);
 
-        void Add(string category, string message);
+    void Add(string category, string message);
 
-        int RemoveAll(string category);
-    }
+    int RemoveAll(string category);
+}
 
-    public delegate void ErrorsChangedHandler(object sender, ErrorsChangedHandlerArgs args);
+public delegate void ErrorsChangedHandler(object sender, ErrorsChangedHandlerArgs args);
 
-    public class ErrorsChangedHandlerArgs
-    {
-    }
+public class ErrorsChangedHandlerArgs
+{
 }

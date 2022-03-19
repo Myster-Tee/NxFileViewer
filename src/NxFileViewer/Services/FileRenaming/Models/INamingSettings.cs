@@ -6,17 +6,17 @@ namespace Emignatik.NxFileViewer.Services.FileRenaming.Models;
 public interface INamingSettings
 {
     /// <summary>
-    /// Pattern for a package with a single content of «Application» type
+    /// Pattern for a package with a single content of type «Application»
     /// </summary>
     public IReadOnlyList<PatternPart> ApplicationPattern { get; }
 
     /// <summary>
-    /// Pattern for a package with a single content of «Patch» type
+    /// Pattern for a package with a single content of type «Patch»
     /// </summary>
     public IReadOnlyList<PatternPart> PatchPattern { get; }
 
     /// <summary>
-    /// Pattern for a package with a single content of «Addon» type
+    /// Pattern for a package with a single content of type «Addon»
     /// </summary>
     public IReadOnlyList<PatternPart> AddonPattern { get; }
 

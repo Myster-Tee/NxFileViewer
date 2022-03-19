@@ -1,9 +1,8 @@
 ﻿using Emignatik.NxFileViewer.Models.TreeItems;
 
-namespace Emignatik.NxFileViewer.Views.TreeItems
+namespace Emignatik.NxFileViewer.Views.TreeItems;
+
+public interface IItemViewModelBuilder
 {
-    public interface IItemViewModelBuilder
-    {
-        IItemViewModel Build(IItem item);
-    }
+    IItemViewModel Build(IItem item);
 }

@@ -1,24 +1,23 @@
-﻿namespace Emignatik.NxFileViewer.Views.ObjectPropertyViewer
+﻿namespace Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
+
+/// <summary>
+/// Represents a line of the <see cref="PropertiesView"/>
+/// </summary>
+public class PropertyData
 {
     /// <summary>
-    /// Represents a line of the <see cref="PropertiesView"/>
+    /// Object property name (first column)
     /// </summary>
-    public class PropertyData
-    {
-        /// <summary>
-        /// Object property name (first column)
-        /// </summary>
-        public string Name { get; init; } = "";
+    public string Name { get; init; } = "";
 
-        /// <summary>
-        /// Object description (Use for tooltip)
-        /// </summary>
-        public string? Description { get; set; }
+    /// <summary>
+    /// Object description (Use for tooltip)
+    /// </summary>
+    public string? Description { get; set; }
 
-        /// <summary>
-        /// Object property value (second column)
-        /// </summary>
-        public object? Value { get; set; }
+    /// <summary>
+    /// Object property value (second column)
+    /// </summary>
+    public object? Value { get; set; }
 
-    }
 }

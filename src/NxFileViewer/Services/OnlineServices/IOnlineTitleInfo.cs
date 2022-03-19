@@ -2,11 +2,11 @@
 
 public interface IOnlineTitleInfo
 {
-    string Id { get; set; }
-    string Name { get; set; }
-    string Publisher { get; set; }
-    string IconUrl { get; set; }
-    string Description { get; set; }
-    object Playtime { get; set; }
-    double Rating { get; set; }
+    string Id { get; }
+    string Name { get; }
+    string Publisher { get; }
+    string IconUrl { get; }
+    string Description { get; }
+    object Playtime { get; }
+    double Rating { get; }
 }

@@ -94,6 +94,8 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Always reload keys before opening a file";
     public string SettingsView_Title_Language => "Language";
     public string SettingsView_ToolTip_OpenKeysLocation => "Open keys file location.";
+    public string SettingsView_ToolTip_BrowseKeys => "Browse...";
+    public string SettingsView_ToolTip_DownloadKeys => "Download from specified URL.";
 
     public string BrowseKeysFile_ProdTitle => "Select \"prod\" keys file";
     public string BrowseKeysFile_ConsoleTitle => "Select \"console\" keys file";
@@ -274,6 +276,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_LogFileRenamed => $"• {{0}}File renamed from{Environment.NewLine}\t«{{1}}» to{Environment.NewLine}\t«{{2}}».";
     public string RenamingTool_LogFileAlreadyNamedProperly => "• {0}«{1}» already named correctly.";
     public string RenamingTool_LogFailedToRenameFile => "• {0}«{1}»Renaming failed: {2}";
+    public string RenamingTool_LogRenamingFailed => "Renaming failed: {0}";
     public string RenamingTool_BadInvalidFileNameCharReplacement => "The replacement string «{0}» (for invalid file name chars), can't contain invalid char «{1}».";
 
     public string Exception_UnexpectedDelimiter => "Unexpected delimiter {0} found at position {1}, use {2}{0} instead.";

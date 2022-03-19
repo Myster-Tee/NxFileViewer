@@ -93,8 +93,9 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_ToolTip_LogLevel => "Le niveau de log indique à partir de quel niveau les messages sont logués.";
     public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Toujours recharger les clés avant l'ouverture d'un fichier";
     public string SettingsView_Title_Language => "Langue";
-    public string SettingsView_ToolTip_OpenKeysLocation => "Ouvrez l'emplacement du fichier de clés.";
-
+    public string SettingsView_ToolTip_OpenKeysLocation => "Ouvrir l'emplacement du fichier de clés.";
+    public string SettingsView_ToolTip_BrowseKeys => "Parcourir...";
+    public string SettingsView_ToolTip_DownloadKeys => "Télécharger à partir de l'URL spécifiée.";
 
     public string BrowseKeysFile_ProdTitle => "Sélectionnez les clés \"prod\"";
     public string BrowseKeysFile_ConsoleTitle => "Sélectionnez les clés \"console\"";
@@ -276,6 +277,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_LogFileRenamed => $"• {{0}}Ficher renommé de{Environment.NewLine}\t«{{1}}» à{Environment.NewLine}\t«{{2}}».";
     public string RenamingTool_LogFileAlreadyNamedProperly => "• {0}«{1}» déjà nommé correctement.";
     public string RenamingTool_LogFailedToRenameFile => "• {0}«{1}»Echec de renommage: {2}";
+    public string RenamingTool_LogRenamingFailed => "Echec de renommage: {0}";
     public string RenamingTool_BadInvalidFileNameCharReplacement => "La chaine de remplacement «{0}» (caractères interdits dans les noms de fichiers), ne peut contenir le caractère interdit «{1}».";
 
     public string Exception_UnexpectedDelimiter => "Délimiteur {0} non attendu à la position {1}, utilisez {2}{0} à la place.";

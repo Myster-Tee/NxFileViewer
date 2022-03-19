@@ -5,28 +5,27 @@ using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 using LibHac.Ncm;
 using LibHac.Util;
 
-namespace Emignatik.NxFileViewer.Views.TreeItems.Impl
+namespace Emignatik.NxFileViewer.Views.TreeItems.Impl;
+
+public class CnmtContentEntryItemViewModel : ItemViewModel
 {
-    public class CnmtContentEntryItemViewModel : ItemViewModel
+    private readonly CnmtContentEntryItem _cnmtContentEntryItem;
+
+    public CnmtContentEntryItemViewModel(CnmtContentEntryItem cnmtContentEntryItem, IServiceProvider serviceProvider) : base(cnmtContentEntryItem, serviceProvider)
     {
-        private readonly CnmtContentEntryItem _cnmtContentEntryItem;
-
-        public CnmtContentEntryItemViewModel(CnmtContentEntryItem cnmtContentEntryItem, IServiceProvider serviceProvider) : base(cnmtContentEntryItem, serviceProvider)
-        {
-            _cnmtContentEntryItem = cnmtContentEntryItem ?? throw new ArgumentNullException(nameof(cnmtContentEntryItem));
-        }
-
-        [PropertyView]
-        public string NcaId => _cnmtContentEntryItem.NcaId.ToStrId();
-
-        [PropertyView]
-        public string NcaHash => _cnmtContentEntryItem.NcaHash.ToHexString();      
-        
-        [PropertyView]
-        public ContentType NcaContentType => _cnmtContentEntryItem.NcaContentType;
-
-        [PropertyView]
-        public string NcaSize => _cnmtContentEntryItem.NcaSize.ToFileSize();
-
+        _cnmtContentEntryItem = cnmtContentEntryItem ?? throw new ArgumentNullException(nameof(cnmtContentEntryItem));
     }
+
+    [PropertyView]
+    public string NcaId => _cnmtContentEntryItem.NcaId.ToStrId();
+
+    [PropertyView]
+    public string NcaHash => _cnmtContentEntryItem.NcaHash.ToHexString();      
+        
+    [PropertyView]
+    public ContentType NcaContentType => _cnmtContentEntryItem.NcaContentType;
+
+    [PropertyView]
+    public string NcaSize => _cnmtContentEntryItem.NcaSize.ToFileSize();
+
 }

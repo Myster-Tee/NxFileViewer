@@ -5,65 +5,64 @@ using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Services.OnlineServices;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
+namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
+
+public class DownloadFileRunnable : IDownloadFileRunnable
 {
-    public class DownloadFileRunnable : IDownloadFileRunnable
+    private readonly IHttpDownloader _httpDownloader;
+    private readonly ILogger _logger;
+    private string? _url;
+    private string? _filePath;
+
+    public DownloadFileRunnable(ILoggerFactory loggerFactory, IHttpDownloader httpDownloader)
     {
-        private readonly IHttpDownloader _httpDownloader;
-        private readonly ILogger _logger;
-        private string? _url;
-        private string? _filePath;
+        _httpDownloader = httpDownloader ?? throw new ArgumentNullException(nameof(httpDownloader));
+        _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+    }
 
-        public DownloadFileRunnable(ILoggerFactory loggerFactory, IHttpDownloader httpDownloader)
+    public bool SupportsCancellation => true;
+
+    public bool SupportProgress => false;
+
+    public void Run(IProgressReporter progressReporter, CancellationToken cancellationToken)
+    {
+        try
         {
-            _httpDownloader = httpDownloader ?? throw new ArgumentNullException(nameof(httpDownloader));
-            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+            if (_url == null || _filePath == null)
+                throw new InvalidOperationException($"{nameof(Setup)} should be called first.");
+
+            progressReporter.SetText(LocalizationManager.Instance.Current.Keys.Status_DownloadingFile.SafeFormat(Path.GetFileName(_filePath)));
+
+            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_DownloadingFileFromUrl.SafeFormat(_filePath, _url));
+
+            _httpDownloader.DownloadFileAsync(_url, _filePath, cancellationToken).Wait(cancellationToken);
+
+            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_FileSuccessfullyDownloaded.SafeFormat(_filePath));
         }
-
-        public bool SupportsCancellation => true;
-
-        public bool SupportProgress => false;
-
-        public void Run(IProgressReporter progressReporter, CancellationToken cancellationToken)
+        catch (OperationCanceledException)
         {
-            try
+            _logger.LogWarning(LocalizationManager.Instance.Current.Keys.Log_DownloadFileCanceled);
+
+            try { File.Delete(_filePath!); }
+            catch
             {
-                if (_url == null || _filePath == null)
-                    throw new InvalidOperationException($"{nameof(Setup)} should be called first.");
-
-                progressReporter.SetText(LocalizationManager.Instance.Current.Keys.Status_DownloadingFile.SafeFormat(Path.GetFileName(_filePath)));
-
-                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_DownloadingFileFromUrl.SafeFormat(_filePath, _url));
-
-                _httpDownloader.DownloadFileAsync(_url, _filePath, cancellationToken).Wait(cancellationToken);
-
-                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_FileSuccessfullyDownloaded.SafeFormat(_filePath));
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogWarning(LocalizationManager.Instance.Current.Keys.Log_DownloadFileCanceled);
-
-                try { File.Delete(_filePath!); }
-                catch
-                {
-                    // ignored
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.Log_FailedToDownloadFileFromUrl.SafeFormat(_filePath, _url, ex.Message));
+                // ignored
             }
         }
-
-        public void Setup(string url, string filePath)
+        catch (Exception ex)
         {
-            _url = url ?? throw new ArgumentNullException(nameof(url));
-            _filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
+            _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.Log_FailedToDownloadFileFromUrl.SafeFormat(_filePath, _url, ex.Message));
         }
     }
 
-    public interface IDownloadFileRunnable : IRunnable
+    public void Setup(string url, string filePath)
     {
-        void Setup(string url, string filePath);
+        _url = url ?? throw new ArgumentNullException(nameof(url));
+        _filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
     }
+}
+
+public interface IDownloadFileRunnable : IRunnable
+{
+    void Setup(string url, string filePath);
 }

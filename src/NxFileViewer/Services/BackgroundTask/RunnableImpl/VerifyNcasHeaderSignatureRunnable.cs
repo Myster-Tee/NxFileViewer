@@ -6,119 +6,118 @@ using Emignatik.NxFileViewer.Models.Overview;
 using LibHac.Common;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
+namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
+
+public class VerifyNcasHeaderSignatureRunnable : IVerifyNcasHeaderSignatureRunnable
 {
-    public class VerifyNcasHeaderSignatureRunnable : IVerifyNcasHeaderSignatureRunnable
+    private const string NCA_HEADER_SIGNATURE_CATEGORY = "NcaHeaderSignature";
+
+    private FileOverview? _fileOverview;
+    private readonly ILogger _logger;
+
+    public VerifyNcasHeaderSignatureRunnable(ILoggerFactory loggerFactory)
     {
-        private const string NCA_HEADER_SIGNATURE_CATEGORY = "NcaHeaderSignature";
+        _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+    }
 
-        private FileOverview? _fileOverview;
-        private readonly ILogger _logger;
+    public bool SupportsCancellation => false;
 
-        public VerifyNcasHeaderSignatureRunnable(ILoggerFactory loggerFactory)
+    public bool SupportProgress => true;
+
+    public void Setup(FileOverview fileOverview)
+    {
+        _fileOverview = fileOverview ?? throw new ArgumentNullException(nameof(fileOverview));
+    }
+
+    public void Run(IProgressReporter progressReporter, CancellationToken cancellationToken)
+    {
+        if (_fileOverview == null)
+            throw new InvalidOperationException($"{nameof(Setup)} should be called first.");
+
+        _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_VerificationStart_Log);
+        try
         {
-            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+            VerifySignatures(progressReporter, _fileOverview);
         }
-
-        public bool SupportsCancellation => false;
-
-        public bool SupportProgress => true;
-
-        public void Setup(FileOverview fileOverview)
+        finally
         {
-            _fileOverview = fileOverview ?? throw new ArgumentNullException(nameof(fileOverview));
+            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_VerificationEnd_Log);
         }
+    }
 
-        public void Run(IProgressReporter progressReporter, CancellationToken cancellationToken)
+    private void VerifySignatures(IProgressReporter progressReporter, FileOverview fileOverview)
+    {
+        fileOverview.NcasHeadersSignatureExceptions = null;
+        var ncaItems = fileOverview.NcaItems;
+        if (ncaItems.Count <= 0)
         {
-            if (_fileOverview == null)
-                throw new InvalidOperationException($"{nameof(Setup)} should be called first.");
-
-            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_VerificationStart_Log);
-            try
-            {
-                VerifySignatures(progressReporter, _fileOverview);
-            }
-            finally
-            {
-                _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_VerificationEnd_Log);
-            }
+            fileOverview.NcasHeadersSignatureValidity = NcasValidity.NoNca;
+            return;
         }
+        fileOverview.NcasHeadersSignatureValidity = NcasValidity.InProgress;
 
-        private void VerifySignatures(IProgressReporter progressReporter, FileOverview fileOverview)
+        var allValid = true;
+        var occurredExceptions = new List<Exception>();
+        try
         {
-            fileOverview.NcasHeadersSignatureExceptions = null;
-            var ncaItems = fileOverview.NcaItems;
-            if (ncaItems.Count <= 0)
-            {
-                fileOverview.NcasHeadersSignatureValidity = NcasValidity.NoNca;
-                return;
-            }
-            fileOverview.NcasHeadersSignatureValidity = NcasValidity.InProgress;
+            progressReporter.SetPercentage(0);
 
-            var allValid = true;
-            var occurredExceptions = new List<Exception>();
-            try
+            var i = 0;
+            foreach (var ncaItem in ncaItems)
             {
-                progressReporter.SetPercentage(0);
+                ncaItem.Errors.RemoveAll(NCA_HEADER_SIGNATURE_CATEGORY);
 
-                var i = 0;
-                foreach (var ncaItem in ncaItems)
+                try
                 {
-                    ncaItem.Errors.RemoveAll(NCA_HEADER_SIGNATURE_CATEGORY);
+                    //=============================================//
+                    //===============> Verify Hash <===============//
+                    var validity = ncaItem.Nca.VerifyHeaderSignature();
+                    //===============> Verify Hash <===============//
+                    //=============================================//
+                    ncaItem.HeaderSignatureValidity = validity;
 
-                    try
-                    {
-                        //=============================================//
-                        //===============> Verify Hash <===============//
-                        var validity = ncaItem.Nca.VerifyHeaderSignature();
-                        //===============> Verify Hash <===============//
-                        //=============================================//
-                        ncaItem.HeaderSignatureValidity = validity;
-
-                        if (validity != Validity.Valid)
-                        {
-                            allValid = false;
-                            ncaItem.Errors.Add(NCA_HEADER_SIGNATURE_CATEGORY, LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_Invalid.SafeFormat(validity.ToString()));
-                            _logger.LogError(LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_Invalid_Log.SafeFormat(ncaItem.DisplayName, validity.ToString()));
-                        }
-                        else
-                            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_Valid_Log.SafeFormat(ncaItem.DisplayName, validity.ToString()));
-                    }
-                    catch (Exception ex)
+                    if (validity != Validity.Valid)
                     {
                         allValid = false;
-                        occurredExceptions.Add(ex);
-                        ncaItem.Errors.Add(NCA_HEADER_SIGNATURE_CATEGORY, LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_Error.SafeFormat(ex.Message));
-                        _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_Error_log.SafeFormat(ncaItem.DisplayName, ex.Message));
+                        ncaItem.Errors.Add(NCA_HEADER_SIGNATURE_CATEGORY, LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_Invalid.SafeFormat(validity.ToString()));
+                        _logger.LogError(LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_Invalid_Log.SafeFormat(ncaItem.DisplayName, validity.ToString()));
                     }
-
-                    progressReporter.SetPercentage(++i / (double)ncaItems.Count);
+                    else
+                        _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_Valid_Log.SafeFormat(ncaItem.DisplayName, validity.ToString()));
+                }
+                catch (Exception ex)
+                {
+                    allValid = false;
+                    occurredExceptions.Add(ex);
+                    ncaItem.Errors.Add(NCA_HEADER_SIGNATURE_CATEGORY, LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_Error.SafeFormat(ex.Message));
+                    _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.NcaHeaderSignature_Error_log.SafeFormat(ncaItem.DisplayName, ex.Message));
                 }
 
-                progressReporter.SetPercentage(1);
-            }
-            catch (Exception ex)
-            {
-                allValid = false;
-                occurredExceptions.Add(ex);
-                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.NcasHeaderSignature_Error_Log.SafeFormat(ex.Message));
+                progressReporter.SetPercentage(++i / (double)ncaItems.Count);
             }
 
-            if (occurredExceptions.Count > 0)
-            {
-                fileOverview.NcasHeadersSignatureExceptions = occurredExceptions;
-                fileOverview.NcasHeadersSignatureValidity = NcasValidity.Error;
-            }
-            else
-            {
-                fileOverview.NcasHeadersSignatureValidity = allValid ? NcasValidity.Valid : NcasValidity.Invalid;
-            }
+            progressReporter.SetPercentage(1);
+        }
+        catch (Exception ex)
+        {
+            allValid = false;
+            occurredExceptions.Add(ex);
+            _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.NcasHeaderSignature_Error_Log.SafeFormat(ex.Message));
+        }
+
+        if (occurredExceptions.Count > 0)
+        {
+            fileOverview.NcasHeadersSignatureExceptions = occurredExceptions;
+            fileOverview.NcasHeadersSignatureValidity = NcasValidity.Error;
+        }
+        else
+        {
+            fileOverview.NcasHeadersSignatureValidity = allValid ? NcasValidity.Valid : NcasValidity.Invalid;
         }
     }
+}
 
-    public interface IVerifyNcasHeaderSignatureRunnable : IRunnable
-    {
-        void Setup(FileOverview fileOverview);
-    }
+public interface IVerifyNcasHeaderSignatureRunnable : IRunnable
+{
+    void Setup(FileOverview fileOverview);
 }

@@ -45,14 +45,15 @@
 
                                     <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysCustomFilePath}" />
                                     <DockPanel LastChildFill="true">
-                                        <Button Command="{Binding Path=BrowseProdKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
+                                        <Button Command="{Binding Path=BrowseProdKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"
+                                                ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_BrowseKeys}"/>
                                         <TextBox Text="{Binding Path=EditedSettings.ProdKeysFilePath}" HorizontalAlignment="Stretch" />
                                     </DockPanel>
 
                                     <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysDownloadUrl}" />
                                     <DockPanel LastChildFill="true">
-                                        <Button Style="{StaticResource DownloadButton}" DockPanel.Dock="Right" 
-                                                Command="{Binding Path=DownloadProdKeysCommand}"/>
+                                        <Button Command="{Binding Path=DownloadProdKeysCommand}" Style="{StaticResource DownloadButton}" DockPanel.Dock="Right" 
+                                                ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_DownloadKeys}"/>
                                         <TextBox Text="{Binding Path=EditedSettings.ProdKeysDownloadUrl}" />
                                     </DockPanel>
                                 </StackPanel>
@@ -75,13 +76,14 @@
 
                                     <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysCustomFilePath}" />
                                     <DockPanel LastChildFill="True">
-                                        <Button Command="{Binding Path=BrowseTitleKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
+                                        <Button Command="{Binding Path=BrowseTitleKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"
+                                                ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_BrowseKeys}"/>
                                         <TextBox Text="{Binding Path=EditedSettings.TitleKeysFilePath, UpdateSourceTrigger=PropertyChanged}"/>
                                     </DockPanel>
                                     <TextBlock  Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysDownloadUrl}" />
                                     <DockPanel LastChildFill="true">
-                                        <Button Style="{StaticResource DownloadButton}" DockPanel.Dock="Right"
-                                                Command="{Binding Path=DownloadTitleKeysCommand}"/>
+                                        <Button Command="{Binding Path=DownloadTitleKeysCommand}" Style="{StaticResource DownloadButton}" DockPanel.Dock="Right"
+                                                ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_DownloadKeys}"/>
                                         <TextBox Text="{Binding Path=EditedSettings.TitleKeysDownloadUrl}" />
                                     </DockPanel>
                                 </StackPanel>
@@ -104,7 +106,8 @@
 
                                     <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_KeysCustomFilePath}" />
                                     <DockPanel LastChildFill="True">
-                                        <Button Command="{Binding Path=BrowseConsoleKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"/>
+                                        <Button Command="{Binding Path=BrowseConsoleKeysCommand}" Style="{StaticResource BrowseButton}" DockPanel.Dock="Right"
+                                                ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_BrowseKeys}"/>
                                         <TextBox Text="{Binding Path=EditedSettings.ConsoleKeysFilePath}"/>
                                     </DockPanel>
                                 </StackPanel>
