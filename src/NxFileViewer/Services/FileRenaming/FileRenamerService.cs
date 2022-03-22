@@ -228,6 +228,12 @@ public class FileRenamerService : IFileRenamerService
                         case PatternKeyword.TitleId:
                             partValue = content.TitleId;
                             break;
+                        case PatternKeyword.ApplicationTitleId:
+                            partValue = content.ApplicationTitleId;
+                            break;
+                        case PatternKeyword.PatchTitleId:
+                            partValue = content.PatchTitleId;
+                            break;
                         case PatternKeyword.TitleName:
                             var firstTitle = content.NacpData?.Titles.FirstOrDefault();
                             partValue = firstTitle != null ? firstTitle.Name : "NO_TITLE";

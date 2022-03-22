@@ -43,6 +43,10 @@ public class Content
 
     public string TitleId => _cnmt.TitleId.ToStrId();
 
+    public string ApplicationTitleId => _cnmt.ApplicationTitleId.ToStrId();
+
+    public string PatchTitleId => _cnmt.PatchTitleId.ToStrId();
+
     public TitleVersion MinimumApplicationVersion => _cnmt.MinimumApplicationVersion;
 
     public NacpData? NacpData { get; set; }
@@ -79,8 +83,6 @@ public class NacpData
 
         Titles = titles;
     }
-
-
 
     public IReadOnlyList<Title?> Titles { get; }
 
