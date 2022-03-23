@@ -119,7 +119,10 @@ public static class LibHacHelperExtension
     }
 
 
-
+    public static int GetPatchNumber(this TitleVersion titleVersion)
+    {
+        return titleVersion.Minor;
+    }
 }
 
 public class FoundEntry

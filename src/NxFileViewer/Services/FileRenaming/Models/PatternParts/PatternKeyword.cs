@@ -31,6 +31,15 @@ public enum PatternKeyword
     PatchTitleId,
 
     /// <summary>
+    /// The patch number.
+    /// If content is an <see cref="ContentMetaType.Application"/>, value is normally 0.
+    /// If content is a <see cref="ContentMetaType.Patch"/>, value corresponds to the patch number.
+    /// If content is an <see cref="ContentMetaType.AddOnContent"/>, value corresponds to the addon patch number.
+    /// </summary>
+    [SerializedValue("PatchNum")]
+    PatchNumber,
+
+    /// <summary>
     /// The first title name in the list of declared titles.
     /// Exists only for <see cref="ContentMetaType.Application"/> and <see cref="ContentMetaType.Patch"/> but not for <see cref="ContentMetaType.AddOnContent"/>
     /// </summary>
@@ -47,8 +56,8 @@ public enum PatternKeyword
     /// The content version number.
     /// </summary>
     [SerializedValue("VerNum")]
-    VersionNumber,
-
+    VersionNumber,   
+    
     /// <summary>
     /// The title name retrieved from the online API, based on the content Title Id.
     /// </summary>

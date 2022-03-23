@@ -82,16 +82,7 @@ public class CnmtContainerViewModel : ViewModelBase
     /// <summary>
     /// Get the patch level
     /// </summary>
-    public string? PatchLevel
-    {
-        get
-        {
-            var patchLevel = _cnmtContainer.CnmtItem.PatchNumber;
-            if (patchLevel != null)
-                return LocalizationManager.Instance.Current.Keys.ToolTip_PatchNumber.SafeFormat(patchLevel);
-            return null;
-        }
-    }
+    public string PatchLevel => LocalizationManager.Instance.Current.Keys.ToolTip_PatchNumber.SafeFormat(_cnmtContainer.CnmtItem.PatchNumber);
 
     /// <summary>
     /// The minimum system version

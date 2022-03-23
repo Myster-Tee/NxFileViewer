@@ -52,6 +52,9 @@ public class Content
     public NacpData? NacpData { get; set; }
 
     public TitleVersion Version => _cnmt.TitleVersion;
+
+    public int PatchNumber => _cnmt.TitleVersion.GetPatchNumber();
+
 }
 
 public class NacpData
