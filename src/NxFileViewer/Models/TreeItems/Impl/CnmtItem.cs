@@ -21,7 +21,7 @@ public class CnmtItem : DirectoryEntryItem, IItem
         Cnmt = cnmt ?? throw new ArgumentNullException(nameof(cnmt));
          
         ParentItem = parentSectionItem;
-        PatchLevel = GetPatchLevel(Cnmt.TitleVersion);
+        PatchNumber = GetPatchNumber(Cnmt.TitleVersion);
         TitleId = Cnmt.TitleId.ToStrId();
         ApplicationTitleId = Cnmt.ApplicationTitleId.ToStrId();
         PatchTitleId = Cnmt.PatchTitleId.ToStrId();
@@ -44,7 +44,7 @@ public class CnmtItem : DirectoryEntryItem, IItem
 
     public string? TitleVersion { get; }
 
-    public int? PatchLevel { get; }
+    public int? PatchNumber { get; }
 
     public TitleVersion? MinimumApplicationVersion => Cnmt.MinimumApplicationVersion;
 
@@ -54,12 +54,8 @@ public class CnmtItem : DirectoryEntryItem, IItem
 
     public new List<CnmtContentEntryItem> ChildItems { get; } = new();
 
-    private static int? GetPatchLevel(TitleVersion? titleVersion)
+    private static int? GetPatchNumber(TitleVersion? titleVersion)
     {
-        var version = titleVersion?.Version;
-        const int n = 65536;
-        if (version != null && version % n == 0)
-            return (int)version / n;
-        return null;
+        return titleVersion?.Minor;
     }
 }

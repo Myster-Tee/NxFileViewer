@@ -148,7 +148,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string Log_FileSuccessfullyDownloaded { get; }
     string Log_FailedToDownloadFileFromUrl { get; }
 
-    string ToolTip_PatchLevel { get; }
+    string ToolTip_PatchNumber { get; }
     string Log_OpeningFile { get; }
     string MainModuleIdTooltip { get; }
     string ATaskIsAlreadyRunning { get; }

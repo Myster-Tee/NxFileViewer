@@ -31,7 +31,7 @@ public class CnmtItemViewModel : DirectoryEntryItemViewModel
     public string? TitleVersion => _cnmtItem.TitleVersion;
 
     [PropertyView] 
-    public int? PatchLevel => _cnmtItem.PatchLevel;
+    public int? PatchLevel => _cnmtItem.PatchNumber;
 
     [PropertyView]
     public string? MinimumApplicationVersion => _cnmtItem.MinimumApplicationVersion?.ToString();

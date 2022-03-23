@@ -86,9 +86,9 @@ public class CnmtContainerViewModel : ViewModelBase
     {
         get
         {
-            var patchLevel = _cnmtContainer.CnmtItem.PatchLevel;
+            var patchLevel = _cnmtContainer.CnmtItem.PatchNumber;
             if (patchLevel != null)
-                return LocalizationManager.Instance.Current.Keys.ToolTip_PatchLevel.SafeFormat(patchLevel);
+                return LocalizationManager.Instance.Current.Keys.ToolTip_PatchNumber.SafeFormat(patchLevel);
             return null;
         }
     }

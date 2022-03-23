@@ -176,7 +176,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string Log_FileSuccessfullyDownloaded => "File «{0}» successfully downloaded.";
     public string Log_FailedToDownloadFileFromUrl => "Failed to download «{0}» from URL «{1}»: {2}";
 
-    public string ToolTip_PatchLevel => "Patch level {0}";
+    public string ToolTip_PatchNumber => "Patch number {0}";
     public string Log_OpeningFile => "=====> {0} <=====";
     public string MainModuleIdTooltip => "Also known as «Build ID» (or BID).";
     public string ATaskIsAlreadyRunning => "A task is already running...";
