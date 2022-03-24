@@ -1,5 +1,6 @@
 ﻿using System;
 using Emignatik.NxFileViewer.Utils.MVVM.Localization;
+using LibHac.Ncm;
 
 namespace Emignatik.NxFileViewer.Localization.Keys;
 
@@ -254,9 +255,34 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_AddonPattern => "Pattern d'add-on";
     public string RenamingTool_InputPath => "Chemin d'entrée";
     public string RenamingTool_FileFilters => "Filtres";
-    public string RenamingTool_ToolTip_BasePattern => "Bla bla bla"; //TODO : finir de documenter
-    public string RenamingTool_ToolTip_PatchPattern => ""; //TODO : finir de documenter
-    public string RenamingTool_ToolTip_AddonPattern => ""; //TODO : finir de documenter
+    public string RenamingTool_ToolTip_Patterns => $"Mots clés:{Environment.NewLine}" +
+                                                   $"  • {{TitleId}}{Environment.NewLine}" +
+                                                   $"       - L'id du contenu.{Environment.NewLine}" +
+                                                   $"  • {{AppId}}{Environment.NewLine}" +
+                                                   $"       - L'id de l'{nameof(ContentMetaType.Application)} correspondante (pour des contenus de type {nameof(ContentMetaType.Application)}, cette valeur est égale à {{TitleId}}).{Environment.NewLine}" +
+                                                   $"  • {{PatchId}}:{Environment.NewLine}" +
+                                                   $"       - Si le contenu est une {nameof(ContentMetaType.Application)}, cette valeur est égale à l'id du contenu de {nameof(ContentMetaType.Patch)} correspondant, sinon zéro.{Environment.NewLine}" +
+                                                   $"  • {{PatchNum}}:{Environment.NewLine}" +
+                                                   $"       - Si le contenu est une {nameof(ContentMetaType.Application)}, cette valeur est normalement 0.{Environment.NewLine}" +
+                                                   $"       - Si le contenu est un {nameof(ContentMetaType.Patch)}, cette valeur correspond au numéro du patch.{Environment.NewLine}" +
+                                                   $"       - Si le contenu est un {nameof(ContentMetaType.AddOnContent)}, cette valeur correspond au numéro de patch de l'add-on.{Environment.NewLine}" +
+                                                   $"  • {{Title}}:{Environment.NewLine}" +
+                                                   $"       - Le premier titre parmi la liste des titres définis.{Environment.NewLine}" +
+                                                   $"       - Cette valeur n'existe que pour des contenus de type {nameof(ContentMetaType.Application)} ou {nameof(ContentMetaType.Patch)}, mais pas pour des contenus de type {nameof(ContentMetaType.AddOnContent)}.{Environment.NewLine}" +
+                                                   $"  • {{Ext}}:{Environment.NewLine}" +
+                                                   $"       - L'extension correspondant au type de fichier détecté.{Environment.NewLine}" +
+                                                   $"  • {{VerNum}}:{Environment.NewLine}" +
+                                                   $"       - Le numéro de version du contenu.{Environment.NewLine}" +
+                                                   $"  • {{WTitle}}:{Environment.NewLine}" +
+                                                   $"       - Le titre du contenu récupéré depuis Internet.{Environment.NewLine}" +
+                                                   $"  • {{WAppTitle}}: {Environment.NewLine}" +
+                                                   $"       - Le titre de l'{nameof(ContentMetaType.Application)} correspondante, récupéré depuis internet.{Environment.NewLine}" +
+                                                   $"{Environment.NewLine}" +
+                                                   $"Use \\{{ or \\}} to write the literal chars {{ or }}.";
+
+    public string RenamingTool_ToolTip_BasePattern => $"Le pattern à utiliser pour des contenus de type {nameof(ContentMetaType.Application)}.";
+    public string RenamingTool_ToolTip_PatchPattern => $"Le pattern à utiliser pour des contenus de type {nameof(ContentMetaType.Patch)}.";
+    public string RenamingTool_ToolTip_AddonPattern => $"Le pattern à utiliser pour des contenus de type {nameof(ContentMetaType.AddOnContent)}.";
     public string RenamingTool_Button_Cancel => "Annuler";
     public string RenamingTool_Button_Rename => "Renommer";
     public string RenamingTool_GroupBoxInput => "Entrée";
@@ -286,4 +312,5 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string FileRenaming_EmptyPatternNotAllowed => "La pattern ne peut être vide.";
     public string FileRenaming_PatternKeywordNotAllowed => "Le mot clé «{0}» n'est pas autorisé pour les patterns de type «{1}».";
     public string FileRenaming_StringOperatorUnknown => "L'opérateur «{0}» n'est pas reconnu, les opérateurs autorisés sont «{1}».";
+    public string FileRenaming_EmptyDirectoryNotAllowed => "Le répertoire d'entrée ne peut être vide.";
 }

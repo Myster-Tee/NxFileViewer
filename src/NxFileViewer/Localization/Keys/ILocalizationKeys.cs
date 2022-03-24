@@ -226,6 +226,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string RenamingTool_AddonPattern { get; }
     string RenamingTool_InputPath { get; }
     string RenamingTool_FileFilters { get; }
+    string RenamingTool_ToolTip_Patterns { get; }
     string RenamingTool_ToolTip_BasePattern { get; }
     string RenamingTool_ToolTip_PatchPattern { get; }
     string RenamingTool_ToolTip_AddonPattern { get; }
@@ -258,4 +259,5 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string FileRenaming_EmptyPatternNotAllowed { get; }
     string FileRenaming_PatternKeywordNotAllowed { get; }
     string FileRenaming_StringOperatorUnknown { get; }
+    string FileRenaming_EmptyDirectoryNotAllowed { get; }
 }

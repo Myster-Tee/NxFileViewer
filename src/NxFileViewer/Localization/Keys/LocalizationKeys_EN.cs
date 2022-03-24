@@ -1,5 +1,6 @@
 ﻿using System;
 using Emignatik.NxFileViewer.Utils.MVVM.Localization;
+using LibHac.Ncm;
 
 namespace Emignatik.NxFileViewer.Localization.Keys;
 
@@ -251,12 +252,36 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_Patterns => "Patterns";
     public string RenamingTool_ApplicationPattern => "Application pattern";
     public string RenamingTool_PatchPattern => "Patch pattern";
-    public string RenamingTool_AddonPattern => "Addon pattern";
+    public string RenamingTool_AddonPattern => "Add-on pattern";
     public string RenamingTool_InputPath => "Input path";
     public string RenamingTool_FileFilters => "Filters";
-    public string RenamingTool_ToolTip_BasePattern => "Use {{TitleID}} {{TitleName}}"; //TODO : finir de documenter
-    public string RenamingTool_ToolTip_PatchPattern => ""; //TODO : finir de documenter
-    public string RenamingTool_ToolTip_AddonPattern => ""; //TODO : finir de documenter
+    public string RenamingTool_ToolTip_Patterns => $"Allowed keywords:{Environment.NewLine}" +
+                                                   $"  • {{TitleId}}{Environment.NewLine}" +
+                                                   $"       - The content id.{Environment.NewLine}" +
+                                                   $"  • {{AppId}}{Environment.NewLine}" +
+                                                   $"       - The id of the corresponding {nameof(ContentMetaType.Application)} (for {nameof(ContentMetaType.Application)} contents, this value is equal to the {{TitleId}}).{Environment.NewLine}" +
+                                                   $"  • {{PatchId}}:{Environment.NewLine}" +
+                                                   $"       - If content is an {nameof(ContentMetaType.Application)}, this value is equal to the id of the corresponding {nameof(ContentMetaType.Patch)} content, otherwise zero.{Environment.NewLine}" +
+                                                   $"  • {{PatchNum}}:{Environment.NewLine}" +
+                                                   $"       - If content is an {nameof(ContentMetaType.Application)}, value is normally 0.{Environment.NewLine}" +
+                                                   $"       - If content is a {nameof(ContentMetaType.Patch)}, value corresponds to the patch number.{Environment.NewLine}" +
+                                                   $"       - If content is an {nameof(ContentMetaType.AddOnContent)}, value corresponds to the add-on patch number.{Environment.NewLine}" +
+                                                   $"  • {{Title}}:{Environment.NewLine}" +
+                                                   $"       - The first title among the list of declared titles.{Environment.NewLine}" +
+                                                   $"       - This value exists only for contents of type {nameof(ContentMetaType.Application)} or {nameof(ContentMetaType.Patch)}, but not for {nameof(ContentMetaType.AddOnContent)}.{Environment.NewLine}" +
+                                                   $"  • {{Ext}}:{Environment.NewLine}" +
+                                                   $"       - The extension corresponding to the detected file type.{Environment.NewLine}" +
+                                                   $"  • {{VerNum}}:{Environment.NewLine}" +
+                                                   $"       - The content version number.{Environment.NewLine}" +
+                                                   $"  • {{WTitle}}:{Environment.NewLine}" +
+                                                   $"       - The content title retrieved from the Internet.{Environment.NewLine}" +
+                                                   $"  • {{WAppTitle}}: {Environment.NewLine}" +
+                                                   $"       - The title of the corresponding {nameof(ContentMetaType.Application)}, retrieved from the Internet.{Environment.NewLine}" +
+                                                   $"{Environment.NewLine}" +
+                                                   $"Use \\{{ or \\}} to write the literal chars {{ or }}.";
+    public string RenamingTool_ToolTip_BasePattern => $"The pattern to use for contents of type {nameof(ContentMetaType.Application)}.";
+    public string RenamingTool_ToolTip_PatchPattern => $"The pattern to use for contents of type {nameof(ContentMetaType.Patch)}.";
+    public string RenamingTool_ToolTip_AddonPattern => $"The pattern to use for contents of type {nameof(ContentMetaType.AddOnContent)}.";
     public string RenamingTool_Button_Cancel => "Cancel";
     public string RenamingTool_Button_Rename => "Rename";
     public string RenamingTool_GroupBoxInput => "Input";
@@ -285,5 +310,5 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string FileRenaming_EmptyPatternNotAllowed => "Pattern can't be empty.";
     public string FileRenaming_PatternKeywordNotAllowed => "Keyword «{0}» not allowed for patters of type «{1}».";
     public string FileRenaming_StringOperatorUnknown => "Operator «{0}» is not recognized, allowed operators are «{1}».";
-
+    public string FileRenaming_EmptyDirectoryNotAllowed => "Input directory can't be empty.";
 }

@@ -65,7 +65,10 @@
 
                         <Expander>
                             <Expander.Header>
-                                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Patterns}" Style="{StaticResource Title1}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Patterns}" Style="{StaticResource Title1}"/>
+                                    <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ToolTip_Patterns}"/>
+                                </StackPanel>
                             </Expander.Header>
                             <StackPanel>
                                 <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ApplicationPattern}" Style="{StaticResource Title2}" />
@@ -77,8 +80,8 @@
                                     <TextBox Grid.Column="0" Text="{Binding Path=ApplicationPattern}" bindingExtensions:TextBoxExtension.FlushOnEnterKeyPressed ="True" />
                                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                                         <TextBlock Style="{StaticResource FieldError}"
-                                   Visibility="{Binding Path=ApplicationPatternError, Converter={StaticResource StringNullOrEmptyToCollapsedVisibilityConverter}}"
-                                   ToolTip="{Binding Path=ApplicationPatternError}" />
+                                                   Visibility="{Binding Path=ApplicationPatternError, Converter={StaticResource StringNullOrEmptyToCollapsedVisibilityConverter}}"
+                                                   ToolTip="{Binding Path=ApplicationPatternError}" />
                                         <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_ToolTip_BasePattern}"/>
                                     </StackPanel>
                                 </Grid>
