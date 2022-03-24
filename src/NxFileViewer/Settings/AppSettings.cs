@@ -154,7 +154,10 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
         }
     }
 
-    public IRenamingOptions RenamingOptions { get; } = new RenamingOptions();
+    [JsonIgnore]
+    IRenamingOptions IAppSettings.RenamingOptions => RenamingOptions;
+
+    public RenamingOptions RenamingOptions { get; set; } = new();
 
     [JsonIgnore]
     public int ProgressBufferSize { get; } = 4 * 1024 * 1024;
