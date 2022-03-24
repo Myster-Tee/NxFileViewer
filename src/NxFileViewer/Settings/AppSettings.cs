@@ -168,9 +168,9 @@ public class RenamingOptions : NotifyPropertyChangedBase, IRenamingOptions
 {
     private string? _fileFilters = "*.nsp;*.nsz;*.xci;*.xcz";
     private bool _includeSubdirectories = true;
-    private string _applicationPattern = "{Title} [{TitleId:U}] [v{VerNum}].{Ext:L}";
-    private string _patchPattern = "{Title} [{TitleId:U}] [v{VerNum}].{Ext:L}";
-    private string _addonPattern = "DLC_{WTitle}_[v{VerNum}].{Ext:L}";
+    private string _applicationPattern = "{WAppTitle} [{TitleId:U}][v{PatchNum}].{Ext:L}";
+    private string _patchPattern = "{WAppTitle} [{TitleId:U}][v{PatchNum}].{Ext:L}";
+    private string _addonPattern = "{WAppTitle} - {WTitle} [{TitleId:U}][v{PatchNum}].{Ext:L}";
     private bool _isSimulation = true;
     private string _invalidFileNameCharsReplacement = "꞉";
     private bool _replaceWhiteSpaceChars = false;
