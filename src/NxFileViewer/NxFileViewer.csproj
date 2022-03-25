@@ -59,7 +59,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\FileOverviewView.xaml.cs">
+    <Compile Update="Views\UserControls\FileOverviewView.xaml.cs">
       <DependentUpon>FileOverviewView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -69,11 +69,14 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\FileOverviewView.xaml">
+    <Page Update="Styling\CheckBoxStyle.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Views\UserControls\FileOverviewView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\SettingsWindow.xaml">
+    <Page Update="Views\Windows\SettingsWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
   </ItemGroup>

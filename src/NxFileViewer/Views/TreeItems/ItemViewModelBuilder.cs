@@ -1,64 +1,63 @@
 ﻿using System;
 using System.Diagnostics;
-using Emignatik.NxFileViewer.Model.TreeItems;
-using Emignatik.NxFileViewer.Model.TreeItems.Impl;
+using Emignatik.NxFileViewer.Models.TreeItems;
+using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 using Emignatik.NxFileViewer.Views.TreeItems.Impl;
 
-namespace Emignatik.NxFileViewer.Views.TreeItems
+namespace Emignatik.NxFileViewer.Views.TreeItems;
+
+public class ItemViewModelBuilder : IItemViewModelBuilder
 {
-    public class ItemViewModelBuilder : IItemViewModelBuilder
+    private readonly IServiceProvider _serviceProvider;
+
+    public ItemViewModelBuilder(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider _serviceProvider;
+        _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+    }
 
-        public ItemViewModelBuilder(IServiceProvider serviceProvider)
+    public IItemViewModel Build(IItem item)
+    {
+        switch (item)
         {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-        }
+            case XciItem xciItem:
+                return new XciItemViewModel(xciItem, _serviceProvider);
 
-        public IItemViewModel Build(IItem item)
-        {
-            switch (item)
-            {
-                case XciItem xciItem:
-                    return new XciItemViewModel(xciItem, _serviceProvider);
+            case XciPartitionItem xciPartitionItem:
+                return new XciPartitionItemViewModel(xciPartitionItem, _serviceProvider);
 
-                case XciPartitionItem xciPartitionItem:
-                    return new XciPartitionItemViewModel(xciPartitionItem, _serviceProvider);
+            case NspItem nspItem:
+                return new NspItemViewModel(nspItem, _serviceProvider);
 
-                case NspItem nspItem:
-                    return new NspItemViewModel(nspItem, _serviceProvider);
-
-                case NcaItem ncaItem:
-                    return new NcaItemViewModel(ncaItem, _serviceProvider);    
+            case NcaItem ncaItem:
+                return new NcaItemViewModel(ncaItem, _serviceProvider);    
                 
-                case TicketItem ticketItem:
-                    return new TicketItemViewModel(ticketItem, _serviceProvider);
+            case TicketItem ticketItem:
+                return new TicketItemViewModel(ticketItem, _serviceProvider);
 
-                case PartitionFileEntryItemBase partitionFileEntryItem:
-                    return new PartitionFileEntryItemViewModel(partitionFileEntryItem, _serviceProvider);
+            case PartitionFileEntryItemBase partitionFileEntryItem:
+                return new PartitionFileEntryItemViewModel(partitionFileEntryItem, _serviceProvider);
 
-                case SectionItem sectionItem:
-                    return new SectionItemViewModel(sectionItem, _serviceProvider);
+            case SectionItem sectionItem:
+                return new SectionItemViewModel(sectionItem, _serviceProvider);
 
-                case CnmtItem cnmtItem:
-                    return new CnmtItemViewModel(cnmtItem, _serviceProvider);
+            case CnmtItem cnmtItem:
+                return new CnmtItemViewModel(cnmtItem, _serviceProvider);
 
-                case NacpItem nacpItem:
-                    return new NacpItemViewModel(nacpItem, _serviceProvider);
+            case NacpItem nacpItem:
+                return new NacpItemViewModel(nacpItem, _serviceProvider);
 
-                case MainItem mainItem:
-                    return new MainItemViewModel(mainItem, _serviceProvider);
+            case MainItem mainItem:
+                return new MainItemViewModel(mainItem, _serviceProvider);
 
-                case DirectoryEntryItem directoryEntryItem:
-                    return new DirectoryEntryItemViewModel(directoryEntryItem, _serviceProvider);      
+            case DirectoryEntryItem directoryEntryItem:
+                return new DirectoryEntryItemViewModel(directoryEntryItem, _serviceProvider);      
                 
-                case CnmtContentEntryItem cnmtContentEntryItem:
-                    return new CnmtContentEntryItemViewModel(cnmtContentEntryItem, _serviceProvider);
+            case CnmtContentEntryItem cnmtContentEntryItem:
+                return new CnmtContentEntryItemViewModel(cnmtContentEntryItem, _serviceProvider);
 
-                default:
-                    Debug.Fail($"{nameof(IItemViewModel)} implementation missing for item of type «{item.GetType().Name}».");
-                    return new ItemViewModel(item, _serviceProvider);
-            }
+            default:
+                Debug.Fail($"{nameof(IItemViewModel)} implementation missing for item of type «{item.GetType().Name}».");
+                return new ItemViewModel(item, _serviceProvider);
         }
     }
 }

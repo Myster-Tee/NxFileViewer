@@ -53,9 +53,13 @@ If you'd like to have this app in your language, feel free to give me your trans
 
 Use Microsoft Visual Studio 2019+ to build the solution.
 
-By default, the assembly is signed using my personal certificate bundled in AppSign.pfx, install it using the following command (required once):
+By default, the assembly is signed using my personal certificate bundled in «AppSign.pfx».  
+If you are not a team member, simply remove the signing certificate from the project properties.  
+If you are a team member, you can install it (required once) from the Visual Studio Terminal window (CTRL+ù), by running the command below.
 
+```
+sn.exe -i .\NxFileViewer\AppSign.pfx <key_container_name>
+```
 
-    sn.exe -i AppSign.pfx <key_container_name_from_error_message>
-
+***NOTE:** <key_container_name> can be obtained in the error message of the build output, in the form of «VS_KEY_XXXXXXXXXXXXXXXX».*
 

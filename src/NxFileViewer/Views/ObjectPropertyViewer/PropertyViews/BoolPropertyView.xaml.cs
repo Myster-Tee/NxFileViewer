@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace Emignatik.NxFileViewer.Views.ObjectPropertyViewer.PropertyViews
+namespace Emignatik.NxFileViewer.Views.ObjectPropertyViewer.PropertyViews;
+
+/// <summary>
+/// Logique d'interaction pour BoolView.xaml
+/// </summary>
+public partial class BoolPropertyView : UserControl
 {
-    /// <summary>
-    /// Logique d'interaction pour BoolView.xaml
-    /// </summary>
-    public partial class BoolPropertyView : UserControl
+    public BoolPropertyView()
     {
-        public BoolPropertyView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

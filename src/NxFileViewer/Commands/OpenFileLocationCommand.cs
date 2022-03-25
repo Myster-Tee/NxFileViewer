@@ -1,64 +1,54 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Input;
-using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Services.FileLocationOpening;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Commands
+namespace Emignatik.NxFileViewer.Commands;
+
+public class OpenFileLocationCommand : CommandBase, IOpenFileLocationCommand
 {
-    public class OpenFileLocationCommand : CommandBase, IOpenFileLocationCommand
+    private readonly IFileLocationOpenerService _fileLocationOpenerService;
+    private readonly ILogger _logger;
+    private string? _filePath;
+
+    public OpenFileLocationCommand(ILoggerFactory loggerFactory, IFileLocationOpenerService fileLocationOpenerService)
     {
-        private readonly ILogger _logger;
-        private string? _filePath;
+        _fileLocationOpenerService = fileLocationOpenerService ?? throw new ArgumentNullException(nameof(fileLocationOpenerService));
+        _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+    }
 
-        public OpenFileLocationCommand(ILoggerFactory loggerFactory)
+    public string? FilePath
+    {
+        get => _filePath;
+        set
         {
-            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+            _filePath = value;
+            TriggerCanExecuteChanged();
         }
+    }
 
-        public string? FilePath
-        {
-            get => _filePath;
-            set
-            {
-                _filePath = value;
-                TriggerCanExecuteChanged();
-            }
-        }
+    public override void Execute(object? parameter)
+    {
+        _fileLocationOpenerService.OpenFileLocationSafe(FilePath);
+    }
 
-        public override void Execute(object? parameter)
+    public override bool CanExecute(object? parameter)
+    {
+        try
         {
             var filePath = FilePath;
-            try
-            {
-
-                var argument = $"/select, \"{filePath}\"";
-                Process.Start("explorer.exe", argument);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.OpenFileLocation_Failed_Log.SafeFormat(filePath, ex.Message));
-            }
+            return filePath != null && File.Exists(filePath);
         }
-
-        public override bool CanExecute(object? parameter)
+        catch
         {
-            try
-            {
-                var filePath = FilePath;
-                return filePath != null && File.Exists(filePath);
-            }
-            catch
-            {
-                return false;
-            }
+            return false;
         }
     }
+}
 
-    public interface IOpenFileLocationCommand : ICommand
-    {
-        string? FilePath { get; set; }
-    }
+public interface IOpenFileLocationCommand : ICommand
+{
+    string? FilePath { get; set; }
 }

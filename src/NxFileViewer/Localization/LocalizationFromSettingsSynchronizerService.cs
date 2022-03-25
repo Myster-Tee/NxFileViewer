@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using Emignatik.NxFileViewer.Settings;
 using Microsoft.Extensions.Logging;
 
@@ -28,15 +27,11 @@ public class LocalizationFromSettingsSynchronizerService : ILocalizationFromSett
     private void UpdateFromSettings()
     {
         var appLanguage = _appSettings.AppLanguage;
-        var newLocalization = LocalizationManager.Instance.AvailableLocalizations.FirstOrDefault(localization => localization.CultureName == appLanguage);
+        var newLocalization = LocalizationManager.Instance.AvailableLocalizations.FindByCultureName(appLanguage);
         if (newLocalization == null)
-        {
             _logger.LogWarning(LocalizationManager.Instance.Current.Keys.InvalidSetting_LanguageNotFound.SafeFormat(appLanguage));
-        }
         else
-        {
             LocalizationManager.Instance.Current = newLocalization;
-        }
     }
 
     public void Initialize()

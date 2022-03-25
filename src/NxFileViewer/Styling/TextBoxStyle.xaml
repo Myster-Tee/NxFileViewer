@@ -9,4 +9,9 @@
         <Setter Property="Foreground" Value="{DynamicResource ReadOnlyTextBox.Static.Foreground}" />
         <Setter Property="Background" Value="{DynamicResource ReadOnlyTextBox.Static.Background}" />
     </Style>
+
+    <Style TargetType="TextBox" x:Key="ReadOnlyTextBoxShaded" BasedOn="{StaticResource ReadOnlyTextBox}">
+        <Setter Property="FontStyle" Value="Italic" />
+        <Setter Property="Opacity" Value="0.7" />
+    </Style>
 </ResourceDictionary>

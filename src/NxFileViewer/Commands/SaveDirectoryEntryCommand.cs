@@ -1,90 +1,89 @@
 ﻿using System;
 using System.Windows.Input;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Model.TreeItems.Impl;
-using Emignatik.NxFileViewer.Services;
+using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
+using Emignatik.NxFileViewer.Services.Prompting;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using LibHac.Fs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Commands
+namespace Emignatik.NxFileViewer.Commands;
+
+public class SaveDirectoryEntryCommand : CommandBase, ISaveDirectoryEntryCommand
 {
-    public class SaveDirectoryEntryCommand : CommandBase, ISaveDirectoryEntryCommand
+    private readonly IPromptService _promptService;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IMainBackgroundTaskRunnerService _backgroundTaskRunnerService;
+    private readonly ILogger _logger;
+
+    private DirectoryEntryItem? _directoryEntryItem;
+
+    public SaveDirectoryEntryCommand(IPromptService promptService, IServiceProvider serviceProvider, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, ILoggerFactory loggerFactory)
     {
-        private readonly IPromptService _promptService;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IBackgroundTaskService _backgroundTaskService;
-        private readonly ILogger _logger;
+        _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+        _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
+        _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        _backgroundTaskRunnerService = backgroundTaskRunnerService ?? throw new ArgumentNullException(nameof(backgroundTaskRunnerService));
+    }
 
-        private DirectoryEntryItem? _directoryEntryItem;
-
-        public SaveDirectoryEntryCommand(IPromptService promptService, IServiceProvider serviceProvider, IBackgroundTaskService backgroundTaskService, ILoggerFactory loggerFactory)
+    public DirectoryEntryItem DirectoryEntryItem
+    {
+        set
         {
-            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
-            _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            _backgroundTaskService = backgroundTaskService ?? throw new ArgumentNullException(nameof(backgroundTaskService));
+            _directoryEntryItem = value;
+            TriggerCanExecuteChanged();
         }
+    }
 
-        public DirectoryEntryItem DirectoryEntryItem
+    public override async void Execute(object? parameter)
+    {
+        if (_directoryEntryItem == null)
+            return;
+
+        try
         {
-            set
+            IRunnable runnable;
+            if (_directoryEntryItem.DirectoryEntryType == DirectoryEntryType.File)
             {
-                _directoryEntryItem = value;
-                TriggerCanExecuteChanged();
+                var file = _directoryEntryItem.GetFile();
+                var filePath = _promptService.PromptSaveFile(_directoryEntryItem.Name);
+                if (filePath == null)
+                    return;
+
+                var saveFileRunnable = _serviceProvider.GetRequiredService<ISaveFileRunnable>();
+                saveFileRunnable.Setup(file, filePath);
+                runnable = saveFileRunnable;
             }
-        }
-
-        public override async void Execute(object? parameter)
-        {
-            if (_directoryEntryItem == null)
-                return;
-
-            try
+            else
             {
-                IRunnable runnable;
-                if (_directoryEntryItem.DirectoryEntryType == DirectoryEntryType.File)
-                {
-                    var file = _directoryEntryItem.GetFile();
-                    var filePath = _promptService.PromptSaveFile(_directoryEntryItem.Name);
-                    if (filePath == null)
-                        return;
-
-                    var saveFileRunnable = _serviceProvider.GetRequiredService<ISaveFileRunnable>();
-                    saveFileRunnable.Setup(file, filePath);
-                    runnable = saveFileRunnable;
-                }
-                else
-                {
-                    var dirPath = _promptService.PromptSaveDir();
-                    if (dirPath == null)
-                        return;
-                    var saveDirectoryRunnable = _serviceProvider.GetRequiredService<ISaveDirectoryRunnable>();
-                    saveDirectoryRunnable.Setup(new[] { _directoryEntryItem }, dirPath);
-                    runnable = saveDirectoryRunnable;
-                }
-
-                await _backgroundTaskService.RunAsync(runnable);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SaveFile_Error.SafeFormat(ex.Message));
+                var dirPath = _promptService.PromptSelectDir(LocalizationManager.Instance.Current.Keys.SaveDialog_Title);
+                if (dirPath == null)
+                    return;
+                var saveDirectoryRunnable = _serviceProvider.GetRequiredService<ISaveDirectoryRunnable>();
+                saveDirectoryRunnable.Setup(new[] { _directoryEntryItem }, dirPath);
+                runnable = saveDirectoryRunnable;
             }
 
+            await _backgroundTaskRunnerService.RunAsync(runnable);
         }
-
-        public override bool CanExecute(object? parameter)
+        catch (Exception ex)
         {
-            return _directoryEntryItem != null && !_backgroundTaskService.IsRunning;
+            _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SaveFile_Error.SafeFormat(ex.Message));
         }
 
     }
 
-    public interface ISaveDirectoryEntryCommand : ICommand
+    public override bool CanExecute(object? parameter)
     {
-        DirectoryEntryItem DirectoryEntryItem { set; }
+        return _directoryEntryItem != null && !_backgroundTaskRunnerService.IsRunning;
     }
+
+}
+
+public interface ISaveDirectoryEntryCommand : ICommand
+{
+    DirectoryEntryItem DirectoryEntryItem { set; }
 }

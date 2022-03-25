@@ -1,0 +1,116 @@
+﻿<Window x:Class="Emignatik.NxFileViewer.Views.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
+        xmlns:dragAndDrop="clr-namespace:Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions.DragAndDrop"
+        xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
+        xmlns:userControls="clr-namespace:Emignatik.NxFileViewer.Views.UserControls"
+        xmlns:windows="clr-namespace:Emignatik.NxFileViewer.Views.Windows"
+        mc:Ignorable="d"
+        AllowDrop="True"
+        Style="{StaticResource WindowStyle}"
+        Title="{Binding Path=Title}" Height="600" Width="450" d:DataContext="{d:DesignInstance windows:MainWindowViewModel}"
+        dragAndDrop:DropFilesBehaviorExtension.IsEnabled="True">
+
+    <Window.InputBindings>
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding Path=OpenFileCommand}" />
+        <KeyBinding Gesture="Ctrl+Shift+O" Command="{Binding Path=OpenLastFileCommand}" />
+        <KeyBinding Gesture="Ctrl+Shift+C" Command="{Binding Path=CloseFileCommand}" />
+        <KeyBinding Gesture="F5" Command="{Binding Path=VerifyNcasHashCommand}" />
+        <KeyBinding Gesture="Ctrl+F5" Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" />
+        <KeyBinding Gesture="F10" Command="{Binding Path=LoadKeysCommand}" />
+        <KeyBinding Gesture="F9" Command="{Binding Path=OpenTitleWebPageCommand}" />
+        <KeyBinding Gesture="F2" Command="{Binding Path=ShowRenameToolWindowCommand}" />
+    </Window.InputBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Menu -->
+            <RowDefinition Height="Auto" />
+            <!-- Content -->
+            <RowDefinition Height="*" />
+            <!-- Grid Splitter Row-->
+            <RowDefinition Height="Auto" />
+            <!-- Log Row -->
+            <RowDefinition Height="0" />
+            <!-- Status Bar -->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_File}">
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Open}" 
+                          Command="{Binding Path=OpenFileCommand}" InputGestureText="Ctrl+O" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_OpenLast}"
+                          Command="{Binding Path=OpenLastFileCommand}" InputGestureText="Ctrl+Shift+O" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Close}" Command="{Binding Path=CloseFileCommand}" InputGestureText="Ctrl+Shift+C" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Exit}" Command="{Binding Path=ExitAppCommand}" InputGestureText="Alt+F4" />
+            </MenuItem>
+            <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Tools}">
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_VerifyNcasHash}" 
+                          Command="{Binding Path=VerifyNcasHashCommand}" InputGestureText="F5" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_VerifyNcasHeaderSignature}" 
+                          Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" InputGestureText="Ctrl+F5" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_ReloadKeys}" 
+                          Command="{Binding Path=LoadKeysCommand}" InputGestureText="F10" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_OpenTitleWebPage}" 
+                          Command="{Binding Path=OpenTitleWebPageCommand}" InputGestureText="F9" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_ShowRenameToolWindow}" 
+                          Command="{Binding Path=ShowRenameToolWindowCommand}" InputGestureText="F9" />
+            </MenuItem>
+            <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Options}">
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Settings}" Command="{Binding Path=ShowSettingsWindowCommand}" />
+            </MenuItem>
+        </Menu>
+
+        <TextBlock Grid.Row="1" Style="{StaticResource WatermarkText}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DragMeAFile}" />
+        <ContentControl Grid.Row="1" Content="{Binding Path=OpenedFile, Mode=TwoWay}"
+                            ContentTemplateSelector="{StaticResource OpenedFileDataTemplateSelector}" />
+
+        <customControls:GridSplitterEx Grid.Row="2" ResizeDirection="Rows" TriggerAnimation="{Binding Path=ErrorAnimationEnabled, Mode=TwoWay}" />
+        <userControls:LoggingView Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LogSource="{Binding LogSource, Mode=OneWay}" />
+
+        <StatusBar Grid.Row="4">
+            <!-- Status Text -->
+            <StatusBarItem VerticalAlignment="Center">
+                <TextBlock Text="{Binding Path=BackgroundTaskRunner.ProgressText, FallbackValue=Ready.}" ToolTip="{Binding Path=BackgroundTaskRunner.ProgressText, FallbackValue=Ready.}" />
+            </StatusBarItem>
+
+            <!-- Missing Keys Icon -->
+            <StatusBarItem DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center"
+                           Visibility="{Binding Path=OpenedFile.FileOverview.MissingKeys, FallbackValue=Collapsed, Converter={StaticResource StringNullOrEmptyToCollapsedVisibilityConverter}}">
+                <StatusBarItem.InputBindings>
+                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding ShowSettingsWindowCommand}" />
+                </StatusBarItem.InputBindings>
+                <StatusBarItem.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_CopyTextToClipboard}" 
+                                  Command="{Binding Path=OpenedFile.FileOverview.CopyMissingKeysCommand, FallbackValue={x:Null}}" />
+                    </ContextMenu>
+                </StatusBarItem.ContextMenu>
+                <Label Style="{StaticResource KeyIcon}"
+                       ToolTip="{Binding Path=OpenedFile.FileOverview.MissingKeys, FallbackValue={x:Null}}" />
+            </StatusBarItem>
+
+            <!-- Progress Bar -->
+            <StatusBarItem DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <customControls:ProgressBarExt Width="80" Minimum="0" Maximum="100" Height="18"
+                                               Visibility="{Binding Path=BackgroundTaskRunner.IsRunning, Mode=OneWay, Converter={StaticResource FalseToCollapseVisibilityConverter}}"
+                                               Value="{Binding Path=BackgroundTaskRunner.ProgressValue, Mode=OneWay, FallbackValue=70}" 
+                                               ValueText="{Binding Path=BackgroundTaskRunner.ProgressValueText, Mode=OneWay, FallbackValue=70%}"
+                                               IsIndeterminate="{Binding Path=BackgroundTaskRunner.IsIndeterminate, Mode=OneWay, FallbackValue=True}">
+
+                    <customControls:ProgressBarExt.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding BackgroundTaskRunner.CancelCommand}" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CancelAction}" />
+                        </ContextMenu>
+                    </customControls:ProgressBarExt.ContextMenu>
+
+                </customControls:ProgressBarExt>
+            </StatusBarItem>
+        </StatusBar>
+
+    </Grid>
+</Window>

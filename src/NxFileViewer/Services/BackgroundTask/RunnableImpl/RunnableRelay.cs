@@ -1,53 +1,51 @@
 ﻿using System;
 using System.Threading;
 
-namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl
+namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
+
+/// <summary>
+/// Defers the run logic outside (<see cref="RunHandler"/>)
+/// </summary>
+public class RunnableRelay : IRunnable
 {
+    private readonly RunHandler _runHandler;
 
-    /// <summary>
-    /// Defers the run logic outside (<see cref="RunHandler"/>)
-    /// </summary>
-    public class RunnableRelay : IRunnable
+    public RunnableRelay(RunHandler runHandler)
     {
-        private readonly RunHandler _runHandler;
-
-        public RunnableRelay(RunHandler runHandler)
-        {
-            _runHandler = runHandler ?? throw new ArgumentNullException(nameof(runHandler));
-        }
-
-        public bool SupportsCancellation { get; set; }
-
-        public bool SupportProgress { get; set; }
-
-        public void Run(IProgressReporter progressReporter, CancellationToken cancellationToken)
-        {
-            _runHandler(progressReporter, cancellationToken);
-        }
+        _runHandler = runHandler ?? throw new ArgumentNullException(nameof(runHandler));
     }
 
-    /// <summary>
-    /// Defers the run logic outside (<see cref="RunHandler{T}"/>)
-    /// </summary>
-    public class RunnableRelay<T> : IRunnable<T>
+    public bool SupportsCancellation { get; set; }
+
+    public bool SupportProgress { get; set; }
+
+    public void Run(IProgressReporter progressReporter, CancellationToken cancellationToken)
     {
-        private readonly RunHandler<T> _runHandler;
-
-        public RunnableRelay(RunHandler<T> runHandler)
-        {
-            _runHandler = runHandler ?? throw new ArgumentNullException(nameof(runHandler));
-        }
-
-        public bool SupportsCancellation { get; set; }
-
-        public bool SupportProgress { get; set; }
-
-        public T Run(IProgressReporter progressReporter, CancellationToken cancellationToken)
-        {
-            return _runHandler(progressReporter, cancellationToken);
-        }
+        _runHandler(progressReporter, cancellationToken);
     }
-
-    public delegate void RunHandler(IProgressReporter progressReporter, CancellationToken cancellationToken);
-    public delegate T RunHandler<out T>(IProgressReporter progressReporter, CancellationToken cancellationToken);
 }
+
+/// <summary>
+/// Defers the run logic outside (<see cref="RunHandler{T}"/>)
+/// </summary>
+public class RunnableRelay<T> : IRunnable<T>
+{
+    private readonly RunHandler<T> _runHandler;
+
+    public RunnableRelay(RunHandler<T> runHandler)
+    {
+        _runHandler = runHandler ?? throw new ArgumentNullException(nameof(runHandler));
+    }
+
+    public bool SupportsCancellation { get; set; }
+
+    public bool SupportProgress { get; set; }
+
+    public T Run(IProgressReporter progressReporter, CancellationToken cancellationToken)
+    {
+        return _runHandler(progressReporter, cancellationToken);
+    }
+}
+
+public delegate void RunHandler(IProgressReporter progressReporter, CancellationToken cancellationToken);
+public delegate T RunHandler<out T>(IProgressReporter progressReporter, CancellationToken cancellationToken);

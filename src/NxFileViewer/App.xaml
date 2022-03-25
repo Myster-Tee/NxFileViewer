@@ -1,17 +1,18 @@
 ﻿<Application x:Class="Emignatik.NxFileViewer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:converters="clr-namespace:Emignatik.NxFileViewer.Views.Converters"
+             xmlns:mvvmConverters="clr-namespace:Emignatik.NxFileViewer.Views.Converters"
              xmlns:views="clr-namespace:Emignatik.NxFileViewer.Views"
-             xmlns:converters1="clr-namespace:Emignatik.NxFileViewer.Utils.MVVM.Converters"
-             xmlns:treeItems="clr-namespace:Emignatik.NxFileViewer.Views.TreeItems">
+             xmlns:converters="clr-namespace:Emignatik.NxFileViewer.Utils.MVVM.Converters"
+             xmlns:treeItems="clr-namespace:Emignatik.NxFileViewer.Views.TreeItems"
+             xmlns:userControls="clr-namespace:Emignatik.NxFileViewer.Views.UserControls">
     <Application.Resources>
         <ResourceDictionary>
             <!-- OpenedFileDataTemplateSelector -->
             <views:OpenedFileDataTemplateSelector x:Key="OpenedFileDataTemplateSelector">
                 <views:OpenedFileDataTemplateSelector.OpenedFileTemplate>
                     <DataTemplate>
-                        <views:OpenedFileView />
+                        <userControls:OpenedFileView />
                     </DataTemplate>
                 </views:OpenedFileDataTemplateSelector.OpenedFileTemplate>
                 <views:OpenedFileDataTemplateSelector.NoOpenedFileTemplate>
@@ -72,12 +73,12 @@
             </treeItems:ItemIconDataTemplateSelector>
 
             <!-- Converters -->
-            <converters:NacpLanguageConverter x:Key="NacpLanguageConverter" />
-            <converters1:BoolInverterConverter x:Key="BoolInverterConverter" />
-            <converters1:BoolToVisibilityConverter x:Key="FalseToCollapseVisibilityConverter" FalseVisibility="Collapsed" TrueVisibility="Visible" />
-            <converters1:BoolToVisibilityConverter x:Key="FalseToHiddenVisibilityConverter" FalseVisibility="Hidden" TrueVisibility="Visible" />
-            <converters:NcasValidityConverter x:Key="NcasValidityConverter" />
-            <converters1:NullOrEmptyStringToVisibilityConverter x:Key="StringNullOrEmptyToCollapsedVisibilityConverter" />
+            <mvvmConverters:NacpLanguageConverter x:Key="NacpLanguageConverter" />
+            <converters:BoolInverterConverter x:Key="BoolInverterConverter" />
+            <converters:BoolToVisibilityConverter x:Key="FalseToCollapseVisibilityConverter" FalseVisibility="Collapsed" TrueVisibility="Visible" />
+            <converters:BoolToVisibilityConverter x:Key="FalseToHiddenVisibilityConverter" FalseVisibility="Hidden" TrueVisibility="Visible" />
+            <mvvmConverters:NcasValidityConverter x:Key="NcasValidityConverter" />
+            <converters:NullOrEmptyStringToVisibilityConverter x:Key="StringNullOrEmptyToCollapsedVisibilityConverter" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styling/Theme/DefaultTheme.xaml" />
@@ -93,6 +94,7 @@
                 <ResourceDictionary Source="Styling/TreeViewStyle.xaml" />
                 <ResourceDictionary Source="Styling/TreeViewItemStyle.xaml" />
                 <ResourceDictionary Source="Styling/ProgressBar.xaml" />
+                <ResourceDictionary Source="Styling/CheckBoxStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

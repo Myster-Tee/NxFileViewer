@@ -1,150 +1,280 @@
-﻿using System;
-using System.ComponentModel;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using Emignatik.NxFileViewer.Settings.Model;
+﻿using System.Text.Json.Serialization;
+using Emignatik.NxFileViewer.Utils.MVVM;
+using Emignatik.NxFileViewer.Utils.MVVM.Localization;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Settings
+namespace Emignatik.NxFileViewer.Settings;
+
+public class AppSettings : NotifyPropertyChangedBase, IAppSettings
 {
-    public class AppSettingsWrapper : IAppSettingsWrapper<AppSettingsModel>
+    private string _appLanguage = IAutoLocalization<ILocalizationKeysBase>.CULTURE_NAME;
+    private string _lastRenamePath = "";
+    private string _lastOpenedFile = "";
+    private string _prodKeysFilePath = "";
+    private string _consoleKeysFilePath = "";
+    private string _titleKeysFilePath = "";
+    private LogLevel _logLevel = LogLevel.Information;
+    private string _prodKeysDownloadUrl = "";
+    private string _titleKeysDownloadUrl = "";
+    private bool _alwaysReloadKeysBeforeOpen = false;
+
+    private string _titlePageUrl = "https://tinfoil.media/Title/{TitleId}";
+    private string _titleInfoApiUrl = "https://tinfoil.media/api/title/{TitleId}";
+    private string _lastUsedDir = "";
+
+
+    public string AppLanguage
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public string? AppLanguage
+        get => _appLanguage;
+        set
         {
-            get => WrappedModel.AppLanguage ?? "";
-            set
-            {
-                WrappedModel.AppLanguage = value;
-                NotifyPropertyChanged();
-            }
+            _appLanguage = value;
+            NotifyPropertyChanged();
         }
+    }
 
-        public string LastSaveDir
+    public string LastUsedDir
+    {
+        get => _lastUsedDir;
+        set
         {
-            get => WrappedModel.LastSaveDir ?? "";
-            set
-            {
-                WrappedModel.LastSaveDir = value;
-                NotifyPropertyChanged();
-            }
+            _lastUsedDir = value;
+            NotifyPropertyChanged();
         }
+    }
 
-        public string LastOpenedFile
+    public string LastRenamePath
+    {
+        get => _lastRenamePath;
+        set
         {
-            get => WrappedModel.LastOpenedFile ?? "";
-            set
-            {
-                WrappedModel.LastOpenedFile = value;
-                NotifyPropertyChanged();
-            }
+            _lastRenamePath = value;
+            NotifyPropertyChanged();
         }
+    }
 
-        public string ProdKeysFilePath
+    public string LastOpenedFile
+    {
+        get => _lastOpenedFile;
+        set
         {
-            get => WrappedModel.KeysFilePath ?? "";
-            set
-            {
-                WrappedModel.KeysFilePath = value;
-                NotifyPropertyChanged();
-            }
+            _lastOpenedFile = value;
+            NotifyPropertyChanged();
         }
+    }
 
-        public string ConsoleKeysFilePath
+    public string ProdKeysFilePath
+    {
+        get => _prodKeysFilePath;
+        set
         {
-            get => WrappedModel.ConsoleKeysFilePath ?? "";
-            set
-            {
-                WrappedModel.ConsoleKeysFilePath = value;
-                NotifyPropertyChanged();
-            }
+            _prodKeysFilePath = value;
+            NotifyPropertyChanged();
         }
+    }
 
-        public string TitleKeysFilePath
+    public string ConsoleKeysFilePath
+    {
+        get => _consoleKeysFilePath;
+        set
         {
-            get => WrappedModel.TitleKeysFilePath ?? "";
-            set
-            {
-                WrappedModel.TitleKeysFilePath = value;
-                NotifyPropertyChanged();
-            }
+            _consoleKeysFilePath = value;
+            NotifyPropertyChanged();
         }
+    }
 
-        public LogLevel LogLevel
+    public string TitleKeysFilePath
+    {
+        get => _titleKeysFilePath;
+        set
         {
-            get => WrappedModel.LogLevel;
-            set
-            {
-                WrappedModel.LogLevel = value;
-                NotifyPropertyChanged();
-            }
+            _titleKeysFilePath = value;
+            NotifyPropertyChanged();
         }
+    }
 
-        public string ProdKeysDownloadUrl
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public LogLevel LogLevel
+    {
+        get => _logLevel;
+        set
         {
-            get => WrappedModel.ProdKeysDownloadUrl ?? "";
-            set
-            {
-                WrappedModel.ProdKeysDownloadUrl = value;
-                NotifyPropertyChanged();
-            }
+            _logLevel = value;
+            NotifyPropertyChanged();
         }
+    }
 
-        public string TitleKeysDownloadUrl
+    public string ProdKeysDownloadUrl
+    {
+        get => _prodKeysDownloadUrl;
+        set
         {
-            get => WrappedModel.TitleKeysDownloadUrl ?? "";
-            set
-            {
-                WrappedModel.TitleKeysDownloadUrl = value;
-                NotifyPropertyChanged();
-            }
+            _prodKeysDownloadUrl = value;
+            NotifyPropertyChanged();
         }
+    }
 
-        public bool AlwaysReloadKeysBeforeOpen
+    public string TitleKeysDownloadUrl
+    {
+        get => _titleKeysDownloadUrl;
+        set
         {
-            get => WrappedModel.AlwaysReloadKeysBeforeOpen;
-            set
-            {
-                WrappedModel.AlwaysReloadKeysBeforeOpen = value;
-                NotifyPropertyChanged();
-            }
+            _titleKeysDownloadUrl = value;
+            NotifyPropertyChanged();
         }
+    }
 
-        public string TitlePageUrl
+    public bool AlwaysReloadKeysBeforeOpen
+    {
+        get => _alwaysReloadKeysBeforeOpen;
+        set
         {
-            get => WrappedModel.TitlePageUrl;
-            set
-            {
-                WrappedModel.TitlePageUrl = value;
-                NotifyPropertyChanged();
-            }
+            _alwaysReloadKeysBeforeOpen = value;
+            NotifyPropertyChanged();
         }
+    }
 
-        public int ProgressBufferSize { get; set; } = 4 * 1024 * 1024;
-
-        public AppSettingsModel WrappedModel { get; private set; } = new();
-
-        public void Update(AppSettingsModel newModel)
+    public string TitlePageUrl
+    {
+        get => _titlePageUrl;
+        set
         {
-            WrappedModel = newModel ?? throw new ArgumentNullException(nameof(newModel));
-
-            NotifyAllPropertiesChanged();
+            _titlePageUrl = value;
+            NotifyPropertyChanged();
         }
+    }
 
-        private void NotifyAllPropertiesChanged()
+    public string TitleInfoApiUrl
+    {
+        get => _titleInfoApiUrl;
+        set
         {
-            var properties = typeof(IAppSettings).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var property in properties)
-            {
-                NotifyPropertyChanged(property.Name);
-            }
+            _titleInfoApiUrl = value;
+            NotifyPropertyChanged();
         }
+    }
 
-        protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null!)
+    [JsonIgnore]
+    IRenamingOptions IAppSettings.RenamingOptions => RenamingOptions;
+
+    public RenamingOptions RenamingOptions { get; set; } = new();
+
+    [JsonIgnore]
+    public int ProgressBufferSize { get; } = 4 * 1024 * 1024;
+
+}
+
+public class RenamingOptions : NotifyPropertyChangedBase, IRenamingOptions
+{
+    private string? _fileFilters = "*.nsp;*.nsz;*.xci;*.xcz";
+    private bool _includeSubdirectories = true;
+    private string _applicationPattern = "{WAppTitle} [{TitleId:U}][v{PatchNum}].{Ext:L}";
+    private string _patchPattern = "{WAppTitle} [{TitleId:U}][v{PatchNum}].{Ext:L}";
+    private string _addonPattern = "{WAppTitle} - {WTitle} [{TitleId:U}][v{PatchNum}].{Ext:L}";
+    private bool _isSimulation = true;
+    private string _invalidFileNameCharsReplacement = "꞉";
+    private bool _replaceWhiteSpaceChars = false;
+    private string _whiteSpaceCharsReplacement = "_";
+    private string _lastRenamePath = "";
+
+    public string LastRenamePath
+    {
+        get => _lastRenamePath;
+        set
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            _lastRenamePath = value;
+            NotifyPropertyChanged();
         }
+    }
 
+    public string? FileFilters
+    {
+        get => _fileFilters;
+        set
+        {
+            _fileFilters = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public bool IncludeSubdirectories
+    {
+        get => _includeSubdirectories;
+        set
+        {
+            _includeSubdirectories = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public string ApplicationPattern
+    {
+        get => _applicationPattern;
+        set
+        {
+            _applicationPattern = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public string PatchPattern
+    {
+        get => _patchPattern;
+        set
+        {
+            _patchPattern = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public string AddonPattern
+    {
+        get => _addonPattern;
+        set
+        {
+            _addonPattern = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public bool IsSimulation
+    {
+        get => _isSimulation;
+        set
+        {
+            _isSimulation = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public string InvalidFileNameCharsReplacement
+    {
+        get => _invalidFileNameCharsReplacement;
+        set
+        {
+            _invalidFileNameCharsReplacement = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public bool ReplaceWhiteSpaceChars
+    {
+        get => _replaceWhiteSpaceChars;
+        set
+        {
+            _replaceWhiteSpaceChars = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public string WhiteSpaceCharsReplacement
+    {
+        get => _whiteSpaceCharsReplacement;
+        set
+        {
+            _whiteSpaceCharsReplacement = value;
+            NotifyPropertyChanged();
+        }
     }
 }
+

@@ -1,14 +1,13 @@
 ﻿using System;
 
-namespace Emignatik.NxFileViewer.FileLoading
-{
-    internal class FileNotSupportedException : Exception
-    {
-        public FileNotSupportedException(string? filePath)
-        {
-            FilePath = filePath;
-        }
+namespace Emignatik.NxFileViewer.FileLoading;
 
-        public string? FilePath { get; }
+internal class FileNotSupportedException : Exception
+{
+    public FileNotSupportedException(string? filePath)
+    {
+        FilePath = filePath;
     }
+
+    public string? FilePath { get; }
 }

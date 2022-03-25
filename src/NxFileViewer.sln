@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots"
 		..\screenshots\Settings.png = ..\screenshots\Settings.png
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NxFileViewer.Test", "NxFileViewer.Test\NxFileViewer.Test.csproj", "{55B6DEB7-0DFB-4C7F-834D-09D7AFC60847}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{AE1B6D6F-5F73-4ECD-86C8-F7C0B55793D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE1B6D6F-5F73-4ECD-86C8-F7C0B55793D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE1B6D6F-5F73-4ECD-86C8-F7C0B55793D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55B6DEB7-0DFB-4C7F-834D-09D7AFC60847}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55B6DEB7-0DFB-4C7F-834D-09D7AFC60847}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55B6DEB7-0DFB-4C7F-834D-09D7AFC60847}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55B6DEB7-0DFB-4C7F-834D-09D7AFC60847}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

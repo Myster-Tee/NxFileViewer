@@ -1,32 +1,63 @@
 ﻿using System.ComponentModel;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Settings
+namespace Emignatik.NxFileViewer.Settings;
+
+/// <summary>
+/// Exposes the list of application settings
+/// </summary>
+public interface IAppSettings : INotifyPropertyChanged
 {
-    public interface IAppSettings: INotifyPropertyChanged
-    {
-        public string? AppLanguage { get; set; }
 
-        string LastSaveDir { get; set; }
+    string AppLanguage { get; set; }
 
-        string LastOpenedFile { get; set; }
+    string LastUsedDir { get; set; }
 
-        string ProdKeysFilePath { get; set; }
+    string LastOpenedFile { get; set; }
 
-        string ConsoleKeysFilePath { get; set; }
+    string ProdKeysFilePath { get; set; }
 
-        string TitleKeysFilePath { get; set; }
+    string ProdKeysDownloadUrl { get; set; }
 
-        LogLevel LogLevel { get; set; }
+    string TitleKeysFilePath { get; set; }
 
-        string ProdKeysDownloadUrl { get; set; }
+    string TitleKeysDownloadUrl { get; set; }
 
-        string TitleKeysDownloadUrl { get; set; }
+    string ConsoleKeysFilePath { get; set; }
 
-        bool AlwaysReloadKeysBeforeOpen { get; set; }
+    LogLevel LogLevel { get; set; }
 
-        string TitlePageUrl { get; set; }
+    bool AlwaysReloadKeysBeforeOpen { get; set; }
 
-        public int ProgressBufferSize { get; set; }
-    }
+    string TitlePageUrl { get; set; }
+
+    string TitleInfoApiUrl { get; set; }
+
+    IRenamingOptions RenamingOptions { get; }
+
+    int ProgressBufferSize { get; }
+}
+
+public interface IRenamingOptions : INotifyPropertyChanged
+{
+
+    string LastRenamePath { get; set; }
+
+    string? FileFilters { get; set; }
+
+    bool IncludeSubdirectories { get; set; }
+
+    string ApplicationPattern { get; set; }
+
+    string PatchPattern { get; set; }
+
+    string AddonPattern { get; set; }
+
+    bool IsSimulation { get; set; }
+
+    string InvalidFileNameCharsReplacement { get; set; }
+
+    bool ReplaceWhiteSpaceChars { get; set; }
+
+    string WhiteSpaceCharsReplacement { get; set; }
 }

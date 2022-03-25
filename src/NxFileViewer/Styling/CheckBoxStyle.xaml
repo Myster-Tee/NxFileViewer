@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="CheckBox">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource Title2}" VerticalAlignment="Center" Padding="0,1,0,0" Margin="0"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="TextOnLeft" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+        <Style.Resources>
+            <Style TargetType="Path">
+                <Setter Property="FlowDirection" Value="LeftToRight" />
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="FlowDirection" Value="LeftToRight" />
+            </Style>
+        </Style.Resources>
+
+        <Setter Property="FlowDirection" Value="RightToLeft" />
+    </Style>
+
+</ResourceDictionary>

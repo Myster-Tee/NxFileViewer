@@ -2,6 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style TargetType="TextBlock">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="Title1" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -30,5 +35,15 @@
         <Setter Property="FontStyle" Value="Italic"/>
         <Setter Property="FontSize" Value="16"/>
     </Style>
+
+    <Style x:Key="FieldError" TargetType="TextBlock"  BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Text" Value="!" />
+        <Setter Property="Foreground" Value="{StaticResource FontBrush.Error}"/>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontWeight" Value="ExtraBold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="5,0,0,0"/>
+    </Style>
+
 
 </ResourceDictionary>

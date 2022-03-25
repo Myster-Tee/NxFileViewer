@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace Emignatik.NxFileViewer.Views.ObjectPropertyViewer.PropertyViews
+namespace Emignatik.NxFileViewer.Views.ObjectPropertyViewer.PropertyViews;
+
+/// <summary>
+/// Logique d'interaction pour StringPropertyView.xaml
+/// </summary>
+public partial class StringPropertyView : UserControl
 {
-    /// <summary>
-    /// Logique d'interaction pour StringPropertyView.xaml
-    /// </summary>
-    public partial class StringPropertyView : UserControl
+    public StringPropertyView()
     {
-        public StringPropertyView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

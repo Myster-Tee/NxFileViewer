@@ -2,60 +2,98 @@
 using System.IO;
 using System.Text.Json;
 using Emignatik.NxFileViewer.Localization;
-using Emignatik.NxFileViewer.Settings.Model;
+using Emignatik.NxFileViewer.Services.GlobalEvents;
+using Emignatik.NxFileViewer.Tools;
 using Emignatik.NxFileViewer.Utils;
 using Microsoft.Extensions.Logging;
 
-namespace Emignatik.NxFileViewer.Settings
+namespace Emignatik.NxFileViewer.Settings;
+
+public class AppSettingsManager : IAppSettingsManager
 {
-    public class AppSettingsManager : IAppSettingsManager
+    private static readonly string _settingsFilePath;
+
+    private readonly ILogger _logger;
+    private readonly AppSettings _appSettings;
+    private readonly IShallowCopier _shallowCopier;
+
+    static AppSettingsManager()
     {
-        private static readonly string SettingsFilePath;
+        _settingsFilePath = Path.Combine(PathHelper.CurrentAppDir, $"{AppDomain.CurrentDomain.FriendlyName}.settings.json");
+    }
 
-        private readonly ILogger _logger;
-        private readonly IAppSettingsWrapper<AppSettingsModel> _appSettingsWrapper;
+    public AppSettingsManager(ILoggerFactory loggerFactory, AppSettings appSettings, IAppEvents appEvents, IShallowCopier shallowCopier)
+    {
+        _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
+        _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+        _shallowCopier = shallowCopier ?? throw new ArgumentNullException(nameof(shallowCopier));
+        (appEvents ?? throw new ArgumentNullException(nameof(appEvents))).AppShuttingDown += OnAppShuttingDown;
 
-        static AppSettingsManager()
+        Load(new AppSettings());
+    }
+
+    public IAppSettings Settings => _appSettings;
+
+    public IAppSettings Clone()
+    {
+        var clone = new AppSettings();
+        _shallowCopier.Copy(this.Settings, clone);
+        return clone;
+    }
+
+    public void Load(IAppSettings appSettings)
+    {
+        if (appSettings == null) 
+            throw new ArgumentNullException(nameof(appSettings));
+
+        _shallowCopier.Copy(appSettings, _appSettings);
+    }
+
+    public bool LoadSafe()
+    {
+        try
         {
-            SettingsFilePath = Path.Combine(PathHelper.CurrentAppDir, $"{AppDomain.CurrentDomain.FriendlyName}.settings.json");
-        }
+            if (!File.Exists(_settingsFilePath))
+                return false;
 
-        public AppSettingsManager(ILoggerFactory loggerFactory, IAppSettingsWrapper<AppSettingsModel> appSettingsWrapper)
+            var bytes = File.ReadAllBytes(_settingsFilePath);
+            var settingsModel = JsonSerializer.Deserialize<AppSettings>(new ReadOnlySpan<byte>(bytes));
+            if (settingsModel == null)
+                return false;
+
+            _shallowCopier.Copy(settingsModel, _appSettings);
+
+            return true;
+        }
+        catch (Exception ex)
         {
-            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
-            _appSettingsWrapper = appSettingsWrapper ?? throw new ArgumentNullException(nameof(appSettingsWrapper));
+            _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SettingsLoadingError.SafeFormat(ex.Message));
+            return false;
         }
+    }
 
-        public IAppSettings Settings => _appSettingsWrapper;
 
-        public void Load()
+    public void SaveSafe()
+    {
+        try
         {
-            try
-            {
-                if (!File.Exists(SettingsFilePath))
-                    return;
+            using var stream = File.Create(_settingsFilePath);
 
-                var bytes = File.ReadAllBytes(SettingsFilePath);
-                var appSettings = JsonSerializer.Deserialize<AppSettingsModel>(new ReadOnlySpan<byte>(bytes)) ?? new AppSettingsModel();
-                _appSettingsWrapper.Update(appSettings);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SettingsLoadingError.SafeFormat(ex.Message));
-            }
+            JsonSerializer.Serialize(new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }), _appSettings);
         }
-
-        public void Save()
+        catch (Exception ex)
         {
-            try
-            {
-                using var stream = File.Create(SettingsFilePath);
-                JsonSerializer.Serialize(new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }), _appSettingsWrapper.WrappedModel);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SettingsSavingError.SafeFormat(ex.Message));
-            }
+            _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.SettingsSavingError.SafeFormat(ex.Message));
         }
+    }
+
+    public IAppSettings GetDefault()
+    {
+        return new AppSettings();
+    }
+
+    private void OnAppShuttingDown()
+    {
+        SaveSafe();
     }
 }
