@@ -63,32 +63,30 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_Title_KeysCustomFilePath => "Chemin personnalisé";
     public string SettingsView_Title_KeysDownloadUrl => "URL de téléchargement";
 
-    public string SettingsView_ToolTip_ProdKeys => "This file contains common keys used by all Switch devices. This file is required for opening encrypted title files." + Environment.NewLine +
-                                                   "The program will search this file in the following order:" + Environment.NewLine +
-                                                   "    1. the path defined by this setting" + Environment.NewLine +
-                                                   "    2. the current program's directory" + Environment.NewLine +
-                                                   "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
-                                                   "At startup, the program can automatically download the keys file when none is found on the system." + Environment.NewLine +
-                                                   "The keys file will be downloaded to the current application's directory." + Environment.NewLine + Environment.NewLine +
-                                                   "File should contain one key per line in form of «KEY_NAME = HEXADECIMAL_KEY».";
+    public string SettingsView_ToolTip_ProdKeys => "Ce fichier contient les clés communes à toutes les consoles Switch. Ce fichier est requis pour ouvrir les contenus chiffrés." + Environment.NewLine +
+                                                   "Le programme cherchera la présence du fichier dans l'ordre suivant:" + Environment.NewLine +
+                                                   "    1. le chemin défini par ce paramètre" + Environment.NewLine +
+                                                   "    2. le répertoire courant du programme" + Environment.NewLine +
+                                                   "    3. le dossier «%UserProfile%\\.switch»" + Environment.NewLine + Environment.NewLine +
+                                                   "Au démarrage, le programme peut automatiquement télécharger le fichier de clés quand aucun n'est trouvé sur le système." + Environment.NewLine +
+                                                   "Le fichier de clés sera téléchargé dans le répertoire courant de l'application." + Environment.NewLine + Environment.NewLine +
+                                                   "Le fichier doit contenir une clé par ligne, sous la forme «NOM_CLE = VALEUR_HEXADECIMAL».";
 
-    public string SettingsView_ToolTip_TitleKeys => "You can optionally specify a file containing game-specific keys." + Environment.NewLine +
-                                                    "The program will search this file in the following locations:" + Environment.NewLine +
-                                                    "    1. the path defined by this setting" + Environment.NewLine +
-                                                    "    2. the current program's directory" + Environment.NewLine +
-                                                    "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
-                                                    "At startup, the program can automatically download the keys file when none is found on the system." + Environment.NewLine +
-                                                    "The keys file will be downloaded to the current application's directory." + Environment.NewLine + Environment.NewLine +
-                                                    "File should contain one key per line in form of «KEY_NAME = HEXADECIMAL_KEY».";
-
-
-    public string SettingsView_ToolTip_ConsoleKeys => "Vous pouvez optionnellement spécifier un fichier contenant les clés uniques de console." + Environment.NewLine +
+    public string SettingsView_ToolTip_TitleKeys => "Vous pouvez optionnellement spécifier un fichier contenant les clés spécifiques de certains jeux." + Environment.NewLine +
+                                                    "Le programme cherchera la présence du fichier dans l'ordre suivant:" + Environment.NewLine +
+                                                    "    1. le chemin défini par ce paramètre" + Environment.NewLine +
+                                                    "    2. le répertoire courant du programme" + Environment.NewLine +
+                                                    "    3. le dossier «%UserProfile%\\.switch»" + Environment.NewLine + Environment.NewLine +
+                                                    "Au démarrage, le programme peut automatiquement télécharger le fichier de clés quand aucun n'est trouvé sur le système." + Environment.NewLine +
+                                                    "Le fichier de clés sera téléchargé dans le répertoire courant de l'application." + Environment.NewLine + Environment.NewLine +
+                                                    "Le fichier doit contenir une clé par ligne, sous la forme «NOM_CLE = VALEUR_HEXADECIMAL».";
+    
+    public string SettingsView_ToolTip_ConsoleKeys => "Vous pouvez optionnellement spécifier un fichier contenant les clés uniques de votre console (ne partagez jamais ces clés)." + Environment.NewLine +
                                                       "Le programme cherchera les fichiers aux emplacements suivants:" + Environment.NewLine +
                                                       "    1. le chemin défini par ce paramètre" + Environment.NewLine +
                                                       "    2. le répertoire courant du programme" + Environment.NewLine +
                                                       "    3. le dossier «%UserProfile%\\.switch»" + Environment.NewLine + Environment.NewLine +
                                                       "Le fichier doit contenir une clé par ligne, sous la forme «NOM_CLE = VALEUR_HEXADECIMAL».";
-
 
     public string SettingsView_LogLevel => "Niveau de log";
     public string SettingsView_ToolTip_LogLevel => "Le niveau de log indique à partir de quel niveau les messages sont logués.";
@@ -313,4 +311,5 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string FileRenaming_PatternKeywordNotAllowed => "Le mot clé «{0}» n'est pas autorisé pour les patterns de type «{1}».";
     public string FileRenaming_StringOperatorUnknown => "L'opérateur «{0}» n'est pas reconnu, les opérateurs autorisés sont «{1}».";
     public string FileRenaming_EmptyDirectoryNotAllowed => "Le répertoire d'entrée ne peut être vide.";
+    public string Window_Tip_Title => "Astuce";
 }

@@ -260,4 +260,6 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string FileRenaming_PatternKeywordNotAllowed { get; }
     string FileRenaming_StringOperatorUnknown { get; }
     string FileRenaming_EmptyDirectoryNotAllowed { get; }
+
+    string Window_Tip_Title { get; }
 }

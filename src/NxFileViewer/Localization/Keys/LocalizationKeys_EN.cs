@@ -63,14 +63,14 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_Title_KeysCustomFilePath => "Custom path";
     public string SettingsView_Title_KeysDownloadUrl => "Download URL";
 
-    public string SettingsView_ToolTip_ProdKeys => "This file contains common keys used by all Switch devices. This file is required for opening encrypted title files." + Environment.NewLine +
+    public string SettingsView_ToolTip_ProdKeys => "This file contains common keys used by all Switch devices. This file is required for opening encrypted title contents." + Environment.NewLine +
                                                    "The program will search this file in the following order:" + Environment.NewLine +
                                                    "    1. the path defined by this setting" + Environment.NewLine +
                                                    "    2. the current program's directory" + Environment.NewLine +
                                                    "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
                                                    "At startup, the program can automatically download the keys file when none is found on the system." + Environment.NewLine +
                                                    "The keys file will be downloaded to the current application's directory." + Environment.NewLine + Environment.NewLine +
-                                                   "File should contain one key per line in form of «KEY_NAME = HEXADECIMAL_KEY».";
+                                                   "File should contain one key per line, in form of «KEY_NAME = HEXADECIMAL_VALUE».";
 
     public string SettingsView_ToolTip_TitleKeys => "You can optionally specify a file containing game-specific keys." + Environment.NewLine +
                                                     "The program will search this file in the following locations:" + Environment.NewLine +
@@ -79,16 +79,14 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
                                                     "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
                                                     "At startup, the program can automatically download the keys file when none is found on the system." + Environment.NewLine +
                                                     "The keys file will be downloaded to the current application's directory." + Environment.NewLine + Environment.NewLine +
-                                                    "File should contain one key per line in form of «KEY_NAME = HEXADECIMAL_KEY».";
-
+                                                    "File should contain one key per line, in form of «KEY_NAME = HEXADECIMAL_VALUE».";
 
     public string SettingsView_ToolTip_ConsoleKeys => "You can optionally specify a file containing console-unique keys." + Environment.NewLine +
                                                       "The program will search this file in the following locations:" + Environment.NewLine +
                                                       "    1. the path defined by this setting" + Environment.NewLine +
                                                       "    2. the current program's directory" + Environment.NewLine +
                                                       "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
-                                                      "File should contain one key per line in form of «KEY_NAME = HEXADECIMAL_KEY».";
-
+                                                      "File should contain one key per line, in form of «KEY_NAME = HEXADECIMAL_VALUE».";
 
     public string SettingsView_LogLevel => "Log level";
     public string SettingsView_ToolTip_LogLevel => "The log level specifies the minimum level to log.";
@@ -311,4 +309,5 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string FileRenaming_PatternKeywordNotAllowed => "Keyword «{0}» not allowed for patters of type «{1}».";
     public string FileRenaming_StringOperatorUnknown => "Operator «{0}» is not recognized, allowed operators are «{1}».";
     public string FileRenaming_EmptyDirectoryNotAllowed => "Input directory can't be empty.";
+    public string Window_Tip_Title => "Tip";
 }

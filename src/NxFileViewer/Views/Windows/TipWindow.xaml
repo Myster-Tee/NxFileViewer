@@ -3,8 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
         mc:Ignorable="d"
-        Title="TipWindow" Height="200" Width="300" ResizeMode="CanResizeWithGrip" ShowInTaskbar="False" WindowStyle="ToolWindow">
+        Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Window_Tip_Title}"
+        Height="200" Width="300" ResizeMode="CanResizeWithGrip" ShowInTaskbar="False" WindowStyle="ToolWindow">
     <Grid Margin="5">
         <TextBox x:Name="TextBox" IsReadOnly="True" BorderBrush="{StaticResource ScrollViewer.Border.Brush}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
     </Grid>
