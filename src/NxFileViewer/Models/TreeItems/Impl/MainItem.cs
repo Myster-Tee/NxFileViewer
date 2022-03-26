@@ -1,4 +1,5 @@
 ﻿using System;
+using Emignatik.NxFileViewer.Utils;
 using LibHac.Common;
 using LibHac.Loader;
 using LibHac.Tools.Fs;
@@ -21,6 +22,6 @@ public class MainItem : DirectoryEntryItem
 
     public override string LibHacUnderlyingTypeName => "Nso";
 
-    public Buffer32 ModuleId => NsoHeader.ModuleId;
+    public string ModuleId => NsoHeader.ModuleId.Items.ToStrId();
 
 }

@@ -4,17 +4,17 @@ namespace Emignatik.NxFileViewer.Models.Overview;
 
 public class TitleInfo
 {
-    private readonly ApplicationControlTitle _applicationControlTitle;
+    private readonly ApplicationControlProperty.ApplicationTitle _applicationTitle;
 
-    public TitleInfo(ref ApplicationControlTitle applicationControlTitle, NacpLanguage language)
+    public TitleInfo(ref ApplicationControlProperty.ApplicationTitle applicationTitle, NacpLanguage language)
     {
-        _applicationControlTitle = applicationControlTitle;
+        _applicationTitle = applicationTitle;
         Language = language;
     }
 
-    public string AppName => _applicationControlTitle.Name.ToString();
+    public string AppName => _applicationTitle.NameString.ToString();
 
-    public string Publisher => _applicationControlTitle.Publisher.ToString();
+    public string Publisher => _applicationTitle.PublisherString.ToString();
 
     public NacpLanguage Language { get; }
 

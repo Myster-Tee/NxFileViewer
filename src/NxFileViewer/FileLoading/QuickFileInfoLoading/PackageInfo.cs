@@ -72,9 +72,9 @@ public class NacpData
         for (var i = 0; i < 16; i++)
         {
 
-            if ((_applicationControlProperty.SupportedLanguages & mask) == mask)
+            if ((_applicationControlProperty.SupportedLanguageFlag & mask) == mask)
             {
-                titles[i] = new Title(_applicationControlProperty.Titles[i]);
+                titles[i] = new Title(_applicationControlProperty.Title[i]);
             }
             else
             {
@@ -93,14 +93,14 @@ public class NacpData
 
 public class Title
 {
-    private readonly ApplicationControlTitle _applicationControlTitle;
+    private readonly ApplicationControlProperty.ApplicationTitle _applicationControlTitle;
 
-    public Title(ApplicationControlTitle applicationControlTitle)
+    public Title(ApplicationControlProperty.ApplicationTitle applicationControlTitle)
     {
         _applicationControlTitle = applicationControlTitle;
     }
 
-    public string Name => _applicationControlTitle.Name.ToString();
+    public string Name => _applicationControlTitle.NameString.ToString();
 
-    public string Publisher => _applicationControlTitle.Publisher.ToString();
+    public string Publisher => _applicationControlTitle.PublisherString.ToString();
 }

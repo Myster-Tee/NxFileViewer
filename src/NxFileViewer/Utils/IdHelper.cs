@@ -29,6 +29,11 @@ public static class IdHelper
     public static string ToStrId(this IEnumerable<byte> bytes)
     {
         return bytes.Aggregate("", (current, b) => current + b.ToString("X2"));
+    }  
+    
+    public static string ToStrId(this Span<byte> bytes)
+    {
+        return bytes.ToArray().ToStrId();
     }
 
     private static string ToIdFromConvertedNumBytes(IEnumerable<byte> getBytes)

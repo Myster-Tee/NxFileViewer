@@ -163,14 +163,14 @@ public class FileOverviewLoader : IFileOverviewLoader
             var nacp = nacpItem.Nacp;
 
             var language = -1;
-            foreach (ref var applicationControlTitle in nacp.Titles)
+            foreach (ref var applicationTitle in nacp.Title.Items)
             {
                 language++;
 
-                if (applicationControlTitle.Name.IsEmpty())
+                if (applicationTitle.NameString.IsEmpty())
                     continue;
 
-                var titleInfo = new TitleInfo(ref applicationControlTitle, (NacpLanguage)language);
+                var titleInfo = new TitleInfo(ref applicationTitle, (NacpLanguage)language);
 
                 titleInfo.Icon = LoadExpectedIcon(nacpItem.ContainerSectionItem, titleInfo.Language);
                 contentDetails.Titles.Add(titleInfo);

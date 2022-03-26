@@ -23,15 +23,15 @@ public class NacpItem : DirectoryEntryItem
 
     public override string LibHacUnderlyingTypeName => nameof(Nacp);
 
-    public string DisplayVersion => Nacp.DisplayVersion.ToString();
+    public string DisplayVersion => Nacp.DisplayVersionString.ToString();
 
     public string AddOnContentBaseId { get; }
 
-    public string Isbn => Nacp.Isbn.ToString();
+    public string Isbn => Nacp.IsbnString.ToString();
 
-    public string ApplicationErrorCodeCategory => Nacp.ApplicationErrorCodeCategory.ToString();
+    public string ApplicationErrorCodeCategory => Nacp.ApplicationErrorCodeCategoryString.ToString();
 
-    public string BcatPassphrase => Nacp.BcatPassphrase.ToString();
+    public string BcatPassphrase => Nacp.BcatPassphraseString.ToString();
 
-    public ParentalControlFlagValue ParentalControl => Nacp.ParentalControl;
+    public ApplicationControlProperty.ParentalControlFlagValue ParentalControl => Nacp.ParentalControlFlag;
 }

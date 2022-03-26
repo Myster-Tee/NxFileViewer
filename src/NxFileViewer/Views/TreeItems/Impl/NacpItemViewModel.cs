@@ -31,5 +31,5 @@ public class NacpItemViewModel : DirectoryEntryItemViewModel
     public string BcatPassphrase => _nacpItem.BcatPassphrase;
 
     [PropertyView]
-    public ParentalControlFlagValue ParentalControl => _nacpItem.ParentalControl;
+    public ApplicationControlProperty.ParentalControlFlagValue ParentalControl => _nacpItem.ParentalControl;
 }
