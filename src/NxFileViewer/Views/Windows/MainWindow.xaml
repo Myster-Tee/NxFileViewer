@@ -42,26 +42,66 @@
         <Menu Grid.Row="0">
             <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_File}">
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Open}" 
-                          Command="{Binding Path=OpenFileCommand}" InputGestureText="Ctrl+O" />
+                          Command="{Binding Path=OpenFileCommand}" InputGestureText="Ctrl+O">
+                    <MenuItem.Icon>
+                        <Image Source="/Styling/Icons/open_16x16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_OpenLast}"
-                          Command="{Binding Path=OpenLastFileCommand}" InputGestureText="Ctrl+Shift+O" />
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Close}" Command="{Binding Path=CloseFileCommand}" InputGestureText="Ctrl+Shift+C" />
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Exit}" Command="{Binding Path=ExitAppCommand}" InputGestureText="Alt+F4" />
+                          Command="{Binding Path=OpenLastFileCommand}" InputGestureText="Ctrl+Shift+O">
+                    <MenuItem.Icon>
+                        <Image Source="/Styling/Icons/reload_last_16x16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Close}" Command="{Binding Path=CloseFileCommand}" InputGestureText="Ctrl+Shift+C">
+                    <MenuItem.Icon>
+                        <Image Source="/Styling/Icons/close_16x16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Exit}" Command="{Binding Path=ExitAppCommand}" InputGestureText="Alt+F4">
+                    <MenuItem.Icon>
+                        <Image Source="/Styling/Icons/exit_16x16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Tools}">
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_VerifyNcasHash}" 
-                          Command="{Binding Path=VerifyNcasHashCommand}" InputGestureText="F5" />
+                          Command="{Binding Path=VerifyNcasHashCommand}" InputGestureText="F5">
+                    <MenuItem.Icon>
+                        <Image Source="/Styling/Icons/safe_16x16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_VerifyNcasHeaderSignature}" 
-                          Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" InputGestureText="Ctrl+F5" />
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_ReloadKeys}" 
-                          Command="{Binding Path=LoadKeysCommand}" InputGestureText="F10" />
+                          Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" InputGestureText="Ctrl+F5">
+                    <MenuItem.Icon>
+                        <Image Source="/Styling/Icons/safe_16x16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_ReloadKeys}"
+                          Command="{Binding Path=LoadKeysCommand}" InputGestureText="F10">
+                    <MenuItem.Icon>
+                        <Image Source="/Styling/Icons/refresh_16x16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_OpenTitleWebPage}" 
-                          Command="{Binding Path=OpenTitleWebPageCommand}" InputGestureText="F9" />
+                          Command="{Binding Path=OpenTitleWebPageCommand}" InputGestureText="F9">
+                    <MenuItem.Icon>
+                        <Image Source="/Styling/Icons/navigate_16x16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_ShowRenameToolWindow}" 
-                          Command="{Binding Path=ShowRenameToolWindowCommand}" InputGestureText="F9" />
+                          Command="{Binding Path=ShowRenameToolWindowCommand}" InputGestureText="F9">
+                    <MenuItem.Icon>
+                        <Image Source="/Styling/Icons/rename_16x16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Options}">
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Settings}" Command="{Binding Path=ShowSettingsWindowCommand}" />
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Settings}" Command="{Binding Path=ShowSettingsWindowCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Styling/Icons/settings_16x16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
 

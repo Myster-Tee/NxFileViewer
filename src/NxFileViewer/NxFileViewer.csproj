@@ -23,13 +23,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Styling\Icons\close_16x16.png" />
     <None Remove="Styling\Icons\CnmtContentEntryItem.png" />
+    <None Remove="Styling\Icons\exit_16x16.png" />
     <None Remove="Styling\Icons\FileDirectoryEntryItem.png" />
     <None Remove="Styling\Icons\FolderDirectoryEntryItem.png" />
     <None Remove="Styling\Icons\Icon.ico" />
+    <None Remove="Styling\Icons\navigate_16x16.png" />
     <None Remove="Styling\Icons\NspItem.png" />
+    <None Remove="Styling\Icons\open_16x16.png" />
     <None Remove="Styling\Icons\PartitionFileEntryItem.png" />
+    <None Remove="Styling\Icons\refresh_16x16.png" />
+    <None Remove="Styling\Icons\reload_last_16x16.png" />
+    <None Remove="Styling\Icons\rename_16x16.png" />
+    <None Remove="Styling\Icons\safe_16x16.png" />
     <None Remove="Styling\Icons\SectionItem.png" />
+    <None Remove="Styling\Icons\settings_16x16.png" />
     <None Remove="Styling\Icons\XciItem.png" />
     <None Remove="Styling\Icons\XciPartitionItem.png" />
     <None Include="Styling\Icons\Icon.ico">
@@ -47,12 +56,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Styling\Icons\close_16x16.png" />
     <Resource Include="Styling\Icons\CnmtContentEntryItem.png" />
+    <Resource Include="Styling\Icons\exit_16x16.png" />
     <Resource Include="Styling\Icons\FileDirectoryEntryItem.png" />
     <Resource Include="Styling\Icons\FolderDirectoryEntryItem.png" />
     <Resource Include="Styling\Icons\Icon.ico" />
+    <Resource Include="Styling\Icons\navigate_16x16.png" />
     <Resource Include="Styling\Icons\NspItem.png" />
+    <Resource Include="Styling\Icons\open_16x16.png" />
     <Resource Include="Styling\Icons\PartitionFileEntryItem.png" />
+    <Resource Include="Styling\Icons\refresh_16x16.png" />
+    <Resource Include="Styling\Icons\reload_last_16x16.png" />
+    <Resource Include="Styling\Icons\rename_16x16.png" />
+    <Resource Include="Styling\Icons\safe_16x16.png" />
+    <Resource Include="Styling\Icons\settings_16x16.png" />
     <Resource Include="Styling\Icons\XciPartitionItem.png" />
     <Resource Include="Styling\Icons\SectionItem.png" />
     <Resource Include="Styling\Icons\XciItem.png" />
