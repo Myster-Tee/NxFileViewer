@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
-using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Utils.MVVM;
-using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Emignatik.NxFileViewer.Views.Windows;
 
 namespace Emignatik.NxFileViewer.Views.CustomControls;
@@ -15,33 +12,12 @@ public class TipLabel : Label
     private TipWindow? _tipWindow;
     private Window? _attachedWindow;
 
-    public TipLabel()
-    {
-
-        var contextMenu = new ContextMenu();
-        var copyTextMenuItem = new MenuItem
-        {
-            Command = new RelayCommand(CopyToolTipText)
-        };
-        contextMenu.Items.Add(copyTextMenuItem);
-
-        const string PROPERTY_PATH = $"{nameof(LocalizationManager.Instance.Current)}.{nameof(LocalizationManager.Instance.Current.Keys)}.{nameof(LocalizationManager.Instance.Current.Keys.MenuItem_CopyTextToClipboard)}";
-
-        var binding = new Binding
-        {
-            Source = LocalizationManager.Instance,
-            Path = new PropertyPath(PROPERTY_PATH)
-        };
-
-
-        BindingOperations.SetBinding(copyTextMenuItem, HeaderedItemsControl.HeaderProperty, binding);
-
-        this.ContextMenu = contextMenu;
-    }
-
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
         base.OnMouseDown(e);
+        if(e.LeftButton != MouseButtonState.Pressed)
+            return;
+
         e.Handled = true;
 
         var tipText = TipText;
@@ -79,21 +55,6 @@ public class TipLabel : Label
         if (_tipWindow != null)
             _tipWindow.Closed -= OnTipWindowClosed;
         _tipWindow = null;
-    }
-
-    private void CopyToolTipText()
-    {
-        var tipText = TipText;
-        if (tipText == null)
-            return;
-        try
-        {
-            Clipboard.SetText(tipText);
-        }
-        catch
-        {
-            // ignored
-        }
     }
 
     public string? TipText => this.ToolTip as string;

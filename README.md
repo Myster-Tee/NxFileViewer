@@ -25,6 +25,7 @@ Download latest version [here](https://github.com/Myster-Tee/NxFileViewer/releas
 - Displays missing keys
 - Opens title URL
 - Multiple languages (actually English and French, PR me for more ;))
+- Advanced files renaming
 
 ## Screenshots
 
@@ -36,13 +37,13 @@ Download latest version [here](https://github.com/Myster-Tee/NxFileViewer/releas
 
 ## Requirements
 
-The program requires the *.NET Desktop Runtime 5 X64* which can be downloaded from the official Microsoft website [here](https://dotnet.microsoft.com/download/dotnet/5.0).
+The program requires the *.NET Desktop Runtime 6 X64* which can be downloaded from the official Microsoft website [here](https://dotnet.microsoft.com/download/dotnet/6.0).
 
 ## Contribute
 Feel free to contribute to this project to make this program better.
 
-I designed the application so that it can easily be localized in several languages.
-If you'd like to have this app in your language, feel free to give me your translations ;).
+I designed the application so that it can be easily localized in several languages.  
+If you want this app in your language, send me your translations ;).
 
 ## Credits
 
