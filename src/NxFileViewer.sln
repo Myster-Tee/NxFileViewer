@@ -15,10 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots"
 	ProjectSection(SolutionItems) = preProject
 		..\screenshots\Content.png = ..\screenshots\Content.png
 		..\screenshots\Overview.png = ..\screenshots\Overview.png
+		..\screenshots\Rename.png = ..\screenshots\Rename.png
 		..\screenshots\Settings.png = ..\screenshots\Settings.png
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NxFileViewer.Test", "NxFileViewer.Test\NxFileViewer.Test.csproj", "{55B6DEB7-0DFB-4C7F-834D-09D7AFC60847}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NxFileViewer.Test", "NxFileViewer.Test\NxFileViewer.Test.csproj", "{55B6DEB7-0DFB-4C7F-834D-09D7AFC60847}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

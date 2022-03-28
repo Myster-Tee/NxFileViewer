@@ -33,6 +33,8 @@ Download latest version [here](https://github.com/Myster-Tee/NxFileViewer/releas
 
 ![Content](./screenshots/Content.png)
 
+![Content](./screenshots/Rename.png)
+
 ![Settings](./screenshots/Settings.png)
 
 ## Requirements
