@@ -43,10 +43,10 @@ public class ItemViewModel : ViewModelBase, IItemViewModel
     public string Name => _item.Name;
 
     [PropertyView("Type")]
-    public string ObjectType => _item.LibHacTypeName;
+    public string LibHacTypeName => _item.LibHacTypeName;
 
     [PropertyView("Format")]
-    public string? UnderlyingType => _item.Format;
+    public string? Format => _item.Format;
 
     public IItem AttachedItem => _item;
 

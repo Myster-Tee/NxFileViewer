@@ -22,7 +22,7 @@ public class XciItem : ItemBase
 
     public Xci Xci { get; }
 
-    public override string LibHacTypeName => nameof(Xci);
+    public override string LibHacTypeName => Xci.GetType().Name;
 
     public override string? Format => "XCI";
 

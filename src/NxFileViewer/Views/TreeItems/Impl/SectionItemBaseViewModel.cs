@@ -14,6 +14,8 @@ public abstract class SectionItemBaseViewModel : ItemViewModel
     {
         _sectionItemBase = sectionItemBase;
     }
+    [PropertyView]
+    public bool IsPatchSection => _sectionItemBase.IsPatchSection;
 
     [PropertyView]
     public int SectionIndex => _sectionItemBase.SectionIndex;
@@ -22,14 +24,9 @@ public abstract class SectionItemBaseViewModel : ItemViewModel
     public NcaEncryptionType EncryptionType => _sectionItemBase.EncryptionType;
 
     [PropertyView]
-    public NcaFormatType FormatType => _sectionItemBase.FormatType;
-
-    [PropertyView]
-    public bool IsPatchSection => _sectionItemBase.IsPatchSection;
-
-    [PropertyView]
     public NcaHashType HashType => _sectionItemBase.HashType;
 
     [PropertyView]
     public short Version => _sectionItemBase.Version;
+
 }

@@ -7,32 +7,33 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 
 public class CnmtContentEntryItem : ItemBase
 {
-    private readonly CnmtContentEntry _cnmtContentEntry;
-    private readonly int _index;
-
     public CnmtContentEntryItem(CnmtContentEntry cnmtContentEntry, CnmtItem parentItem, int index) : base(parentItem)
     {
         // TODO: a utiliser au final? Ce serait sûrement plus logique de le présenter dans les propriétés du CnmtItem
-        _cnmtContentEntry = cnmtContentEntry ?? throw new ArgumentNullException(nameof(cnmtContentEntry));
-        _index = index;
+        CnmtContentEntry = cnmtContentEntry ?? throw new ArgumentNullException(nameof(cnmtContentEntry));
+        Index = index;
         ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
     }
 
-    public override string DisplayName => $"Entry {_index}";
+    public override string DisplayName => $"Entry {Index}";
 
-    public override string Name => _index.ToString();
+    public override string Name => Index.ToString();
 
-    public ContentType NcaContentType => _cnmtContentEntry.Type;
+    public int Index { get; }
 
-    public byte[] NcaId => _cnmtContentEntry.NcaId;
+    public CnmtContentEntry CnmtContentEntry { get; }
 
-    public byte[] NcaHash => _cnmtContentEntry.Hash;
+    public ContentType NcaContentType => CnmtContentEntry.Type;
 
-    public long NcaSize => _cnmtContentEntry.Size;
+    public byte[] NcaId => CnmtContentEntry.NcaId;
+
+    public byte[] NcaHash => CnmtContentEntry.Hash;
+
+    public long NcaSize => CnmtContentEntry.Size;
 
     public new CnmtItem ParentItem { get; }
 
-    public override string LibHacTypeName => nameof(CnmtContentEntry);
+    public override string LibHacTypeName => CnmtContentEntry.GetType().Name;
 
     public override string? Format => null;
 

@@ -13,25 +13,23 @@ public abstract class SectionItemBase : ItemBase
         ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
     }
 
-    public sealed override string Name => SectionIndex.ToString();
+    public sealed override string Name => $"Section {SectionIndex}";
 
-    public sealed override string DisplayName => $"Section {SectionIndex}";
+    public sealed override string DisplayName => Name;
 
-    public sealed override string LibHacTypeName => "Section";
-
-    public override string Format => FsHeader.FormatType.ToString();
-
-    public NcaFsHeader FsHeader { get; }
-
-    public int SectionIndex { get; }
+    public sealed override string LibHacTypeName => FsHeader.GetType().Name;
 
     public new NcaItem ParentItem { get; }
 
+    public int SectionIndex { get; }
+
+    public NcaFsHeader FsHeader { get; }
+
     public bool IsPatchSection => FsHeader.IsPatchSection();
 
-    public NcaEncryptionType EncryptionType => FsHeader.EncryptionType;
+    public override string Format => FsHeader.FormatType.ToString();
 
-    public NcaFormatType FormatType => FsHeader.FormatType;
+    public NcaEncryptionType EncryptionType => FsHeader.EncryptionType;
 
     public NcaHashType HashType => FsHeader.HashType;
 

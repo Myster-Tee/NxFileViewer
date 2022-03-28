@@ -74,7 +74,7 @@ public class DirectoryEntryItem : ItemBase
     /// </summary>
     public DirectoryEntryEx DirectoryEntry { get; }
 
-    public sealed override string LibHacTypeName => nameof(DirectoryEntry);
+    public sealed override string LibHacTypeName => DirectoryEntry.GetType().Name;
 
     public override string? Format => null;
 

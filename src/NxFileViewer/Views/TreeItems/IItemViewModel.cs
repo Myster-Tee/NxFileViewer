@@ -12,7 +12,7 @@ public interface IItemViewModel: IViewModelBase
     /// <summary>
     /// Get the end user displayed type of this item 
     /// </summary>
-    string ObjectType { get; }
+    string LibHacTypeName { get; }
 
     IItem AttachedItem { get; }
 

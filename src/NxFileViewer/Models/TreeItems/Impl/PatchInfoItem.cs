@@ -10,8 +10,15 @@ public class PatchSectionItem : SectionItemBase
     public PatchSectionItem(int sectionIndex, NcaFsHeader ncaFsHeader, NcaItem parentItem, ref NcaFsPatchInfo ncaFsPatchInfo) : base(sectionIndex, ncaFsHeader, parentItem)
     {
         _ncaFsPatchInfo = ncaFsPatchInfo;
-        //TODO: afficher des info de ncaFsPatchInfo? 
     }
+
+    public long RelocationTreeOffset => _ncaFsPatchInfo.RelocationTreeOffset;
+    
+    public long RelocationTreeSize => _ncaFsPatchInfo.RelocationTreeSize;
+    
+    public long EncryptionTreeOffset => _ncaFsPatchInfo.EncryptionTreeOffset;
+
+    public long EncryptionTreeSize => _ncaFsPatchInfo.EncryptionTreeSize;
 
     public override IEnumerable<IItem> ChildItems
     {

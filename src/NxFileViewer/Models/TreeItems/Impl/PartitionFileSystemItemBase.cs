@@ -18,7 +18,7 @@ public abstract class PartitionFileSystemItemBase : ItemBase
 
     public int NumFiles => PartitionFileSystem.Header.NumFiles;
 
-    public sealed override string LibHacTypeName => nameof(PartitionFileSystem);
+    public sealed override string LibHacTypeName => PartitionFileSystem.GetType().Name;
 
     public abstract KeySet KeySet { get; }
 

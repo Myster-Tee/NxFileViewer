@@ -19,7 +19,7 @@ public class MainItem : DirectoryEntryItem
 
     public NsoHeader NsoHeader { get; }
 
-    public string FileFormat => "Nso"; //TODO: à afficher
+    public sealed override string Format => "Nso";
 
     public string ModuleId => NsoHeader.ModuleId.Items.ToStrId();
 
