@@ -310,26 +310,46 @@ public class FileItemLoader : IFileItemLoader
                     continue;
                 }
 
-                var sectionItem = new SectionItem(sectionIndex, ncaFsHeader, parentItem);
-                parentItem.ChildItems.Add(sectionItem);
 
-                IFileSystem? fileSystem = null;
-                try
+                if (ncaFsHeader.IsPatchSection())
                 {
-                    fileSystem = nca.OpenFileSystem(sectionIndex, IntegrityCheckLevel.ErrorOnInvalid);
+                    //TODO: supprimer l'ouverture du storage?
+                    var openRawStorage = nca.OpenRawStorage(sectionIndex);
+                    openRawStorage.GetSize(out var s).ThrowIfFailure();
+
+
+                    var ncaFsPatchInfo = ncaFsHeader.GetPatchInfo();
+
+                    var patchSectionItem = new PatchSectionItem(sectionIndex, ncaFsHeader, parentItem, ref ncaFsPatchInfo);
+                    parentItem.ChildItems.Add(patchSectionItem);
                 }
-                catch (Exception ex)
+                else
                 {
-                    OnLoadingException(ex, sectionItem);
+                    var sectionItem = new FsSectionItem(sectionIndex, ncaFsHeader, parentItem);
+                    parentItem.ChildItems.Add(sectionItem);
 
-                    var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenNcaSectionFileSystem.SafeFormat(sectionIndex, ex.Message);
-                    sectionItem.Errors.Add(TREE_LOADING_CATEGORY, message);
-                    _logger.LogError(ex, message);
+                    IFileSystem? fileSystem = null;
+
+
+                    try
+                    {
+                        fileSystem = nca.OpenFileSystem(sectionIndex, IntegrityCheckLevel.ErrorOnInvalid);
+                    }
+                    catch (Exception ex)
+                    {
+                        OnLoadingException(ex, sectionItem);
+
+                        var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenNcaSectionFileSystem.SafeFormat(sectionIndex, ex.Message);
+                        sectionItem.Errors.Add(TREE_LOADING_CATEGORY, message);
+                        _logger.LogError(ex, message);
+                    }
+
+                    sectionItem.FileSystem = fileSystem;
+
+                    BuildChildItems(sectionItem);
                 }
 
-                sectionItem.FileSystem = fileSystem;
 
-                BuildChildItems(sectionItem);
             }
         }
         catch (Exception ex)
@@ -342,7 +362,7 @@ public class FileItemLoader : IFileItemLoader
         }
     }
 
-    private void BuildChildItems(SectionItem parentItem)
+    private void BuildChildItems(FsSectionItem parentItem)
     {
         try
         {
@@ -500,11 +520,11 @@ public class FileItemLoader : IFileItemLoader
                 return;
 
             var currentPath = parentItem.Path;
-            var directoryEntries = SafeGetDirectoryEntries(parentItem.ContainerSectionItem.FileSystem!, currentPath, parentItem);
+            var directoryEntries = SafeGetDirectoryEntries(parentItem.ContainerFsSectionItem.FileSystem!, currentPath, parentItem);
 
             foreach (var directoryEntry in directoryEntries)
             {
-                var directoryEntryItem = new DirectoryEntryItem(parentItem.ContainerSectionItem, directoryEntry, parentItem);
+                var directoryEntryItem = new DirectoryEntryItem(parentItem.ContainerFsSectionItem, directoryEntry, parentItem);
                 BuildChildItems(directoryEntryItem);
                 parentItem.ChildItems.Add(directoryEntryItem);
             }

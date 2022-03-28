@@ -9,18 +9,18 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 public class MainItem : DirectoryEntryItem
 {
 
-    public MainItem(NsoHeader nsoHeader, SectionItem parentItem, DirectoryEntryEx directoryEntry)
+    public MainItem(NsoHeader nsoHeader, FsSectionItem parentItem, DirectoryEntryEx directoryEntry)
         : base(parentItem, directoryEntry)
     {
         ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
         NsoHeader = nsoHeader;
     }
 
-    public override SectionItem ParentItem { get; }
+    public override FsSectionItem ParentItem { get; }
 
     public NsoHeader NsoHeader { get; }
 
-    public override string LibHacUnderlyingTypeName => "Nso";
+    public string FileFormat => "Nso"; //TODO: à afficher
 
     public string ModuleId => NsoHeader.ModuleId.Items.ToStrId();
 

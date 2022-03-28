@@ -15,12 +15,12 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 /// </summary>
 public class CnmtItem : DirectoryEntryItem, IItem
 {
-    public CnmtItem(Cnmt cnmt, SectionItem parentSectionItem, DirectoryEntryEx directoryEntry)
-        : base(parentSectionItem, directoryEntry)
+    public CnmtItem(Cnmt cnmt, FsSectionItem parentFsSectionItem, DirectoryEntryEx directoryEntry)
+        : base(parentFsSectionItem, directoryEntry)
     {
         Cnmt = cnmt ?? throw new ArgumentNullException(nameof(cnmt));
-         
-        ParentItem = parentSectionItem;
+
+        ParentItem = parentFsSectionItem;
         PatchNumber = Cnmt.TitleVersion.GetPatchNumber();
         TitleId = Cnmt.TitleId.ToStrId();
         ApplicationTitleId = Cnmt.ApplicationTitleId.ToStrId();
@@ -28,11 +28,11 @@ public class CnmtItem : DirectoryEntryItem, IItem
         TitleVersion = Cnmt.TitleVersion?.Version.ToString();
     }
 
-    public sealed override SectionItem ParentItem { get; }
+    public sealed override FsSectionItem ParentItem { get; }
 
     public Cnmt Cnmt { get; }
 
-    public override string LibHacUnderlyingTypeName => nameof(Cnmt);
+    public override string Format => nameof(Cnmt);
 
     public ContentMetaType ContentType => Cnmt.Type;
 

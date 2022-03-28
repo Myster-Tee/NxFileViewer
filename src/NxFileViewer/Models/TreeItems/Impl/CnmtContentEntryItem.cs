@@ -34,7 +34,7 @@ public class CnmtContentEntryItem : ItemBase
 
     public override string LibHacTypeName => nameof(CnmtContentEntry);
 
-    public override string? LibHacUnderlyingTypeName => null;
+    public override string? Format => null;
 
     public override IEnumerable<IItem> ChildItems { get { yield break; } }
 

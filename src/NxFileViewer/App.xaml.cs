@@ -102,7 +102,7 @@ public partial class App : Application, IAppEvents
             .AddTransient<IOpenFileLocationCommand, OpenFileLocationCommand>()
             .AddTransient<ISaveDirectoryEntryCommand, SaveDirectoryEntryCommand>()
             .AddTransient<ISavePartitionFileCommand, SavePartitionFileCommand>()
-            .AddTransient<ISaveSectionContentCommand, SaveSectionContentCommand>()
+            .AddTransient<ISaveFsSectionContentCommand, SaveFsSectionContentCommand>()
             .AddTransient<ISavePlaintextNcaFileCommand, SavePlaintextNcaFileCommand>()
             .AddTransient<IFsSanitizer, FsSanitizer>()
             .AddTransient<IHttpDownloader, HttpDownloader>()

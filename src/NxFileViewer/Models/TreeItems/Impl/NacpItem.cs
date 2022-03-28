@@ -9,7 +9,7 @@ public class NacpItem : DirectoryEntryItem
 {
     public const string NacpFileName = "control.nacp";
 
-    public NacpItem(ApplicationControlProperty nacp, SectionItem parentItem, DirectoryEntryEx directoryEntry)
+    public NacpItem(ApplicationControlProperty nacp, FsSectionItem parentItem, DirectoryEntryEx directoryEntry)
         : base(parentItem, directoryEntry)
     {
         Nacp = nacp;
@@ -17,11 +17,11 @@ public class NacpItem : DirectoryEntryItem
         AddOnContentBaseId = Nacp.AddOnContentBaseId.ToStrId();
     }
 
-    public override SectionItem ParentItem { get; }
+    public override FsSectionItem ParentItem { get; }
 
     public ApplicationControlProperty Nacp { get; }
 
-    public override string LibHacUnderlyingTypeName => nameof(Nacp);
+    public override string Format => nameof(Nacp);
 
     public string DisplayVersion => Nacp.DisplayVersionString.ToString();
 

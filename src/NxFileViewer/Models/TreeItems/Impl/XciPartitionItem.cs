@@ -18,7 +18,7 @@ public class XciPartitionItem : PartitionFileSystemItemBase
 
     public XciPartition XciPartition { get; }
 
-    public override string LibHacUnderlyingTypeName => nameof(XciPartition);
+    public override string Format => nameof(XciPartition);
 
     public override string Name => XciPartitionType.ToString();
 

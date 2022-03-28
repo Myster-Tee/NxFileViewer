@@ -45,8 +45,8 @@ public class ItemViewModel : ViewModelBase, IItemViewModel
     [PropertyView("Type")]
     public string ObjectType => _item.LibHacTypeName;
 
-    [PropertyView("UnderlyingType")]
-    public string? UnderlyingType => _item.LibHacUnderlyingTypeName;
+    [PropertyView("Format")]
+    public string? UnderlyingType => _item.Format;
 
     public IItem AttachedItem => _item;
 

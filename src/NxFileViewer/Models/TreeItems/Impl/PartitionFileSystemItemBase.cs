@@ -20,8 +20,6 @@ public abstract class PartitionFileSystemItemBase : ItemBase
 
     public sealed override string LibHacTypeName => nameof(PartitionFileSystem);
 
-    public override string? LibHacUnderlyingTypeName => null;
-
     public abstract KeySet KeySet { get; }
 
     public sealed override IEnumerable<IItem> ChildItems

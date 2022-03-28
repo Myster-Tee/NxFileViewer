@@ -24,6 +24,8 @@ public class NspItem : PartitionFileSystemItemBase
 
     public override IItem? ParentItem => null;
 
+    public override string? Format => "NSP";
+
     public PartitionFileSystem NspPartitionFileSystem { get; }
 
     public override KeySet KeySet { get; }

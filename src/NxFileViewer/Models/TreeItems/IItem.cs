@@ -41,9 +41,9 @@ public interface IItem : INotifyPropertyChanged, IDisposable
     string LibHacTypeName { get; }
 
     /// <summary>
-    /// Get the name of the underlying wrapped LibHac object
+    /// Get the name of the item structure format
     /// </summary>
-    string? LibHacUnderlyingTypeName { get; }
+    string? Format { get; }
 
 
     IItemErrors Errors { get; }

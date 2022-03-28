@@ -19,7 +19,7 @@ public class TicketItem : PartitionFileEntryItemBase
 
     public override IEnumerable<IItem> ChildItems { get { yield break; } }
 
-    public override string LibHacUnderlyingTypeName => nameof(Ticket);
+    public override string Format => nameof(Ticket);
 
     public string Issuer => _ticket.Issuer;
 

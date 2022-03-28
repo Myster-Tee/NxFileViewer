@@ -26,7 +26,7 @@ public class XciItem : ItemBase
 
     public override string LibHacTypeName => nameof(Xci);
 
-    public override string? LibHacUnderlyingTypeName => null;
+    public override string? Format => "XCI";
 
     public override string Name { get; }
 

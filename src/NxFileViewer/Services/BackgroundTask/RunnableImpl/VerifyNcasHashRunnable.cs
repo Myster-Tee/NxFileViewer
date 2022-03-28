@@ -205,16 +205,6 @@ public class VerifyNcasHashRunnable : IVerifyNcasHashRunnable
         return !expectedNcaHash.Where((expectedByte, byteIndex) => currentNcaHash[byteIndex] != expectedByte).Any();
     }
 
-    private List<SectionItem> ListAllNcaSections(IEnumerable<NcaItem> ncaItems)
-    {
-        var sectionItems = new List<SectionItem>();
-        foreach (var ncaItem in ncaItems)
-        {
-            sectionItems.AddRange(ncaItem.ChildItems);
-        }
-
-        return sectionItems;
-    }
 }
 
 public interface IVerifyNcasHashRunnable : IRunnable

@@ -25,7 +25,7 @@ public abstract class ItemBase : NotifyPropertyChangedBase, IItem
 
     public abstract string LibHacTypeName { get; }
 
-    public abstract string? LibHacUnderlyingTypeName { get; }
+    public abstract string? Format { get; }
 
     public bool HasErrorInDescendants => _nbChildErrors > 0;
 

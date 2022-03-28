@@ -37,8 +37,11 @@ public class ItemViewModelBuilder : IItemViewModelBuilder
             case PartitionFileEntryItemBase partitionFileEntryItem:
                 return new PartitionFileEntryItemViewModel(partitionFileEntryItem, _serviceProvider);
 
-            case SectionItem sectionItem:
-                return new SectionItemViewModel(sectionItem, _serviceProvider);
+            case FsSectionItem fsSectionItem:
+                return new FsSectionItemViewModel(fsSectionItem, _serviceProvider);    
+            
+            case PatchSectionItem patchSectionItem:
+                return new PatchSectionItemViewModel(patchSectionItem, _serviceProvider);
 
             case CnmtItem cnmtItem:
                 return new CnmtItemViewModel(cnmtItem, _serviceProvider);

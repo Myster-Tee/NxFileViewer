@@ -24,8 +24,6 @@ public abstract class PartitionFileEntryItemBase : ItemBase
 
     public sealed override string LibHacTypeName => nameof(PartitionFileEntry);
 
-    public override string? LibHacUnderlyingTypeName => null;
-
     public override string Name => PartitionFileEntry.Name;
 
     public override string DisplayName => Name;
