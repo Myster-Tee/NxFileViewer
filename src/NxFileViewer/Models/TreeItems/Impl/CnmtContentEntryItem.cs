@@ -10,7 +10,7 @@ public class CnmtContentEntryItem : ItemBase
     private readonly CnmtContentEntry _cnmtContentEntry;
     private readonly int _index;
 
-    public CnmtContentEntryItem(CnmtContentEntry cnmtContentEntry, CnmtItem parentItem, int index)
+    public CnmtContentEntryItem(CnmtContentEntry cnmtContentEntry, CnmtItem parentItem, int index) : base(parentItem)
     {
         // TODO: a utiliser au final? Ce serait sûrement plus logique de le présenter dans les propriétés du CnmtItem
         _cnmtContentEntry = cnmtContentEntry ?? throw new ArgumentNullException(nameof(cnmtContentEntry));
@@ -30,7 +30,7 @@ public class CnmtContentEntryItem : ItemBase
 
     public long NcaSize => _cnmtContentEntry.Size;
 
-    public override CnmtItem ParentItem { get; }
+    public new CnmtItem ParentItem { get; }
 
     public override string LibHacTypeName => nameof(CnmtContentEntry);
 

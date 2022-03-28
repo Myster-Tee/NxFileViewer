@@ -20,7 +20,7 @@ public class DirectoryEntryItem : ItemBase
     public DirectoryEntryItem(FsSectionItem parentFsItem, DirectoryEntryEx directoryEntry)
         : this(parentFsItem, parentFsItem, directoryEntry)
     {
-        ParentFsSectionItem = parentFsItem;
+        ParentFsSectionItem = parentFsItem ?? throw new ArgumentNullException(nameof(parentFsItem));
     }
 
     /// <summary>
@@ -32,18 +32,16 @@ public class DirectoryEntryItem : ItemBase
     public DirectoryEntryItem(FsSectionItem containerFsSectionItem, DirectoryEntryEx directoryEntry, DirectoryEntryItem parentItem)
         : this(parentItem, containerFsSectionItem, directoryEntry)
     {
-        ParentDirectoryEntryItem = parentItem;
+        ParentDirectoryEntryItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
     }
 
-    private DirectoryEntryItem(IItem parentItem, FsSectionItem containerFsSectionItem, DirectoryEntryEx directoryEntry)
+    private DirectoryEntryItem(ItemBase parentItem, FsSectionItem containerFsSectionItem, DirectoryEntryEx directoryEntry) : base(parentItem)
     {
         DirectoryEntry = directoryEntry;
         ContainerFsSectionItem = containerFsSectionItem ?? throw new ArgumentNullException(nameof(containerFsSectionItem));
-        ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
         Size = directoryEntry.Size;
     }
 
-    public override IItem ParentItem { get; }
 
     /// <summary>
     /// Get the parent <see cref="DirectoryEntryItem"/> or null (<see cref="ParentFsSectionItem"/>).

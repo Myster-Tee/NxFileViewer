@@ -28,7 +28,7 @@ public class CnmtItem : DirectoryEntryItem, IItem
         TitleVersion = Cnmt.TitleVersion?.Version.ToString();
     }
 
-    public sealed override FsSectionItem ParentItem { get; }
+    public new FsSectionItem ParentItem { get; }
 
     public Cnmt Cnmt { get; }
 

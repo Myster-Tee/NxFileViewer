@@ -6,11 +6,12 @@ namespace Emignatik.NxFileViewer.Models.TreeItems;
 
 public abstract class ItemBase : NotifyPropertyChangedBase, IItem
 {
-    private int _nbErrorsBeforeNextChange = 0;
+    private int _nbErrorsPrev = 0;
     private int _nbChildErrors = 0;
 
-    protected ItemBase()
+    protected ItemBase(ItemBase? parent)
     {
+        ParentItem = parent;
         Errors.ErrorsChanged += OnErrorsChanged;
     }
 
@@ -20,8 +21,9 @@ public abstract class ItemBase : NotifyPropertyChangedBase, IItem
 
     public abstract IEnumerable<IItem> ChildItems { get; }
 
-    public abstract IItem? ParentItem { get; }
+    IItem? IItem.ParentItem => ParentItem;
 
+    public ItemBase? ParentItem { get; }
 
     public abstract string LibHacTypeName { get; }
 
@@ -31,7 +33,7 @@ public abstract class ItemBase : NotifyPropertyChangedBase, IItem
 
     public IItemErrors Errors { get; } = new ItemErrors();
 
-    public void ReportNbChildErrors(int moreOrLessErrors)
+    private void BubbleNbErrors(int moreOrLessErrors)
     {
         _nbChildErrors += moreOrLessErrors;
         NotifyPropertyChanged(nameof(HasErrorInDescendants));
@@ -48,14 +50,14 @@ public abstract class ItemBase : NotifyPropertyChangedBase, IItem
 
     private void OnErrorsChanged(object sender, ErrorsChangedHandlerArgs args)
     {
-        var delta = Errors.Count - _nbErrorsBeforeNextChange;
-        _nbErrorsBeforeNextChange = Errors.Count;
+        var delta = Errors.Count - _nbErrorsPrev;
+        _nbErrorsPrev = Errors.Count;
 
         var parentTemp = ParentItem;
 
         while (parentTemp != null)
         {
-            parentTemp.ReportNbChildErrors(delta);
+            parentTemp.BubbleNbErrors(delta);
             parentTemp = parentTemp.ParentItem;
         }
     }

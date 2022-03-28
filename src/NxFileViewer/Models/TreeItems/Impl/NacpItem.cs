@@ -17,7 +17,7 @@ public class NacpItem : DirectoryEntryItem
         AddOnContentBaseId = Nacp.AddOnContentBaseId.ToStrId();
     }
 
-    public override FsSectionItem ParentItem { get; }
+    public new FsSectionItem ParentItem { get; }
 
     public ApplicationControlProperty Nacp { get; }
 

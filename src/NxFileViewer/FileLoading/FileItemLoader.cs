@@ -310,14 +310,8 @@ public class FileItemLoader : IFileItemLoader
                     continue;
                 }
 
-
                 if (ncaFsHeader.IsPatchSection())
                 {
-                    //TODO: supprimer l'ouverture du storage?
-                    var openRawStorage = nca.OpenRawStorage(sectionIndex);
-                    openRawStorage.GetSize(out var s).ThrowIfFailure();
-
-
                     var ncaFsPatchInfo = ncaFsHeader.GetPatchInfo();
 
                     var patchSectionItem = new PatchSectionItem(sectionIndex, ncaFsHeader, parentItem, ref ncaFsPatchInfo);
@@ -329,8 +323,6 @@ public class FileItemLoader : IFileItemLoader
                     parentItem.ChildItems.Add(sectionItem);
 
                     IFileSystem? fileSystem = null;
-
-
                     try
                     {
                         fileSystem = nca.OpenFileSystem(sectionIndex, IntegrityCheckLevel.ErrorOnInvalid);

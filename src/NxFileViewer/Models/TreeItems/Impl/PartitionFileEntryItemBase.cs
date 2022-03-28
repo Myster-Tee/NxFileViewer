@@ -9,14 +9,14 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 /// </summary>
 public abstract class PartitionFileEntryItemBase : ItemBase
 {
-    public PartitionFileEntryItemBase(PartitionFileEntry partitionFileEntry, IFile file, PartitionFileSystemItemBase parentItem)
+    public PartitionFileEntryItemBase(PartitionFileEntry partitionFileEntry, IFile file, PartitionFileSystemItemBase parentItem) : base(parentItem)
     {
         PartitionFileEntry = partitionFileEntry ?? throw new ArgumentNullException(nameof(partitionFileEntry));
         File = file ?? throw new ArgumentNullException(nameof(file));
         ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
     }
 
-    public sealed override PartitionFileSystemItemBase ParentItem { get; }
+    public new PartitionFileSystemItemBase ParentItem { get; }
 
     public IFile File { get; }
 

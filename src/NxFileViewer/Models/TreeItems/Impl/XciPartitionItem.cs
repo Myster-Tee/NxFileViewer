@@ -7,14 +7,14 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 public class XciPartitionItem : PartitionFileSystemItemBase
 {
     public XciPartitionItem(XciPartition xciPartition, XciPartitionType xciPartitionType, XciItem parentItem)
-        : base(xciPartition)
+        : base(xciPartition, parentItem)
     {
         XciPartition = xciPartition ?? throw new ArgumentNullException(nameof(xciPartition));
         XciPartitionType = xciPartitionType;
         ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
     }
 
-    public override XciItem ParentItem { get; }
+    public new XciItem ParentItem { get; }
 
     public XciPartition XciPartition { get; }
 

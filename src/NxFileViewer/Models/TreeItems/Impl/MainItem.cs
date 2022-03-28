@@ -1,6 +1,5 @@
 ﻿using System;
 using Emignatik.NxFileViewer.Utils;
-using LibHac.Common;
 using LibHac.Loader;
 using LibHac.Tools.Fs;
 
@@ -16,7 +15,7 @@ public class MainItem : DirectoryEntryItem
         NsoHeader = nsoHeader;
     }
 
-    public override FsSectionItem ParentItem { get; }
+    public new FsSectionItem ParentItem { get; }
 
     public NsoHeader NsoHeader { get; }
 

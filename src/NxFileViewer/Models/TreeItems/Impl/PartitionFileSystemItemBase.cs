@@ -7,7 +7,7 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 
 public abstract class PartitionFileSystemItemBase : ItemBase
 {
-    protected PartitionFileSystemItemBase(PartitionFileSystem partitionFileSystem)
+    protected PartitionFileSystemItemBase(PartitionFileSystem partitionFileSystem, ItemBase? parent) : base(parent)
     {
         PartitionFileSystem = partitionFileSystem ?? throw new ArgumentNullException(nameof(partitionFileSystem));
     }
@@ -29,8 +29,8 @@ public abstract class PartitionFileSystemItemBase : ItemBase
             foreach (var childItem in NcaChildItems)
             {
                 yield return childItem;
-            }       
-                
+            }
+
             foreach (var childItem in TicketChildItems)
             {
                 yield return childItem;

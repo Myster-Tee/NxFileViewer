@@ -6,7 +6,7 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 
 public abstract class SectionItemBase : ItemBase
 {
-    public SectionItemBase(int sectionIndex, NcaFsHeader ncaFsHeader, NcaItem parentItem)
+    public SectionItemBase(int sectionIndex, NcaFsHeader ncaFsHeader, NcaItem parentItem) : base(parentItem)
     {
         FsHeader = ncaFsHeader;
         SectionIndex = sectionIndex;
@@ -25,7 +25,7 @@ public abstract class SectionItemBase : ItemBase
 
     public int SectionIndex { get; }
 
-    public sealed override NcaItem ParentItem { get; }
+    public new NcaItem ParentItem { get; }
 
     public bool IsPatchSection => FsHeader.IsPatchSection();
 

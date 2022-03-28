@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using LibHac.Fs.Fsa;
-using LibHac.FsSystem;
 using LibHac.Tools.FsSystem.NcaUtils;
 
 namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;

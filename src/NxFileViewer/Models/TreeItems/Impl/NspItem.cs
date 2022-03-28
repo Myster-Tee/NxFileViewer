@@ -14,7 +14,7 @@ public class NspItem : PartitionFileSystemItemBase
     private readonly IFile _file;
 
     public NspItem(PartitionFileSystem nspPartitionFileSystem, string name, IFile file, KeySet keySet)
-        : base(nspPartitionFileSystem)
+        : base(nspPartitionFileSystem, null)
     {
         NspPartitionFileSystem = nspPartitionFileSystem ?? throw new ArgumentNullException(nameof(nspPartitionFileSystem));
         Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -22,9 +22,7 @@ public class NspItem : PartitionFileSystemItemBase
         KeySet = keySet ?? throw new ArgumentNullException(nameof(keySet));
     }
 
-    public override IItem? ParentItem => null;
-
-    public override string? Format => "NSP";
+    public override string Format => "NSP";
 
     public PartitionFileSystem NspPartitionFileSystem { get; }
 

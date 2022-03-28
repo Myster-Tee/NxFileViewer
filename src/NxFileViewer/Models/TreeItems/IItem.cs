@@ -45,9 +45,9 @@ public interface IItem : INotifyPropertyChanged, IDisposable
     /// </summary>
     string? Format { get; }
 
-
+    /// <summary>
+    /// Occurred errors related to this item
+    /// </summary>
     IItemErrors Errors { get; }
-
-    void ReportNbChildErrors(int moreOrLessErrors);
 
 }
