@@ -37,7 +37,6 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string AppTitle => "Titre";
     public string Publisher => "Editeur";
 
-    public string Lng_Unknown => "Inconnue";
     public string Lng_AmericanEnglish => "Americain";
     public string Lng_BritishEnglish => "Anglais";
     public string Lng_CanadianFrench => "Canadien";
@@ -53,6 +52,8 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string Lng_SimplifiedChinese => "Chinois Simplifié";
     public string Lng_Spanish => "Espagnol";
     public string Lng_TraditionalChinese => "Chinois Traditionnel";
+    public string Lng_BrazilianPortuguese => "Brésilien Portugais";
+    public string Lng_Unknown => "Inconnue";
 
     public string SettingsView_Title => "Paramètres";
     public string SettingsView_Button_Apply => "Appliquer";

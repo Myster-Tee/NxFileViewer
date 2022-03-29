@@ -33,7 +33,6 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string AppTitle { get; }
     string Publisher { get; }
 
-    string Lng_Unknown { get; }
     string Lng_AmericanEnglish { get; }
     string Lng_BritishEnglish { get; }
     string Lng_CanadianFrench { get; }
@@ -49,6 +48,8 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string Lng_SimplifiedChinese { get; }
     string Lng_Spanish { get; }
     string Lng_TraditionalChinese { get; }
+    string Lng_BrazilianPortuguese { get; }
+    string Lng_Unknown { get; }
 
     string SettingsView_Title { get; }
     string SettingsView_Button_Apply { get; }

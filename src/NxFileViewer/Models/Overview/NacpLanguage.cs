@@ -23,5 +23,5 @@ public enum NacpLanguage : uint
     Korean = 12,
     TraditionalChinese = 13, // SwitchBrew specifies "Taiwanese" but it seems to be "TraditionalChinese"
     SimplifiedChinese = 14, // SwitchBrew specifies "Chinese" but it seems to be "SimplifiedChinese"
-    Unknown = 15,
+    BrazilianPortuguese = 15,
 }

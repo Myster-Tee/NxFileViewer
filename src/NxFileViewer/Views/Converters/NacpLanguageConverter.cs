@@ -27,7 +27,7 @@ public class NacpLanguageConverter : ValueConverterBase<string, NacpLanguage>
             NacpLanguage.Korean => LocalizationManager.Instance.Current.Keys.Lng_Korean,
             NacpLanguage.TraditionalChinese => LocalizationManager.Instance.Current.Keys.Lng_TraditionalChinese,
             NacpLanguage.SimplifiedChinese => LocalizationManager.Instance.Current.Keys.Lng_SimplifiedChinese,
-            NacpLanguage.Unknown => LocalizationManager.Instance.Current.Keys.Lng_Unknown,
+            NacpLanguage.BrazilianPortuguese => LocalizationManager.Instance.Current.Keys.Lng_BrazilianPortuguese,
             _ => LocalizationManager.Instance.Current.Keys.Lng_Unknown
         };
     }
