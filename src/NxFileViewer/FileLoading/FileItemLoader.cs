@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Models.TreeItems;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
@@ -364,7 +365,7 @@ public class FileItemLoader : IFileItemLoader
             if (fileSystem == null)
                 return;
 
-            var directoryEntries = SafeGetDirectoryEntries(fileSystem, ROOT_PATH, parentItem);
+            var directoryEntries = SafeGetChildDirectoryEntries(fileSystem, ROOT_PATH, parentItem).ToArray();
 
             foreach (var directoryEntry in directoryEntries)
             {
@@ -512,7 +513,7 @@ public class FileItemLoader : IFileItemLoader
                 return;
 
             var currentPath = parentItem.Path;
-            var directoryEntries = SafeGetDirectoryEntries(parentItem.ContainerFsSectionItem.FileSystem!, currentPath, parentItem);
+            var directoryEntries = SafeGetChildDirectoryEntries(parentItem.ContainerFsSectionItem.FileSystem!, currentPath, parentItem);
 
             foreach (var directoryEntry in directoryEntries)
             {
@@ -531,11 +532,11 @@ public class FileItemLoader : IFileItemLoader
         }
     }
 
-    private IEnumerable<DirectoryEntryEx> SafeGetDirectoryEntries(IFileSystem fileSystem, string currentPath, IItem parentItem)
+    private IEnumerable<DirectoryEntryEx> SafeGetChildDirectoryEntries(IFileSystem fileSystem, string currentPath, IItem parentItem)
     {
         try
         {
-            return fileSystem.EnumerateEntries(currentPath, "*", SearchOptions.RecurseSubdirectories);
+            return fileSystem.EnumerateEntries(currentPath, "*", SearchOptions.Default);
         }
         catch (Exception ex)
         {
