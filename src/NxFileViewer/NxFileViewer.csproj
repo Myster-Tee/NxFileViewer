@@ -7,13 +7,13 @@
     <RootNamespace>Emignatik.NxFileViewer</RootNamespace>
     <Nullable>enable</Nullable>
     <ApplicationIcon>Styling\Icons\Icon.ico</ApplicationIcon>
-    <AssemblyVersion>2.6.0.0</AssemblyVersion>
-    <FileVersion>2.6.0.0</FileVersion>
+    <AssemblyVersion>2.6.0.1</AssemblyVersion>
+    <FileVersion>2.6.0.1</FileVersion>
     <PackageId>NxFileViewer</PackageId>
     <Company>NxFileViewer</Company>
     <Product>NxFileViewer</Product>
     <Authors>NxFileViewer</Authors>
-    <Version>2.6.0</Version>
+    <Version>2.6.1</Version>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageIcon>Icon.ico</PackageIcon>
     <Description>Browse content of Nintendo Switch files</Description>
