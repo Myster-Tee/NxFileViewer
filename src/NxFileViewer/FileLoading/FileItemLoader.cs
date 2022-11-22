@@ -21,6 +21,7 @@ using LibHac.Tools.FsSystem;
 using LibHac.Tools.FsSystem.NcaUtils;
 using LibHac.Tools.Ncm;
 using Microsoft.Extensions.Logging;
+using NcaFsHeader = LibHac.Tools.FsSystem.NcaUtils.NcaFsHeader;
 
 
 namespace Emignatik.NxFileViewer.FileLoading;
