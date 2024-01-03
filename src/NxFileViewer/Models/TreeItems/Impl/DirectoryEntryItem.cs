@@ -95,7 +95,7 @@ public class DirectoryEntryItem : ItemBase
     public IFile GetFile()
     {
         using var uniqueRefFile = new UniqueRef<IFile>();
-        this.ContainerFsSectionItem.FileSystem!.OpenFile(ref uniqueRefFile.Ref(), this.Path.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+        this.ContainerFsSectionItem.FileSystem!.OpenFile(ref uniqueRefFile.Ref, this.Path.ToU8Span(), OpenMode.Read).ThrowIfFailure();
         return uniqueRefFile.Release();
     }
 

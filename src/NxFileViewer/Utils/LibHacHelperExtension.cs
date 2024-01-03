@@ -114,7 +114,7 @@ public static class LibHacHelperExtension
     public static IFile LoadFile(this IFileSystem fileSystem, DirectoryEntryEx directoryEntryEx, OpenMode openMode = OpenMode.Read)
     {
         using var uniqueRefFile = new UniqueRef<IFile>();
-        fileSystem.OpenFile(ref uniqueRefFile.Ref(), directoryEntryEx.FullPath.ToU8Span(), openMode).ThrowIfFailure();
+        fileSystem.OpenFile(ref uniqueRefFile.Ref, directoryEntryEx.FullPath.ToU8Span(), openMode).ThrowIfFailure();
         return uniqueRefFile.Release();
     }
 

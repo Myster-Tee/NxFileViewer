@@ -380,7 +380,7 @@ public class FileItemLoader : IFileItemLoader
                     try
                     {
                         using var uniqueRefFile = new UniqueRef<IFile>();
-                        fileSystem.OpenFile(ref uniqueRefFile.Ref(), entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                        fileSystem.OpenFile(ref uniqueRefFile.Ref, entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
                         nacpFile = uniqueRefFile.Release();
                     }
                     catch (Exception ex)
@@ -420,7 +420,7 @@ public class FileItemLoader : IFileItemLoader
                     try
                     {
                         using var uniqueRefFile = new UniqueRef<IFile>();
-                        fileSystem.OpenFile(ref uniqueRefFile.Ref(), entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                        fileSystem.OpenFile(ref uniqueRefFile.Ref, entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
                         cnmtFile = uniqueRefFile.Release();
                     }
                     catch (Exception ex)
@@ -456,7 +456,7 @@ public class FileItemLoader : IFileItemLoader
                     try
                     {
                         using var uniqueRefFile = new UniqueRef<IFile>();
-                        fileSystem.OpenFile(ref uniqueRefFile.Ref(), entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                        fileSystem.OpenFile(ref uniqueRefFile.Ref, entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
                         nsoFile = uniqueRefFile.Release();
                     }
                     catch (Exception ex)
