@@ -1,5 +1,5 @@
 ﻿using System;
-using LibHac.FsSystem;
+using LibHac.Tools.FsSystem.NcaUtils;
 using NcaFsHeader = LibHac.Tools.FsSystem.NcaUtils.NcaFsHeader;
 
 namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
