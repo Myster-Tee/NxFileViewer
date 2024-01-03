@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Emignatik.NxFileViewer.Services.KeysManagement;
 using Emignatik.NxFileViewer.Utils;
@@ -59,9 +60,8 @@ public class PackageInfoLoader : IPackageInfoLoader
 
     private static List<Content> LoadNspContents(string nspFilePath, KeySet keySet, out AccuratePackageType accuratePackageType)
     {
-        using var localFile = new LocalFile(nspFilePath, OpenMode.Read);
-        var fileStorage = new FileStorage(localFile);
-        var nspPartition = new PartitionFileSystem(fileStorage);
+        using var localFile = new LocalStorage(nspFilePath, FileAccess.Read);
+        using var nspPartition = localFile.LoadPartition();
 
         var contents = LoadContentsFromPartition(nspPartition, keySet, out var containsNcz);
 

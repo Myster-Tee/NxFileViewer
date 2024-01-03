@@ -207,7 +207,7 @@ public class FileOverviewLoader : IFileOverviewLoader
 
                 file.GetSize(out var fileSize).ThrowIfFailure();
                 var bytes = new byte[fileSize];
-                file.AsStream().Read(bytes);
+                _ = file.AsStream().Read(bytes);
                 return bytes;
             }
             catch (Exception ex)

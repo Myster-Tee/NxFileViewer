@@ -6,6 +6,7 @@ using LibHac.Common;
 using LibHac.Common.Keys;
 using LibHac.Fs;
 using LibHac.Fs.Fsa;
+using LibHac.FsSystem;
 using LibHac.Ns;
 using LibHac.Tools.Fs;
 using LibHac.Tools.FsSystem;
@@ -36,7 +37,7 @@ public static class LibHacHelperExtension
         if (partitionFileEntry == null)
             return null;
 
-        var ncaFile = fileSystem.LoadFile(partitionFileEntry, OpenMode.Read);
+        var ncaFile = fileSystem.LoadFile(partitionFileEntry);
 
         return new Nca(keySet, new FileStorage(ncaFile));
     }
@@ -46,7 +47,7 @@ public static class LibHacHelperExtension
     {
         foreach (var cnmtFileEntry in fileSystem.FindCnmtEntries())
         {
-            var ncaFile = fileSystem.LoadFile(cnmtFileEntry, OpenMode.Read);
+            var ncaFile = fileSystem.LoadFile(cnmtFileEntry);
 
             var nca = new Nca(keySet, new FileStorage(ncaFile));
 
@@ -124,6 +125,13 @@ public static class LibHacHelperExtension
     public static int GetPatchNumber(this TitleVersion titleVersion)
     {
         return titleVersion.Minor;
+    }
+
+    public static PartitionFileSystem LoadPartition(this IStorage storage)
+    {
+        var pfs = new UniqueRef<PartitionFileSystem>(new PartitionFileSystem());
+        pfs.Get.Initialize(storage).ThrowIfFailure();
+        return pfs.Get;
     }
 }
 

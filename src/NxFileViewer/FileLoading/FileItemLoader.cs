@@ -12,7 +12,6 @@ using LibHac.Common;
 using LibHac.Common.Keys;
 using LibHac.Fs;
 using LibHac.Fs.Fsa;
-using LibHac.FsSystem;
 using LibHac.Loader;
 using LibHac.Ns;
 using LibHac.Spl;
@@ -45,16 +44,8 @@ public class FileItemLoader : IFileItemLoader
     public NspItem LoadNsp(string nspFilePath)
     {
         var keySet = _keySetProviderService.GetKeySet(_appSettings.AlwaysReloadKeysBeforeOpen);
-
-        var localFile = new LocalFile(nspFilePath, OpenMode.Read);
-
-        var fileStorage = new FileStorage(localFile);
-        var nspPartition = new PartitionFileSystem(fileStorage);
-
-
-        var nspItem = new NspItem(nspPartition, System.IO.Path.GetFileName(nspFilePath), localFile, keySet);
+        var nspItem = NspItem.FromFile(nspFilePath, keySet);
         BuildChildItems(nspItem);
-
         return nspItem;
     }
 
@@ -63,13 +54,7 @@ public class FileItemLoader : IFileItemLoader
     public XciItem LoadXci(string xciFilePath)
     {
         var keySet = _keySetProviderService.GetKeySet(_appSettings.AlwaysReloadKeysBeforeOpen);
-
-        var localFile = new LocalFile(xciFilePath, OpenMode.Read);
-
-        var fileStorage = new FileStorage(localFile);
-        var xci = new Xci(keySet, fileStorage);
-
-        var xciItem = new XciItem(xci, System.IO.Path.GetFileName(xciFilePath), localFile, keySet);
+        var xciItem = XciItem.FromFile(xciFilePath, keySet);
         BuildChildItems(xciItem);
         return xciItem;
     }
@@ -151,7 +136,7 @@ public class FileItemLoader : IFileItemLoader
                 IFile file;
                 try
                 {
-                    file = partitionFileSystem.LoadFile(partitionFileEntry, OpenMode.Read);
+                    file = partitionFileSystem.LoadFile(partitionFileEntry);
                 }
                 catch (Exception ex)
                 {
@@ -223,7 +208,7 @@ public class FileItemLoader : IFileItemLoader
                 IFile file;
                 try
                 {
-                    file = partitionFileSystem.LoadFile(partitionFileEntry, OpenMode.Read);
+                    file = partitionFileSystem.LoadFile(partitionFileEntry);
                 }
                 catch (Exception ex)
                 {
@@ -562,4 +547,4 @@ public class FileItemLoader : IFileItemLoader
     {
         MissingKey?.Invoke(this, new MissingKeyExceptionHandlerArgs(ex, parentItem));
     }
-}
+};
