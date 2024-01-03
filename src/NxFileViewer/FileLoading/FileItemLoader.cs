@@ -6,6 +6,7 @@ using Emignatik.NxFileViewer.Models.TreeItems;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 using Emignatik.NxFileViewer.Services.KeysManagement;
 using Emignatik.NxFileViewer.Settings;
+using Emignatik.NxFileViewer.Utils;
 using LibHac;
 using LibHac.Common;
 using LibHac.Common.Keys;
@@ -135,10 +136,10 @@ public class FileItemLoader : IFileItemLoader
         {
             var partitionFileSystem = parentItem.PartitionFileSystem;
 
-            var remainingEntries = new List<PartitionFileEntry>();
+            var remainingEntries = new List<DirectoryEntryEx>();
 
             // First loop on *.tik files to inject title keys in KeySet
-            foreach (var partitionFileEntry in partitionFileSystem.Files)
+            foreach (var partitionFileEntry in partitionFileSystem.EnumerateEntries().Where(e => e.Type == DirectoryEntryType.File))
             {
                 var fileName = partitionFileEntry.Name;
                 if (!fileName.EndsWith(".tik", StringComparison.OrdinalIgnoreCase))
@@ -150,7 +151,7 @@ public class FileItemLoader : IFileItemLoader
                 IFile file;
                 try
                 {
-                    file = partitionFileSystem.OpenFile(partitionFileEntry, OpenMode.Read);
+                    file = partitionFileSystem.LoadFile(partitionFileEntry, OpenMode.Read);
                 }
                 catch (Exception ex)
                 {
@@ -222,7 +223,7 @@ public class FileItemLoader : IFileItemLoader
                 IFile file;
                 try
                 {
-                    file = partitionFileSystem.OpenFile(partitionFileEntry, OpenMode.Read);
+                    file = partitionFileSystem.LoadFile(partitionFileEntry, OpenMode.Read);
                 }
                 catch (Exception ex)
                 {

@@ -1,17 +1,17 @@
 ﻿using System;
 using LibHac.Fs.Fsa;
-using LibHac.FsSystem;
+using LibHac.Tools.Fs;
 
 namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 
 /// <summary>
-/// Represents a <see cref="PartitionFileEntry"/> item
+/// Represents a <see cref="FileEntry"/> item
 /// </summary>
 public abstract class PartitionFileEntryItemBase : ItemBase
 {
-    public PartitionFileEntryItemBase(PartitionFileEntry partitionFileEntry, IFile file, PartitionFileSystemItemBase parentItem) : base(parentItem)
+    public PartitionFileEntryItemBase(DirectoryEntryEx fileEntry, IFile file, PartitionFileSystemItemBase parentItem) : base(parentItem)
     {
-        PartitionFileEntry = partitionFileEntry ?? throw new ArgumentNullException(nameof(partitionFileEntry));
+        FileEntry = fileEntry ?? throw new ArgumentNullException(nameof(fileEntry));
         File = file ?? throw new ArgumentNullException(nameof(file));
         ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
     }
@@ -20,15 +20,15 @@ public abstract class PartitionFileEntryItemBase : ItemBase
 
     public IFile File { get; }
 
-    public PartitionFileEntry PartitionFileEntry { get; }
+    public DirectoryEntryEx FileEntry { get; }
 
-    public sealed override string LibHacTypeName => nameof(PartitionFileEntry);
+    public sealed override string LibHacTypeName => nameof(FileEntry);
 
-    public override string Name => PartitionFileEntry.Name;
+    public override string Name => FileEntry.Name;
 
     public override string DisplayName => Name;
 
-    public long Size => PartitionFileEntry.Size;
+    public long Size => FileEntry.Size;
 
     public override void Dispose()
     {

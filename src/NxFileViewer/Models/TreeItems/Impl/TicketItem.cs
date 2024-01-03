@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using LibHac.Fs;
 using LibHac.Fs.Fsa;
-using LibHac.FsSystem;
 using LibHac.Spl;
 using LibHac.Tools.Es;
+using LibHac.Tools.Fs;
 
 namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 
@@ -12,7 +12,7 @@ public class TicketItem : PartitionFileEntryItemBase
 {
     private readonly Ticket _ticket;
 
-    public TicketItem(Ticket ticket, PartitionFileEntry partitionFileEntry, IFile file, PartitionFileSystemItemBase parentItem) : base(partitionFileEntry, file, parentItem)
+    public TicketItem(Ticket ticket, DirectoryEntryEx ticketFileEntry, IFile file, PartitionFileSystemItemBase parentItem) : base(ticketFileEntry, file, parentItem)
     {
         _ticket = ticket ?? throw new ArgumentNullException(nameof(ticket));
     }

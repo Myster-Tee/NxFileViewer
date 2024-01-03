@@ -5,8 +5,10 @@ using Emignatik.NxFileViewer.Services.KeysManagement;
 using Emignatik.NxFileViewer.Utils;
 using LibHac.Common.Keys;
 using LibHac.Fs;
+using LibHac.Fs.Fsa;
 using LibHac.FsSystem;
 using LibHac.Tools.Fs;
+using LibHac.Tools.FsSystem;
 using ContentType = LibHac.Ncm.ContentType;
 
 namespace Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
@@ -93,9 +95,11 @@ public class PackageInfoLoader : IPackageInfoLoader
         return contents;
     }
 
-    private static List<Content> LoadContentsFromPartition(PartitionFileSystem partition, KeySet keySet, out bool containsNcz)
+    private static List<Content> LoadContentsFromPartition(IFileSystem partition, KeySet keySet, out bool containsNcz)
     {
-        containsNcz = partition.Files.Any(entry => entry.Name.EndsWith(".ncz", StringComparison.OrdinalIgnoreCase));
+        containsNcz = partition.EnumerateEntries()
+            .Where(e => e.Type == DirectoryEntryType.File)
+            .Any(entry => entry.Name.EndsWith(".ncz", StringComparison.OrdinalIgnoreCase));
 
         var contents = new List<Content>();
 
