@@ -6,12 +6,12 @@ using Emignatik.NxFileViewer.Models.TreeItems;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 using Emignatik.NxFileViewer.Services.KeysManagement;
 using Emignatik.NxFileViewer.Settings;
+using Emignatik.NxFileViewer.Utils;
 using LibHac;
 using LibHac.Common;
 using LibHac.Common.Keys;
 using LibHac.Fs;
 using LibHac.Fs.Fsa;
-using LibHac.FsSystem;
 using LibHac.Loader;
 using LibHac.Ns;
 using LibHac.Spl;
@@ -44,16 +44,8 @@ public class FileItemLoader : IFileItemLoader
     public NspItem LoadNsp(string nspFilePath)
     {
         var keySet = _keySetProviderService.GetKeySet(_appSettings.AlwaysReloadKeysBeforeOpen);
-
-        var localFile = new LocalFile(nspFilePath, OpenMode.Read);
-
-        var fileStorage = new FileStorage(localFile);
-        var nspPartition = new PartitionFileSystem(fileStorage);
-
-
-        var nspItem = new NspItem(nspPartition, System.IO.Path.GetFileName(nspFilePath), localFile, keySet);
+        var nspItem = NspItem.FromFile(nspFilePath, keySet);
         BuildChildItems(nspItem);
-
         return nspItem;
     }
 
@@ -62,13 +54,7 @@ public class FileItemLoader : IFileItemLoader
     public XciItem LoadXci(string xciFilePath)
     {
         var keySet = _keySetProviderService.GetKeySet(_appSettings.AlwaysReloadKeysBeforeOpen);
-
-        var localFile = new LocalFile(xciFilePath, OpenMode.Read);
-
-        var fileStorage = new FileStorage(localFile);
-        var xci = new Xci(keySet, fileStorage);
-
-        var xciItem = new XciItem(xci, System.IO.Path.GetFileName(xciFilePath), localFile, keySet);
+        var xciItem = XciItem.FromFile(xciFilePath, keySet);
         BuildChildItems(xciItem);
         return xciItem;
     }
@@ -135,10 +121,10 @@ public class FileItemLoader : IFileItemLoader
         {
             var partitionFileSystem = parentItem.PartitionFileSystem;
 
-            var remainingEntries = new List<PartitionFileEntry>();
+            var remainingEntries = new List<DirectoryEntryEx>();
 
             // First loop on *.tik files to inject title keys in KeySet
-            foreach (var partitionFileEntry in partitionFileSystem.Files)
+            foreach (var partitionFileEntry in partitionFileSystem.EnumerateEntries().Where(e => e.Type == DirectoryEntryType.File))
             {
                 var fileName = partitionFileEntry.Name;
                 if (!fileName.EndsWith(".tik", StringComparison.OrdinalIgnoreCase))
@@ -150,7 +136,7 @@ public class FileItemLoader : IFileItemLoader
                 IFile file;
                 try
                 {
-                    file = partitionFileSystem.OpenFile(partitionFileEntry, OpenMode.Read);
+                    file = partitionFileSystem.LoadFile(partitionFileEntry);
                 }
                 catch (Exception ex)
                 {
@@ -222,7 +208,7 @@ public class FileItemLoader : IFileItemLoader
                 IFile file;
                 try
                 {
-                    file = partitionFileSystem.OpenFile(partitionFileEntry, OpenMode.Read);
+                    file = partitionFileSystem.LoadFile(partitionFileEntry);
                 }
                 catch (Exception ex)
                 {
@@ -380,7 +366,7 @@ public class FileItemLoader : IFileItemLoader
                     try
                     {
                         using var uniqueRefFile = new UniqueRef<IFile>();
-                        fileSystem.OpenFile(ref uniqueRefFile.Ref(), entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                        fileSystem.OpenFile(ref uniqueRefFile.Ref, entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
                         nacpFile = uniqueRefFile.Release();
                     }
                     catch (Exception ex)
@@ -420,7 +406,7 @@ public class FileItemLoader : IFileItemLoader
                     try
                     {
                         using var uniqueRefFile = new UniqueRef<IFile>();
-                        fileSystem.OpenFile(ref uniqueRefFile.Ref(), entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                        fileSystem.OpenFile(ref uniqueRefFile.Ref, entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
                         cnmtFile = uniqueRefFile.Release();
                     }
                     catch (Exception ex)
@@ -456,7 +442,7 @@ public class FileItemLoader : IFileItemLoader
                     try
                     {
                         using var uniqueRefFile = new UniqueRef<IFile>();
-                        fileSystem.OpenFile(ref uniqueRefFile.Ref(), entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                        fileSystem.OpenFile(ref uniqueRefFile.Ref, entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
                         nsoFile = uniqueRefFile.Release();
                     }
                     catch (Exception ex)
@@ -561,4 +547,4 @@ public class FileItemLoader : IFileItemLoader
     {
         MissingKey?.Invoke(this, new MissingKeyExceptionHandlerArgs(ex, parentItem));
     }
-}
+};

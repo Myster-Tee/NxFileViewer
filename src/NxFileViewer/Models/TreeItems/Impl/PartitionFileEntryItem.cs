@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using LibHac.Fs.Fsa;
-using LibHac.FsSystem;
+using LibHac.Tools.Fs;
 
 namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 
 public class PartitionFileEntryItem : PartitionFileEntryItemBase
 {
-    public PartitionFileEntryItem(PartitionFileEntry partitionFileEntry, IFile file, PartitionFileSystemItemBase parentItem)
+    public PartitionFileEntryItem(DirectoryEntryEx partitionFileEntry, IFile file, PartitionFileSystemItemBase parentItem)
         : base(partitionFileEntry, file, parentItem)
     {
     }

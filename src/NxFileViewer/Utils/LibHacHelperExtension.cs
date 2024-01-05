@@ -18,33 +18,36 @@ namespace Emignatik.NxFileViewer.Utils;
 public static class LibHacHelperExtension
 {
 
-    public static IEnumerable<PartitionFileEntry> FindCnmtEntries(this PartitionFileSystem fileSystem)
+    public static IEnumerable<DirectoryEntryEx> FindCnmtEntries(this IFileSystem fileSystem)
     {
-        foreach (var partitionFileEntry in fileSystem.Files)
+        foreach (var fileEntry in fileSystem.EnumerateEntries().Where(e => e.Type == DirectoryEntryType.File))
         {
-            var fileName = partitionFileEntry.Name;
+            var fileName = fileEntry.Name;
             if (fileName.EndsWith("cnmt.nca", StringComparison.OrdinalIgnoreCase))
-                yield return partitionFileEntry;
+                yield return fileEntry;
         }
     }
 
-    public static Nca? FindNca(this PartitionFileSystem fileSystem, string ncaId, KeySet keySet)
+    public static Nca? LoadNca(this IFileSystem fileSystem, string ncaId, KeySet keySet)
     {
-        var partitionFileEntry = fileSystem.Files.FirstOrDefault(entry => entry.Name.StartsWith(ncaId + ".", StringComparison.OrdinalIgnoreCase));
+        var partitionFileEntry = fileSystem.EnumerateEntries()
+            .Where(e => e.Type == DirectoryEntryType.File)
+            .FirstOrDefault(entry => entry.Name.StartsWith(ncaId + ".", StringComparison.OrdinalIgnoreCase));
+
         if (partitionFileEntry == null)
             return null;
 
-        var ncaFile = fileSystem.OpenFile(partitionFileEntry, OpenMode.Read);
+        var ncaFile = fileSystem.LoadFile(partitionFileEntry);
 
         return new Nca(keySet, new FileStorage(ncaFile));
     }
 
 
-    public static IEnumerable<Cnmt> LoadCnmts(this PartitionFileSystem fileSystem, KeySet keySet)
+    public static IEnumerable<Cnmt> LoadCnmts(this IFileSystem fileSystem, KeySet keySet)
     {
-        foreach (var cnmtNcaPartitionFileEntry in fileSystem.FindCnmtEntries())
+        foreach (var cnmtFileEntry in fileSystem.FindCnmtEntries())
         {
-            var ncaFile = fileSystem.OpenFile(cnmtNcaPartitionFileEntry, OpenMode.Read);
+            var ncaFile = fileSystem.LoadFile(cnmtFileEntry);
 
             var nca = new Nca(keySet, new FileStorage(ncaFile));
 
@@ -73,9 +76,9 @@ public static class LibHacHelperExtension
     /// <param name="ncaId">The ID of the NCA of ContentType <see cref="ContentType.Control"/></param>
     /// <param name="keySet"></param>
     /// <returns></returns>
-    public static ApplicationControlProperty? LoadNacp(this PartitionFileSystem fileSystem, string ncaId, KeySet keySet)
+    public static ApplicationControlProperty? LoadNacp(this IFileSystem fileSystem, string ncaId, KeySet keySet)
     {
-        var nca = fileSystem.FindNca(ncaId, keySet);
+        var nca = fileSystem.LoadNca(ncaId, keySet);
         if (nca == null)
             return null;
 
@@ -114,7 +117,7 @@ public static class LibHacHelperExtension
     public static IFile LoadFile(this IFileSystem fileSystem, DirectoryEntryEx directoryEntryEx, OpenMode openMode = OpenMode.Read)
     {
         using var uniqueRefFile = new UniqueRef<IFile>();
-        fileSystem.OpenFile(ref uniqueRefFile.Ref(), directoryEntryEx.FullPath.ToU8Span(), openMode).ThrowIfFailure();
+        fileSystem.OpenFile(ref uniqueRefFile.Ref, directoryEntryEx.FullPath.ToU8Span(), openMode).ThrowIfFailure();
         return uniqueRefFile.Release();
     }
 
@@ -122,6 +125,13 @@ public static class LibHacHelperExtension
     public static int GetPatchNumber(this TitleVersion titleVersion)
     {
         return titleVersion.Minor;
+    }
+
+    public static PartitionFileSystem LoadPartition(this IStorage storage)
+    {
+        var pfs = new UniqueRef<PartitionFileSystem>(new PartitionFileSystem());
+        pfs.Get.Initialize(storage).ThrowIfFailure();
+        return pfs.Get;
     }
 }
 

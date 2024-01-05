@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
-using LibHac.FsSystem;
+using LibHac.Tools.FsSystem.NcaUtils;
 
 namespace Emignatik.NxFileViewer.Models.TreeItems;
 

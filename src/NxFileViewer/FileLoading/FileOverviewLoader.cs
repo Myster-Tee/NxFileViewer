@@ -202,12 +202,12 @@ public class FileOverviewLoader : IFileOverviewLoader
             {
                 using var uniqueRefFile = new UniqueRef<IFile>();
 
-                fileSystem.OpenFile(ref uniqueRefFile.Ref(), iconItem.Path.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                fileSystem.OpenFile(ref uniqueRefFile.Ref, iconItem.Path.ToU8Span(), OpenMode.Read).ThrowIfFailure();
                 var file = uniqueRefFile.Release();
 
                 file.GetSize(out var fileSize).ThrowIfFailure();
                 var bytes = new byte[fileSize];
-                file.AsStream().Read(bytes);
+                _ = file.AsStream().Read(bytes);
                 return bytes;
             }
             catch (Exception ex)
