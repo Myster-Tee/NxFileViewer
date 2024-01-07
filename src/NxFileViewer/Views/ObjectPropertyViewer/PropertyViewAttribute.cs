@@ -31,4 +31,10 @@ public class PropertyViewAttribute : Attribute
     /// The key to the localized description
     /// </summary>
     public string? DescriptionLocalizationKey { get; set; }
+
+    /// <summary>
+    /// Displays the property only if not null
+    /// </summary>
+    public bool HideIfNull { get; set; }
+
 }

@@ -15,12 +15,12 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 /// </summary>
 public class CnmtItem : DirectoryEntryItem, IItem
 {
-    public CnmtItem(Cnmt cnmt, FsSectionItem parentFsSectionItem, DirectoryEntryEx directoryEntry)
-        : base(parentFsSectionItem, directoryEntry)
+    public CnmtItem(Cnmt cnmt, SectionItem parentSectionItem, DirectoryEntryEx directoryEntry)
+        : base(parentSectionItem, directoryEntry)
     {
         Cnmt = cnmt ?? throw new ArgumentNullException(nameof(cnmt));
 
-        ParentItem = parentFsSectionItem;
+        ParentItem = parentSectionItem;
         PatchNumber = Cnmt.TitleVersion.GetPatchNumber();
         TitleId = Cnmt.TitleId.ToStrId();
         ApplicationTitleId = Cnmt.ApplicationTitleId.ToStrId();
@@ -28,7 +28,7 @@ public class CnmtItem : DirectoryEntryItem, IItem
         TitleVersion = Cnmt.TitleVersion?.Version.ToString();
     }
 
-    public new FsSectionItem ParentItem { get; }
+    public new SectionItem ParentItem { get; }
 
     public Cnmt Cnmt { get; }
 
@@ -52,7 +52,7 @@ public class CnmtItem : DirectoryEntryItem, IItem
 
     IEnumerable<IItem> IItem.ChildItems => ChildItems;
 
-    public new List<CnmtContentEntryItem> ChildItems { get; } = new();
+    public new IEnumerable<CnmtContentEntryItem> ChildItems { get { yield break; } }
 
 
 }

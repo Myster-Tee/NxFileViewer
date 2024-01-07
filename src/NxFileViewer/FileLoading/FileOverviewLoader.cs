@@ -120,7 +120,7 @@ public class FileOverviewLoader : IFileOverviewLoader
                 {
                     var ncaId = cnmtContentEntry.NcaId.ToStrId();
 
-                    var parentPartitionFileSystemItem = cnmtItem.ContainerFsSectionItem.ParentItem.ParentItem;
+                    var parentPartitionFileSystemItem = cnmtItem.ContainerSectionItem.ParentItem.ParentItem;
                     var ncaItem = parentPartitionFileSystemItem.FindNcaItem(ncaId);
                     if (ncaItem == null)
                     {
@@ -172,29 +172,29 @@ public class FileOverviewLoader : IFileOverviewLoader
 
                 var titleInfo = new TitleInfo(ref applicationTitle, (NacpLanguage)language);
 
-                titleInfo.Icon = LoadExpectedIcon(nacpItem.ContainerFsSectionItem, titleInfo.Language);
+                titleInfo.Icon = LoadExpectedIcon(nacpItem.ContainerSectionItem, titleInfo.Language);
                 contentDetails.Titles.Add(titleInfo);
             }
 
             return contentDetails;
         }
 
-        private byte[]? LoadExpectedIcon(FsSectionItem fsSectionItem, NacpLanguage nacpLanguage)
+        private byte[]? LoadExpectedIcon(SectionItem sectionItem, NacpLanguage nacpLanguage)
         {
             var languageName = nacpLanguage.ToString();
 
             var expectedFileName = $"icon_{languageName}.dat";
 
-            var iconItem = fsSectionItem.ChildItems.FirstOrDefault(item => string.Equals(item.Name, expectedFileName, StringComparison.OrdinalIgnoreCase));
+            var iconItem = sectionItem.ChildItems.FirstOrDefault(item => string.Equals(item.Name, expectedFileName, StringComparison.OrdinalIgnoreCase));
             if (iconItem == null)
             {
                 var message = LocalizationManager.Instance.Current.Keys.LoadingError_IconMissing.SafeFormat(expectedFileName);
-                fsSectionItem.Errors.Add(message);
+                sectionItem.Errors.Add(message);
                 _logger.LogError(message);
                 return null;
             }
 
-            var fileSystem = fsSectionItem.FileSystem;
+            var fileSystem = sectionItem.FileSystem;
             if (fileSystem == null)
                 return null;
 

@@ -12,6 +12,7 @@ using LibHac.Common;
 using LibHac.Common.Keys;
 using LibHac.Fs;
 using LibHac.Fs.Fsa;
+using LibHac.FsSystem;
 using LibHac.Loader;
 using LibHac.Ns;
 using LibHac.Spl;
@@ -298,18 +299,21 @@ public class FileItemLoader : IFileItemLoader
                     continue;
                 }
 
-                if (ncaFsHeader.IsPatchSection())
-                {
-                    var ncaFsPatchInfo = ncaFsHeader.GetPatchInfo();
 
-                    var patchSectionItem = new PatchSectionItem(sectionIndex, ncaFsHeader, parentItem, ref ncaFsPatchInfo);
-                    parentItem.ChildItems.Add(patchSectionItem);
-                }
-                else
-                {
-                    var sectionItem = new FsSectionItem(sectionIndex, ncaFsHeader, parentItem);
-                    parentItem.ChildItems.Add(sectionItem);
+                var existsSparseLayer = ncaFsHeader.ExistsSparseLayer();
+                var ncaSparseInfo = existsSparseLayer ? ncaFsHeader.GetSparseInfo() : (NcaSparseInfo?)null;
 
+                var isPatchSection = ncaFsHeader.IsPatchSection();
+                var ncaFsPatchInfo = isPatchSection ? ncaFsHeader.GetPatchInfo() : (NcaFsPatchInfo?)null;
+
+
+                var sectionItem = new SectionItem(sectionIndex, ncaFsHeader, parentItem, ncaFsPatchInfo, ncaSparseInfo);
+
+                parentItem.ChildItems.Add(sectionItem);
+
+
+                if (!existsSparseLayer && !isPatchSection)
+                {
                     IFileSystem? fileSystem = null;
                     try
                     {
@@ -319,7 +323,9 @@ public class FileItemLoader : IFileItemLoader
                     {
                         OnLoadingException(ex, sectionItem);
 
-                        var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenNcaSectionFileSystem.SafeFormat(sectionIndex, ex.Message);
+                        var message =
+                            LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenNcaSectionFileSystem
+                                .SafeFormat(sectionIndex, ex.Message);
                         sectionItem.Errors.Add(TREE_LOADING_CATEGORY, message);
                         _logger.LogError(ex, message);
                     }
@@ -328,8 +334,6 @@ public class FileItemLoader : IFileItemLoader
 
                     BuildChildItems(sectionItem);
                 }
-
-
             }
         }
         catch (Exception ex)
@@ -342,7 +346,7 @@ public class FileItemLoader : IFileItemLoader
         }
     }
 
-    private void BuildChildItems(FsSectionItem parentItem)
+    private void BuildChildItems(SectionItem parentItem)
     {
         try
         {
@@ -500,11 +504,11 @@ public class FileItemLoader : IFileItemLoader
                 return;
 
             var currentPath = parentItem.Path;
-            var directoryEntries = SafeGetChildDirectoryEntries(parentItem.ContainerFsSectionItem.FileSystem!, currentPath, parentItem);
+            var directoryEntries = SafeGetChildDirectoryEntries(parentItem.ContainerSectionItem.FileSystem!, currentPath, parentItem);
 
             foreach (var directoryEntry in directoryEntries)
             {
-                var directoryEntryItem = new DirectoryEntryItem(parentItem.ContainerFsSectionItem, directoryEntry, parentItem);
+                var directoryEntryItem = new DirectoryEntryItem(parentItem.ContainerSectionItem, directoryEntry, parentItem);
                 BuildChildItems(directoryEntryItem);
                 parentItem.ChildItems.Add(directoryEntryItem);
             }

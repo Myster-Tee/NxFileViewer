@@ -23,7 +23,7 @@ public class NcaItem : PartitionFileEntryItemBase
         Id = FileEntry.Name.Split('.', 2)[0];
     }
 
-    public sealed override List<SectionItemBase> ChildItems { get; } = new();
+    public sealed override List<SectionItem> ChildItems { get; } = new();
 
     public Nca Nca { get; }
 

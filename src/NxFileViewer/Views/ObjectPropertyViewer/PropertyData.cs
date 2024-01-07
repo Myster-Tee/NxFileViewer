@@ -1,4 +1,6 @@
-﻿namespace Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
+﻿using System.Windows;
+
+namespace Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 
 /// <summary>
 /// Represents a line of the <see cref="PropertiesView"/>
@@ -19,5 +21,8 @@ public class PropertyData
     /// Object property value (second column)
     /// </summary>
     public object? Value { get; set; }
+
+
+    public Visibility Visibility { get; set; }
 
 }

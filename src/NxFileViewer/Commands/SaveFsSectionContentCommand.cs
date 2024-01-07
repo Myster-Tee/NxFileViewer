@@ -12,16 +12,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Commands;
 
-public class SaveFsSectionContentCommand : CommandBase, ISaveFsSectionContentCommand
+public class SaveSectionContentCommand : CommandBase, ISaveSectionContentCommand
 {
     private readonly IPromptService _promptService;
     private readonly IServiceProvider _serviceProvider;
     private readonly IMainBackgroundTaskRunnerService _backgroundTaskRunnerService;
     private readonly ILogger _logger;
 
-    private FsSectionItem? _fsSectionItem;
+    private SectionItem? _sectionItem;
 
-    public SaveFsSectionContentCommand(IPromptService promptService, IServiceProvider serviceProvider, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, ILoggerFactory loggerFactory)
+    public SaveSectionContentCommand(IPromptService promptService, IServiceProvider serviceProvider, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, ILoggerFactory loggerFactory)
     {
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         _promptService = promptService ?? throw new ArgumentNullException(nameof(promptService));
@@ -29,18 +29,18 @@ public class SaveFsSectionContentCommand : CommandBase, ISaveFsSectionContentCom
         _backgroundTaskRunnerService = backgroundTaskRunnerService ?? throw new ArgumentNullException(nameof(backgroundTaskRunnerService));
     }
 
-    public FsSectionItem FsSectionItem
+    public SectionItem SectionItem
     {
         set
         {
-            _fsSectionItem = value;
+            _sectionItem = value;
             TriggerCanExecuteChanged();
         }
     }
 
     public override async void Execute(object? parameter)
     {
-        if (_fsSectionItem == null)
+        if (_sectionItem == null)
             return;
 
         var selectedDir = _promptService.PromptSelectDir(LocalizationManager.Instance.Current.Keys.SaveDialog_Title);
@@ -49,10 +49,10 @@ public class SaveFsSectionContentCommand : CommandBase, ISaveFsSectionContentCom
 
         try
         {
-            var targetDirPath = Path.Combine(selectedDir, $"Section_{_fsSectionItem.SectionIndex}");
+            var targetDirPath = Path.Combine(selectedDir, $"Section_{_sectionItem.SectionIndex}");
 
             var runnable = _serviceProvider.GetRequiredService<ISaveDirectoryRunnable>();
-            runnable.Setup(_fsSectionItem.ChildItems, targetDirPath);
+            runnable.Setup(_sectionItem.ChildItems, targetDirPath);
 
             await _backgroundTaskRunnerService.RunAsync(runnable);
         }
@@ -65,11 +65,11 @@ public class SaveFsSectionContentCommand : CommandBase, ISaveFsSectionContentCom
 
     public override bool CanExecute(object? parameter)
     {
-        return _fsSectionItem != null && !_backgroundTaskRunnerService.IsRunning;
+        return _sectionItem is { ChildItems.Count: > 0 } && !_backgroundTaskRunnerService.IsRunning;
     }
 }
 
-public interface ISaveFsSectionContentCommand : ICommand
+public interface ISaveSectionContentCommand : ICommand
 {
-    FsSectionItem FsSectionItem { set; }
+    SectionItem SectionItem { set; }
 }

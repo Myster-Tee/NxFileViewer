@@ -13,56 +13,56 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 public class DirectoryEntryItem : ItemBase
 {
     /// <summary>
-    /// Constructor when entry is direct child of a <see cref="FsSectionItem"/>
+    /// Constructor when entry is direct child of a <see cref="SectionItem"/>
     /// </summary>
-    /// <param name="parentFsItem"></param>
+    /// <param name="parentItem"></param>
     /// <param name="directoryEntry"></param>
-    public DirectoryEntryItem(FsSectionItem parentFsItem, DirectoryEntryEx directoryEntry)
-        : this(parentFsItem, parentFsItem, directoryEntry)
+    public DirectoryEntryItem(SectionItem parentItem, DirectoryEntryEx directoryEntry)
+        : this(parentItem, parentItem, directoryEntry)
     {
-        ParentFsSectionItem = parentFsItem ?? throw new ArgumentNullException(nameof(parentFsItem));
+        ParentSectionItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
     }
 
     /// <summary>
     /// Constructor when entry is direct child of another <see cref="DirectoryEntryItem"/>
     /// </summary>
-    /// <param name="containerFsSectionItem"></param>
+    /// <param name="containerSectionItem"></param>
     /// <param name="directoryEntry"></param>
     /// <param name="parentItem"></param>
-    public DirectoryEntryItem(FsSectionItem containerFsSectionItem, DirectoryEntryEx directoryEntry, DirectoryEntryItem parentItem)
-        : this(parentItem, containerFsSectionItem, directoryEntry)
+    public DirectoryEntryItem(SectionItem containerSectionItem, DirectoryEntryEx directoryEntry, DirectoryEntryItem parentItem)
+        : this(parentItem, containerSectionItem, directoryEntry)
     {
         ParentDirectoryEntryItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
     }
 
-    private DirectoryEntryItem(ItemBase parentItem, FsSectionItem containerFsSectionItem, DirectoryEntryEx directoryEntry) : base(parentItem)
+    private DirectoryEntryItem(ItemBase parentItem, SectionItem containerSectionItem, DirectoryEntryEx directoryEntry) : base(parentItem)
     {
         DirectoryEntry = directoryEntry;
-        ContainerFsSectionItem = containerFsSectionItem ?? throw new ArgumentNullException(nameof(containerFsSectionItem));
+        ContainerSectionItem = containerSectionItem ?? throw new ArgumentNullException(nameof(containerSectionItem));
         Size = directoryEntry.Size;
     }
 
 
     /// <summary>
-    /// Get the parent <see cref="DirectoryEntryItem"/> or null (<see cref="ParentFsSectionItem"/>).
+    /// Get the parent <see cref="DirectoryEntryItem"/> or null (<see cref="ParentSectionItem"/>).
     /// 
     /// A <see cref="DirectoryEntryItem"/> can either be a child of another <see cref="DirectoryEntryItem"/>
-    /// or a child of a <see cref="FsSectionItem"/>
+    /// or a child of a <see cref="SectionItem"/>
     /// </summary>
     public DirectoryEntryItem? ParentDirectoryEntryItem { get; }
 
     /// <summary>
-    /// Get the parent <see cref="FsSectionItem"/> or null (<see cref="ParentDirectoryEntryItem"/>).
+    /// Get the parent <see cref="SectionItem"/> or null (<see cref="ParentDirectoryEntryItem"/>).
     /// 
     /// A <see cref="DirectoryEntryItem"/> can either be a child of another <see cref="DirectoryEntryItem"/>
-    /// or a child of a <see cref="FsSectionItem"/>
+    /// or a child of a <see cref="SectionItem"/>
     /// </summary>
-    public FsSectionItem? ParentFsSectionItem { get; }
+    public SectionItem? ParentSectionItem { get; }
 
     /// <summary>
     /// Get the section which contains this <see cref="DirectoryEntryItem"/> in its descendants
     /// </summary>
-    public FsSectionItem ContainerFsSectionItem { get; }
+    public SectionItem ContainerSectionItem { get; }
 
     /// <summary>
     /// Get the child directory entries (can be either a file or a directory)
@@ -95,7 +95,7 @@ public class DirectoryEntryItem : ItemBase
     public IFile GetFile()
     {
         using var uniqueRefFile = new UniqueRef<IFile>();
-        this.ContainerFsSectionItem.FileSystem!.OpenFile(ref uniqueRefFile.Ref, this.Path.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+        this.ContainerSectionItem.FileSystem!.OpenFile(ref uniqueRefFile.Ref, this.Path.ToU8Span(), OpenMode.Read).ThrowIfFailure();
         return uniqueRefFile.Release();
     }
 

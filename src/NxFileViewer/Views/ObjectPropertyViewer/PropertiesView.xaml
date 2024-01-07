@@ -27,6 +27,11 @@
     </UserControl.Resources>
 
     <DataGrid x:Name="PropertiesDataGrid" HeadersVisibility="All" IsReadOnly="True" ItemsSource="{Binding}" AutoGenerateColumns="False" ColumnHeaderHeight="10" >
+        <DataGrid.RowStyle>
+            <Style TargetType="DataGridRow">
+                <Setter Property="Visibility" Value="{Binding Path=Visibility}" />
+            </Style>
+        </DataGrid.RowStyle>
         <DataGrid.Columns>
             <DataGridTemplateColumn Header="" Width="Auto">
                 <DataGridTemplateColumn.CellTemplate>
