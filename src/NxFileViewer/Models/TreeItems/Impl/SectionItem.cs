@@ -26,7 +26,15 @@ public class SectionItem : ItemBase
                           | (sparseInfo != null ? SectionType.Sparse : 0);
         }
 
+
+        if (Nca.TryGetSectionTypeFromIndex(sectionIndex, parentItem.ContentType, out var ncaSectionType))
+            this.NcaSectionType = ncaSectionType;
+        else
+            this.NcaSectionType = null;
+
     }
+
+    public NcaSectionType? NcaSectionType { get; private set; }
 
     public sealed override string Name => $"Section {SectionIndex}";
 

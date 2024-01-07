@@ -33,6 +33,9 @@ public sealed class SectionItemViewModel : ItemViewModel
     public int SectionIndex => _sectionItem.SectionIndex;
 
     [PropertyView]
+    public string NcaSectionType => _sectionItem.NcaSectionType?.ToString() ?? "[UNKNOWN]";
+
+    [PropertyView]
     public NcaEncryptionType EncryptionType => _sectionItem.FsHeader.EncryptionType;
 
     [PropertyView]
@@ -45,16 +48,15 @@ public sealed class SectionItemViewModel : ItemViewModel
     [PropertyView]
     public string ContentType => _sectionItem.SectionType.ToString();
 
-
     [PropertyView(HideIfNull = true)]
     public ushort? SparseGeneration => _sectionItem.SparseInfo?.Generation;
 
     [PropertyView(HideIfNull = true)]
-    public long? SparseMetaSize => _sectionItem.SparseInfo?.MetaSize; 
-    
+    public long? SparseMetaSize => _sectionItem.SparseInfo?.MetaSize;
+
     [PropertyView(HideIfNull = true)]
-    public long? SparseMetaOffset => _sectionItem.SparseInfo?.MetaOffset;  
-    
+    public long? SparseMetaOffset => _sectionItem.SparseInfo?.MetaOffset;
+
     [PropertyView(HideIfNull = true)]
     public long? SparsePhysicalOffset => _sectionItem.SparseInfo?.PhysicalOffset;
 
