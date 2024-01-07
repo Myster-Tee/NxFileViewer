@@ -63,31 +63,43 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_Title_UsedKeysFilePath => "Used path";
     public string SettingsView_Title_KeysCustomFilePath => "Custom path";
     public string SettingsView_Title_KeysDownloadUrl => "Download URL";
+    public string SettingsView_ToolTip_Keys => """
+                                               Keys are mandatory to open encrypted Nintendo Switch files (XCI, NSP, ...).
+                                               Each official Nintendo Switch file is encrypted with keys specific to the Switch firmware version it was built for.
 
-    public string SettingsView_ToolTip_ProdKeys => "This file contains common keys used by all Switch devices. This file is required for opening encrypted title contents." + Environment.NewLine +
-                                                   "The program will search this file in the following order:" + Environment.NewLine +
-                                                   "    1. the path defined by this setting" + Environment.NewLine +
-                                                   "    2. the current program's directory" + Environment.NewLine +
-                                                   "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
-                                                   "At startup, the program can automatically download the keys file when none is found on the system." + Environment.NewLine +
-                                                   "The keys file will be downloaded to the current application's directory." + Environment.NewLine + Environment.NewLine +
-                                                   "File should contain one key per line, in form of «KEY_NAME = HEXADECIMAL_VALUE».";
+                                               In order to open any Nintendo Switch file without any error, always ensure to have an up-to-date "prod.keys" file with all the keys of all existing firmwares.
+                                               
+                                               File should contain one key per line, in form of «KEY_NAME = HEXADECIMAL_VALUE».
+                                               """;
+    public string SettingsView_ToolTip_ProdKeys => """
+                                                   This file contains common keys used by all Switch devices. This file is required for opening encrypted title contents.
+                                                   The program will search this file in the following order:
+                                                       1. the path defined by this setting
+                                                       2. the current program's directory
+                                                       3. the «%UserProfile%\\.switch» directory
+                                                   
+                                                   At startup, the program can automatically download the keys file when none is found on the system.
+                                                   The keys file will be downloaded to the current application's directory.
+                                                   """;
 
-    public string SettingsView_ToolTip_TitleKeys => "You can optionally specify a file containing game-specific keys." + Environment.NewLine +
-                                                    "The program will search this file in the following locations:" + Environment.NewLine +
-                                                    "    1. the path defined by this setting" + Environment.NewLine +
-                                                    "    2. the current program's directory" + Environment.NewLine +
-                                                    "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
-                                                    "At startup, the program can automatically download the keys file when none is found on the system." + Environment.NewLine +
-                                                    "The keys file will be downloaded to the current application's directory." + Environment.NewLine + Environment.NewLine +
-                                                    "File should contain one key per line, in form of «KEY_NAME = HEXADECIMAL_VALUE».";
+    public string SettingsView_ToolTip_TitleKeys => """
+                                                    You can optionally specify a file containing game-specific keys.
+                                                    The program will search this file in the following locations:
+                                                        1. the path defined by this setting
+                                                        2. the current program's directory
+                                                        3. the «%UserProfile%\\.switch» directory
+                                                    
+                                                    At startup, the program can automatically download the keys file when none is found on the system.
+                                                    The keys file will be downloaded to the current application's directory.
+                                                    """;
 
-    public string SettingsView_ToolTip_ConsoleKeys => "You can optionally specify a file containing console-unique keys." + Environment.NewLine +
-                                                      "The program will search this file in the following locations:" + Environment.NewLine +
-                                                      "    1. the path defined by this setting" + Environment.NewLine +
-                                                      "    2. the current program's directory" + Environment.NewLine +
-                                                      "    3. the «%UserProfile%\\.switch» directory" + Environment.NewLine + Environment.NewLine +
-                                                      "File should contain one key per line, in form of «KEY_NAME = HEXADECIMAL_VALUE».";
+    public string SettingsView_ToolTip_ConsoleKeys => """
+                                                      You can optionally specify a file containing console-unique keys.
+                                                      The program will search this file in the following locations:
+                                                          1. the path defined by this setting
+                                                          2. the current program's directory
+                                                          3. the «%UserProfile%\\.switch» directory
+                                                      """;
 
     public string SettingsView_LogLevel => "Log level";
     public string SettingsView_ToolTip_LogLevel => "The log level specifies the minimum level to log.";
@@ -188,8 +200,10 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string Title_NcasHeaderSignature => "Signature:";
     public string ToolTip_NcasHeaderSignature => "Verifies the signature of each NCA header.";
     public string Title_NcasHash => "Hash:";
-    public string ToolTip_NcasHash => "Verifies the hash of each NCA." + Environment.NewLine +
-                                      "A valid hash ensures that a file has not been corrupted.";
+    public string ToolTip_NcasHash => """
+                                      Verifies the hash of each NCA.
+                                      A valid hash ensures that a file has not been corrupted.
+                                      """;
 
     public string NcaHeaderSignature_VerificationStart_Log => ">>> Signature verification starting...";
     public string NcaHeaderSignature_VerificationEnd_Log => ">>> Signature verification finished.";

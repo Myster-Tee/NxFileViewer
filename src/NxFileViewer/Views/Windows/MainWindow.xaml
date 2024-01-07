@@ -25,7 +25,7 @@
         <KeyBinding Gesture="F2" Command="{Binding Path=ShowRenameToolWindowCommand}" />
     </Window.InputBindings>
 
-    <Grid>
+    <Grid Cursor="">
         <Grid.RowDefinitions>
             <!-- Menu -->
             <RowDefinition Height="Auto" />
@@ -105,7 +105,18 @@
             </MenuItem>
         </Menu>
 
-        <TextBlock Grid.Row="1" Style="{StaticResource WatermarkText}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DragMeAFile}" />
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Style="{StaticResource WatermarkText}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DragMeAFile}" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding Path=NoProdKeysLoaded, Converter={StaticResource FalseToCollapseVisibilityConverter}}">
+                <TextBlock Foreground="{StaticResource FontBrush.Warning}">⚠</TextBlock>
+                <TextBlock  Margin="5,0,0,0">
+                    <Hyperlink Foreground="{StaticResource FontBrush.Warning}" Command="{Binding ShowSettingsWindowCommand}">
+                        <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.WarnNoProdKeysFileFound}"></TextBlock>
+                    </Hyperlink>
+                </TextBlock>
+                <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_Keys}"/>
+            </StackPanel>
+        </StackPanel>
         <ContentControl Grid.Row="1" Content="{Binding Path=OpenedFile, Mode=TwoWay}"
                             ContentTemplateSelector="{StaticResource OpenedFileDataTemplateSelector}" />
 
