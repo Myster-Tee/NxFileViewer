@@ -39,11 +39,11 @@ dotnet clean $ProjectPath
 $Releases =
 @(
     @{
-        Suffix    = "_x64"
+        Suffix    = "x64"
         Options = @( "-p:PublishSingleFile=true", "-c", "Release", "--no-self-contained", "-r", "win-x64" )
     },
     @{
-        Suffix    = "_x86"
+        Suffix    = "x86"
         Options = @( "-p:PublishSingleFile=true", "-c", "Release", "--no-self-contained", "-r", "win-x86" )
     }
 
