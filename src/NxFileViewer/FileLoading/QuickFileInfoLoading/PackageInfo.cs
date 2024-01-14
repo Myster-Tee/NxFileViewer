@@ -10,7 +10,7 @@ namespace Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
 
 public class PackageInfo
 {
-    public List<Content> Contents { get; init; }
+    public List<Content> Contents { get; init; } = null!;
 
     public AccuratePackageType AccuratePackageType { get; init; }
 

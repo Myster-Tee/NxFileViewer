@@ -9,7 +9,7 @@ public class NacpItem : DirectoryEntryItem
 {
     public const string NacpFileName = "control.nacp";
 
-    public NacpItem(ApplicationControlProperty nacp, FsSectionItem parentItem, DirectoryEntryEx directoryEntry)
+    public NacpItem(ApplicationControlProperty nacp, SectionItem parentItem, DirectoryEntryEx directoryEntry)
         : base(parentItem, directoryEntry)
     {
         Nacp = nacp;
@@ -17,7 +17,7 @@ public class NacpItem : DirectoryEntryItem
         AddOnContentBaseId = Nacp.AddOnContentBaseId.ToStrId();
     }
 
-    public new FsSectionItem ParentItem { get; }
+    public new SectionItem ParentItem { get; }
 
     public ApplicationControlProperty Nacp { get; }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using LibHac.Common;
 using LibHac.Fs.Fsa;
-using LibHac.FsSystem;
+using LibHac.Tools.Fs;
 using LibHac.Tools.FsSystem.NcaUtils;
 
 namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
@@ -16,14 +16,14 @@ public class NcaItem : PartitionFileEntryItemBase
 
     public static int MaxSections { get; } = 4;
 
-    public NcaItem(Nca nca, PartitionFileEntry partitionFileEntry, IFile file, PartitionFileSystemItemBase parentItem)
-        : base(partitionFileEntry, file, parentItem)
+    public NcaItem(Nca nca, DirectoryEntryEx ncaFileEntry, IFile file, PartitionFileSystemItemBase parentItem)
+        : base(ncaFileEntry, file, parentItem)
     {
         Nca = nca ?? throw new ArgumentNullException(nameof(nca));
-        Id = PartitionFileEntry.Name.Split('.', 2)[0];
+        Id = FileEntry.Name.Split('.', 2)[0];
     }
 
-    public sealed override List<SectionItemBase> ChildItems { get; } = new();
+    public sealed override List<SectionItem> ChildItems { get; } = new();
 
     public Nca Nca { get; }
 
@@ -47,7 +47,7 @@ public class NcaItem : PartitionFileEntryItemBase
 
     public bool IsEncrypted => Nca.Header.IsEncrypted;
 
-    public string FileName => PartitionFileEntry.Name;
+    public string FileName => FileEntry.Name;
 
     public override string DisplayName => $"{FileName} ({Nca.Header.ContentType})";
 

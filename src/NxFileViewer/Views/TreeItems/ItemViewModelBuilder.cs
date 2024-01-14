@@ -17,50 +17,52 @@ public class ItemViewModelBuilder : IItemViewModelBuilder
 
     public IItemViewModel Build(IItem item)
     {
+        IItemViewModel itemViewModel;
         switch (item)
         {
             case XciItem xciItem:
-                return new XciItemViewModel(xciItem, _serviceProvider);
+                itemViewModel = new XciItemViewModel(xciItem, _serviceProvider);
+                break;
 
             case XciPartitionItem xciPartitionItem:
-                return new XciPartitionItemViewModel(xciPartitionItem, _serviceProvider);
-
+                itemViewModel = new XciPartitionItemViewModel(xciPartitionItem, _serviceProvider);
+                break;
             case NspItem nspItem:
-                return new NspItemViewModel(nspItem, _serviceProvider);
-
+                itemViewModel = new NspItemViewModel(nspItem, _serviceProvider);
+                break;
             case NcaItem ncaItem:
-                return new NcaItemViewModel(ncaItem, _serviceProvider);    
-                
+                itemViewModel = new NcaItemViewModel(ncaItem, _serviceProvider);
+                break;
             case TicketItem ticketItem:
-                return new TicketItemViewModel(ticketItem, _serviceProvider);
-
+                itemViewModel = new TicketItemViewModel(ticketItem, _serviceProvider);
+                break;
             case PartitionFileEntryItemBase partitionFileEntryItem:
-                return new PartitionFileEntryItemViewModel(partitionFileEntryItem, _serviceProvider);
-
-            case FsSectionItem fsSectionItem:
-                return new FsSectionItemViewModel(fsSectionItem, _serviceProvider);    
-            
-            case PatchSectionItem patchSectionItem:
-                return new PatchSectionItemViewModel(patchSectionItem, _serviceProvider);
-
+                itemViewModel = new PartitionFileEntryItemViewModel(partitionFileEntryItem, _serviceProvider);
+                break;
+            case SectionItem patchSectionItem:
+                itemViewModel = new SectionItemViewModel(patchSectionItem, _serviceProvider);
+                break;
             case CnmtItem cnmtItem:
-                return new CnmtItemViewModel(cnmtItem, _serviceProvider);
-
+                itemViewModel = new CnmtItemViewModel(cnmtItem, _serviceProvider);
+                break;
             case NacpItem nacpItem:
-                return new NacpItemViewModel(nacpItem, _serviceProvider);
-
+                itemViewModel = new NacpItemViewModel(nacpItem, _serviceProvider);
+                break;
             case MainItem mainItem:
-                return new MainItemViewModel(mainItem, _serviceProvider);
-
+                itemViewModel = new MainItemViewModel(mainItem, _serviceProvider);
+                break;
             case DirectoryEntryItem directoryEntryItem:
-                return new DirectoryEntryItemViewModel(directoryEntryItem, _serviceProvider);      
-                
+                itemViewModel = new DirectoryEntryItemViewModel(directoryEntryItem, _serviceProvider);
+                break;
             case CnmtContentEntryItem cnmtContentEntryItem:
-                return new CnmtContentEntryItemViewModel(cnmtContentEntryItem, _serviceProvider);
-
+                itemViewModel = new CnmtContentEntryItemViewModel(cnmtContentEntryItem, _serviceProvider);
+                break;
             default:
                 Debug.Fail($"{nameof(IItemViewModel)} implementation missing for item of type «{item.GetType().Name}».");
-                return new ItemViewModel(item, _serviceProvider);
+                itemViewModel = new ItemViewModel(item, _serviceProvider);
+                break;
         }
+
+        return itemViewModel;
     }
 }

@@ -6,6 +6,7 @@ using Emignatik.NxFileViewer.Models.TreeItems;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 using Emignatik.NxFileViewer.Services.KeysManagement;
 using Emignatik.NxFileViewer.Settings;
+using Emignatik.NxFileViewer.Utils;
 using LibHac;
 using LibHac.Common;
 using LibHac.Common.Keys;
@@ -21,6 +22,7 @@ using LibHac.Tools.FsSystem;
 using LibHac.Tools.FsSystem.NcaUtils;
 using LibHac.Tools.Ncm;
 using Microsoft.Extensions.Logging;
+using NcaFsHeader = LibHac.Tools.FsSystem.NcaUtils.NcaFsHeader;
 
 
 namespace Emignatik.NxFileViewer.FileLoading;
@@ -43,16 +45,8 @@ public class FileItemLoader : IFileItemLoader
     public NspItem LoadNsp(string nspFilePath)
     {
         var keySet = _keySetProviderService.GetKeySet(_appSettings.AlwaysReloadKeysBeforeOpen);
-
-        var localFile = new LocalFile(nspFilePath, OpenMode.Read);
-
-        var fileStorage = new FileStorage(localFile);
-        var nspPartition = new PartitionFileSystem(fileStorage);
-
-
-        var nspItem = new NspItem(nspPartition, System.IO.Path.GetFileName(nspFilePath), localFile, keySet);
+        var nspItem = NspItem.FromFile(nspFilePath, keySet);
         BuildChildItems(nspItem);
-
         return nspItem;
     }
 
@@ -61,13 +55,7 @@ public class FileItemLoader : IFileItemLoader
     public XciItem LoadXci(string xciFilePath)
     {
         var keySet = _keySetProviderService.GetKeySet(_appSettings.AlwaysReloadKeysBeforeOpen);
-
-        var localFile = new LocalFile(xciFilePath, OpenMode.Read);
-
-        var fileStorage = new FileStorage(localFile);
-        var xci = new Xci(keySet, fileStorage);
-
-        var xciItem = new XciItem(xci, System.IO.Path.GetFileName(xciFilePath), localFile, keySet);
+        var xciItem = XciItem.FromFile(xciFilePath, keySet);
         BuildChildItems(xciItem);
         return xciItem;
     }
@@ -134,10 +122,10 @@ public class FileItemLoader : IFileItemLoader
         {
             var partitionFileSystem = parentItem.PartitionFileSystem;
 
-            var remainingEntries = new List<PartitionFileEntry>();
+            var remainingEntries = new List<DirectoryEntryEx>();
 
             // First loop on *.tik files to inject title keys in KeySet
-            foreach (var partitionFileEntry in partitionFileSystem.Files)
+            foreach (var partitionFileEntry in partitionFileSystem.EnumerateEntries().Where(e => e.Type == DirectoryEntryType.File))
             {
                 var fileName = partitionFileEntry.Name;
                 if (!fileName.EndsWith(".tik", StringComparison.OrdinalIgnoreCase))
@@ -149,7 +137,7 @@ public class FileItemLoader : IFileItemLoader
                 IFile file;
                 try
                 {
-                    file = partitionFileSystem.OpenFile(partitionFileEntry, OpenMode.Read);
+                    file = partitionFileSystem.LoadFile(partitionFileEntry);
                 }
                 catch (Exception ex)
                 {
@@ -221,7 +209,7 @@ public class FileItemLoader : IFileItemLoader
                 IFile file;
                 try
                 {
-                    file = partitionFileSystem.OpenFile(partitionFileEntry, OpenMode.Read);
+                    file = partitionFileSystem.LoadFile(partitionFileEntry);
                 }
                 catch (Exception ex)
                 {
@@ -311,18 +299,21 @@ public class FileItemLoader : IFileItemLoader
                     continue;
                 }
 
-                if (ncaFsHeader.IsPatchSection())
-                {
-                    var ncaFsPatchInfo = ncaFsHeader.GetPatchInfo();
 
-                    var patchSectionItem = new PatchSectionItem(sectionIndex, ncaFsHeader, parentItem, ref ncaFsPatchInfo);
-                    parentItem.ChildItems.Add(patchSectionItem);
-                }
-                else
-                {
-                    var sectionItem = new FsSectionItem(sectionIndex, ncaFsHeader, parentItem);
-                    parentItem.ChildItems.Add(sectionItem);
+                var existsSparseLayer = ncaFsHeader.ExistsSparseLayer();
+                var ncaSparseInfo = existsSparseLayer ? ncaFsHeader.GetSparseInfo() : (NcaSparseInfo?)null;
 
+                var isPatchSection = ncaFsHeader.IsPatchSection();
+                var ncaFsPatchInfo = isPatchSection ? ncaFsHeader.GetPatchInfo() : (NcaFsPatchInfo?)null;
+
+
+                var sectionItem = new SectionItem(sectionIndex, ncaFsHeader, parentItem, ncaFsPatchInfo, ncaSparseInfo);
+
+                parentItem.ChildItems.Add(sectionItem);
+
+
+                if (!existsSparseLayer && !isPatchSection)
+                {
                     IFileSystem? fileSystem = null;
                     try
                     {
@@ -332,7 +323,9 @@ public class FileItemLoader : IFileItemLoader
                     {
                         OnLoadingException(ex, sectionItem);
 
-                        var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenNcaSectionFileSystem.SafeFormat(sectionIndex, ex.Message);
+                        var message =
+                            LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenNcaSectionFileSystem
+                                .SafeFormat(sectionIndex, ex.Message);
                         sectionItem.Errors.Add(TREE_LOADING_CATEGORY, message);
                         _logger.LogError(ex, message);
                     }
@@ -341,8 +334,6 @@ public class FileItemLoader : IFileItemLoader
 
                     BuildChildItems(sectionItem);
                 }
-
-
             }
         }
         catch (Exception ex)
@@ -355,7 +346,7 @@ public class FileItemLoader : IFileItemLoader
         }
     }
 
-    private void BuildChildItems(FsSectionItem parentItem)
+    private void BuildChildItems(SectionItem parentItem)
     {
         try
         {
@@ -379,7 +370,7 @@ public class FileItemLoader : IFileItemLoader
                     try
                     {
                         using var uniqueRefFile = new UniqueRef<IFile>();
-                        fileSystem.OpenFile(ref uniqueRefFile.Ref(), entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                        fileSystem.OpenFile(ref uniqueRefFile.Ref, entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
                         nacpFile = uniqueRefFile.Release();
                     }
                     catch (Exception ex)
@@ -419,7 +410,7 @@ public class FileItemLoader : IFileItemLoader
                     try
                     {
                         using var uniqueRefFile = new UniqueRef<IFile>();
-                        fileSystem.OpenFile(ref uniqueRefFile.Ref(), entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                        fileSystem.OpenFile(ref uniqueRefFile.Ref, entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
                         cnmtFile = uniqueRefFile.Release();
                     }
                     catch (Exception ex)
@@ -455,7 +446,7 @@ public class FileItemLoader : IFileItemLoader
                     try
                     {
                         using var uniqueRefFile = new UniqueRef<IFile>();
-                        fileSystem.OpenFile(ref uniqueRefFile.Ref(), entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
+                        fileSystem.OpenFile(ref uniqueRefFile.Ref, entryPath.ToU8Span(), OpenMode.Read).ThrowIfFailure();
                         nsoFile = uniqueRefFile.Release();
                     }
                     catch (Exception ex)
@@ -513,11 +504,11 @@ public class FileItemLoader : IFileItemLoader
                 return;
 
             var currentPath = parentItem.Path;
-            var directoryEntries = SafeGetChildDirectoryEntries(parentItem.ContainerFsSectionItem.FileSystem!, currentPath, parentItem);
+            var directoryEntries = SafeGetChildDirectoryEntries(parentItem.ContainerSectionItem.FileSystem!, currentPath, parentItem);
 
             foreach (var directoryEntry in directoryEntries)
             {
-                var directoryEntryItem = new DirectoryEntryItem(parentItem.ContainerFsSectionItem, directoryEntry, parentItem);
+                var directoryEntryItem = new DirectoryEntryItem(parentItem.ContainerSectionItem, directoryEntry, parentItem);
                 BuildChildItems(directoryEntryItem);
                 parentItem.ChildItems.Add(directoryEntryItem);
             }
@@ -560,4 +551,4 @@ public class FileItemLoader : IFileItemLoader
     {
         MissingKey?.Invoke(this, new MissingKeyExceptionHandlerArgs(ex, parentItem));
     }
-}
+};

@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using LibHac.Common.Keys;
-using LibHac.Fs.Fsa;
+using LibHac.Fs;
+using LibHac.FsSystem;
 using LibHac.Tools.Fs;
 
 namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 
 public class XciItem : ItemBase
 {
-    private readonly IFile _file;
+    private readonly IStorage _storage;
 
-    public XciItem(Xci xci, string name, IFile file, KeySet keySet) : base(null)
+    public XciItem(Xci xci, string name, IStorage storage, KeySet keySet) : base(null)
     {
         Xci = xci ?? throw new ArgumentNullException(nameof(xci));
         Name = name ?? throw new ArgumentNullException(nameof(name));
-        _file = file ?? throw new ArgumentNullException(nameof(file));
+        _storage = storage ?? throw new ArgumentNullException(nameof(storage));
         KeySet = keySet ?? throw new ArgumentNullException(nameof(keySet));
     }
 
@@ -34,6 +36,17 @@ public class XciItem : ItemBase
 
     public override void Dispose()
     {
-        _file.Dispose();
+        _storage.Dispose();
+    }
+
+    public static XciItem FromFile(string xciFilePath, KeySet keySet)
+    {
+        var fileStorage = new LocalStorage(xciFilePath, FileAccess.Read);
+
+        var xci = new Xci(keySet, fileStorage);
+
+        var xciItem = new XciItem(xci, System.IO.Path.GetFileName(xciFilePath), fileStorage, keySet);
+
+        return xciItem;
     }
 }

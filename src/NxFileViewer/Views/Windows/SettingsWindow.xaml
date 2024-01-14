@@ -24,14 +24,22 @@
         <Border Grid.Row="0" BorderBrush="{DynamicResource ScrollViewer.Border.Brush}" BorderThickness="{DynamicResource ScrollViewer.Border.Thickness}">
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <StackPanel>
-                    <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_GroupBoxKeys}">
+                    <GroupBox>
+                        <GroupBox.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_GroupBoxKeys}" Style="{StaticResource Title1}"/>
+                                <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_Keys}"/>
+                            </StackPanel>
+                        </GroupBox.Header>
+
+
                         <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
                             <CheckBox IsChecked="{Binding EditedSettings.AlwaysReloadKeysBeforeOpen}"
                                         Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen}" />
                             <Expander>
                                 <Expander.Header>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{x:Static keysManagement:IKeySetProviderService.DefaultProdKeysFileName}" Style="{StaticResource Title1}"/>
+                                        <TextBlock Text="{x:Static keysManagement:IKeySetProviderService.DEFAULT_PROD_KEYS_FILE_NAME}" Style="{StaticResource Title1}"/>
                                         <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_ProdKeys}"/>
                                     </StackPanel>
                                 </Expander.Header>
@@ -62,7 +70,7 @@
                             <Expander>
                                 <Expander.Header>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{x:Static keysManagement:IKeySetProviderService.DefaultTitleKeysFileName}" Style="{StaticResource Title1}"/>
+                                        <TextBlock Text="{x:Static keysManagement:IKeySetProviderService.DEFAULT_TITLE_KEYS_FILE_NAME}" Style="{StaticResource Title1}"/>
                                         <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_TitleKeys}"/>
                                     </StackPanel>
                                 </Expander.Header>
@@ -92,7 +100,7 @@
                             <Expander>
                                 <Expander.Header>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{x:Static keysManagement:IKeySetProviderService.DefaultConsoleKeysFileName}" Style="{StaticResource Title1}"/>
+                                        <TextBlock Text="{x:Static keysManagement:IKeySetProviderService.DEFAULT_CONSOLE_KEYS_FILE_NAME}" Style="{StaticResource Title1}"/>
                                         <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_ConsoleKeys}"/>
                                     </StackPanel>
                                 </Expander.Header>

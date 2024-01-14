@@ -25,7 +25,7 @@
         <KeyBinding Gesture="F2" Command="{Binding Path=ShowRenameToolWindowCommand}" />
     </Window.InputBindings>
 
-    <Grid>
+    <Grid Cursor="">
         <Grid.RowDefinitions>
             <!-- Menu -->
             <RowDefinition Height="Auto" />
@@ -105,7 +105,18 @@
             </MenuItem>
         </Menu>
 
-        <TextBlock Grid.Row="1" Style="{StaticResource WatermarkText}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DragMeAFile}" />
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Style="{StaticResource WatermarkText}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DragMeAFile}" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding Path=NoProdKeysLoaded, Converter={StaticResource FalseToCollapseVisibilityConverter}}">
+                <TextBlock Foreground="{StaticResource FontBrush.Warning}">⚠</TextBlock>
+                <TextBlock  Margin="5,0,0,0">
+                    <Hyperlink Foreground="{StaticResource FontBrush.Warning}" Command="{Binding ShowSettingsWindowCommand}">
+                        <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.WarnNoProdKeysFileFound}" />
+                    </Hyperlink>
+                </TextBlock>
+                <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_Keys}"/>
+            </StackPanel>
+        </StackPanel>
         <ContentControl Grid.Row="1" Content="{Binding Path=OpenedFile, Mode=TwoWay}"
                             ContentTemplateSelector="{StaticResource OpenedFileDataTemplateSelector}" />
 
@@ -130,8 +141,18 @@
                                   Command="{Binding Path=OpenedFile.FileOverview.CopyMissingKeysCommand, FallbackValue={x:Null}}" />
                     </ContextMenu>
                 </StatusBarItem.ContextMenu>
-                <Label Style="{StaticResource KeyIcon}"
+                <Label Style="{StaticResource KeyWarningIcon}"
                        ToolTip="{Binding Path=OpenedFile.FileOverview.MissingKeys, FallbackValue={x:Null}}" />
+            </StatusBarItem>
+
+            <!-- Prod.keys missing Icon -->
+            <StatusBarItem DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center"
+                           Visibility="{Binding Path=NoProdKeysLoaded, Converter={StaticResource FalseToCollapseVisibilityConverter}}">
+                <StatusBarItem.InputBindings>
+                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding ShowSettingsWindowCommand}" />
+                </StatusBarItem.InputBindings>
+                <Label Style="{StaticResource KeyErrorIcon}"
+                       ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.WarnNoProdKeysFileFound}" />
             </StatusBarItem>
 
             <!-- Progress Bar -->

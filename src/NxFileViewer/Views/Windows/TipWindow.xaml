@@ -8,6 +8,6 @@
         Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Window_Tip_Title}"
         Height="200" Width="300" ResizeMode="CanResizeWithGrip" ShowInTaskbar="False" WindowStyle="ToolWindow">
     <Grid Margin="5">
-        <TextBox x:Name="TextBox" IsReadOnly="True" BorderBrush="{StaticResource ScrollViewer.Border.Brush}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+        <TextBox x:Name="TextBox" IsReadOnly="True" BorderBrush="{StaticResource ScrollViewer.Border.Brush}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"/>
     </Grid>
 </Window>

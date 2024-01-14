@@ -1,13 +1,15 @@
 # NxFileViewer
 
 ## Description
+
 View and browse content of Nintendo Switch files.
 
 Download latest version [here](https://github.com/Myster-Tee/NxFileViewer/releases).
 
 ## Features
+
 - Based on [LibHac](https://github.com/Thealexbarney/LibHac)
-- Supported files: NSP, NSZ, XCI, XCZ
+- Supported files: NSP, NSZ*, XCI, XCZ*
 - Supports Super NSP/XCI
 - Browse files content structure
 - Export files
@@ -27,6 +29,9 @@ Download latest version [here](https://github.com/Myster-Tee/NxFileViewer/releas
 - Multiple languages (actually English and French, PR me for more ;))
 - Advanced files renaming
 
+*\* NSZ and XCZ contain compressed data, those files are actually partially supported.  
+You can decompress those files using [NSZ](https://github.com/nicoboss/nsz/) tool from **nicoboss**.*
+
 ## Screenshots
 
 ![Overview](./screenshots/Overview.png)
@@ -39,30 +44,30 @@ Download latest version [here](https://github.com/Myster-Tee/NxFileViewer/releas
 
 ## Requirements
 
-The program requires the *.NET Desktop Runtime 6 X64* which can be downloaded from the official Microsoft website [here](https://dotnet.microsoft.com/download/dotnet/6.0).
+If application doesn't start, please install the *.NET Desktop Runtime 7* which can be downloaded from the official Microsoft website [here](https://dotnet.microsoft.com/download/dotnet/7.0).
 
 ## Contribute
+
 Feel free to contribute to this project to make this program better.
 
 I designed the application so that it can be easily localized in several languages.  
 If you want this app in your language, send me your translations ;).
 
+## Development
+
+### Requirements
+
+ - Microsoft Visual Studio 2022+
+
+### Publishing
+
+Run the PowerShell script below.
+
+```PowerShell
+.\Publish.ps1
+```
+
 ## Credits
 
 - Special thanks to [Thealexbarney](https://github.com/Thealexbarney) for his powerful and easy to use [LibHac](https://github.com/Thealexbarney/LibHac) library.
 - Thanks to all the Switch scene :)
-
-## Building the solution
-
-Use Microsoft Visual Studio 2019+ to build the solution.
-
-By default, the assembly is signed using my personal certificate bundled in «AppSign.pfx».  
-If you are not a team member, simply remove the signing certificate from the project properties.  
-If you are a team member, you can install it (required once) from the Visual Studio Terminal window (CTRL+ù), by running the command below.
-
-```
-sn.exe -i .\NxFileViewer\AppSign.pfx <key_container_name>
-```
-
-***NOTE:** <key_container_name> can be obtained in the error message of the build output, in the form of «VS_KEY_XXXXXXXXXXXXXXXX».*
-

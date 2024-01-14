@@ -8,14 +8,14 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 public class MainItem : DirectoryEntryItem
 {
 
-    public MainItem(NsoHeader nsoHeader, FsSectionItem parentItem, DirectoryEntryEx directoryEntry)
+    public MainItem(NsoHeader nsoHeader, SectionItem parentItem, DirectoryEntryEx directoryEntry)
         : base(parentItem, directoryEntry)
     {
         ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
         NsoHeader = nsoHeader;
     }
 
-    public new FsSectionItem ParentItem { get; }
+    public new SectionItem ParentItem { get; }
 
     public NsoHeader NsoHeader { get; }
 

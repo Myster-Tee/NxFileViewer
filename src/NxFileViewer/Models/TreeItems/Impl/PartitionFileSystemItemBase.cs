@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using LibHac.Common.Keys;
-using LibHac.FsSystem;
+using LibHac.Fs.Fsa;
+using LibHac.Tools.FsSystem;
 
 namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 
 public abstract class PartitionFileSystemItemBase : ItemBase
 {
-    protected PartitionFileSystemItemBase(PartitionFileSystem partitionFileSystem, ItemBase? parent) : base(parent)
+    protected PartitionFileSystemItemBase(IFileSystem partitionFileSystem, ItemBase? parent) : base(parent)
     {
         PartitionFileSystem = partitionFileSystem ?? throw new ArgumentNullException(nameof(partitionFileSystem));
     }
 
-    public PartitionFileSystem PartitionFileSystem { get; }
+    public IFileSystem PartitionFileSystem { get; }
 
-    public PartitionFileSystemType PartitionType => PartitionFileSystem.Header.Type;
+    public string PartitionType => PartitionFileSystem.GetType().Name;
 
-    public int NumFiles => PartitionFileSystem.Header.NumFiles;
+    public int NbEntries => PartitionFileSystem.GetEntryCount(OpenDirectoryMode.All);
 
     public sealed override string LibHacTypeName => PartitionFileSystem.GetType().Name;
 
@@ -24,6 +25,7 @@ public abstract class PartitionFileSystemItemBase : ItemBase
 
     public sealed override IEnumerable<IItem> ChildItems
     {
+        
         get
         {
             foreach (var childItem in NcaChildItems)

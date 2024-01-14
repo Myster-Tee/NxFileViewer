@@ -54,8 +54,6 @@
     </Style>
 
     <Style x:Key="KeyIcon" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
-        <Setter Property="Background" Value="{DynamicResource KeyIcon.Static.Background}" />
-        <Setter Property="Foreground" Value="{DynamicResource KeyIcon.Static.Foreground}"></Setter>
         <Setter Property="Width" Value="18" />
         <Setter Property="Height" Value="18" />
         <Setter Property="Template">
@@ -80,5 +78,16 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="KeyWarningIcon" TargetType="Label" BasedOn="{StaticResource KeyIcon}">
+        <Setter Property="Background" Value="{DynamicResource KeyIcon.Static.Background}" />
+        <Setter Property="Foreground" Value="{DynamicResource KeyIcon.Static.WarningForeground}"></Setter>
+    </Style>
+
+    <Style x:Key="KeyErrorIcon" TargetType="Label" BasedOn="{StaticResource KeyIcon}">
+        <Setter Property="Background" Value="{DynamicResource KeyIcon.Static.Background}" />
+        <Setter Property="Foreground" Value="{DynamicResource KeyIcon.Static.ErrorForeground}"></Setter>
+    </Style>
+
 
 </ResourceDictionary>

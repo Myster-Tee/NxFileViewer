@@ -49,10 +49,7 @@ public class ItemIconDataTemplateSelector : DataTemplateSelector
             case NspItemViewModel _:
                 return NspItemIconDataTemplate;
 
-            case FsSectionItemViewModel _:
-                return SectionItemIconDataTemplate;           
-            
-            case PatchSectionItemViewModel _:
+            case SectionItemViewModel _:
                 return SectionItemIconDataTemplate;
 
             case DirectoryEntryItemViewModel directoryEntryItem when directoryEntryItem.DirectoryEntryType == DirectoryEntryType.Directory:

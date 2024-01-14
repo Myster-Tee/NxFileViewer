@@ -51,11 +51,15 @@ public partial class PropertiesView : UserControl
                     description = localizedDescription;
             }
 
+            var propertyValue = propertyInfo.GetValue(newDataContext);
+            var visibility = propertiesViewAttribute.HideIfNull && propertyValue == null ? Visibility.Collapsed : Visibility.Visible;
+
             properties.Add(new PropertyData
             {
                 Name = name,
                 Description = description,
-                Value = propertyInfo.GetValue(newDataContext)
+                Value = propertyValue,
+                Visibility = visibility,
             });
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 
 namespace Emignatik.NxFileViewer.Utils;
 
@@ -10,7 +9,7 @@ public static class PathHelper
     {
         try
         {
-            CurrentAppDir = AppDomain.CurrentDomain.BaseDirectory ?? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Directory.GetCurrentDirectory();
+            CurrentAppDir = AppDomain.CurrentDomain.BaseDirectory;
         }
         catch
         {

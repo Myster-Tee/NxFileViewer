@@ -29,8 +29,8 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
 
-        AppDirProdKeysFilePath = Path.Combine(PathHelper.CurrentAppDir, IKeySetProviderService.DefaultProdKeysFileName);
-        AppDirTitleKeysFilePath = Path.Combine(PathHelper.CurrentAppDir, IKeySetProviderService.DefaultTitleKeysFileName);
+        AppDirProdKeysFilePath = Path.Combine(PathHelper.CurrentAppDir, IKeySetProviderService.DEFAULT_PROD_KEYS_FILE_NAME);
+        AppDirTitleKeysFilePath = Path.Combine(PathHelper.CurrentAppDir, IKeySetProviderService.DEFAULT_TITLE_KEYS_FILE_NAME);
 
         Reset();
 
@@ -124,9 +124,9 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
 
             _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysLoading_Starting_Log);
 
-            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DefaultProdKeysFileName, actualProdKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
-            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DefaultTitleKeysFileName, actualTitleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
-            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DefaultConsoleKeysFileName, actualConsoleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
+            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DEFAULT_PROD_KEYS_FILE_NAME, actualProdKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
+            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DEFAULT_TITLE_KEYS_FILE_NAME, actualTitleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
+            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DEFAULT_CONSOLE_KEYS_FILE_NAME, actualConsoleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
 
 
             var keySet = KeySet.CreateDefaultKeySet();
@@ -156,7 +156,7 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
 
     private void UpdateActualProdKeysFilePath()
     {
-        var findProdKeysFile = FindKeysFile(_appSettings.ProdKeysFilePath, IKeySetProviderService.DefaultProdKeysFileName);
+        var findProdKeysFile = FindKeysFile(_appSettings.ProdKeysFilePath, IKeySetProviderService.DEFAULT_PROD_KEYS_FILE_NAME);
 
         if (findProdKeysFile == null)
             _logger.LogWarning(LocalizationManager.Instance.Current.Keys.WarnNoProdKeysFileFound);
@@ -166,12 +166,12 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
 
     private void UpdateActualTitleKeysFilePath()
     {
-        ActualTitleKeysFilePath = FindKeysFile(_appSettings.TitleKeysFilePath, IKeySetProviderService.DefaultTitleKeysFileName);
+        ActualTitleKeysFilePath = FindKeysFile(_appSettings.TitleKeysFilePath, IKeySetProviderService.DEFAULT_TITLE_KEYS_FILE_NAME);
     }
 
     private void UpdateActualConsoleKeysFilePath()
     {
-        ActualConsoleKeysFilePath = FindKeysFile(_appSettings.ConsoleKeysFilePath, IKeySetProviderService.DefaultConsoleKeysFileName);
+        ActualConsoleKeysFilePath = FindKeysFile(_appSettings.ConsoleKeysFilePath, IKeySetProviderService.DEFAULT_CONSOLE_KEYS_FILE_NAME);
     }
 
     private string? FindKeysFile(string? keysFilePathRawFromSettings, string keysFileName)

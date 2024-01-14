@@ -8,17 +8,17 @@ namespace Emignatik.NxFileViewer.Services.KeysManagement;
 /// </summary>
 public interface IKeySetProviderService : INotifyPropertyChanged
 {
-    public const string DefaultProdKeysFileName = "prod.keys";
-    public const string DefaultConsoleKeysFileName = "console.keys";
-    public const string DefaultTitleKeysFileName = "title.keys";
+    public const string DEFAULT_PROD_KEYS_FILE_NAME = "prod.keys";
+    public const string DEFAULT_CONSOLE_KEYS_FILE_NAME = "console.keys";
+    public const string DEFAULT_TITLE_KEYS_FILE_NAME = "title.keys";
 
     /// <summary>
-    /// Get the location of the <see cref="DefaultProdKeysFileName"/> expected in the current application's directory
+    /// Get the location of the <see cref="DEFAULT_PROD_KEYS_FILE_NAME"/> expected in the current application's directory
     /// </summary>
     string AppDirProdKeysFilePath { get; }
 
     /// <summary>
-    /// Get the location of the <see cref="DefaultTitleKeysFileName"/> expected in the current application's directory
+    /// Get the location of the <see cref="DEFAULT_TITLE_KEYS_FILE_NAME"/> expected in the current application's directory
     /// </summary>
     string AppDirTitleKeysFilePath { get; }
 

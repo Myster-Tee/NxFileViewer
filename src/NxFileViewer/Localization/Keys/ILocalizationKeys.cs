@@ -59,6 +59,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string SettingsView_Title_UsedKeysFilePath { get; }
     string SettingsView_Title_KeysCustomFilePath { get; }
     string SettingsView_Title_KeysDownloadUrl { get; }
+    string SettingsView_ToolTip_Keys { get; }
     string SettingsView_ToolTip_ProdKeys { get; }
     string SettingsView_ToolTip_ConsoleKeys { get; }
     string SettingsView_ToolTip_TitleKeys { get; }
@@ -77,6 +78,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
 
     string SuspiciousFileExtension { get; }
     string DragMeAFile { get; }
+
     string MultipleFilesDragAndDropNotSupported { get; }
     string ContentType { get; }
     string TitleVersion { get; }

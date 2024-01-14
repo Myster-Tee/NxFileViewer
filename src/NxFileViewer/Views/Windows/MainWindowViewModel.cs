@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using Emignatik.NxFileViewer.Commands;
@@ -6,6 +7,7 @@ using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.FileOpening;
+using Emignatik.NxFileViewer.Services.KeysManagement;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions.DragAndDrop;
 using Emignatik.NxFileViewer.Views.UserControls;
@@ -17,6 +19,7 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
 {
     private readonly ILogger _logger;
     private readonly IFileOpenerService _fileOpenerService;
+    private readonly IKeySetProviderService _keySetProviderService;
 
     private OpenedFileViewModel? _openedFile;
     private readonly string _appNameAndVersion;
@@ -40,10 +43,12 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
         IServiceProvider serviceProvider,
         ILogSource logSource,
         IMainBackgroundTaskRunnerService backgroundTaskRunnerService,
-        IShowRenameToolWindowCommand showRenameToolWindowCommand)
+        IShowRenameToolWindowCommand showRenameToolWindowCommand,
+        IKeySetProviderService keySetProviderService)
     {
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         _fileOpenerService = fileOpenerService ?? throw new ArgumentNullException(nameof(fileOpenerService));
+        _keySetProviderService = keySetProviderService ?? throw new ArgumentNullException(nameof(keySetProviderService));
         _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
         OpenFileCommand = openFileCommand ?? throw new ArgumentNullException(nameof(openFileCommand));
         ExitAppCommand = exitAppCommand ?? throw new ArgumentNullException(nameof(exitAppCommand));
@@ -65,10 +70,8 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
 
         UpdateTitle();
         _openedFileService.OpenedFileChanged += OnOpenedFileChanged;
+        _keySetProviderService.PropertyChanged += OnKeySetProviderPropertyChanged;
         LogSource.Log += OnLog;
-
-
-
     }
 
     private IServiceProvider ServiceProvider { get; }
@@ -92,6 +95,8 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
     public IOpenTitleWebPageCommand OpenTitleWebPageCommand { get; }
 
     public IShowRenameToolWindowCommand ShowRenameToolWindowCommand { get; }
+
+    public bool NoProdKeysLoaded => _keySetProviderService.ActualProdKeysFilePath == null;
 
     public string Title
     {
@@ -140,6 +145,14 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
         var newFile = args.NewFile;
         OpenedFile = newFile != null ? new OpenedFileViewModel(newFile, ServiceProvider) : null;
         UpdateTitle();
+    }
+
+    private void OnKeySetProviderPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(IKeySetProviderService.ActualProdKeysFilePath))
+        {
+            NotifyPropertyChanged(nameof(NoProdKeysLoaded));
+        }
     }
 
     public void OnFilesDropped(string[] files)
