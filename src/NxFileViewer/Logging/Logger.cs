@@ -30,7 +30,7 @@ public class LoggerSource : ILogSource, ILogger
         return logLevel >= Level;
     }
 
-    public IDisposable BeginScope<TState>(TState state)
+    public IDisposable BeginScope<TState>(TState state) where TState : notnull
     {
         throw new NotSupportedException();
     }

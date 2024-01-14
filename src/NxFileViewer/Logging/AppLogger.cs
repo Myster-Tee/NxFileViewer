@@ -37,7 +37,7 @@ public class AppLogger : ILogger
         return logLevel >= _appSettings.LogLevel;
     }
 
-    public IDisposable BeginScope<TState>(TState state)
+    public IDisposable BeginScope<TState>(TState state) where TState : notnull
     {
         throw new NotSupportedException();
     }
