@@ -364,7 +364,7 @@ public class FileItemLoader : IFileItemLoader
                 var entryPath = directoryEntry.FullPath;
 
                 // NACP File
-                if (parentItem.ParentItem.ContentType == NcaContentType.Control && string.Equals(entryName, NacpItem.NacpFileName, StringComparison.OrdinalIgnoreCase) && directoryEntry.Type == DirectoryEntryType.File)
+                if (parentItem.ParentItem.ContentType == NcaContentType.Control && string.Equals(entryName, NacpItem.NACP_FILE_NAME, StringComparison.OrdinalIgnoreCase) && directoryEntry.Type == DirectoryEntryType.File)
                 {
                     IFile nacpFile;
                     try

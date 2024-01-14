@@ -140,7 +140,7 @@ public class FileOverviewLoader : IFileOverviewLoader
                         var nacpItem = ncaItem.FindNacpItem();
                         if (nacpItem == null)
                         {
-                            var message = LocalizationManager.Instance.Current.Keys.LoadingError_NacpFileMissing.SafeFormat(NacpItem.NacpFileName);
+                            var message = LocalizationManager.Instance.Current.Keys.LoadingError_NacpFileMissing.SafeFormat(NacpItem.NACP_FILE_NAME);
                             ncaItem.Errors.Add(message);
                             _logger.LogError(message);
                         }
