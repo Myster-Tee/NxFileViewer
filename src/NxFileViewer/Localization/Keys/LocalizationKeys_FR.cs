@@ -28,8 +28,6 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string MenuItem_ShowRenameToolWindow => "Outil de renommage...";
 
     public string MultiContentPackage => "Package a contenu multiples";
-    public string GeneralInfo => "Informations Générales";
-    public string TitleId => "ID du titre";
     public string DisplayVersion => "Version affichée";
     public string Presentation => "Présentation";
     public string ToolTip_AvailableLanguages => "Le titre, l'éditeur et l'icône peuvent changer selon la langue sélectionnée.";
@@ -118,9 +116,15 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string SuspiciousFileExtension => "L'extension du fichier «{0}» semble invalide, «{1}» ou «{2}» était attendu.";
     public string DragMeAFile => "Glisse moi un petit fichier supporté par ici :)";
     public string MultipleFilesDragAndDropNotSupported => "L'ouverture de plusieurs fichiers n'est pas supportée, seul le premier sera ouvert.";
-    public string ContentType => "Type";
-    public string TitleVersion => "Version";
-    public string MinimumSystemVersion => "Version minimum du system";
+
+    public string CnmtOverview_GeneralInfo => "Informations Générales";
+    public string CnmtOverview_TitleId => "ID du titre";
+    public string CnmtOverview_ContentType => "Type";
+    public string CnmtOverview_TitleVersion => "Version";
+    public string CnmtOverview_MinimumSystemVersion => "Version minimum du système";
+    public string CnmtOverview_BuildID => "Build ID";
+    public string CnmtOverview_BuildID_NotAvailableBecauseSectionIsSparse => "Non disponible (contenu dispersé)";
+    public string CnmtOverview_IsDemo => "Démo";
 
     public string ContextMenu_SaveImage => "Sauvegarder...";
     public string CopyTitleImageError => "Echec de copie du fichier image: {0}";
@@ -170,6 +174,8 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string LoadingError_NcaFileMissing => "L'entrée NCA «{0}» de type «{1}» est manquante.";
     public string LoadingError_NoCnmtFound => "Auncun CNMT trouvé!";
     public string LoadingError_NacpFileMissing => "Fichier NACP «{0}» non trouvé!";
+    public string LoadingError_NcaMissingSection => "Le fichier NCA de type de contenu «{0}» ne contient pas la section de type «{0}».";
+    public string LoadingError_MainFileMissing => "Fichier «{0}» non trouvé!";
     public string LoadingError_IconMissing => "Le fichier d'icône «{0}» est manquant.";
     public string LoadingError_XciSecurePartitionNotFound => "Partition sécurisée XCI non trouvée!";
     public string LoadingError_FailedToGetNcaSectionFsHeader => "Echec de récupération de l'entête du système de fichier NCA pour la section «{0}»: {1}";

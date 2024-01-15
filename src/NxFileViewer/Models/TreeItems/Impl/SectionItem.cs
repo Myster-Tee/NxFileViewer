@@ -56,6 +56,8 @@ public class SectionItem : ItemBase
 
     public NcaSparseInfo? SparseInfo { get; }
 
+    public bool IsSparse => SparseInfo != null;
+
     public NcaFsPatchInfo? PatchInfo { get; }
 
     /// <summary>

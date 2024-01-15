@@ -7,6 +7,7 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 
 public class MainItem : DirectoryEntryItem
 {
+    public const string MAIN_FILE_NAME = "main";
 
     public MainItem(NsoHeader nsoHeader, SectionItem parentItem, DirectoryEntryEx directoryEntry)
         : base(parentItem, directoryEntry)

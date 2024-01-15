@@ -7,6 +7,7 @@
              xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls"
              xmlns:userControls="clr-namespace:Emignatik.NxFileViewer.Views.UserControls"
              xmlns:overview="clr-namespace:Emignatik.NxFileViewer.Models.Overview"
+             xmlns:customControls1="clr-namespace:Emignatik.NxFileViewer.Utils.MVVM.CustomControls"
              mc:Ignorable="d"
              Style="{StaticResource UserControlStyle}"
              d:DesignHeight="450" d:DesignWidth="400" d:DataContext="{d:DesignInstance userControls:CnmtContainerViewModel}">
@@ -14,10 +15,11 @@
     <DockPanel Margin="0">
 
         <!-- General Info -->
-        <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.GeneralInfo}" DockPanel.Dock="Top">
+        <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CnmtOverview_GeneralInfo}" DockPanel.Dock="Top">
 
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
@@ -28,24 +30,44 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Row="0" Grid.Column="0">
-                    <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ContentType}" Style="{StaticResource Title2}"/>
+                    <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CnmtOverview_ContentType}" Style="{StaticResource Title2}"/>
                     <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=Type, Mode=OneWay}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="0" Grid.Column="2">
-                    <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.TitleId}" Style="{StaticResource Title2}"/>
+                    <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CnmtOverview_TitleId}" Style="{StaticResource Title2}"/>
                     <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=TitleId, Mode=OneWay}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="0">
-                    <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.TitleVersion}" Style="{StaticResource Title2}"/>
+                    <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CnmtOverview_TitleVersion}" Style="{StaticResource Title2}"/>
                     <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=TitleVersion, Mode=OneWay}" ToolTip="{Binding Path=PatchLevel, Mode=OneWay}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="2">
-                    <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MinimumSystemVersion}" Style="{StaticResource Title2}"/>
+                    <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CnmtOverview_MinimumSystemVersion}" Style="{StaticResource Title2}"/>
                     <TextBox Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=MinimumSystemVersion, Mode=OneWay}" />
                 </StackPanel>
+
+                <Grid Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CnmtOverview_BuildID}" Style="{StaticResource Title2}"/>
+                    <TextBox Grid.Row="1" Grid.Column="0" Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=BuildID, Mode=OneWay}" />
+
+                    <CheckBox Grid.Row="1" Grid.Column="2" IsChecked="{Binding IsDemo, Mode=OneWay}" VerticalAlignment="Center" customControls1:ToggleButtonEx.IsReadOnly="True"
+                              Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CnmtOverview_IsDemo}" />
+
+                </Grid>
             </Grid>
 
         </GroupBox>

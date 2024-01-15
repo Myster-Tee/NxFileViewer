@@ -28,8 +28,6 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string MenuItem_ShowRenameToolWindow => "Renaming tool...";
 
     public string MultiContentPackage => "Multi-content Package";
-    public string GeneralInfo => "General Info";
-    public string TitleId => "Title ID";
     public string DisplayVersion => "Display Version";
     public string Presentation => "Presentation";
     public string ToolTip_AvailableLanguages => "Title, Publisher and Icon may change according to the selected language.";
@@ -117,9 +115,15 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string SuspiciousFileExtension => "File extension «{0}» seems invalid, «{1}» or «{2}» was expected.";
     public string DragMeAFile => "Drag me any supported file here :)";
     public string MultipleFilesDragAndDropNotSupported => "Multiple files drag and drop not supported, only the first file will be opened.";
-    public string ContentType => "Type";
-    public string TitleVersion => "Version";
-    public string MinimumSystemVersion => "Minimum system version";
+
+    public string CnmtOverview_GeneralInfo => "General Info";
+    public string CnmtOverview_TitleId => "Title ID";
+    public string CnmtOverview_ContentType => "Type";
+    public string CnmtOverview_TitleVersion => "Version";
+    public string CnmtOverview_MinimumSystemVersion => "Minimum system version";
+    public string CnmtOverview_BuildID => "Build ID";
+    public string CnmtOverview_BuildID_NotAvailableBecauseSectionIsSparse => "Not available (content sparse)";
+    public string CnmtOverview_IsDemo => "Demo";
 
     public string ContextMenu_SaveImage => "Save...";
     public string CopyTitleImageError => "Failed to copy title image: {0}";
@@ -169,6 +173,8 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string LoadingError_NcaFileMissing => "NCA entry «{0}» of type «{1}» missing.";
     public string LoadingError_NoCnmtFound => "No CNMT entry found!";
     public string LoadingError_NacpFileMissing => "NACP file «{0}» not found!";
+    public string LoadingError_NcaMissingSection => "NCA of content type «{0}» is missing section of type «{0}».";
+    public string LoadingError_MainFileMissing => "File «{0}» not found!";
     public string LoadingError_IconMissing => "Expected icon file «{0}» missing.";
     public string LoadingError_XciSecurePartitionNotFound => "XCI secure partition not found!";
     public string LoadingError_FailedToGetNcaSectionFsHeader => "Failed to get NCA file system header of section «{0}»: {1}";

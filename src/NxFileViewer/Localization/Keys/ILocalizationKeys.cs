@@ -24,8 +24,6 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string MenuItem_ShowRenameToolWindow { get; }
 
     string MultiContentPackage { get; }
-    string GeneralInfo { get; }
-    string TitleId { get; }
     string DisplayVersion { get; }
     string Presentation { get; }
     string ToolTip_AvailableLanguages { get; }
@@ -80,9 +78,15 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string DragMeAFile { get; }
 
     string MultipleFilesDragAndDropNotSupported { get; }
-    string ContentType { get; }
-    string TitleVersion { get; }
-    string MinimumSystemVersion { get; }
+
+    string CnmtOverview_GeneralInfo { get; }
+    string CnmtOverview_TitleId { get; }
+    string CnmtOverview_ContentType { get; }
+    string CnmtOverview_TitleVersion { get; }
+    string CnmtOverview_MinimumSystemVersion { get; }
+    string CnmtOverview_BuildID { get; }
+    string CnmtOverview_BuildID_NotAvailableBecauseSectionIsSparse { get; }
+    string CnmtOverview_IsDemo { get; }
 
     string ContextMenu_SaveImage { get; }
     string CopyTitleImageError { get; }
@@ -132,6 +136,8 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string LoadingError_NcaFileMissing { get; }
     string LoadingError_NoCnmtFound { get; }
     string LoadingError_NacpFileMissing { get; }
+    string LoadingError_NcaMissingSection { get; }
+    string LoadingError_MainFileMissing { get; }
     string LoadingError_IconMissing { get; }
     string LoadingError_XciSecurePartitionNotFound { get; }
     string LoadingError_FailedToGetNcaSectionFsHeader { get; }

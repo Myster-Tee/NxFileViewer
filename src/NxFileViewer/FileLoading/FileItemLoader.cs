@@ -323,9 +323,7 @@ public class FileItemLoader : IFileItemLoader
                     {
                         OnLoadingException(ex, sectionItem);
 
-                        var message =
-                            LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenNcaSectionFileSystem
-                                .SafeFormat(sectionIndex, ex.Message);
+                        var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToOpenNcaSectionFileSystem.SafeFormat(sectionIndex, ex.Message);
                         sectionItem.Errors.Add(TREE_LOADING_CATEGORY, message);
                         _logger.LogError(ex, message);
                     }
@@ -440,7 +438,7 @@ public class FileItemLoader : IFileItemLoader
                     parentItem.ChildItems.Add(new CnmtItem(cnmt, parentItem, directoryEntry));
                 }
                 // MAIN file
-                else if (parentItem.ParentItem.ContentType == NcaContentType.Program && string.Equals(entryName, "main", StringComparison.OrdinalIgnoreCase) && directoryEntry.Type == DirectoryEntryType.File)
+                else if (parentItem.ParentItem.ContentType == NcaContentType.Program && string.Equals(entryName, MainItem.MAIN_FILE_NAME, StringComparison.OrdinalIgnoreCase) && directoryEntry.Type == DirectoryEntryType.File)
                 {
                     IFile nsoFile;
                     try

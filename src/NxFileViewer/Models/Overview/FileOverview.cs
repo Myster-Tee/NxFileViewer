@@ -33,13 +33,12 @@ public class FileOverview : NotifyPropertyChangedBase
 
     /// <summary>
     /// Shortcut which returns the list of all <see cref="NcaItem"/> contained in the <see cref="RootItem"/>
-    /// (<see cref="ItemExtension.FindAllNcaItems"/>)
     /// </summary>
     public IReadOnlyCollection<NcaItem> NcaItems
     {
         get
         {
-            return _ncaItems ??= RootItem.FindAllNcaItems().ToArray();
+            return _ncaItems ??= RootItem.FindChildrenOfType<NcaItem>(includeItem: true).ToArray();
         }
     }
 

@@ -8,7 +8,6 @@ namespace Emignatik.NxFileViewer.Models.Overview;
 /// </summary>
 public class CnmtContainer 
 {
-
     public CnmtContainer(CnmtItem cnmtItem)
     {
         CnmtItem = cnmtItem ?? throw new ArgumentNullException(nameof(cnmtItem));
@@ -21,4 +20,13 @@ public class CnmtContainer
     /// </summary>
     public NacpContainer? NacpContainer { get; set; }
 
+    /// <summary>
+    /// The main item
+    /// </summary>
+    public MainItem? MainItem { get; set; }
+
+    /// <summary>
+    /// True when Code Section is sparse, which means <see cref="MainItem"/> is normally null
+    /// </summary>
+    public bool MainItemSectionIsSparse { get; set; }
 }

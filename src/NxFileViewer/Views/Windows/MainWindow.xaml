@@ -11,7 +11,7 @@
         mc:Ignorable="d"
         AllowDrop="True"
         Style="{StaticResource WindowStyle}"
-        Title="{Binding Path=Title}" Height="600" Width="450" d:DataContext="{d:DesignInstance windows:MainWindowViewModel}"
+        Title="{Binding Path=Title}" Height="704" Width="470" d:DataContext="{d:DesignInstance windows:MainWindowViewModel}"
         dragAndDrop:DropFilesBehaviorExtension.IsEnabled="True">
 
     <Window.InputBindings>

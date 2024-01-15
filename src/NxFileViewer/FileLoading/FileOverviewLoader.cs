@@ -11,6 +11,7 @@ using LibHac.Fs;
 using LibHac.Fs.Fsa;
 using LibHac.Tools.Fs;
 using LibHac.Tools.FsSystem;
+using LibHac.Tools.FsSystem.NcaUtils;
 using Microsoft.Extensions.Logging;
 using ContentType = LibHac.Ncm.ContentType;
 
@@ -121,8 +122,10 @@ public class FileOverviewLoader : IFileOverviewLoader
                     var ncaId = cnmtContentEntry.NcaId.ToStrId();
 
                     var parentPartitionFileSystemItem = cnmtItem.ContainerSectionItem.ParentItem.ParentItem;
-                    var ncaItem = parentPartitionFileSystemItem.FindNcaItem(ncaId);
-                    if (ncaItem == null)
+
+                    // Search for the NCA referenced by CNMT
+                    var referencedNcaItem = parentPartitionFileSystemItem.FindNcaItem(ncaId);
+                    if (referencedNcaItem == null)
                     {
                         if (cnmtContentEntry.Type == ContentType.DeltaFragment)
                             _logger.LogWarning(LocalizationManager.Instance.Current.Keys.LoadingError_NcaFileMissing.SafeFormat(ncaId, cnmtContentEntry.Type));
@@ -137,17 +140,52 @@ public class FileOverviewLoader : IFileOverviewLoader
 
                     if (cnmtContentEntry.Type == ContentType.Control)
                     {
-                        var nacpItem = ncaItem.FindNacpItem();
+                        var nacpItem = referencedNcaItem.FindNacpItem();
                         if (nacpItem == null)
                         {
                             var message = LocalizationManager.Instance.Current.Keys.LoadingError_NacpFileMissing.SafeFormat(NacpItem.NACP_FILE_NAME);
-                            ncaItem.Errors.Add(message);
+                            referencedNcaItem.Errors.Add(message);
                             _logger.LogError(message);
                         }
                         else
                         {
                             cnmtContainer.NacpContainer = LoadContentDetails(nacpItem);
                         }
+                    }
+
+                    if (cnmtContentEntry.Type == ContentType.Program)
+                    {
+                        // Search for corresponding Program (Code) section
+                        var programSection = referencedNcaItem.ChildItems.FirstOrDefault(section => section.NcaSectionType == NcaSectionType.Code);
+
+                        if (programSection == null)
+                        {
+                            var message = LocalizationManager.Instance.Current.Keys.LoadingError_NcaMissingSection.SafeFormat(cnmtContentEntry.Type, NcaSectionType.Code);
+                            referencedNcaItem.Errors.Add(message);
+                            _logger.LogError(message);
+                        }
+                        else
+                        {
+                            cnmtContainer.MainItemSectionIsSparse = programSection.IsSparse;
+
+                            if (!programSection.IsSparse)
+                            {
+                                var mainItem = programSection.FindChildrenOfType<MainItem>(includeItem: false).FirstOrDefault();
+                                cnmtContainer.MainItem = mainItem;
+
+                                if (mainItem == null)
+                                {
+                                    var message = LocalizationManager.Instance.Current.Keys.LoadingError_MainFileMissing.SafeFormat(MainItem.MAIN_FILE_NAME);
+                                    referencedNcaItem.Errors.Add(message);
+                                    _logger.LogError(message);
+                                }
+                            }
+                            else
+                            {
+                                cnmtContainer.MainItem = null;
+                            }
+                        }
+
                     }
                 }
 

@@ -8,6 +8,7 @@ using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Models.Overview;
 using Emignatik.NxFileViewer.Utils.MVVM;
+using LibHac.Ns;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -94,10 +95,34 @@ public class CnmtContainerViewModel : ViewModelBase
     /// </summary>
     public string? DisplayVersion => _cnmtContainer.NacpContainer?.NacpItem.DisplayVersion;
 
+    /// <summary>
+    /// Indicates if title is a demo
+    /// </summary>
+    public bool IsDemo => _cnmtContainer.NacpContainer?.NacpItem.Attribute == ApplicationControlProperty.AttributeFlagValue.Demo;
+
+    /// <summary>
+    /// The build ID
+    /// </summary>
+    public string BuildID
+    {
+        get
+        {
+            if (_cnmtContainer.MainItem != null)
+                return _cnmtContainer.MainItem?.ModuleId ?? "";
+            if (_cnmtContainer.MainItemSectionIsSparse)
+                return LocalizationManager.Instance.Current.Keys.CnmtOverview_BuildID_NotAvailableBecauseSectionIsSparse;
+            else
+                return "";
+        }
+    }
 
     public Visibility PresentationGroupBoxVisibility => _cnmtContainer.NacpContainer == null ? Visibility.Collapsed : Visibility.Visible;
+
 }
 
+/// <summary>
+/// View model for a title and an icon for a specific region/language
+/// </summary>
 public class TitleInfoViewModel
 {
     private readonly ILogger _logger;
@@ -120,7 +145,6 @@ public class TitleInfoViewModel
     public string Publisher => Title.Publisher;
 
     public NacpLanguage Language => Title.Language;
-
 
     private BitmapImage? BuildBitmapImage(byte[]? bytes)
     {
