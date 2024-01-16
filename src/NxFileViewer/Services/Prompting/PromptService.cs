@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Tools;
+using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace Emignatik.NxFileViewer.Services.Prompting;
@@ -40,43 +40,27 @@ public class PromptService : IPromptService
         return dirPath;
     }
 
-    public string? PromptSaveFile(string defaultFileName, string? title = null, IEnumerable<CommonFileDialogFilter>? filters = null)
+    public string? PromptSaveFile(string defaultFileName, string? title = null, string? filter = null)
     {
         title ??= LocalizationManager.Instance.Current.Keys.SaveDialog_Title;
         var sanitizedFileName = _fsSanitizer.SanitizeFileName(defaultFileName);
 
-        var fileDialog = new CommonSaveFileDialog
+        var saveFileDialog = new SaveFileDialog
         {
-            Title = title,
             InitialDirectory = _appSettings.LastUsedDir,
-            DefaultFileName = sanitizedFileName,
+            Title = title,
+            FileName = sanitizedFileName,
+            Filter = filter ?? $"{LocalizationManager.Instance.Current.Keys.SaveDialog_AnyFileFilter} (*.*)|*.*"
         };
 
-        if (filters == null)
-        {
-
-            fileDialog.Filters.Add(new CommonFileDialogFilter
-            {
-                DisplayName = LocalizationManager.Instance.Current.Keys.SaveDialog_AnyFileFilter,
-                ShowExtensions = false
-            });
-        }
-        else
-        {
-            foreach (var filter in filters)
-            {
-                fileDialog.Filters.Add(filter);
-            }
-        }
-
-
-        if (fileDialog.ShowDialog(Application.Current.MainWindow) != CommonFileDialogResult.Ok)
+        if (saveFileDialog.ShowDialog() == false) 
             return null;
 
-        var filePath = fileDialog.FileName;
+        var filePath = saveFileDialog.FileName;
 
         _appSettings.LastUsedDir = Path.GetDirectoryName(filePath)!;
 
         return filePath;
+
     }
 }
