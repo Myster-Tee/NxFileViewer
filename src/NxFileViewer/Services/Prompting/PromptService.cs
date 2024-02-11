@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Windows;
+using System.Windows.Forms;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Tools;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace Emignatik.NxFileViewer.Services.Prompting;
 
@@ -22,55 +20,37 @@ public class PromptService : IPromptService
 
     public string? PromptSelectDir(string title)
     {
-        var fileDialog = new CommonOpenFileDialog
+        var folderDialog = new FolderBrowserDialog
         {
             InitialDirectory = _appSettings.LastUsedDir,
-            Multiselect = false,
-            IsFolderPicker = true,
-            Title = title
+            Description = title
         };
 
-        if (fileDialog.ShowDialog(Application.Current.MainWindow) != CommonFileDialogResult.Ok)
+        if (folderDialog.ShowDialog() != DialogResult.OK)
             return null;
 
-        var dirPath = fileDialog.FileName;
+        var dirPath = folderDialog.SelectedPath;
 
         _appSettings.LastUsedDir = dirPath;
 
         return dirPath;
     }
 
-    public string? PromptSaveFile(string defaultFileName, string? title = null, IEnumerable<CommonFileDialogFilter>? filters = null)
+    public string? PromptSaveFile(string defaultFileName, string? title = null, string? filters = null)
     {
-        title ??= LocalizationManager.Instance.Current.Keys.SaveDialog_Title;
+        title ??= filters != null ? LocalizationManager.Instance.Current.Keys.SaveDialog_Title : LocalizationManager.Instance.Current.Keys.SaveDialog_AnyFileFilter;
         var sanitizedFileName = _fsSanitizer.SanitizeFileName(defaultFileName);
 
-        var fileDialog = new CommonSaveFileDialog
+        var fileDialog = new SaveFileDialog
         {
             Title = title,
             InitialDirectory = _appSettings.LastUsedDir,
-            DefaultFileName = sanitizedFileName,
+            FileName = sanitizedFileName,
+            Filter = filters
         };
 
-        if (filters == null)
-        {
 
-            fileDialog.Filters.Add(new CommonFileDialogFilter
-            {
-                DisplayName = LocalizationManager.Instance.Current.Keys.SaveDialog_AnyFileFilter,
-                ShowExtensions = false
-            });
-        }
-        else
-        {
-            foreach (var filter in filters)
-            {
-                fileDialog.Filters.Add(filter);
-            }
-        }
-
-
-        if (fileDialog.ShowDialog(Application.Current.MainWindow) != CommonFileDialogResult.Ok)
+        if (fileDialog.ShowDialog() != DialogResult.OK)
             return null;
 
         var filePath = fileDialog.FileName;

@@ -6,7 +6,6 @@ using Emignatik.NxFileViewer.Models.Overview;
 using Emignatik.NxFileViewer.Services.Prompting;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace Emignatik.NxFileViewer.Commands;
 
@@ -44,20 +43,7 @@ public class SaveTitleImageCommand : CommandBase, ISaveTitleImageCommand
 
 
             var defaultFileName = $"{title.AppName}_({title.Language}).jpg";
-            var filters = new CommonFileDialogFilter[]
-            {
-                new()
-                {
-                    DisplayName = LocalizationManager.Instance.Current.Keys.SaveDialog_ImageFilter,
-                    Extensions =
-                    {
-                        "jpg"
-                    },
-                    ShowExtensions = true
-                }
-            };
-
-            var filePath = _promptService.PromptSaveFile(defaultFileName, LocalizationManager.Instance.Current.Keys.SaveDialog_Title, filters);
+            var filePath = _promptService.PromptSaveFile(defaultFileName, LocalizationManager.Instance.Current.Keys.SaveDialog_Title, "Image Files|*.jpg");
 
             if (filePath == null)
                 return;
