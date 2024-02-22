@@ -235,7 +235,7 @@ public class FileRenamerService : IFileRenamerService
                             partValue = content.PatchTitleId;
                             break;
                         case PatternKeyword.TitleName:
-                            var firstTitle = content.NacpData?.Titles.FirstOrDefault();
+                            var firstTitle = content.NacpData?.Titles.FirstOrDefault(title => title != null && !string.IsNullOrEmpty(title.Name));
                             partValue = firstTitle != null ? firstTitle.Name : "NO_TITLE";
                             break;
                         case PatternKeyword.PackageType:
