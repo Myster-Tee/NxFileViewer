@@ -11,7 +11,7 @@
     <Company>NxFileViewer</Company>
     <Product>NxFileViewer</Product>
     <Authors>NxFileViewer</Authors>
-    <Version>2.7.0</Version>
+    <Version>2.7.1</Version>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageIcon>Icon.ico</PackageIcon>
     <Description>Browse content of Nintendo Switch files</Description>
@@ -44,11 +44,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
     <PackageReference Include="LibHac" Version="0.19.0" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="ZstdSharp.Port" Version="0.7.2" />
   </ItemGroup>
 
   <ItemGroup>
