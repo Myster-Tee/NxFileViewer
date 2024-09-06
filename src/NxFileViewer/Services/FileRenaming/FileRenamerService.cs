@@ -222,7 +222,7 @@ public class FileRenamerService : IFileRenamerService
                     newFileName += staticText.Text;
                     break;
                 case DynamicTextPatternPart dynamicText:
-                    string partValue;
+                    string? partValue;
                     switch (dynamicText.Keyword)
                     {
                         case PatternKeyword.TitleId:
@@ -246,6 +246,9 @@ public class FileRenamerService : IFileRenamerService
                             break;
                         case PatternKeyword.PatchNumber:
                             partValue = content.PatchNumber.ToString();
+                            break;
+                        case PatternKeyword.DisplayVersion:
+                            partValue = content.NacpData?.DisplayVersionString.ToString();
                             break;
                         case PatternKeyword.OnlineTitleName:
                             var onlineTitleInfo = await _cachedOnlineTitleInfoService.GetTitleInfoAsync(content.TitleId);

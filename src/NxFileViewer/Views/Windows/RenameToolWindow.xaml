@@ -12,14 +12,14 @@
         mc:Ignorable="d"
         Style="{StaticResource WindowStyle}"
         Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_WindowTitle}" 
-        Height="400"
-        Width="380"
+        Height="900"
+        Width="1400"
         d:DataContext="{d:DesignInstance windows:RenameToolWindowViewModel}">
 
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*" />
+            <RowDefinition Height=".5*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -55,7 +55,7 @@
                             <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding Path=RenameCommand.FileFilters}" VerticalAlignment="Center" />
                             <CheckBox Grid.Row="1" Grid.Column="1" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_IncludeSubDirectories}" 
                               IsChecked="{Binding Path=RenameCommand.IncludeSubdirectories}"
-                              HorizontalAlignment="Center" VerticalAlignment="Center" />
+                              HorizontalAlignment="Right" VerticalAlignment="Center" />
                         </Grid>
                     </StackPanel>
                 </GroupBox>
@@ -182,7 +182,7 @@
             <userControls:LoggingView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LogSource="{Binding LogSource, Mode=OneWay}" />
         </GroupBox>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Margin="0,5">
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Height="30" HorizontalAlignment="Right" Margin="0,5">
             <CheckBox Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Simulation}" VerticalAlignment="Center" IsChecked="{Binding Path=RenameCommand.IsSimulation}" 
                       Style="{StaticResource TextOnLeft}" />
 
