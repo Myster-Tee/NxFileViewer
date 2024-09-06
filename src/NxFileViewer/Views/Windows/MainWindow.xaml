@@ -90,7 +90,7 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_ShowRenameToolWindow}" 
-                          Command="{Binding Path=ShowRenameToolWindowCommand}" InputGestureText="F9">
+                          Command="{Binding Path=ShowRenameToolWindowCommand}" InputGestureText="F2">
                     <MenuItem.Icon>
                         <Image Source="/Styling/Icons/rename_16x16.png" />
                     </MenuItem.Icon>

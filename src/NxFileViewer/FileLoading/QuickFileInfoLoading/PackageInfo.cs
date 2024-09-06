@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Emignatik.NxFileViewer.Models.Overview;
 using Emignatik.NxFileViewer.Utils;
+using LibHac.Common;
 using LibHac.Ncm;
 using LibHac.Ns;
 using LibHac.Tools.FsSystem.NcaUtils;
@@ -60,6 +63,8 @@ public class Content
 public class NacpData
 {
     private readonly ApplicationControlProperty _applicationControlProperty;
+ 
+    public U8Span DisplayVersionString => new U8Span(_applicationControlProperty.DisplayVersion.ItemsRo);
 
     public NacpData(ApplicationControlProperty applicationControlProperty)
     {

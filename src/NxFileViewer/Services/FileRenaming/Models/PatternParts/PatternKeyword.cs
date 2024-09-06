@@ -69,6 +69,12 @@ public enum PatternKeyword
     /// </summary>
     [SerializedValue("WAppTitle")]
     OnlineAppTitleName,
+
+    /// <summary>
+    /// The update display version number.
+    /// </summary>
+    [SerializedValue("UpdateVer")]
+    DisplayVersion,
 }
 
 public static class PatternKeywordHelper

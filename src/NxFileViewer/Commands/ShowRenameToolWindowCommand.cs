@@ -26,6 +26,8 @@ public class ShowRenameToolWindowCommand : CommandBase, IShowRenameToolWindowCom
         }
 
         var renameToolWindowViewModel = _serviceProvider.GetRequiredService<RenameToolWindowViewModel>();
+        var mainWindowViewModel = _serviceProvider.GetService<MainWindowViewModel>();
+        mainWindowViewModel?.CloseFileCommand.Execute(null);
 
         _renameToolWindow = new RenameToolWindow
         {
