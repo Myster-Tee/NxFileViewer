@@ -31,19 +31,20 @@ public class ShowRenameToolWindowCommand : CommandBase, IShowRenameToolWindowCom
 
         _renameToolWindow = new RenameToolWindow
         {
-            Owner = Application.Current.MainWindow,
+            Owner = Application.Current.MainWindow,            
         };
         _renameToolWindow.Closed += OnRenameToolWindowClosed;
         _renameToolWindow.DataContext = renameToolWindowViewModel;
         renameToolWindowViewModel.Window = _renameToolWindow;
-
         _renameToolWindow.Show();
+        Application.Current.MainWindow.Hide();
     }
 
     private void OnRenameToolWindowClosed(object? sender, EventArgs e)
     {
         _renameToolWindow = null;
         TriggerCanExecuteChanged();
+        Application.Current?.MainWindow?.Show();
     }
 }
 

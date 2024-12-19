@@ -73,8 +73,14 @@ public enum PatternKeyword
     /// <summary>
     /// The update display version number.
     /// </summary>
-    [SerializedValue("UpdateVer")]
+    [SerializedValue("DisplayVer")]
     DisplayVersion,
+
+    /// <summary>
+    /// The update display version number.
+    /// </summary>
+    [SerializedValue("XCIUpdateVer")]
+    XCIUpdateVersion,
 }
 
 public static class PatternKeywordHelper
