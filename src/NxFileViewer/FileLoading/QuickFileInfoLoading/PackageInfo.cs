@@ -58,6 +58,21 @@ public class Content
 
     public int PatchNumber => _cnmt.TitleVersion.GetPatchNumber();
 
+    public string DisplayVersion
+    {
+        get
+        {
+            U8Span _displayVersion = new U8Span("0");
+            if (NacpData != null)
+            {
+                _displayVersion = NacpData.DisplayVersionString;
+            }
+            return _displayVersion.ToString();
+        }
+    }
+
+    public string XCIUpdateVersion = "zzz";
+
 }
 
 public class NacpData

@@ -12,8 +12,8 @@
         mc:Ignorable="d"
         Style="{StaticResource WindowStyle}"
         Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_WindowTitle}" 
-        Height="900"
-        Width="1400"
+        Height="600"
+        Width="800"
         d:DataContext="{d:DesignInstance windows:RenameToolWindowViewModel}">
 
     <Grid>

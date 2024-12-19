@@ -163,28 +163,50 @@ public class FileRenamerService : IFileRenamerService
 
     private async Task<string> ComputeFileName(string filePath, INamingSettings namingSettings, CancellationToken cancellationToken)
     {
-        string newFileName;
+        string newFileName ="";
 
         var packageInfo = _packageInfoLoader.GetPackageInfo(filePath);
 
-        if (packageInfo.Contents.Count == 1)
-        {
-            var content = packageInfo.Contents[0];
+        //if (packageInfo.Contents.Count == 1)
+        //{
+        //    var content = packageInfo.Contents[0];
 
-            var patternParts = content.Type switch
-            {
-                ContentMetaType.Application => namingSettings.ApplicationPattern,
-                ContentMetaType.Patch => namingSettings.PatchPattern,
-                ContentMetaType.AddOnContent => namingSettings.AddonPattern,
-                _ => throw new ContentTypeNotSupportedException(content.Type)
-            };
-            newFileName = await ComputePackageFileName(content, packageInfo.AccuratePackageType, patternParts, cancellationToken);
-        }
-        else
+        //    var patternParts = content.Type switch
+        //    {
+        //        ContentMetaType.Application => namingSettings.ApplicationPattern,
+        //        ContentMetaType.Patch => namingSettings.PatchPattern,
+        //        ContentMetaType.AddOnContent => namingSettings.AddonPattern,
+        //        _ => throw new ContentTypeNotSupportedException(content.Type)
+        //    };
+        //    newFileName = await ComputePackageFileName(content, packageInfo.AccuratePackageType, patternParts, cancellationToken);
+        //}
+        //else
+        //{
+        //    //TODO: supporter les super NSP/XCI
+        //    throw new SuperPackageNotSupportedException();
+        //}
+
+        var content = packageInfo.Contents[0];
+        var patternParts = content.Type switch
         {
-            //TODO: supporter les super NSP/XCI
-            throw new SuperPackageNotSupportedException();
+            ContentMetaType.Application => namingSettings.ApplicationPattern,
+            ContentMetaType.Patch => namingSettings.PatchPattern,
+            ContentMetaType.AddOnContent => namingSettings.AddonPattern,
+            _ => throw new ContentTypeNotSupportedException(content.Type)
+        };
+
+       
+        for (int i = 1; i < packageInfo.Contents.Count; i++)
+        {
+            var tcnt = packageInfo.Contents[i];
+            if (tcnt.Type == ContentMetaType.Patch)
+            {
+                content.XCIUpdateVersion = tcnt.DisplayVersion;
+            }
         }
+        newFileName = await ComputePackageFileName(content, packageInfo.AccuratePackageType, patternParts, cancellationToken);
+
+
 
         if (namingSettings.ReplaceWhiteSpaceChars)
         {
@@ -235,8 +257,9 @@ public class FileRenamerService : IFileRenamerService
                             partValue = content.PatchTitleId;
                             break;
                         case PatternKeyword.TitleName:
-                            var firstTitle = content.NacpData?.Titles.FirstOrDefault();
+                            var firstTitle = content.NacpData?.Titles.FirstOrDefault();                           
                             partValue = firstTitle != null ? firstTitle.Name : "NO_TITLE";
+                            partValue = partValue.Replace(" –", " - ").Replace(" -  "," - ").Replace("™", string.Empty).Replace("®", string.Empty).Replace("©",string.Empty);
                             break;
                         case PatternKeyword.PackageType:
                             partValue = accuratePackageType.ToString();
@@ -248,15 +271,20 @@ public class FileRenamerService : IFileRenamerService
                             partValue = content.PatchNumber.ToString();
                             break;
                         case PatternKeyword.DisplayVersion:
-                            partValue = content.NacpData?.DisplayVersionString.ToString();
+                            partValue = content.DisplayVersion;
+                            break;
+                        case PatternKeyword.XCIUpdateVersion:
+                            partValue = content.XCIUpdateVersion;
                             break;
                         case PatternKeyword.OnlineTitleName:
                             var onlineTitleInfo = await _cachedOnlineTitleInfoService.GetTitleInfoAsync(content.TitleId);
                             partValue = onlineTitleInfo != null ? onlineTitleInfo.Name : "NO_TITLE";
+                            partValue = partValue.Replace(" –", " - ").Replace(" -  ", " - ").Replace("™", string.Empty).Replace("®", string.Empty).Replace("©", string.Empty);
                             break;
                         case PatternKeyword.OnlineAppTitleName:
                             var onlineAppTitleInfo = await _cachedOnlineTitleInfoService.GetTitleInfoAsync(content.ApplicationTitleId);
                             partValue = onlineAppTitleInfo != null ? onlineAppTitleInfo.Name : "NO_TITLE";
+                            partValue = partValue.Replace(" –", " - ").Replace(" -  ", " - ").Replace("™", string.Empty).Replace("®", string.Empty).Replace("©", string.Empty);
                             break;
 
                         default:
@@ -284,7 +312,8 @@ public class FileRenamerService : IFileRenamerService
                     throw new NotSupportedException($"Unknown part of type «{patternPart.GetType().Name}».");
             }
         }
-
+        newFileName = newFileName.Replace("+[uzzz]", "");//.Replace("[v0]+[u", "+[v"); ;
+      
         return newFileName;
     }
 

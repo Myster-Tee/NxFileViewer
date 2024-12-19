@@ -296,8 +296,10 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
                                                    $"       - The content title retrieved from the Internet.{Environment.NewLine}" +
                                                    $"  • {{WAppTitle}}: {Environment.NewLine}" +
                                                    $"       - The title of the corresponding {nameof(ContentMetaType.Application)}, retrieved from the Internet.{Environment.NewLine}" +
-                                                   $"  • {{UpdateVer}}: {Environment.NewLine}" +
+                                                   $"  • {{DisplayVer}}: {Environment.NewLine}" +
                                                    $"       - The update display version of the corresponding {nameof(ContentMetaType.Application)}. {Environment.NewLine}" +
+                                                   $"  • {{XCIUpdateVer}}: {Environment.NewLine}" +
+                                                   $"       - The update XCIUpdate version of the corresponding {nameof(ContentMetaType.Application)}. {Environment.NewLine}" +
                                                    $"{Environment.NewLine}" +
                                                    $"Use \\{{ or \\}} to write the literal chars {{ or }}.";
     public string RenamingTool_ToolTip_BasePattern => $"The pattern to use for contents of type {nameof(ContentMetaType.Application)}.";
