@@ -69,7 +69,8 @@ public class Content
         }
     }
 
-    public string XCIUpdateVersion = "zzz";
+    public string XCIUpdateVersion = "-1";
+    public int AddonCount = 0;
 
 }
 
