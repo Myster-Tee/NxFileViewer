@@ -202,6 +202,9 @@ public class FileRenamerService : IFileRenamerService
             if (tcnt.Type == ContentMetaType.Patch)
             {
                 content.XCIUpdateVersion = tcnt.DisplayVersion;
+            }else if (tcnt.Type == ContentMetaType.AddOnContent)
+            {
+                content.AddonCount++;
             }
         }
         newFileName = await ComputePackageFileName(content, packageInfo.AccuratePackageType, patternParts, cancellationToken);
@@ -257,9 +260,10 @@ public class FileRenamerService : IFileRenamerService
                             partValue = content.PatchTitleId;
                             break;
                         case PatternKeyword.TitleName:
-                            var firstTitle = content.NacpData?.Titles.FirstOrDefault();                           
+                            var firstTitle = content.NacpData?.Titles.FirstOrDefault(title => title != null && !string.IsNullOrEmpty(title.Name));
+                            //var langId = content.NacpData?.Titles.TakeWhile(title => title != null && !string.IsNullOrEmpty(title.Name)).Count();
                             partValue = firstTitle != null ? firstTitle.Name : "NO_TITLE";
-                            partValue = partValue.Replace(" –", " - ").Replace(" -  "," - ").Replace("™", string.Empty).Replace("®", string.Empty).Replace("©",string.Empty);
+                            partValue = partValue.Replace(" –", " - ").Replace(" -  ", " - ").Replace("™", string.Empty).Replace("®", string.Empty).Replace("©", string.Empty);
                             break;
                         case PatternKeyword.PackageType:
                             partValue = accuratePackageType.ToString();
@@ -274,7 +278,16 @@ public class FileRenamerService : IFileRenamerService
                             partValue = content.DisplayVersion;
                             break;
                         case PatternKeyword.XCIUpdateVersion:
-                            partValue = content.XCIUpdateVersion;
+
+                            if (content.XCIUpdateVersion.Equals("-1"))
+                            {
+                                newFileName = newFileName[..(newFileName.LastIndexOf("[")+1)];
+                                partValue = (content.AddonCount > 0) ? String.Format("{0}DLC", content.AddonCount) : String.Empty;
+                            }
+                            else
+                            {
+                                partValue = content.XCIUpdateVersion + ((content.AddonCount > 0) ? String.Format("+{0}DLC", content.AddonCount) : String.Empty);
+                            }
                             break;
                         case PatternKeyword.OnlineTitleName:
                             var onlineTitleInfo = await _cachedOnlineTitleInfoService.GetTitleInfoAsync(content.TitleId);
@@ -312,7 +325,7 @@ public class FileRenamerService : IFileRenamerService
                     throw new NotSupportedException($"Unknown part of type «{patternPart.GetType().Name}».");
             }
         }
-        newFileName = newFileName.Replace("+[uzzz]", "");//.Replace("[v0]+[u", "+[v"); ;
+        newFileName = newFileName.Replace("+[]", "");
       
         return newFileName;
     }
