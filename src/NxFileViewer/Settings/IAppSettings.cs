@@ -25,6 +25,10 @@ public interface IAppSettings : INotifyPropertyChanged
 
     string ConsoleKeysFilePath { get; set; }
 
+    bool OpenBlocklessCompressionNCZ { get; set; }
+
+    bool IgnoreMissingDeltaFragments { get; set; }
+
     LogLevel LogLevel { get; set; }
 
     bool AlwaysReloadKeysBeforeOpen { get; set; }

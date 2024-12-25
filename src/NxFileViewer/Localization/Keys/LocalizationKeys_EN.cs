@@ -19,17 +19,16 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string MenuItem_Close => "_Close";
     public string MenuItem_Exit => "E_xit";
     public string MenuItem_Tools => "_Tools";
-    public string MenuItem_VerifyNcasHash => "Verify _hashes";
-    public string MenuItem_VerifyNcasHeaderSignature => "Verify _signatures";
+    public string MenuItem_CheckIntegrity => "Check _integrity";
     public string MenuItem_Options => "_Options";
     public string MenuItem_Settings => "_Settings";
     public string MenuItem_ReloadKeys => "Reload keys";
     public string MenuItem_OpenTitleWebPage => "Open title Web page...";
     public string MenuItem_ShowRenameToolWindow => "Renaming tool...";
 
-    public string MultiContentPackage => "Multi-content Package";
+    public string Packages_Title => "Multi-package file";
     public string DisplayVersion => "Display Version";
-    public string Presentation => "Presentation";
+    public string Presentation_Title => "Presentation";
     public string ToolTip_AvailableLanguages => "Title, Publisher and Icon may change according to the selected language.";
     public string AvailableLanguages => "Languages";
     public string AppTitle => "Title";
@@ -103,6 +102,27 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_ToolTip_LogLevel => "The log level specifies the minimum level to log.";
     public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Always reload keys before opening a file";
     public string SettingsView_Title_Language => "Language";
+    public string SettingsView_Title_NczOptions => "NSZ/XCZ settings";
+
+    public string SettingsView_ToolTip_NczBlockLessCompression => """
+                                                                  NSZ or XCZ file are composed of NCZ files which are NCA compressed files.
+                                                                  NCZ files can be compressed without using the block compression method, which makes efficient random read access impossible.
+                                                                  Thus, if the file is large and a small part needs to be read towards the end, it will be necessary to decompress the entire stream to reach the desired part.
+                                                                  Large files can therefore take a long time to open.
+                                                                  Prefer the use of block compression for large files.
+                                                                  Note that if you choose not to allow the opening of blockless compressed NCZ files, it will not affect the integrity check features.
+                                                                  """;
+
+    public string SettingsView_CheckBox_NczOpenBlocklessCompression => "Open NCZ compressed without block";
+    public string SettingsView_Title_Integrity => "Integrity";
+    public string SettingsView_CheckBox_IgnoreMissingDeltaFragments => "Ignore missing delta fragments";
+    public string SettingsView_ToolTip_IgnoreMissingDeltaFragments => $"""
+                                                                      Patch files can contain full update files and incremental update files (known as {ContentType.DeltaFragment}).
+                                                                      Those fragments are not mandatory to update an application and are sometimes intentionally removed.
+                                                                      Check this option if you want to ignore missing {ContentType.DeltaFragment} while checking integrity.
+                                                                      """;
+
+    public string SettingsView_Miscellaneous => "Misc.";
     public string SettingsView_ToolTip_OpenKeysLocation => "Open keys file location.";
     public string SettingsView_ToolTip_BrowseKeys => "Browse...";
     public string SettingsView_ToolTip_DownloadKeys => "Download from specified URL.";
@@ -116,7 +136,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string DragMeAFile => "Drag me any supported file here :)";
     public string MultipleFilesDragAndDropNotSupported => "Multiple files drag and drop not supported, only the first file will be opened.";
 
-    public string CnmtOverview_GeneralInfo => "General Info";
+    public string CnmtOverview_Title => "Package information";
     public string CnmtOverview_TitleId => "Title ID";
     public string CnmtOverview_ContentType => "Type";
     public string CnmtOverview_TitleVersion => "Version";
@@ -169,19 +189,21 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string LoadingError_FailedToLoadCnmtFile => "Failed to load CNMT file: {0}";
     public string LoadingError_FailedToLoadNcaContent => "Failed to load NCA content: {0}";
     public string LoadingError_FailedToLoadDirectoryContent => "Failed to load directory content: {0}";
-    public string LoadingError_FailedToLoadIcon => "Failed to load icon: {0}";
-    public string LoadingError_NcaFileMissing => "NCA entry «{0}» of type «{1}» missing.";
-    public string LoadingError_NoCnmtFound => "No CNMT entry found!";
-    public string LoadingError_NacpFileMissing => "NACP file «{0}» not found!";
-    public string LoadingError_NcaMissingSection => "NCA of content type «{0}» is missing section of type «{0}».";
-    public string LoadingError_MainFileMissing => "File «{0}» not found!";
-    public string LoadingError_IconMissing => "Expected icon file «{0}» missing.";
-    public string LoadingError_XciSecurePartitionNotFound => "XCI secure partition not found!";
+    public string LoadingError_FailedToLoadIcon_Log => "Failed to load icon: {0}";
+    public string LoadingError_NcaFileMissing_Log => "NCA entry «{0}» of type «{1}» missing.";
+    public string LoadingError_NoCnmtFound_Log => "No CNMT entry found!";
+    public string LoadingError_NacpFileMissing_Log => "NACP file «{0}» not found!";
+    public string LoadingError_NcaMissingSection_Log => "NCA of content type «{0}» is missing section of type «{0}».";
+    public string LoadingError_MainFileMissing_Log => "File «{0}» not found!";
+    public string LoadingError_IconMissing_Log => "Expected icon file «{0}» missing.";
+    public string LoadingError_XciSecurePartitionNotFound_Log => "XCI secure partition not found!";
     public string LoadingError_FailedToGetNcaSectionFsHeader => "Failed to get NCA file system header of section «{0}»: {1}";
     public string LoadingError_FailedToOpenMainFile => "Failed to open Main file: {0}";
     public string LoadingError_FailedToLoadMainFile => "Failed to load Main file: {0}";
     public string LoadingError_FailedToLoadTicketFile => "Failed to load ticket file: {0}";
     public string LoadingError_FailedToLoadTitleIdKey => "Failed to load Title ID key from ticket file «{0}»: {1}";
+    public string LoadingError_NczBlocklessCompressionDisabled => "Opening of NCZ with blockless compression is disabled in the settings.";
+
     public string LoadingInfo_TitleIdKeySuccessfullyInjected => "Title ID key «{0}={1}» found in ticket file «{2}» successfully added to the set of keys.";
     public string LoadingWarning_TitleIdKeyReplaced => "Title ID key «{0}={1}» found in ticket file «{2}» has been used as replacement of the existing title ID key «{0}={2}» found in the set of keys.";
     public string LoadingDebug_TitleIdKeyAlreadyExists => "Title ID key «{0}={1}» found in ticket file «{2}» was already registered in the set of keys.";
@@ -198,50 +220,64 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string Log_OpeningFile => "=====> {0} <=====";
     public string MainModuleIdTooltip => "Also known as «Build ID» (or BID).";
     public string ATaskIsAlreadyRunning => "A task is already running...";
+    public string FileInfo_Title => "File";
+    public string Title_FileInfo_FileType => "Type";
+    public string Title_FileInfo_Compression => "Compression";
+    public string Title_FileInfo_Integrity => "Integrity";
+    public string ToolTip_NcasIntegrity => $"""
+                                           Integrity check consists in verifying the integrity of each NCA (or NCZ).
+                                           
+                                           Integrity result can be any of the following:
+                                           - {NcasIntegrity_NoNca}: No NCA file found.
+                                           - {NcasIntegrity_Unchecked}: Integrity not checked.
+                                           - {NcasIntegrity_InProgress}: Integrity check in progress.
+                                           - {NcasIntegrity_Original}: All NCAs are original (signature and hash ok).
+                                           - {NcasIntegrity_Incomplete}: All NCAs are original, but some are missing.
+                                           - {NcasIntegrity_Modified}: At least one NCA is modified (signature is not ok, but hash is ok).
+                                           - {NcasIntegrity_Corrupted}: At least one NCA is corrupted (hash failed).
+                                           - {NcasIntegrity_Error}: An error occurred during the integrity check.
+                                           
+                                           The detail of each NCA analysis can be found in the «Content» tab.
+                                           """;
 
-    public string Integrity => "Integrity";
     public string AvailableContents => "Contents:";
     public string MultiContentPackageToolTip => "Current package contains multiple contents («{0}» detected).";
 
-    public string Title_NcasHeaderSignature => "Signature:";
-    public string ToolTip_NcasHeaderSignature => "Verifies the signature of each NCA header.";
-    public string Title_NcasHash => "Hash:";
-    public string ToolTip_NcasHash => """
-                                      Verifies the hash of each NCA.
-                                      A valid hash ensures that a file has not been corrupted.
-                                      """;
+    public string NcasIntegrity_Error_NcaMissing => "Integrity of NCA «{0}» can't be verified, NCA missing.";
+    public string NcasIntegrity_Error_Log => "Failed to verify NCAs integrity: {0}";
+    public string NcaIntegrity_GetOriginalNcaError => "Failed to get original NCA: {0}";
+    public string NcaIntegrity_GetOriginalNcaError_Log => "Failed to get original NCA from NCA «{0}»: {1}";
 
-    public string NcaHeaderSignature_VerificationStart_Log => ">>> Signature verification starting...";
-    public string NcaHeaderSignature_VerificationEnd_Log => ">>> Signature verification finished.";
     public string NcaHeaderSignature_Valid_Log => "Header signature of NCA «{0}» is valid.";
     public string NcaHeaderSignature_Invalid => "NCA header signature verification failed with status «{0}».";
     public string NcaHeaderSignature_Invalid_Log => "Header signature verification of NCA «{0}» failed with status «{1}».";
     public string NcaHeaderSignature_Error => "Failed to verify NCA header signature: {0}.";
-    public string NcaHeaderSignature_Error_log => "Failed to verify header signature of NCA «{0}»: {1}";
-    public string NcasHeaderSignature_Error_Log => "Failed to verify NCA's headers signature: {0}";
+    public string NcaHeaderSignature_Error_log => "Failed to verify signature of NCA header «{0}»: {1}";
 
     public string NcaHash_VerificationStart_Log => ">>> NCAs hash verification starting...";
     public string NcaHash_VerificationEnd_Log => ">>> NCAs hash verification finished.";
+    public string NcaHash_NcaItem_CantExtractHashFromName => "Failed to extract expected hash from NCA name.";
+    public string NcaHash_CantExtractHashFromName_Log => "Failed to extract expected hash from NCA name «{0}».";
     public string NcaHash_Valid_Log => "Hash of NCA «{0}» is valid.";
     public string NcaHash_NcaItem_Invalid => "Hash is not valid.";
     public string NcaHash_Invalid_Log => "Hash of NCA «{0}» is not valid.";
-    public string NcaHash_CnmtItem_Error_NcaMissing => "Hash can't be verified, NCA «{0}» is missing.";
     public string NcaHash_NcaItem_Exception => "Failed to verify hash: {0}";
     public string NcaHash_Exception_Log => "Failed to verify hash of NCA «{0}»: {1}";
-    public string NcasHash_Error_Log => "Failed to verify NCAs hashes: {0}";
     public string NcaHash_ProgressText => "Hashing NCA {0}/{1}...";
 
     public string CancelAction => "Cancel";
     public string Status_Ready => "Ready.";
     public string LoadingFile_PleaseWait => "Loading, please wait...";
 
-    public string NcasValidity_NoNca => "No NCA";
-    public string NcasValidity_Unchecked => "Unchecked";
-    public string NcasValidity_InProgress => "In progress";
-    public string NcasValidity_Invalid => "Invalid";
-    public string NcasValidity_Valid => "Valid";
-    public string NcasValidity_Error => "Error";
-    public string NcasValidity_Unknown => "Unknown";
+    public string NcasIntegrity_NoNca => "No NCA";
+    public string NcasIntegrity_Unchecked => "Unchecked";
+    public string NcasIntegrity_InProgress => "In progress";
+    public string NcasIntegrity_Original => "Original";
+    public string NcasIntegrity_Incomplete => "Incomplete";
+    public string NcasIntegrity_Modified => "Modified";
+    public string NcasIntegrity_Corrupted => "Corrupted";
+    public string NcasIntegrity_Error => "Error";
+    public string NcasIntegrity_Unknown => "Unknown";
 
     public string Status_SavingFile => "Saving file «{0}»...";
 
@@ -265,7 +301,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string Log_SaveToDirCanceled => "Directory saving canceled.";
     public string Log_SaveFileCanceled => "File saving canceled.";
     public string Log_SaveStorageCanceled => "Storage saving canceled.";
-    public string Log_NcaHashCanceled => "NCAs hash canceled.";
+    public string Log_NcasIntegrityCanceled => "NCAs integrity canceled.";
 
     public string RenamingTool_WindowTitle => "Renaming tool";
     public string RenamingTool_Patterns => "Patterns";

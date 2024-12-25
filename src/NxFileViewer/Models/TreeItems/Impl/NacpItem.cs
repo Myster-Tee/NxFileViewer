@@ -9,8 +9,7 @@ public class NacpItem : DirectoryEntryItem
 {
     public const string NACP_FILE_NAME = "control.nacp";
 
-    public NacpItem(ApplicationControlProperty nacp, SectionItem parentItem, DirectoryEntryEx directoryEntry)
-        : base(parentItem, directoryEntry)
+    public NacpItem(ApplicationControlProperty nacp, SectionItem parentItem, DirectoryEntryEx directoryEntry) : base(parentItem, directoryEntry)
     {
         Nacp = nacp;
         ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));

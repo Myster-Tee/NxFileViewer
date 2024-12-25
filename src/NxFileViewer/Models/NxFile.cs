@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using System;
+using System.IO;
 using Emignatik.NxFileViewer.Models.Overview;
 using Emignatik.NxFileViewer.Models.TreeItems;
 
@@ -9,18 +11,18 @@ namespace Emignatik.NxFileViewer.Models;
 /// </summary>
 public class NxFile : IDisposable
 {
-    public NxFile(string path, IItem rootItem, FileOverview overview)
+    public NxFile(string filePath, IItem rootItem, FileOverview overview)
     {
-        Path = path;
+        FilePath = filePath;
         RootItem = rootItem;
         Overview = overview;
-        FileName = System.IO.Path.GetFileName(path);
+        FileName = Path.GetFileName(filePath);
     }
 
     /// <summary>
     /// Get the path of the opened file
     /// </summary>
-    public string Path { get; }
+    public string FilePath { get; }
 
     /// <summary>
     /// Get the root item of the opened file

@@ -43,7 +43,7 @@ public class SavePartitionFileCommand : CommandBase, ISavePartitionFileCommand
 
         try
         {
-            var file = _partitionFileItem.File;
+            using var file = _partitionFileItem.LoadFile();
 
             var filePath = _promptService.PromptSaveFile(_partitionFileItem.Name);
             if (filePath == null)

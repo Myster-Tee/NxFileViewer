@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Emignatik.NxFileViewer.Models.TreeItems.Impl;
+﻿using LibHac.Common.Keys;
 using LibHac.Common;
-using LibHac.Common.Keys;
 using LibHac.Fs;
-using LibHac.Fs.Fsa;
-using LibHac.FsSystem;
 using LibHac.Ns;
 using LibHac.Tools.Fs;
-using LibHac.Tools.FsSystem;
 using LibHac.Tools.FsSystem.NcaUtils;
+using LibHac.Tools.FsSystem;
 using LibHac.Tools.Ncm;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using LibHac.Fs.Fsa;
 
-namespace Emignatik.NxFileViewer.Utils;
+namespace Emignatik.NxFileViewer.Utils.LibHacExtensions;
 
-public static class LibHacHelperExtension
+public static class IFileSystemExtension
 {
-
     public static IEnumerable<DirectoryEntryEx> FindCnmtEntries(this IFileSystem fileSystem)
     {
         foreach (var fileEntry in fileSystem.EnumerateEntries().Where(e => e.Type == DirectoryEntryType.File))
@@ -96,61 +93,11 @@ public static class LibHacHelperExtension
         return blitStruct.Value;
     }
 
-    public static IEnumerable<FoundEntry> FindEntriesAmongSections(this Nca nca, string searchPattern, SearchOptions searchOptions = SearchOptions.RecurseSubdirectories | SearchOptions.CaseInsensitive)
-    {
-        for (var sectionIndex = 0; sectionIndex < NcaItem.MaxSections; sectionIndex++)
-        {
-            if (!nca.Header.IsSectionEnabled(sectionIndex))
-                continue;
-
-            var sectionFileSystem = nca.OpenFileSystem(sectionIndex, IntegrityCheckLevel.ErrorOnInvalid);
-
-            var entries = sectionFileSystem.EnumerateEntries("/", searchPattern, searchOptions);
-            foreach (var entry in entries)
-            {
-                yield return new FoundEntry(sectionFileSystem, entry);
-            }
-        }
-    }
-
 
     public static IFile LoadFile(this IFileSystem fileSystem, DirectoryEntryEx directoryEntryEx, OpenMode openMode = OpenMode.Read)
     {
         using var uniqueRefFile = new UniqueRef<IFile>();
         fileSystem.OpenFile(ref uniqueRefFile.Ref, directoryEntryEx.FullPath.ToU8Span(), openMode).ThrowIfFailure();
         return uniqueRefFile.Release();
-    }
-
-
-    public static int GetPatchNumber(this TitleVersion titleVersion)
-    {
-        return titleVersion.Minor;
-    }
-
-    public static PartitionFileSystem LoadPartition(this IStorage storage)
-    {
-        var pfs = new UniqueRef<PartitionFileSystem>(new PartitionFileSystem());
-        pfs.Get.Initialize(storage).ThrowIfFailure();
-        return pfs.Get;
-    }
-}
-
-public class FoundEntry
-{
-    public FoundEntry(IFileSystem sectionFileSystem, DirectoryEntryEx entry)
-    {
-        SectionFileSystem = sectionFileSystem;
-        Entry = entry;
-    }
-
-    public IFileSystem SectionFileSystem { get; }
-
-    public DirectoryEntryEx Entry { get; }
-
-
-    public void Deconstruct(out IFileSystem sectionFileSystem, out DirectoryEntryEx entry)
-    {
-        sectionFileSystem = SectionFileSystem;
-        entry = Entry;
     }
 }

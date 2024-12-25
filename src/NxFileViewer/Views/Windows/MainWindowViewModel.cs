@@ -35,8 +35,7 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
         ICloseFileCommand closeFileCommand,
         IExitAppCommand exitAppCommand,
         IShowSettingsWindowCommand showSettingsWindowCommand,
-        IVerifyNcasHeaderSignatureCommand verifyNcasHeaderSignatureCommand,
-        IVerifyNcasHashCommand verifyNcasHashCommand,
+        IVerifyNcasIntegrityCommand verifyNcasIntegrityCommand,
         ILoadKeysCommand loadKeysCommand,
         IOpenTitleWebPageCommand openTitleWebPageCommand,
         IFileOpenerService fileOpenerService,
@@ -53,8 +52,7 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
         OpenFileCommand = openFileCommand ?? throw new ArgumentNullException(nameof(openFileCommand));
         ExitAppCommand = exitAppCommand ?? throw new ArgumentNullException(nameof(exitAppCommand));
         ShowSettingsWindowCommand = showSettingsWindowCommand ?? throw new ArgumentNullException(nameof(showSettingsWindowCommand));
-        VerifyNcasHeaderSignatureCommand = verifyNcasHeaderSignatureCommand ?? throw new ArgumentNullException(nameof(verifyNcasHeaderSignatureCommand));
-        VerifyNcasHashCommand = verifyNcasHashCommand ?? throw new ArgumentNullException(nameof(verifyNcasHashCommand));
+        VerifyNcasIntegrityCommand = verifyNcasIntegrityCommand ?? throw new ArgumentNullException(nameof(verifyNcasIntegrityCommand));
         LoadKeysCommand = loadKeysCommand ?? throw new ArgumentNullException(nameof(loadKeysCommand));
         ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         LogSource = logSource ?? throw new ArgumentNullException(nameof(logSource));
@@ -82,9 +80,7 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
 
     public IShowSettingsWindowCommand ShowSettingsWindowCommand { get; }
 
-    public IVerifyNcasHeaderSignatureCommand VerifyNcasHeaderSignatureCommand { get; }
-
-    public IVerifyNcasHashCommand VerifyNcasHashCommand { get; }
+    public IVerifyNcasIntegrityCommand VerifyNcasIntegrityCommand { get; }
 
     public ILoadKeysCommand LoadKeysCommand { get; }
 

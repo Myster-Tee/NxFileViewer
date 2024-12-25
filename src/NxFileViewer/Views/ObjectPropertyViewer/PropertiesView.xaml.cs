@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -14,21 +15,36 @@ namespace Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 /// </summary>
 public partial class PropertiesView : UserControl
 {
+    private readonly ObservableCollection<PropertyData> _properties = new();
+
     public PropertiesView()
     {
         InitializeComponent();
         DataContextChanged += OnDataContextChanged;
+        PropertiesDataGrid.DataContext = _properties;
+
     }
 
     private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        BuildFromDataContext(e.NewValue);
+        RefreshPropertiesWithDataContext(e.NewValue);
     }
 
-    private void BuildFromDataContext(object? newDataContext)
+    private INotifyPropertyChanged? _prevNotifyPropertyChanged;
+
+    /// <summary>
+    /// Build the collection of <see cref="PropertyData"/> models bound to this view
+    /// </summary>
+    /// <param name="newDataContext"></param>
+    private void RefreshPropertiesWithDataContext(object? newDataContext)
     {
-        var properties = new ObservableCollection<PropertyData>();
-        PropertiesDataGrid.DataContext = properties;
+        _properties.Clear();
+
+        if (_prevNotifyPropertyChanged != null)
+        {
+            _prevNotifyPropertyChanged.PropertyChanged -= OnDataContextPropertyChanged;
+            _prevNotifyPropertyChanged = null;
+        }
 
         if (newDataContext == null)
             return;
@@ -51,29 +67,37 @@ public partial class PropertiesView : UserControl
                     description = localizedDescription;
             }
 
-            var propertyValue = propertyInfo.GetValue(newDataContext);
-            var visibility = propertiesViewAttribute.HideIfNull && propertyValue == null ? Visibility.Collapsed : Visibility.Visible;
-
-            properties.Add(new PropertyData
+            _properties.Add(new PropertyData(propertyInfo, newDataContext)
             {
                 Name = name,
                 Description = description,
-                Value = propertyValue,
-                Visibility = visibility,
+                HideWhenValueNull = propertiesViewAttribute.HideIfNull,
             });
+
+            if (newDataContext is INotifyPropertyChanged notifyPropertyChanged)
+            {
+                _prevNotifyPropertyChanged = notifyPropertyChanged;
+                _prevNotifyPropertyChanged.PropertyChanged += OnDataContextPropertyChanged;
+            }
         }
 
     }
 
-    private static readonly Dictionary<Type, Property[]> CachedPropertiesByType = new();
+    private void OnDataContextPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        var property = _properties.FirstOrDefault(p => p.PropertyInfo.Name == e.PropertyName);
+        property?.NotifyPropertyChanged(nameof(PropertyData.Value));
+    }
+
+    private static readonly Dictionary<Type, Property[]> _cachedPropertiesByType = new();
 
     private static Property[] GetCachedObjectTypeProperties(Type type)
     {
-        if (CachedPropertiesByType.TryGetValue(type, out var properties))
+        if (_cachedPropertiesByType.TryGetValue(type, out var properties))
             return properties;
         properties = GetObjectTypeProperties(type).ToArray();
 
-        CachedPropertiesByType.Add(type, properties);
+        _cachedPropertiesByType.Add(type, properties);
         return properties;
     }
 

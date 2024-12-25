@@ -30,6 +30,9 @@ public class ItemViewModelBuilder : IItemViewModelBuilder
             case NspItem nspItem:
                 itemViewModel = new NspItemViewModel(nspItem, _serviceProvider);
                 break;
+            case NczItem nczItem:
+                itemViewModel = new NczItemViewModel(nczItem, _serviceProvider);
+                break;
             case NcaItem ncaItem:
                 itemViewModel = new NcaItemViewModel(ncaItem, _serviceProvider);
                 break;

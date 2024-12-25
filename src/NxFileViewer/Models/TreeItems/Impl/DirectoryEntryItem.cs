@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using LibHac.Common;
 using LibHac.Fs;
 using LibHac.Fs.Fsa;
@@ -67,7 +67,7 @@ public class DirectoryEntryItem : ItemBase
     /// <summary>
     /// Get the child directory entries (can be either a file or a directory)
     /// </summary>
-    public sealed override List<DirectoryEntryItem> ChildItems { get; } = new();
+    public new DirectoryEntryItem[] ChildItems => base.ChildItems.OfType<DirectoryEntryItem>().ToArray();
 
     /// <summary>
     /// Get the <see cref="DirectoryEntry"/> metadata

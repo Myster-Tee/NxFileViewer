@@ -5,7 +5,6 @@ using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Models.Overview;
 using Emignatik.NxFileViewer.Models.TreeItems;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
-using Emignatik.NxFileViewer.Utils;
 using LibHac.Common;
 using LibHac.Fs;
 using LibHac.Fs.Fsa;
@@ -54,9 +53,7 @@ public class FileOverviewLoader : IFileOverviewLoader
 
             if (securePartitionItem == null)
             {
-                var message = LocalizationManager.Instance.Current.Keys.LoadingError_XciSecurePartitionNotFound;
-                xciItem.Errors.Add(message);
-                _logger.LogError(message);
+                _logger.LogError(LocalizationManager.Instance.Current.Keys.LoadingError_XciSecurePartitionNotFound_Log);
                 return fileOverview;
             }
 
@@ -72,33 +69,10 @@ public class FileOverviewLoader : IFileOverviewLoader
         private FileOverview FillOverview(FileOverview fileOverview, PartitionFileSystemItemBase partitionItem)
         {
             var cnmtContainers = BuildCnmtContainers(partitionItem).ToArray();
-
-            var packageType = DeterminePackageType(fileOverview, cnmtContainers);
-
-            fileOverview.PackageType = packageType;
             fileOverview.CnmtContainers.AddRange(cnmtContainers);
-
             return fileOverview;
         }
 
-        private static Models.Overview.PackageType DeterminePackageType(FileOverview fileOverview, CnmtContainer[] cnmtContainers)
-        {
-            Models.Overview.PackageType packageType;
-            if (cnmtContainers.Length > 1)
-            {
-                var rootItemType = fileOverview.RootItem.GetType();
-                if (rootItemType == typeof(XciItem))
-                    packageType = Models.Overview.PackageType.SuperXCI;
-                else if (rootItemType == typeof(NspItem))
-                    packageType = Models.Overview.PackageType.SuperNSP;
-                else
-                    packageType = Models.Overview.PackageType.Unknown;
-            }
-            else
-                packageType = Models.Overview.PackageType.Normal;
-
-            return packageType;
-        }
 
         private IEnumerable<CnmtContainer> BuildCnmtContainers(PartitionFileSystemItemBase partitionItem)
         {
@@ -106,63 +80,41 @@ public class FileOverviewLoader : IFileOverviewLoader
             // Find all Cnmt (kind of manifest containing contents information such a base title, a patch, etc.)
             var cnmtItems = partitionItem.FindAllCnmtItems().ToArray();
 
-            if (cnmtItems.Length <= 0)
-            {
-                var message = LocalizationManager.Instance.Current.Keys.LoadingError_NoCnmtFound;
-                partitionItem.Errors.Add(message);
-                _logger.LogError(message);
-            }
+            if (cnmtItems.Length <= 0) 
+                _logger.LogError(LocalizationManager.Instance.Current.Keys.LoadingError_NoCnmtFound_Log);
 
             foreach (var cnmtItem in cnmtItems)
             {
                 var cnmtContainer = new CnmtContainer(cnmtItem);
 
-                foreach (var cnmtContentEntry in cnmtItem.Cnmt.ContentEntries)
+                foreach (var cnmtEntryItem in cnmtItem.ChildItems)
                 {
-                    var ncaId = cnmtContentEntry.NcaId.ToStrId();
-
-                    var parentPartitionFileSystemItem = cnmtItem.ContainerSectionItem.ParentItem.ParentItem;
+                    var referencedNcaItem = cnmtEntryItem.FindReferencedNcaItem();
 
                     // Search for the NCA referenced by CNMT
-                    var referencedNcaItem = parentPartitionFileSystemItem.FindNcaItem(ncaId);
                     if (referencedNcaItem == null)
                     {
-                        if (cnmtContentEntry.Type == ContentType.DeltaFragment)
-                            _logger.LogWarning(LocalizationManager.Instance.Current.Keys.LoadingError_NcaFileMissing.SafeFormat(ncaId, cnmtContentEntry.Type));
-                        else
-                        {
-                            var message = LocalizationManager.Instance.Current.Keys.LoadingError_NcaFileMissing.SafeFormat(ncaId, cnmtContentEntry.Type);
-                            parentPartitionFileSystemItem.Errors.Add(message);
-                            _logger.LogError(message);
-                        }
+                        _logger.LogError(LocalizationManager.Instance.Current.Keys.LoadingError_NcaFileMissing_Log.SafeFormat(cnmtEntryItem.NcaId, cnmtEntryItem.NcaContentType));
                         continue;
                     }
 
-                    if (cnmtContentEntry.Type == ContentType.Control)
+                    if (cnmtEntryItem.NcaContentType == ContentType.Control)
                     {
                         var nacpItem = referencedNcaItem.FindNacpItem();
                         if (nacpItem == null)
-                        {
-                            var message = LocalizationManager.Instance.Current.Keys.LoadingError_NacpFileMissing.SafeFormat(NacpItem.NACP_FILE_NAME);
-                            referencedNcaItem.Errors.Add(message);
-                            _logger.LogError(message);
-                        }
+                            _logger.LogError(LocalizationManager.Instance.Current.Keys.LoadingError_NacpFileMissing_Log.SafeFormat(NacpItem.NACP_FILE_NAME));
                         else
-                        {
                             cnmtContainer.NacpContainer = LoadContentDetails(nacpItem);
-                        }
                     }
 
-                    if (cnmtContentEntry.Type == ContentType.Program)
+                    if (cnmtEntryItem.NcaContentType == ContentType.Program)
                     {
                         // Search for corresponding Program (Code) section
                         var programSection = referencedNcaItem.ChildItems.FirstOrDefault(section => section.NcaSectionType == NcaSectionType.Code);
 
                         if (programSection == null)
                         {
-                            var message = LocalizationManager.Instance.Current.Keys.LoadingError_NcaMissingSection.SafeFormat(cnmtContentEntry.Type, NcaSectionType.Code);
-                            referencedNcaItem.Errors.Add(message);
-                            _logger.LogError(message);
+                            _logger.LogError(LocalizationManager.Instance.Current.Keys.LoadingError_NcaMissingSection_Log.SafeFormat(cnmtEntryItem.NcaContentType, NcaSectionType.Code));
                         }
                         else
                         {
@@ -174,11 +126,7 @@ public class FileOverviewLoader : IFileOverviewLoader
                                 cnmtContainer.MainItem = mainItem;
 
                                 if (mainItem == null)
-                                {
-                                    var message = LocalizationManager.Instance.Current.Keys.LoadingError_MainFileMissing.SafeFormat(MainItem.MAIN_FILE_NAME);
-                                    referencedNcaItem.Errors.Add(message);
-                                    _logger.LogError(message);
-                                }
+                                    _logger.LogError(LocalizationManager.Instance.Current.Keys.LoadingError_MainFileMissing_Log.SafeFormat(MainItem.MAIN_FILE_NAME));
                             }
                             else
                             {
@@ -226,9 +174,7 @@ public class FileOverviewLoader : IFileOverviewLoader
             var iconItem = sectionItem.ChildItems.FirstOrDefault(item => string.Equals(item.Name, expectedFileName, StringComparison.OrdinalIgnoreCase));
             if (iconItem == null)
             {
-                var message = LocalizationManager.Instance.Current.Keys.LoadingError_IconMissing.SafeFormat(expectedFileName);
-                sectionItem.Errors.Add(message);
-                _logger.LogError(message);
+                _logger.LogError(LocalizationManager.Instance.Current.Keys.LoadingError_IconMissing_Log.SafeFormat(expectedFileName));
                 return null;
             }
 
@@ -250,9 +196,7 @@ public class FileOverviewLoader : IFileOverviewLoader
             }
             catch (Exception ex)
             {
-                var message = LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadIcon.SafeFormat(ex.Message);
-                iconItem.Errors.Add(message);
-                _logger.LogError(ex, message);
+                _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadIcon_Log.SafeFormat(ex.Message));
                 return null;
             }
         }

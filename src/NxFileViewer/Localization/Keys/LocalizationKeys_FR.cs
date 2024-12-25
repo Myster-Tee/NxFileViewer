@@ -19,17 +19,16 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string MenuItem_Close => "_Fermer";
     public string MenuItem_Exit => "Q_uitter";
     public string MenuItem_Tools => "_Outils";
-    public string MenuItem_VerifyNcasHash => "Vérifier les _hash";
-    public string MenuItem_VerifyNcasHeaderSignature => "Verify les _signatures";
+    public string MenuItem_CheckIntegrity => "Vérifier l'_intégrité";
     public string MenuItem_Options => "_Options";
     public string MenuItem_Settings => "_Paramètres";
     public string MenuItem_ReloadKeys => "Recharger les clés";
     public string MenuItem_OpenTitleWebPage => "Ouvrir la page Web du titre...";
     public string MenuItem_ShowRenameToolWindow => "Outil de renommage...";
 
-    public string MultiContentPackage => "Package a contenu multiples";
+    public string Packages_Title => "Fichier a contenus multiples";
     public string DisplayVersion => "Version affichée";
-    public string Presentation => "Présentation";
+    public string Presentation_Title => "Présentation";
     public string ToolTip_AvailableLanguages => "Le titre, l'éditeur et l'icône peuvent changer selon la langue sélectionnée.";
     public string AvailableLanguages => "Langues";
     public string AppTitle => "Titre";
@@ -104,6 +103,26 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_ToolTip_LogLevel => "Le niveau de log indique à partir de quel niveau les messages sont logués.";
     public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Toujours recharger les clés avant l'ouverture d'un fichier";
     public string SettingsView_Title_Language => "Langue";
+    public string SettingsView_Title_NczOptions => "Paramètres NSZ/XCZ";
+    public string SettingsView_ToolTip_NczBlockLessCompression => """
+                                                                  Les fichiers NSZ ou XCZ sont composés de fichiers NCZ qui sont des fichiers NCA compressés.
+                                                                  Les fichiers NCZ peuvent être compressés sans utiliser la méthode de compression par bloc, ce qui rend impossible les accès en lecture aléatoire de façon efficace.
+                                                                  Ainsi, si le fichier est volumineux et qu'il faut lire une petite partie vers la fin, il sera nécessaire de décompresser tout le flux jusqu'à atteindre la partie souhaitée.
+                                                                  Les gros fichiers peuvent donc prendre beaucoup de temps avant d'être ouverts.
+                                                                  Privilégiez l'utilisation de la compression par bloc pour les fichiers volumineux.
+                                                                  Notez que si vous choisissez de ne pas permettre l'ouverture des fichiers compressés sans bloc, cela n'affectera pas les fonctionnalités de contrôle d'intégrité.
+                                                                  """;
+
+    public string SettingsView_CheckBox_NczOpenBlocklessCompression => "Ouvrir les NCZ compressés sans bloc";
+    public string SettingsView_Title_Integrity => "Intégrité";
+    public string SettingsView_CheckBox_IgnoreMissingDeltaFragments => "Ignorer les fragments de delta manquants";
+    public string SettingsView_ToolTip_IgnoreMissingDeltaFragments => $"""
+                                                                       Les fichiers de patch peuvent contenir des fichiers de mise à jour incrémentielle (connu sous le nom de {ContentType.DeltaFragment}).
+                                                                       Ces fragments ne sont pas obligatoires pour mettre à jour une application, et sont parfois retirés volontairement.
+                                                                       Cochez cette option si vous voulez ignorer les {ContentType.DeltaFragment} absents lors de la vérification de l'intégrité.
+                                                                       """;
+
+    public string SettingsView_Miscellaneous => "Divers";
     public string SettingsView_ToolTip_OpenKeysLocation => "Ouvrir l'emplacement du fichier de clés.";
     public string SettingsView_ToolTip_BrowseKeys => "Parcourir...";
     public string SettingsView_ToolTip_DownloadKeys => "Télécharger à partir de l'URL spécifiée.";
@@ -117,7 +136,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string DragMeAFile => "Glisse moi un petit fichier supporté par ici :)";
     public string MultipleFilesDragAndDropNotSupported => "L'ouverture de plusieurs fichiers n'est pas supportée, seul le premier sera ouvert.";
 
-    public string CnmtOverview_GeneralInfo => "Informations Générales";
+    public string CnmtOverview_Title => "Informations du package";
     public string CnmtOverview_TitleId => "ID du titre";
     public string CnmtOverview_ContentType => "Type";
     public string CnmtOverview_TitleVersion => "Version";
@@ -170,19 +189,21 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string LoadingError_FailedToLoadCnmtFile => "Echec de chargement du fichier CNMT: {0}";
     public string LoadingError_FailedToLoadNcaContent => "Echec de chargement du contenu du NCA: {0}";
     public string LoadingError_FailedToLoadDirectoryContent => "Echec de chargement du contenu du répertoire: {0}";
-    public string LoadingError_FailedToLoadIcon => "Echec de chargement de l'icône: {0}";
-    public string LoadingError_NcaFileMissing => "L'entrée NCA «{0}» de type «{1}» est manquante.";
-    public string LoadingError_NoCnmtFound => "Auncun CNMT trouvé!";
-    public string LoadingError_NacpFileMissing => "Fichier NACP «{0}» non trouvé!";
-    public string LoadingError_NcaMissingSection => "Le fichier NCA de type de contenu «{0}» ne contient pas la section de type «{0}».";
-    public string LoadingError_MainFileMissing => "Fichier «{0}» non trouvé!";
-    public string LoadingError_IconMissing => "Le fichier d'icône «{0}» est manquant.";
-    public string LoadingError_XciSecurePartitionNotFound => "Partition sécurisée XCI non trouvée!";
+    public string LoadingError_FailedToLoadIcon_Log => "Echec de chargement de l'icône: {0}";
+    public string LoadingError_NcaFileMissing_Log => "L'entrée NCA «{0}» de type «{1}» est manquante.";
+    public string LoadingError_NoCnmtFound_Log => "Auncun CNMT trouvé!";
+    public string LoadingError_NacpFileMissing_Log => "Fichier NACP «{0}» non trouvé!";
+    public string LoadingError_NcaMissingSection_Log => "Le fichier NCA de type de contenu «{0}» ne contient pas la section de type «{0}».";
+    public string LoadingError_MainFileMissing_Log => "Fichier «{0}» non trouvé!";
+    public string LoadingError_IconMissing_Log => "Le fichier d'icône «{0}» est manquant.";
+    public string LoadingError_XciSecurePartitionNotFound_Log => "Partition sécurisée XCI non trouvée!";
     public string LoadingError_FailedToGetNcaSectionFsHeader => "Echec de récupération de l'entête du système de fichier NCA pour la section «{0}»: {1}";
     public string LoadingError_FailedToOpenMainFile => "Echec d'ouverture du fichier Main: {0}";
     public string LoadingError_FailedToLoadMainFile => "Echec de chargement du fichier Main: {0}";
     public string LoadingError_FailedToLoadTicketFile => "Echec de chargement du fichier ticket: {0}";
     public string LoadingError_FailedToLoadTitleIdKey => "Echec de chargement de la clé du Title ID à partir du fichier ticket «{0}»: {1}";
+    public string LoadingError_NczBlocklessCompressionDisabled => "L'ouverture de NCZ sans compression par bloc est désactivé dans les paramètres.";
+
     public string LoadingInfo_TitleIdKeySuccessfullyInjected => "La clé du Title ID «{0}={1}» trouvée dans le fichier ticket «{2}» a été ajoutée avec succès dans le trousseau de clés.";
     public string LoadingWarning_TitleIdKeyReplaced => "La clé du Title ID «{0}={1}» trouvée dans le fichier ticket «{2}» a été utilisée pour remplacer la clé existante «{0}={2}» du trousseau de clés.";
     public string LoadingDebug_TitleIdKeyAlreadyExists => "La clé du Title ID «{0}={1}» trouvée dans le fichier ticket «{2}» était déjà enregistrée dans le trousseau.";
@@ -199,50 +220,64 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string Log_OpeningFile => "=====> {0} <=====";
     public string MainModuleIdTooltip => "Egalement connu sous le nom de «Build ID» (ou BID).";
     public string ATaskIsAlreadyRunning => "Une tâche est déjà en cours...";
+    public string FileInfo_Title => "Fichier";
+    public string Title_FileInfo_FileType => "Type";
+    public string Title_FileInfo_Compression => "Compression";
+    public string Title_FileInfo_Integrity => "Intégrité";
+    public string ToolTip_NcasIntegrity => $"""
+                                            La vérification de l'intégrité consiste à vérifier l'intégrité de chaque NCA (ou NCZ).
 
-    public string Integrity => "Integrité";
+                                            Le résultat de l'intégrité peut être l'une des valeurs suivantes:
+                                            - {NcasIntegrity_NoNca}: Aucun NCA trouvé.
+                                            - {NcasIntegrity_Unchecked}: Intégrité non vérifiée.
+                                            - {NcasIntegrity_InProgress}: Vérification de l'intégrité en cours.
+                                            - {NcasIntegrity_Original}: Tous les NCAs sont originaux (signature et hash ok).
+                                            - {NcasIntegrity_Incomplete}: Tous les NCAs sont originaux, mais certains sont manquants.
+                                            - {NcasIntegrity_Modified}: Au moins un NCA est modifié (signature ok, mais hash pas ok).
+                                            - {NcasIntegrity_Corrupted}: Au moins un NCA est corrompu (hash en échec).
+                                            - {NcasIntegrity_Error}: Une erreur est survenue pendant la vérification de l'intégrité.
+
+                                            Le détail de chaque NCA analysé peut être trouvé dans l'onglet «Contenu».
+                                            """;
+
     public string AvailableContents => "Contenus:";
     public string MultiContentPackageToolTip => "Le package contient plusieurs contenus («{0}» détecté).";
+        
+    public string NcasIntegrity_Error_NcaMissing => "L'intégrité du NCA «{0}» ne peut être vérifiée, NCA manquant.";
+    public string NcasIntegrity_Error_Log => "Echec de vérification de l'intégrité des NCAs: {0}";
+    public string NcaIntegrity_GetOriginalNcaError => "Echec de récupération du NCA original: {0}";
+    public string NcaIntegrity_GetOriginalNcaError_Log => "Echec de récupération du NCA original à partir du NCA «{0}»: {1}";
 
-    public string Title_NcasHeaderSignature => "Signature:";
-    public string ToolTip_NcasHeaderSignature => "Vérifie la signature de l'entête de chaque NCA.";
-    public string Title_NcasHash => "Hash:";
-    public string ToolTip_NcasHash => """
-                                      Vérifie le hash de chaque NCA.
-                                      Un hash valide permet de garantir que le fichier n'a pas été corrompu.
-                                      """;
-
-    public string NcaHeaderSignature_VerificationStart_Log => ">>> La vérification de la signature débute...";
-    public string NcaHeaderSignature_VerificationEnd_Log => ">>> La vérification de la signature est terminée.";
     public string NcaHeaderSignature_Valid_Log => "La signature de l'entête du NCA «{0}» est valide.";
     public string NcaHeaderSignature_Invalid => "La vérification de la signature de l'entête du NCA a échoué avec le statut «{0}».";
     public string NcaHeaderSignature_Invalid_Log => "La vérification de la signature de l'entête du NCA «{0}» a échoué avec le statut «{1}».";
     public string NcaHeaderSignature_Error => "Echec de vérification de la signature de l'entête du NCA: {0}.";
     public string NcaHeaderSignature_Error_log => "Echec de vérification de la signature de l'entête du NCA «{0}»: {1}";
-    public string NcasHeaderSignature_Error_Log => "Echec de la vérification de la signature des entêtes des NCAs: {0}";
 
     public string NcaHash_VerificationStart_Log => ">>> La vérification du hash des NCAs débute...";
     public string NcaHash_VerificationEnd_Log => ">>> La vérification du hash des NCAs est terminée.";
-    public string NcaHash_Valid_Log => "La hash du NCA «{0}» est valide.";
+    public string NcaHash_NcaItem_CantExtractHashFromName => "Echec d'extraction du hash attendu à partir du nom du NCA.";
+    public string NcaHash_CantExtractHashFromName_Log => "Echec d'extraction du hash attendu à partir du nom du NCA «{0}».";
+    public string NcaHash_Valid_Log => "Le hash du NCA «{0}» est valide.";
     public string NcaHash_NcaItem_Invalid => "Hash non valide.";
     public string NcaHash_Invalid_Log => "Le hash du NCA «{0}» n'est pas valide.";
-    public string NcaHash_CnmtItem_Error_NcaMissing => "Impossible de vérifier le hash du NCA «{0}», le fichier n'a pas été trouvé.";
     public string NcaHash_NcaItem_Exception => "Echec de vérification du hash: {0}";
     public string NcaHash_Exception_Log => "Echec de vérification du hash du NCA «{0}»: {1}";
-    public string NcasHash_Error_Log => "Echec de vérification du hash des NCAs: {0}";
     public string NcaHash_ProgressText => "Hashage du NCA {0}/{1}...";
 
     public string CancelAction => "Annuler";
     public string Status_Ready => "Prêt.";
     public string LoadingFile_PleaseWait => "Chargement, veuillez patienter...";
 
-    public string NcasValidity_NoNca => "Aucun NCA";
-    public string NcasValidity_Unchecked => "Non vérifié";
-    public string NcasValidity_InProgress => "En cours";
-    public string NcasValidity_Invalid => "Invalide";
-    public string NcasValidity_Valid => "Valide";
-    public string NcasValidity_Error => "Erreur";
-    public string NcasValidity_Unknown => "Inconnu";
+    public string NcasIntegrity_NoNca => "Aucun NCA";
+    public string NcasIntegrity_Unchecked => "Non vérifié";
+    public string NcasIntegrity_InProgress => "En cours";
+    public string NcasIntegrity_Original => "Original";
+    public string NcasIntegrity_Incomplete => "Incomplet";
+    public string NcasIntegrity_Modified => "Modifié";
+    public string NcasIntegrity_Corrupted => "Corrompu";
+    public string NcasIntegrity_Error => "Erreur";
+    public string NcasIntegrity_Unknown => "Inconnu";
 
     public string Status_SavingFile => "Sauvegarde du fichier «{0}»...";
 
@@ -266,7 +301,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string Log_SaveToDirCanceled => "Sauvegarde du répertoire annulé.";
     public string Log_SaveFileCanceled => "Sauvegarde du fichier annulé.";
     public string Log_SaveStorageCanceled => "Sauvegarde du stockage annulé.";
-    public string Log_NcaHashCanceled => "Hash des NCAs annulé.";
+    public string Log_NcasIntegrityCanceled => "Intégrité des NCAs annulé.";
 
     public string RenamingTool_WindowTitle => "Outil de renommage";
     public string RenamingTool_Patterns => "Patterns";

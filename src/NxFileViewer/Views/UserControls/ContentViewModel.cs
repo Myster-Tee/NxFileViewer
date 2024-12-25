@@ -20,7 +20,9 @@ public class ContentViewModel : ViewModelBase
         _selectedItemService = serviceProvider.GetRequiredService<ISelectedItemService>();
 
         var itemViewModelBuilder = ServiceProvider.GetRequiredService<IItemViewModelBuilder>();
-        RootItems.Add(itemViewModelBuilder.Build(rootItem));
+        var itemViewModel = itemViewModelBuilder.Build(rootItem);
+        itemViewModel.IsExpanded = true;
+        RootItems.Add(itemViewModel);
     }
 
     public IServiceProvider ServiceProvider { get; }

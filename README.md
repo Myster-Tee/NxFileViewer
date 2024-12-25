@@ -23,14 +23,12 @@ Download latest version [here](https://github.com/Myster-Tee/NxFileViewer/releas
 - User-friendly and responsive interface
 - Single executable file
 - Do not write anything outside of the program directory
-- Verify hash and signature
+- Verify integrity (hash and signature)
 - Displays missing keys
 - Opens title URL
 - Multiple languages (actually English and French, PR me for more ;))
 - Advanced files renaming
-
-*\* NSZ and XCZ contain compressed data, those files are actually partially supported.  
-You can decompress those files using [NSZ](https://github.com/nicoboss/nsz/) tool from **nicoboss**.*
+- Full support of NSZ and XCZ files (compressed with [NSZ](https://github.com/nicoboss/nsz/) tool from **nicoboss**).
 
 ## Screenshots
 
@@ -44,7 +42,7 @@ You can decompress those files using [NSZ](https://github.com/nicoboss/nsz/) too
 
 ## Requirements
 
-If application doesn't start, please install the *.NET Desktop Runtime 7* which can be downloaded from the official Microsoft website [here](https://dotnet.microsoft.com/download/dotnet/7.0).
+If application doesn't start, please install the *.NET Desktop Runtime 8* which can be downloaded from the official Microsoft website [here](https://dotnet.microsoft.com/download/dotnet/8.0).
 
 ## Contribute
 
@@ -70,4 +68,5 @@ Run the PowerShell script below.
 ## Credits
 
 - Special thanks to [Thealexbarney](https://github.com/Thealexbarney) for his powerful and easy to use [LibHac](https://github.com/Thealexbarney/LibHac) library.
+- Special thanks to [nicoboss](https://github.com/nicoboss/) who took a lot of time to explain me the [NSZ](https://github.com/nicoboss/nsz) format and many other things.
 - Thanks to all the Switch scene :)

@@ -22,18 +22,19 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.GroupBoxStructure}">
-            <cc:ErrorTreeView ItemsSource="{Binding Path=RootItems}" MinHeight="50" BindableSelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource}">
-                <cc:ErrorTreeView.ItemContainerStyle>
-                    <Style TargetType="cc:ErrorTreeViewItem" BasedOn="{StaticResource {x:Type cc:ErrorTreeViewItem}}">
+            <cc:CustomTreeView ItemsSource="{Binding Path=RootItems}" MinHeight="50" BindableSelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource}">
+                <cc:CustomTreeView.ItemContainerStyle>
+                    <Style TargetType="cc:CustomTreeViewItem" BasedOn="{StaticResource {x:Type cc:CustomTreeViewItem}}">
+                        <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded, Mode=TwoWay}" />
                         <Setter Property="HasErrorInDescendants" Value="{Binding Path=HasErrorInDescendants}" />
                     </Style>
-                </cc:ErrorTreeView.ItemContainerStyle>
-                <cc:ErrorTreeView.ItemTemplate>
+                </cc:CustomTreeView.ItemContainerStyle>
+                <cc:CustomTreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type items:IItemViewModel}">
                         <items:ItemView />
                     </HierarchicalDataTemplate>
-                </cc:ErrorTreeView.ItemTemplate>
-            </cc:ErrorTreeView>
+                </cc:CustomTreeView.ItemTemplate>
+            </cc:CustomTreeView>
         </GroupBox>
         <cc:GridSplitterEx Grid.Row="1" ResizeDirection="Rows"/>
         <GroupBox Grid.Row="2" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.GroupBoxProperties}">

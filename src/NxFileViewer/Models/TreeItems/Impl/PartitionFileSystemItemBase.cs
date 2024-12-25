@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using LibHac.Common.Keys;
 using LibHac.Fs.Fsa;
 using LibHac.Tools.FsSystem;
@@ -23,41 +23,19 @@ public abstract class PartitionFileSystemItemBase : ItemBase
 
     public abstract KeySet KeySet { get; }
 
-    public sealed override IEnumerable<IItem> ChildItems
-    {
-        
-        get
-        {
-            foreach (var childItem in NcaChildItems)
-            {
-                yield return childItem;
-            }
-
-            foreach (var childItem in TicketChildItems)
-            {
-                yield return childItem;
-            }
-
-            foreach (var childItem in PartitionFileEntryChildItems)
-            {
-                yield return childItem;
-            }
-        }
-    }
-
     /// <summary>
     /// Get child items of type <see cref="NcaItem"/>
     /// </summary>
-    public List<NcaItem> NcaChildItems { get; } = new();
+    public NcaItem[] NcaChildItems => base.ChildItems.OfType<NcaItem>().ToArray();
 
     /// <summary>
     /// Get child items of type <see cref="TicketItem"/>
     /// </summary>
-    public List<TicketItem> TicketChildItems { get; } = new();
+    public TicketItem[] TicketChildItems => base.ChildItems.OfType<TicketItem>().ToArray();
 
     /// <summary>
     /// Get child items of type <see cref="PartitionFileEntryItemBase"/>
     /// </summary>
-    public List<PartitionFileEntryItemBase> PartitionFileEntryChildItems { get; } = new();
+    public PartitionFileEntryItemBase[] PartitionFileEntryChildItems => base.ChildItems.OfType<PartitionFileEntryItemBase>().ToArray();
 
 }

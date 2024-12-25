@@ -17,41 +17,41 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0">
-            <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Integrity}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+        <GroupBox Grid.Row="0" Grid.Column="0" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.FileInfo_Title}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="1.2*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Stretch">
+                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Title_FileInfo_FileType}" Margin="0,1,2,0" />
+                    <TextBox Text="{Binding Path=FileType, Mode=OneWay}" Style="{StaticResource ReadOnlyTextBox}" MinWidth="80"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Stretch">
+                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Title_FileInfo_Compression}" Margin="0,1,2,0" />
+                    <TextBox Text="{Binding Path=CompressionType, Mode=OneWay}" Style="{StaticResource ReadOnlyTextBox}" MinWidth="60"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="4" Orientation="Vertical" HorizontalAlignment="Stretch">
+                    <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Title_FileInfo_Integrity}" Margin="0,1,2,0" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" MinWidth="80" Style="{StaticResource ReadOnlyTextBox}" Text="{Binding Path=NcasIntegrity, Mode=OneWay, Converter={StaticResource NcasIntegrityConverter}}"
+                                 Foreground="{Binding NcasIntegrityValidityColor}" HorizontalAlignment="Stretch" />
+                        <customControls:PlayStopButton Grid.Column="1" Width="16" Height="16" Margin="2,0,0,0" Command="{Binding Path=VerifyNcasIntegrityCommand}" />
+                        <customControls:TipLabel Grid.Column="2" ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ToolTip_NcasIntegrity}" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
 
-                    <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Title_NcasHeaderSignature}" Margin="0,1,2,0" />
-                        <TextBox MinWidth="80" Style="{StaticResource ReadOnlyTextBox}" 
-                                 Text="{Binding Path=NcaHeadersSignatureValidity, Mode=OneWay, Converter={StaticResource NcasValidityConverter}}"
-                                 Foreground="{Binding NcaHeadersSignatureValidityColor}"
-                                 ToolTip="{Binding NcasHeadersSignatureExceptions}" />
-                        <customControls:PlayStopButton Width="16" Height="16" Margin="2,0,0,0"
-                                                       Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" />
-                        <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ToolTip_NcasHeaderSignature}"/>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Title_NcasHash}" Margin="0,1,2,0" />
-                        <TextBox MinWidth="80" Style="{StaticResource ReadOnlyTextBox}" 
-                                 Text="{Binding Path=NcasHashValidity, Mode=OneWay, Converter={StaticResource NcasValidityConverter}}"
-                                 Foreground="{Binding NcasHashValidityColor}"
-                                 ToolTip="{Binding Path=NcasHashExceptions}" />
-                        <customControls:PlayStopButton Width="16" Height="16" Margin="2,0,0,0"
-                                                       Command="{Binding Path=VerifyNcasHashCommand}" />
-                        <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.ToolTip_NcasHash}"/>
-                    </StackPanel>
-
-                </Grid>
-            </GroupBox>
-        </Grid>
-
-        <customControls:MaskableGroupBox Grid.Row="1" Grid.Column="0" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MultiContentPackage}" IsMasked="{Binding Path=IsMultiContentPackage, Converter={StaticResource BoolInverterConverter}}">
+        <customControls:MaskableGroupBox Grid.Row="1" Grid.Column="0" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Packages_Title}" IsMasked="{Binding Path=IsSuperPackage, Converter={StaticResource BoolInverterConverter}}">
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -59,7 +59,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Visibility="{Binding Path=IsMultiContentPackage, Converter={StaticResource FalseToCollapseVisibilityConverter}}">
+                <Grid Grid.Row="0" Visibility="{Binding Path=IsSuperPackage, Converter={StaticResource FalseToCollapseVisibilityConverter}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />

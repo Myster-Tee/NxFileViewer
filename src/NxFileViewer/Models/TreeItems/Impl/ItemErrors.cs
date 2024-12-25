@@ -8,9 +8,7 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 public class ItemErrors : IItemErrors
 {
 
-    private readonly Dictionary<string, List<string>> _errorsByCategory = new();
-
-    private readonly object _lock = new();
+    private readonly HashSet<ItemError> _itemErrors = new();
 
     public event ErrorsChangedHandler? ErrorsChanged;
 
@@ -18,23 +16,18 @@ public class ItemErrors : IItemErrors
     {
         get
         {
-            lock (_lock)
+            lock (_itemErrors)
             {
-                return _errorsByCategory.Values.Sum(value => value.Count);
+                return _itemErrors.Count;
             }
         }
     }
 
-    public IEnumerator<string> GetEnumerator()
+    public IEnumerator<ItemError> GetEnumerator()
     {
-        lock (_lock)
+        lock (_itemErrors)
         {
-            var allErrors = new List<string>();
-            foreach (var errorsOfCategory in _errorsByCategory.Values)
-            {
-                allErrors.AddRange(errorsOfCategory);
-            }
-            return allErrors.GetEnumerator();
+            return _itemErrors.GetEnumerator();
         }
     }
 
@@ -43,50 +36,39 @@ public class ItemErrors : IItemErrors
         return GetEnumerator();
     }
 
-    public void Add(string message)
+    public bool Add(ItemError error)
     {
-        AddInternal("", message);
-    }
+        if (error == null)
+            throw new ArgumentNullException(nameof(error));
 
-    public void Add(string category, string message)
-    {
-        if (string.IsNullOrEmpty(category))
-            throw new ArgumentNullException(nameof(category));
-
-        AddInternal(category, message);
-    }
-
-    private void AddInternal(string category, string message)
-    {
-        lock (_lock)
+        lock (_itemErrors)
         {
-            if (!_errorsByCategory.TryGetValue(category, out var errors))
+            var added = _itemErrors.Add(error);
+            if (added)
+                NotifyErrorsChanged([], [error]);
+            return added;
+        }
+    }
+
+    public int RemoveAllOfCategory(Category category)
+    {
+        lock (_itemErrors)
+        {
+            var errorsToRemove = _itemErrors.Where(e => e.Category == category).ToArray();
+            if (errorsToRemove.Length <= 0)
+                return 0;
+            foreach (var errorToRemove in errorsToRemove)
             {
-                errors = new List<string>();
-                _errorsByCategory.Add(category, errors);
+                _itemErrors.Remove(errorToRemove);
             }
 
-            errors.Add(message);
-            NotifyErrorsChanged();
+            NotifyErrorsChanged(errorsToRemove, []);
+            return errorsToRemove.Length;
         }
     }
 
-    public int RemoveAll(string category)
+    protected virtual void NotifyErrorsChanged(ItemError[] removedErrors, ItemError[] addedErrors)
     {
-        lock (_lock)
-        {
-            if (!_errorsByCategory.TryGetValue(category, out var errors))
-                return 0;
-
-            var nbErrors = errors.Count;
-            errors.Clear();
-            NotifyErrorsChanged();
-            return nbErrors;
-        }
-    }
-
-    protected virtual void NotifyErrorsChanged()
-    {
-        ErrorsChanged?.Invoke(this, new ErrorsChangedHandlerArgs());
+        ErrorsChanged?.Invoke(this, new ErrorsChangedHandlerArgs(removedErrors, addedErrors));
     }
 }

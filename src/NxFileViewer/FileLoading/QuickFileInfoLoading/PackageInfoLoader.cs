@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Emignatik.NxFileViewer.Services.KeysManagement;
 using Emignatik.NxFileViewer.Utils;
+using Emignatik.NxFileViewer.Utils.LibHacExtensions;
 using LibHac.Common.Keys;
 using LibHac.Fs;
 using LibHac.Fs.Fsa;

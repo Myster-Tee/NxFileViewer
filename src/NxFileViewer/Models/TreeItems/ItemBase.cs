@@ -6,12 +6,13 @@ namespace Emignatik.NxFileViewer.Models.TreeItems;
 
 public abstract class ItemBase : NotifyPropertyChangedBase, IItem
 {
-    private int _nbErrorsPrev = 0;
-    private int _nbChildErrors = 0;
+    private readonly List<IItem> _childItems = [];
+    private readonly List<ItemError> _descendantErrors = new();
 
     protected ItemBase(ItemBase? parent)
     {
         ParentItem = parent;
+        parent?._childItems.Add(this);
         Errors.ErrorsChanged += OnErrorsChanged;
     }
 
@@ -19,7 +20,7 @@ public abstract class ItemBase : NotifyPropertyChangedBase, IItem
 
     public abstract string DisplayName { get; }
 
-    public abstract IEnumerable<IItem> ChildItems { get; }
+    public IReadOnlyList<IItem> ChildItems => _childItems;
 
     IItem? IItem.ParentItem => ParentItem;
 
@@ -29,15 +30,9 @@ public abstract class ItemBase : NotifyPropertyChangedBase, IItem
 
     public abstract string? Format { get; }
 
-    public bool HasErrorInDescendants => _nbChildErrors > 0;
-
     public IItemErrors Errors { get; } = new ItemErrors();
 
-    private void BubbleNbErrors(int moreOrLessErrors)
-    {
-        _nbChildErrors += moreOrLessErrors;
-        NotifyPropertyChanged(nameof(HasErrorInDescendants));
-    }
+    public IReadOnlyList<ItemError> DescendantErrors => _descendantErrors;
 
     public override string ToString()
     {
@@ -50,14 +45,22 @@ public abstract class ItemBase : NotifyPropertyChangedBase, IItem
 
     private void OnErrorsChanged(object sender, ErrorsChangedHandlerArgs args)
     {
-        var delta = Errors.Count - _nbErrorsPrev;
-        _nbErrorsPrev = Errors.Count;
-
         var parentTemp = ParentItem;
 
         while (parentTemp != null)
         {
-            parentTemp.BubbleNbErrors(delta);
+            foreach (var addedError in args.AddedErrors)
+            {
+                parentTemp._descendantErrors.Add(addedError);
+            }
+
+            foreach (var removedError in args.RemovedErrors)
+            {
+                parentTemp._descendantErrors.Remove(removedError);
+            }
+
+            parentTemp.NotifyPropertyChanged(nameof(DescendantErrors));
+
             parentTemp = parentTemp.ParentItem;
         }
     }

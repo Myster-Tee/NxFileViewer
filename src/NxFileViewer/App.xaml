@@ -74,10 +74,11 @@
 
             <!-- Converters -->
             <mvvmConverters:NacpLanguageConverter x:Key="NacpLanguageConverter" />
+            <converters:IntegerConverter x:Key="IntegerConverter" />
             <converters:BoolInverterConverter x:Key="BoolInverterConverter" />
             <converters:BoolToVisibilityConverter x:Key="FalseToCollapseVisibilityConverter" FalseVisibility="Collapsed" TrueVisibility="Visible" />
             <converters:BoolToVisibilityConverter x:Key="FalseToHiddenVisibilityConverter" FalseVisibility="Hidden" TrueVisibility="Visible" />
-            <mvvmConverters:NcasValidityConverter x:Key="NcasValidityConverter" />
+            <mvvmConverters:NcasIntegrityConverter x:Key="NcasIntegrityConverter" />
             <converters:NullOrEmptyStringToVisibilityConverter x:Key="StringNullOrEmptyToCollapsedVisibilityConverter" />
 
             <ResourceDictionary.MergedDictionaries>

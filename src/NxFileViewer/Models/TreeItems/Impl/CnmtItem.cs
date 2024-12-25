@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using Emignatik.NxFileViewer.Utils;
+using Emignatik.NxFileViewer.Utils.LibHacExtensions;
 using LibHac.Ncm;
 using LibHac.Tools.Fs;
 using LibHac.Tools.FsSystem.NcaUtils;
@@ -13,13 +14,11 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 /// A cnmt file is a metadata file containing various information about what is contained in a package.
 /// The cnmt file references many other files (<see cref="Cnmt.ContentEntries"/> as example).
 /// </summary>
-public class CnmtItem : DirectoryEntryItem, IItem
+public class CnmtItem : DirectoryEntryItem
 {
-    public CnmtItem(Cnmt cnmt, SectionItem parentSectionItem, DirectoryEntryEx directoryEntry)
-        : base(parentSectionItem, directoryEntry)
+    public CnmtItem(Cnmt cnmt, SectionItem parentSectionItem, DirectoryEntryEx directoryEntry) : base(parentSectionItem, directoryEntry)
     {
         Cnmt = cnmt ?? throw new ArgumentNullException(nameof(cnmt));
-
         ParentItem = parentSectionItem;
         PatchNumber = Cnmt.TitleVersion.GetPatchNumber();
         TitleId = Cnmt.TitleId.ToStrId();
@@ -50,9 +49,6 @@ public class CnmtItem : DirectoryEntryItem, IItem
 
     public TitleVersion? MinimumSystemVersion => Cnmt.MinimumSystemVersion;
 
-    IEnumerable<IItem> IItem.ChildItems => ChildItems;
-
-    public new IEnumerable<CnmtContentEntryItem> ChildItems { get { yield break; } }
-
+    public new CnmtContentEntryItem[] ChildItems => (this as ItemBase).ChildItems.OfType<CnmtContentEntryItem>().ToArray();
 
 }

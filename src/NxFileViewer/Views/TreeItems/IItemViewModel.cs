@@ -18,7 +18,15 @@ public interface IItemViewModel: IViewModelBase
 
     IReadOnlyCollection<IItemViewModel> Children { get; }
 
+    /// <summary>
+    /// Get a boolean value indicating if this item has an error in descendants
+    /// </summary>
     public bool HasErrorInDescendants { get; }
+
+    /// <summary>
+    /// Get the expanded state of this item
+    /// </summary>
+    public bool IsExpanded { get; set; }
 
     /// <summary>
     /// Returns true if this item has errors

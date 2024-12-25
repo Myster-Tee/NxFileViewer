@@ -11,7 +11,7 @@
         Style="{StaticResource WindowStyle}"
         Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title}" 
         Width="400"
-        Height="280"
+        Height="420"
         d:DataContext="{d:DesignInstance windows:SettingsWindowViewModel}"
         WindowStartupLocation="CenterOwner">
 
@@ -124,7 +124,32 @@
                         </StackPanel>
                     </GroupBox>
 
-                    <GroupBox Header="Misc.">
+                    <GroupBox>
+                        <GroupBox.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource Title1}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_NczOptions}" />
+                                <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_NczBlockLessCompression}"/>
+                            </StackPanel>
+
+                        </GroupBox.Header>
+                        <StackPanel>
+                            <CheckBox IsChecked="{Binding Path=EditedSettings.OpenBlocklessCompressionNCZ}" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_CheckBox_NczOpenBlocklessCompression}" />
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox>
+                        <GroupBox.Header>
+                            <TextBlock Style="{StaticResource Title1}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_Integrity}" />
+                        </GroupBox.Header>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding Path=EditedSettings.IgnoreMissingDeltaFragments}" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_CheckBox_IgnoreMissingDeltaFragments}" />
+                                <customControls:TipLabel ToolTip="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_ToolTip_IgnoreMissingDeltaFragments}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Miscellaneous}">
                         <StackPanel>
                             <StackPanel>
                                 <TextBlock Style="{StaticResource Title2}" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title_Language}" />

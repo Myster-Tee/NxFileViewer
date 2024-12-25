@@ -9,7 +9,12 @@ namespace Emignatik.NxFileViewer.Models.TreeItems;
 
 public static class ItemExtension
 {
-
+    /// <summary>
+    /// Find the <see cref="NcaItem"/> with the given <paramref name="ncaId"/>
+    /// </summary>
+    /// <param name="partitionItem"></param>
+    /// <param name="ncaId"></param>
+    /// <returns></returns>
     [Pure]
     public static NcaItem? FindNcaItem(this PartitionFileSystemItemBase partitionItem, string ncaId)
     {
@@ -17,6 +22,11 @@ public static class ItemExtension
         return partitionItem.NcaChildItems.FirstOrDefault(ncaItem => string.Equals(ncaItem.Id, expectedFileName, StringComparison.OrdinalIgnoreCase));
     }
 
+    /// <summary>
+    /// Find the <see cref="NacpItem"/> from the <see cref="NcaItem"/>
+    /// </summary>
+    /// <param name="ncaItem"></param>
+    /// <returns></returns>
     [Pure]
     public static NacpItem? FindNacpItem(this NcaItem ncaItem)
     {
@@ -32,6 +42,13 @@ public static class ItemExtension
         return null;
     }
 
+    /// <summary>
+    /// Generic method to find all children of type <typeparamref name="T"/>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="item"></param>
+    /// <param name="includeItem"></param>
+    /// <returns></returns>
     public static IEnumerable<T> FindChildrenOfType<T>(this IItem? item, bool includeItem)
     {
         if (item == null)
@@ -56,6 +73,11 @@ public static class ItemExtension
         }
     }
 
+    /// <summary>
+    /// Find all <see cref="CnmtItem"/> from the <paramref name="partitionItem"/>
+    /// </summary>
+    /// <param name="partitionItem"></param>
+    /// <returns></returns>
     public static IEnumerable<CnmtItem> FindAllCnmtItems(this PartitionFileSystemItemBase partitionItem)
     {
         foreach (var ncaItem in partitionItem.NcaChildItems)
@@ -71,5 +93,22 @@ public static class ItemExtension
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Find the <see cref="NcaItem"/> referenced by the <see cref="CnmtContentEntryItem"/>
+    /// </summary>
+    /// <param name="cnmtContentEntryItem"></param>
+    /// <returns></returns>
+    [Pure]
+    public static NcaItem? FindReferencedNcaItem(this CnmtContentEntryItem cnmtContentEntryItem)
+    {
+        var expectedNcaId = cnmtContentEntryItem.NcaId;
+
+        var partitionItem = cnmtContentEntryItem.ParentItem.ContainerSectionItem.ParentItem.ParentItem;
+
+        var ncaItem = partitionItem.FindNcaItem(expectedNcaId);
+
+        return ncaItem;
     }
 }

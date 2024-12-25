@@ -21,6 +21,7 @@ public class ItemViewModel : ViewModelBase, IItemViewModel
 
     private string? _errorsTooltip;
     private bool _hasErrors;
+    private bool _isExpanded;
 
     public ItemViewModel(IItem item, IServiceProvider serviceProvider)
     {
@@ -29,7 +30,10 @@ public class ItemViewModel : ViewModelBase, IItemViewModel
 
         var itemViewModelBuilder = serviceProvider.GetRequiredService<IItemViewModelBuilder>();
 
-        Children = _item.ChildItems.Select(childItem => itemViewModelBuilder.Build(childItem)).ToList();
+        Children = _item.ChildItems
+            .OrderBy(itemTmp => itemTmp.ChildItems.Count > 0 ? 0 : 1)
+            .Select(itemViewModelBuilder.Build)
+            .ToList();
 
         _menuItemShowErrors = CreateLocalizedMenuItem(nameof(ILocalizationKeys.ContextMenu_ShowItemErrors), serviceProvider.GetRequiredService<IShowItemErrorsWindowCommand>());
 
@@ -50,7 +54,17 @@ public class ItemViewModel : ViewModelBase, IItemViewModel
 
     public IItem AttachedItem => _item;
 
-    public bool HasErrorInDescendants => _item.HasErrorInDescendants;
+    public bool HasErrorInDescendants => _item.DescendantErrors.Count > 0;
+
+    public bool IsExpanded
+    {
+        get => _isExpanded;
+        set
+        {
+            _isExpanded = value;
+            NotifyPropertyChanged();
+        }
+    }
 
     public string DisplayName => _item.DisplayName;
 
@@ -93,8 +107,12 @@ public class ItemViewModel : ViewModelBase, IItemViewModel
 
     private void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(IItem.HasErrorInDescendants))
+        if (e.PropertyName == nameof(IItem.DescendantErrors))
+        {
             NotifyPropertyChanged(nameof(HasErrorInDescendants));
+            if (this.HasErrorInDescendants)
+                IsExpanded = true; // Expand the item if it has errors in descendants
+        }
     }
 
     private void UpdateErrors()

@@ -15,17 +15,16 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string MenuItem_Close { get; }
     string MenuItem_Exit { get; }
     string MenuItem_Tools { get; }
-    string MenuItem_VerifyNcasHash { get; }
-    string MenuItem_VerifyNcasHeaderSignature { get; }
+    string MenuItem_CheckIntegrity { get; }
     string MenuItem_Options { get; }
     string MenuItem_Settings { get; }
     string MenuItem_ReloadKeys { get; }
     string MenuItem_OpenTitleWebPage { get; }
     string MenuItem_ShowRenameToolWindow { get; }
 
-    string MultiContentPackage { get; }
+    string Packages_Title { get; }
     string DisplayVersion { get; }
-    string Presentation { get; }
+    string Presentation_Title { get; }
     string ToolTip_AvailableLanguages { get; }
     string AvailableLanguages { get; }
     string AppTitle { get; }
@@ -65,6 +64,16 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string SettingsView_ToolTip_LogLevel { get; }
     string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen { get; }
     string SettingsView_Title_Language { get; }
+
+    string SettingsView_Title_NczOptions { get; }
+    string SettingsView_ToolTip_NczBlockLessCompression { get; }
+    string SettingsView_CheckBox_NczOpenBlocklessCompression { get; }
+
+    string SettingsView_Title_Integrity { get; }
+    string SettingsView_CheckBox_IgnoreMissingDeltaFragments { get; }
+    string SettingsView_ToolTip_IgnoreMissingDeltaFragments { get; }
+
+    string SettingsView_Miscellaneous { get; }
     string SettingsView_ToolTip_OpenKeysLocation { get; }
     string SettingsView_ToolTip_BrowseKeys { get; }
     string SettingsView_ToolTip_DownloadKeys { get; }
@@ -79,7 +88,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
 
     string MultipleFilesDragAndDropNotSupported { get; }
 
-    string CnmtOverview_GeneralInfo { get; }
+    string CnmtOverview_Title { get; }
     string CnmtOverview_TitleId { get; }
     string CnmtOverview_ContentType { get; }
     string CnmtOverview_TitleVersion { get; }
@@ -132,19 +141,21 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string LoadingError_FailedToLoadCnmtFile { get; }
     string LoadingError_FailedToLoadNcaContent { get; }
     string LoadingError_FailedToLoadDirectoryContent { get; }
-    string LoadingError_FailedToLoadIcon { get; }
-    string LoadingError_NcaFileMissing { get; }
-    string LoadingError_NoCnmtFound { get; }
-    string LoadingError_NacpFileMissing { get; }
-    string LoadingError_NcaMissingSection { get; }
-    string LoadingError_MainFileMissing { get; }
-    string LoadingError_IconMissing { get; }
-    string LoadingError_XciSecurePartitionNotFound { get; }
+    string LoadingError_FailedToLoadIcon_Log { get; }
+    string LoadingError_NcaFileMissing_Log { get; }
+    string LoadingError_NoCnmtFound_Log { get; }
+    string LoadingError_NacpFileMissing_Log { get; }
+    string LoadingError_NcaMissingSection_Log { get; }
+    string LoadingError_MainFileMissing_Log { get; }
+    string LoadingError_IconMissing_Log { get; }
+    string LoadingError_XciSecurePartitionNotFound_Log { get; }
     string LoadingError_FailedToGetNcaSectionFsHeader { get; }
     string LoadingError_FailedToOpenMainFile { get; }
     string LoadingError_FailedToLoadMainFile { get; }
     string LoadingError_FailedToLoadTicketFile { get; }
     string LoadingError_FailedToLoadTitleIdKey { get; }
+    string LoadingError_NczBlocklessCompressionDisabled { get; }
+
     string LoadingInfo_TitleIdKeySuccessfullyInjected { get; }
     string LoadingWarning_TitleIdKeyReplaced { get; }
     string LoadingDebug_TitleIdKeyAlreadyExists { get; }
@@ -162,46 +173,50 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string MainModuleIdTooltip { get; }
     string ATaskIsAlreadyRunning { get; }
 
-    string Integrity { get; }
+    string FileInfo_Title { get; }
+    string Title_FileInfo_FileType { get; }
+    string Title_FileInfo_Compression { get; }
+    string Title_FileInfo_Integrity { get; }
+    string ToolTip_NcasIntegrity { get; }//TODO: a réécrire
+
     string AvailableContents { get; }
     string MultiContentPackageToolTip { get; }
 
-    string Title_NcasHeaderSignature { get; }
-    string ToolTip_NcasHeaderSignature { get; }
-    string Title_NcasHash { get; }
-    string ToolTip_NcasHash { get; }
+    string NcasIntegrity_Error_NcaMissing { get; }
+    string NcasIntegrity_Error_Log { get; }
+    string NcaIntegrity_GetOriginalNcaError { get; }
+    string NcaIntegrity_GetOriginalNcaError_Log { get; }
 
-    string NcaHeaderSignature_VerificationStart_Log { get; }
-    string NcaHeaderSignature_VerificationEnd_Log { get; }
     string NcaHeaderSignature_Valid_Log { get; }
     string NcaHeaderSignature_Invalid { get; }
     string NcaHeaderSignature_Invalid_Log { get; }
     string NcaHeaderSignature_Error { get; }
     string NcaHeaderSignature_Error_log { get; }
-    string NcasHeaderSignature_Error_Log { get; }
 
     string NcaHash_VerificationStart_Log { get; }
     string NcaHash_VerificationEnd_Log { get; }
+    string NcaHash_NcaItem_CantExtractHashFromName { get; }
+    string NcaHash_CantExtractHashFromName_Log { get; }
     string NcaHash_Valid_Log { get; }
     string NcaHash_NcaItem_Invalid { get; }
     string NcaHash_Invalid_Log { get; }
-    string NcaHash_CnmtItem_Error_NcaMissing { get; }
     string NcaHash_NcaItem_Exception { get; }
     string NcaHash_Exception_Log { get; }
-    string NcasHash_Error_Log { get; }
     string NcaHash_ProgressText { get; }
 
     string CancelAction { get; }
     string Status_Ready { get; }
     string LoadingFile_PleaseWait { get; }
 
-    string NcasValidity_NoNca { get; }
-    string NcasValidity_Unchecked { get; }
-    string NcasValidity_InProgress { get; }
-    string NcasValidity_Invalid { get; }
-    string NcasValidity_Valid { get; }
-    string NcasValidity_Error { get; }
-    string NcasValidity_Unknown { get; }
+    string NcasIntegrity_NoNca { get; }
+    string NcasIntegrity_Unchecked { get; }
+    string NcasIntegrity_InProgress { get; }
+    string NcasIntegrity_Original { get; }
+    string NcasIntegrity_Incomplete { get; }
+    string NcasIntegrity_Modified { get; }
+    string NcasIntegrity_Corrupted { get; }
+    string NcasIntegrity_Error { get; }
+    string NcasIntegrity_Unknown { get; }
 
     string Status_SavingFile { get; }
 
@@ -226,7 +241,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string Log_SaveToDirCanceled { get; }
     string Log_SaveFileCanceled { get; }
     string Log_SaveStorageCanceled { get; }
-    string Log_NcaHashCanceled { get; }
+    string Log_NcasIntegrityCanceled { get; }
 
     string RenamingTool_WindowTitle { get; }
     string RenamingTool_Patterns { get; }

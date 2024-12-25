@@ -15,7 +15,7 @@
     <DockPanel Margin="0">
 
         <!-- General Info -->
-        <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CnmtOverview_GeneralInfo}" DockPanel.Dock="Top">
+        <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CnmtOverview_Title}" DockPanel.Dock="Top">
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -72,7 +72,7 @@
 
         </GroupBox>
 
-        <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Presentation}" Visibility="{Binding Path=PresentationGroupBoxVisibility}">
+        <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Presentation_Title}" Visibility="{Binding Path=PresentationGroupBoxVisibility}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

@@ -7,7 +7,7 @@ namespace Emignatik.NxFileViewer.Utils.MVVM.Converters;
 
 public abstract class ValueConverterBase<TView, TViewModel> : IValueConverter
 {
-    object? IValueConverter.Convert(object? value, Type targetType, object parameter, CultureInfo culture)
+    object? IValueConverter.Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not TViewModel && value != null)
         {
@@ -19,7 +19,7 @@ public abstract class ValueConverterBase<TView, TViewModel> : IValueConverter
         return ConvertForView(tViewModel, parameter, culture);
     }
 
-    object? IValueConverter.ConvertBack(object? value, Type targetType, object parameter, CultureInfo culture)
+    object? IValueConverter.ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (!(value is TView) && value != null)
         {
@@ -38,7 +38,7 @@ public abstract class ValueConverterBase<TView, TViewModel> : IValueConverter
     /// <param name="parameter"></param>
     /// <param name="culture"></param>
     /// <returns></returns>
-    protected abstract TView? ConvertForView(TViewModel? value, object parameter, CultureInfo culture);
+    protected abstract TView? ConvertForView(TViewModel? value, object? parameter, CultureInfo culture);
 
     /// <summary>
     /// Converts the View value to the ViewModel value
@@ -47,6 +47,6 @@ public abstract class ValueConverterBase<TView, TViewModel> : IValueConverter
     /// <param name="parameter"></param>
     /// <param name="culture"></param>
     /// <returns></returns>
-    protected abstract TViewModel? ConvertForViewModel(TView? value, object parameter, CultureInfo culture);
+    protected abstract TViewModel? ConvertForViewModel(TView? value, object? parameter, CultureInfo culture);
 
 }

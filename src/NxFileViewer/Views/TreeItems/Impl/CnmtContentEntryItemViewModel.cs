@@ -17,7 +17,7 @@ public class CnmtContentEntryItemViewModel : ItemViewModel
     }
 
     [PropertyView]
-    public string NcaId => _cnmtContentEntryItem.NcaId.ToStrId();
+    public string NcaId => _cnmtContentEntryItem.NcaId;
 
     [PropertyView]
     public string NcaHash => _cnmtContentEntryItem.NcaHash.ToHexString();      

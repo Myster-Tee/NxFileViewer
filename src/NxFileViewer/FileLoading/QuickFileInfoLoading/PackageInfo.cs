@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Emignatik.NxFileViewer.Utils;
+using Emignatik.NxFileViewer.Utils.LibHacExtensions;
 using LibHac.Ncm;
 using LibHac.Ns;
 using LibHac.Tools.FsSystem.NcaUtils;

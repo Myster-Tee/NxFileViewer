@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using LibHac.Common.Keys;
 using LibHac.Fs;
 using LibHac.FsSystem;
@@ -20,7 +20,7 @@ public class XciItem : ItemBase
         KeySet = keySet ?? throw new ArgumentNullException(nameof(keySet));
     }
 
-    public override List<XciPartitionItem> ChildItems { get; } = new();
+    public new XciPartitionItem[] ChildItems => base.ChildItems.OfType<XciPartitionItem>().ToArray();
 
     public Xci Xci { get; }
 

@@ -18,14 +18,14 @@ public class OpenedFileViewModel : ViewModelBase
         FileOverview = new FileOverviewViewModel(_nxFile.Overview, serviceProvider);
 
         OpenFileLocationCommand = serviceProvider.GetRequiredService<IOpenFileLocationCommand>();
-        OpenFileLocationCommand.FilePath = _nxFile.Path;
+        OpenFileLocationCommand.FilePath = _nxFile.FilePath;
     }
 
     public FileOverviewViewModel FileOverview { get; }
 
     public ContentViewModel Content { get; }
 
-    public string FilePath => _nxFile.Path;
+    public string FilePath => _nxFile.FilePath;
 
     public IOpenFileLocationCommand OpenFileLocationCommand { get; }
 }

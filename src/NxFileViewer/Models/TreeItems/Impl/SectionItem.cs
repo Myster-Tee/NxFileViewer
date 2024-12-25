@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using LibHac.Fs.Fsa;
 using LibHac.FsSystem;
 using LibHac.Tools.FsSystem.NcaUtils;
@@ -18,20 +18,15 @@ public class SectionItem : ItemBase
         SparseInfo = sparseInfo;
 
         if (patchInfo == null && sparseInfo == null)
-            SectionType = Impl.SectionType.FileSystem;
+            SectionType = SectionType.FileSystem;
         else
-        {
-
-            SectionType = (patchInfo != null ? SectionType.Patch : 0)
-                          | (sparseInfo != null ? SectionType.Sparse : 0);
-        }
+            SectionType = (patchInfo != null ? SectionType.Patch : 0) | (sparseInfo != null ? SectionType.Sparse : 0);
 
 
         if (Nca.TryGetSectionTypeFromIndex(sectionIndex, parentItem.ContentType, out var ncaSectionType))
             this.NcaSectionType = ncaSectionType;
         else
             this.NcaSectionType = null;
-
     }
 
     public NcaSectionType? NcaSectionType { get; private set; }
@@ -40,7 +35,7 @@ public class SectionItem : ItemBase
 
     public sealed override string DisplayName => Name;
 
-    public override List<DirectoryEntryItem> ChildItems { get; } = new();
+    public new DirectoryEntryItem[] ChildItems => base.ChildItems.OfType<DirectoryEntryItem>().ToArray();
 
     public sealed override string LibHacTypeName => FsHeader.GetType().Name;
 

@@ -6,7 +6,6 @@ using Emignatik.NxFileViewer.Localization.Keys;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 using Emignatik.NxFileViewer.Views.ObjectPropertyViewer;
 using LibHac.Common;
-using LibHac.FsSystem;
 using LibHac.Tools.FsSystem.NcaUtils;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -38,6 +37,8 @@ public class NcaItemViewModel : PartitionFileEntryItemViewModel
     {
         if (e.PropertyName == nameof(_ncaItem.HeaderSignatureValidity))
             NotifyPropertyChanged(nameof(HeaderSignatureValidity));
+        if (e.PropertyName == nameof(_ncaItem.HashValid))
+            NotifyPropertyChanged(nameof(HashValid));
     }
 
     public override IEnumerable<IMenuItemViewModel> GetOtherContextMenuItems()
@@ -48,6 +49,9 @@ public class NcaItemViewModel : PartitionFileEntryItemViewModel
 
     [PropertyView]
     public Validity HeaderSignatureValidity => _ncaItem.HeaderSignatureValidity;
+
+    [PropertyView]
+    public bool? HashValid => _ncaItem.HashValid;
 
     [PropertyView]
     public NcaContentType ContentType => _ncaItem.ContentType;

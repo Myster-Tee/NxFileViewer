@@ -48,6 +48,9 @@ public sealed class SectionItemViewModel : ItemViewModel
     [PropertyView]
     public string ContentType => _sectionItem.SectionType.ToString();
 
+    [PropertyView]
+    public bool IsSparse => _sectionItem.SparseInfo != null;
+
     [PropertyView(HideIfNull = true)]
     public ushort? SparseGeneration => _sectionItem.SparseInfo?.Generation;
 

@@ -91,6 +91,11 @@ public static class FileSizeHelper
         }
     }
 
+    public static string ToFileSize(this int nbBytes, FileSizeUnit unit = FileSizeUnit.BINARY)
+    {
+        return ((ulong)nbBytes).ToFileSize(unit);
+    }
+
     public static string ToFileSize(this long nbBytes, FileSizeUnit unit = FileSizeUnit.BINARY)
     {
         return ((ulong) nbBytes).ToFileSize(unit);

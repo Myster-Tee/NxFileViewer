@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using LibHac.Fs;
-using LibHac.Fs.Fsa;
 using LibHac.Spl;
 using LibHac.Tools.Es;
 using LibHac.Tools.Fs;
@@ -12,12 +10,10 @@ public class TicketItem : PartitionFileEntryItemBase
 {
     private readonly Ticket _ticket;
 
-    public TicketItem(Ticket ticket, DirectoryEntryEx ticketFileEntry, IFile file, PartitionFileSystemItemBase parentItem) : base(ticketFileEntry, file, parentItem)
+    public TicketItem(Ticket ticket, DirectoryEntryEx ticketFileEntry, PartitionFileSystemItemBase parentItem) : base(ticketFileEntry, parentItem)
     {
         _ticket = ticket ?? throw new ArgumentNullException(nameof(ticket));
     }
-
-    public override IEnumerable<IItem> ChildItems { get { yield break; } }
 
     public override string Format => nameof(Ticket);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using Emignatik.NxFileViewer.Utils.LibHacExtensions;
 using LibHac.Fs.Fsa;
 using LibHac.Tools.Fs;
 
@@ -9,16 +10,13 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 /// </summary>
 public abstract class PartitionFileEntryItemBase : ItemBase
 {
-    public PartitionFileEntryItemBase(DirectoryEntryEx fileEntry, IFile file, PartitionFileSystemItemBase parentItem) : base(parentItem)
+    public PartitionFileEntryItemBase(DirectoryEntryEx fileEntry, PartitionFileSystemItemBase parentItem) : base(parentItem)
     {
         FileEntry = fileEntry ?? throw new ArgumentNullException(nameof(fileEntry));
-        File = file ?? throw new ArgumentNullException(nameof(file));
         ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
     }
 
     public new PartitionFileSystemItemBase ParentItem { get; }
-
-    public IFile File { get; }
 
     public DirectoryEntryEx FileEntry { get; }
 
@@ -30,8 +28,12 @@ public abstract class PartitionFileEntryItemBase : ItemBase
 
     public long Size => FileEntry.Size;
 
-    public override void Dispose()
+    /// <summary>
+    /// Shortcut helper to load the file in attached the partition
+    /// </summary>
+    /// <returns></returns>
+    public virtual IFile LoadFile()
     {
-        File.Dispose();
+        return ParentItem.PartitionFileSystem.LoadFile(FileEntry);
     }
 }

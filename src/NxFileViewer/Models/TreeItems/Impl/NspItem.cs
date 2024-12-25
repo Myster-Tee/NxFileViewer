@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Emignatik.NxFileViewer.Utils;
+using Emignatik.NxFileViewer.Utils.LibHacExtensions;
 using LibHac.Common.Keys;
 using LibHac.Fs;
 using LibHac.FsSystem;
@@ -16,8 +16,7 @@ public class NspItem : PartitionFileSystemItemBase
     private readonly IStorage _storage;
     private readonly PartitionFileSystem _nspPartitionFileSystem;
 
-    private NspItem(PartitionFileSystem nspPartitionFileSystem, string name, KeySet keySet, IStorage storage)
-        : base(nspPartitionFileSystem, null)
+    private NspItem(PartitionFileSystem nspPartitionFileSystem, string name, KeySet keySet, IStorage storage) : base(nspPartitionFileSystem, null)
     {
         _nspPartitionFileSystem = nspPartitionFileSystem ?? throw new ArgumentNullException(nameof(nspPartitionFileSystem));
         Name = name ?? throw new ArgumentNullException(nameof(name));

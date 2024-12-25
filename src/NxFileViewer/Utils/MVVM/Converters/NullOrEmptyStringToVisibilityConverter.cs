@@ -10,7 +10,7 @@ public class NullOrEmptyStringToVisibilityConverter : ValueConverterBase<Visibil
 
     public Visibility StringNeitherNullNorEmptyVisibility { get; set; } = Visibility.Visible;
 
-    protected override Visibility ConvertForView(string? value, object parameter, CultureInfo culture)
+    protected override Visibility ConvertForView(string? value, object? parameter, CultureInfo culture)
     {
         if (string.IsNullOrEmpty(value))
             return StringNullOrEmptyVisibility;
@@ -18,7 +18,7 @@ public class NullOrEmptyStringToVisibilityConverter : ValueConverterBase<Visibil
             return StringNeitherNullNorEmptyVisibility;
     }
 
-    protected override string? ConvertForViewModel(Visibility value, object parameter, CultureInfo culture)
+    protected override string? ConvertForViewModel(Visibility value, object? parameter, CultureInfo culture)
     {
         throw new NotSupportedException();
     }

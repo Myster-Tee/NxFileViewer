@@ -27,7 +27,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
     private readonly IKeySetProviderService _keySetProviderService;
     private readonly IFileLocationOpenerService _fileLocationOpenerService;
 
-    private IAppSettings _editedSettings = null!;
+    private IAppSettings _editedSettings;
     private ILocalization<ILocalizationKeys>? _selectedLanguage;
 
 
@@ -72,13 +72,13 @@ public class SettingsWindowViewModel : WindowViewModelBase
             else if (args.PropertyName == nameof(IKeySetProviderService.ActualConsoleKeysFilePath))
                 NotifyPropertyChanged(nameof(ActualConsoleKeysFilePath));
         };
-
     }
 
     public IAppSettings EditedSettings
     {
         get => _editedSettings;
-        set
+        [MemberNotNull(nameof(_editedSettings))]
+        private set
         {
             _editedSettings = value;
             NotifyPropertyChanged();
@@ -130,6 +130,7 @@ public class SettingsWindowViewModel : WindowViewModelBase
         }
     }
 
+    [MemberNotNull(nameof(_editedSettings))]
     private void InitializeFromSettings(IAppSettings appSettings)
     {
         EditedSettings = appSettings;
@@ -162,7 +163,6 @@ public class SettingsWindowViewModel : WindowViewModelBase
             clonedSettings.TitleKeysFilePath = selectedFilePath;
         }
     }
-
 
     private async void DownloadProdKeys()
     {
@@ -236,7 +236,6 @@ public class SettingsWindowViewModel : WindowViewModelBase
             return false;
         }
     }
-
 
     private static bool BrowseKeysFilePath(string initialFilePath, string title, [NotNullWhen(true)] out string? selectedFilePath)
     {

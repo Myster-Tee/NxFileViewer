@@ -21,7 +21,8 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
     private string _titlePageUrl = "https://tinfoil.media/Title/{TitleId}";
     private string _titleInfoApiUrl = "https://tinfoil.media/api/title/{TitleId}";
     private string _lastUsedDir = "";
-
+    private bool _allowNczBlocklessCompressionOpening = true;
+    private bool _acceptMissingDeltaFragments = true;
 
     public string AppLanguage
     {
@@ -79,6 +80,26 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
         set
         {
             _consoleKeysFilePath = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public bool OpenBlocklessCompressionNCZ
+    {
+        get => _allowNczBlocklessCompressionOpening;
+        set
+        {
+            _allowNczBlocklessCompressionOpening = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public bool IgnoreMissingDeltaFragments
+    {
+        get => _acceptMissingDeltaFragments;
+        set
+        {
+            _acceptMissingDeltaFragments = value;
             NotifyPropertyChanged();
         }
     }

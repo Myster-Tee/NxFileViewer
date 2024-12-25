@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows7.0</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>Emignatik.NxFileViewer</RootNamespace>
     <Nullable>enable</Nullable>
@@ -11,11 +11,12 @@
     <Company>NxFileViewer</Company>
     <Product>NxFileViewer</Product>
     <Authors>NxFileViewer</Authors>
-    <Version>2.7.0</Version>
+    <Version>3.0.0</Version>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageIcon>Icon.ico</PackageIcon>
     <Description>Browse content of Nintendo Switch files</Description>
     <RepositoryUrl>https://github.com/Myster-Tee/NxFileViewer</RepositoryUrl>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,9 +47,13 @@
   <ItemGroup>
     <PackageReference Include="LibHac" Version="0.19.0" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LibHac.NSZ\LibHac.NSZ.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -93,10 +98,6 @@
     <Page Update="Views\Windows\SettingsWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

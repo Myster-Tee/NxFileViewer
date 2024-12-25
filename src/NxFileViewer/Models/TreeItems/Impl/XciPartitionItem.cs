@@ -6,8 +6,7 @@ namespace Emignatik.NxFileViewer.Models.TreeItems.Impl;
 
 public class XciPartitionItem : PartitionFileSystemItemBase
 {
-    public XciPartitionItem(XciPartition xciPartition, XciPartitionType xciPartitionType, XciItem parentItem)
-        : base(xciPartition, parentItem)
+    public XciPartitionItem(XciPartition xciPartition, XciPartitionType xciPartitionType, XciItem parentItem) : base(xciPartition, parentItem)
     {
         XciPartition = xciPartition ?? throw new ArgumentNullException(nameof(xciPartition));
         XciPartitionType = xciPartitionType;

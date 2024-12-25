@@ -65,7 +65,7 @@ public class SaveSectionContentCommand : CommandBase, ISaveSectionContentCommand
 
     public override bool CanExecute(object? parameter)
     {
-        return _sectionItem is { ChildItems.Count: > 0 } && !_backgroundTaskRunnerService.IsRunning;
+        return _sectionItem is { ChildItems.Length: > 0 } && !_backgroundTaskRunnerService.IsRunning;
     }
 }
 

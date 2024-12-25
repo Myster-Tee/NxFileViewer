@@ -22,6 +22,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NxFileViewer.Test", "NxFileViewer.Test\NxFileViewer.Test.csproj", "{55B6DEB7-0DFB-4C7F-834D-09D7AFC60847}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibHac.NSZ", "LibHac.NSZ\LibHac.NSZ.csproj", "{FCF6618D-D908-42AA-A4FC-DCB536E359EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibHac.NSZ.Test", "LibHac.NSZ.Test\LibHac.NSZ.Test.csproj", "{A3C75413-8293-4C0A-B9DC-0B41B0F9350C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +40,14 @@ Global
 		{55B6DEB7-0DFB-4C7F-834D-09D7AFC60847}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55B6DEB7-0DFB-4C7F-834D-09D7AFC60847}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55B6DEB7-0DFB-4C7F-834D-09D7AFC60847}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCF6618D-D908-42AA-A4FC-DCB536E359EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCF6618D-D908-42AA-A4FC-DCB536E359EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCF6618D-D908-42AA-A4FC-DCB536E359EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCF6618D-D908-42AA-A4FC-DCB536E359EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3C75413-8293-4C0A-B9DC-0B41B0F9350C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3C75413-8293-4C0A-B9DC-0B41B0F9350C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3C75413-8293-4C0A-B9DC-0B41B0F9350C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3C75413-8293-4C0A-B9DC-0B41B0F9350C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

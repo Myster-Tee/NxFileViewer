@@ -32,14 +32,14 @@ public delegate void MissingKeyExceptionHandler(object sender, MissingKeyExcepti
 public class MissingKeyExceptionHandlerArgs
 {
 
-    public MissingKeyExceptionHandlerArgs(MissingKeyException ex, IItem? parentItem)
+    public MissingKeyExceptionHandlerArgs(MissingKeyException ex, IItem? relatedItem)
     {
         Exception = ex ?? throw new ArgumentNullException(nameof(ex));
-        ParentItem = parentItem;
+        RelatedItem = relatedItem;
     }
 
     public MissingKeyException Exception { get; }
 
 
-    public IItem? ParentItem { get; }
+    public IItem? RelatedItem { get; }
 }

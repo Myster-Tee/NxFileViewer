@@ -18,11 +18,11 @@
         <KeyBinding Gesture="Ctrl+O" Command="{Binding Path=OpenFileCommand}" />
         <KeyBinding Gesture="Ctrl+Shift+O" Command="{Binding Path=OpenLastFileCommand}" />
         <KeyBinding Gesture="Ctrl+Shift+C" Command="{Binding Path=CloseFileCommand}" />
-        <KeyBinding Gesture="F5" Command="{Binding Path=VerifyNcasHashCommand}" />
-        <KeyBinding Gesture="Ctrl+F5" Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" />
+        <KeyBinding Gesture="F5" Command="{Binding Path=VerifyNcasIntegrityCommand}" />
         <KeyBinding Gesture="F10" Command="{Binding Path=LoadKeysCommand}" />
         <KeyBinding Gesture="F9" Command="{Binding Path=OpenTitleWebPageCommand}" />
         <KeyBinding Gesture="F2" Command="{Binding Path=ShowRenameToolWindowCommand}" />
+        <KeyBinding Gesture="Alt+S" Command="{Binding Path=ShowSettingsWindowCommand}" />
     </Window.InputBindings>
 
     <Grid Cursor="">
@@ -65,14 +65,8 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Tools}">
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_VerifyNcasHash}" 
-                          Command="{Binding Path=VerifyNcasHashCommand}" InputGestureText="F5">
-                    <MenuItem.Icon>
-                        <Image Source="/Styling/Icons/safe_16x16.png" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_VerifyNcasHeaderSignature}" 
-                          Command="{Binding Path=VerifyNcasHeaderSignatureCommand}" InputGestureText="Ctrl+F5">
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_CheckIntegrity}" 
+                          Command="{Binding Path=VerifyNcasIntegrityCommand}" InputGestureText="F5">
                     <MenuItem.Icon>
                         <Image Source="/Styling/Icons/safe_16x16.png" />
                     </MenuItem.Icon>
@@ -90,14 +84,14 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_ShowRenameToolWindow}" 
-                          Command="{Binding Path=ShowRenameToolWindowCommand}" InputGestureText="F9">
+                          Command="{Binding Path=ShowRenameToolWindowCommand}" InputGestureText="F2">
                     <MenuItem.Icon>
                         <Image Source="/Styling/Icons/rename_16x16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Options}">
-                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Settings}" Command="{Binding Path=ShowSettingsWindowCommand}">
+                <MenuItem Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.MenuItem_Settings}" Command="{Binding Path=ShowSettingsWindowCommand}" InputGestureText="Alt+S">
                     <MenuItem.Icon>
                         <Image Source="/Styling/Icons/settings_16x16.png" />
                     </MenuItem.Icon>
@@ -157,7 +151,7 @@
 
             <!-- Progress Bar -->
             <StatusBarItem DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <customControls:ProgressBarExt Width="80" Minimum="0" Maximum="100" Height="18"
+                <customControls:ProgressBarExt Width="80" Minimum="0" Maximum="100" 
                                                Visibility="{Binding Path=BackgroundTaskRunner.IsRunning, Mode=OneWay, Converter={StaticResource FalseToCollapseVisibilityConverter}}"
                                                Value="{Binding Path=BackgroundTaskRunner.ProgressValue, Mode=OneWay, FallbackValue=70}" 
                                                ValueText="{Binding Path=BackgroundTaskRunner.ProgressValueText, Mode=OneWay, FallbackValue=70%}"

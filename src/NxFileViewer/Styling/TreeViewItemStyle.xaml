@@ -3,10 +3,10 @@
                     xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls">
 
 
-    <Style TargetType="customControls:ErrorTreeViewItem">
+    <Style TargetType="customControls:CustomTreeViewItem">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type customControls:ErrorTreeViewItem}">
+                <ControlTemplate TargetType="{x:Type customControls:CustomTreeViewItem}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -51,7 +51,7 @@
                                                     <MultiDataTrigger>
                                                         <MultiDataTrigger.Conditions>
                                                             <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" Value="True"/>
-                                                            <Condition Binding="{Binding Path=HasErrorInDescendants, RelativeSource={RelativeSource FindAncestor, AncestorType=customControls:ErrorTreeViewItem}}" Value="False"/>
+                                                            <Condition Binding="{Binding Path=HasErrorInDescendants, RelativeSource={RelativeSource FindAncestor, AncestorType=customControls:CustomTreeViewItem}}" Value="False"/>
                                                         </MultiDataTrigger.Conditions>
                                                         <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.Stroke}"/>
                                                         <Setter Property="Fill" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.Fill}"/>
@@ -61,7 +61,7 @@
                                                     <MultiDataTrigger>
                                                         <MultiDataTrigger.Conditions>
                                                             <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" Value="False"/>
-                                                            <Condition Binding="{Binding Path=HasErrorInDescendants, RelativeSource={RelativeSource FindAncestor, AncestorType=customControls:ErrorTreeViewItem}}" Value="True"/>
+                                                            <Condition Binding="{Binding Path=HasErrorInDescendants, RelativeSource={RelativeSource FindAncestor, AncestorType=customControls:CustomTreeViewItem}}" Value="True"/>
                                                         </MultiDataTrigger.Conditions>
                                                         <Setter Property="Stroke" TargetName="ExpandPath" Value="{DynamicResource TreeViewItem.TreeArrow.Static.ErrorInDescendants.Stroke}"/>
                                                         <Setter Property="Fill" TargetName="ExpandPath" Value="{DynamicResource TreeViewItem.TreeArrow.Static.ErrorInDescendants.Fill}"/>
@@ -71,7 +71,7 @@
                                                     <MultiDataTrigger>
                                                         <MultiDataTrigger.Conditions>
                                                             <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" Value="True"/>
-                                                            <Condition Binding="{Binding Path=HasErrorInDescendants, RelativeSource={RelativeSource FindAncestor, AncestorType=customControls:ErrorTreeViewItem}}" Value="True"/>
+                                                            <Condition Binding="{Binding Path=HasErrorInDescendants, RelativeSource={RelativeSource FindAncestor, AncestorType=customControls:CustomTreeViewItem}}" Value="True"/>
                                                         </MultiDataTrigger.Conditions>
                                                         <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.ErrorInDescendants.Stroke}"/>
                                                         <Setter Property="Fill" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.ErrorInDescendants.Fill}"/>

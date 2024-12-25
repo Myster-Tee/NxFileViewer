@@ -15,6 +15,7 @@ using Emignatik.NxFileViewer.Services.FileLocationOpening;
 using Emignatik.NxFileViewer.Services.FileOpening;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.GlobalEvents;
+using Emignatik.NxFileViewer.Services.Integrity;
 using Emignatik.NxFileViewer.Services.KeysManagement;
 using Emignatik.NxFileViewer.Services.OnlineServices;
 using Emignatik.NxFileViewer.Services.Prompting;
@@ -63,8 +64,7 @@ public partial class App : Application, IAppEvents
             .AddSingleton<IOpenLastFileCommand, OpenLastFileCommand>()
             .AddSingleton<ICloseFileCommand, CloseFileCommand>()
             .AddSingleton<IShowSettingsWindowCommand, ShowSettingsWindowCommand>()
-            .AddSingleton<IVerifyNcasHashCommand, VerifyNcasHashCommand>()
-            .AddSingleton<IVerifyNcasHeaderSignatureCommand, VerifyNcasHeaderSignatureCommand>()
+            .AddSingleton<IVerifyNcasIntegrityCommand, VerifyNcasIntegrityCommand>()
             .AddSingleton<IShowItemErrorsWindowCommand, ShowItemErrorsWindowCommand>()
             .AddSingleton<ISaveTitleImageCommand, SaveTitleImageCommand>()
             .AddSingleton<ICopyImageCommand, CopyImageCommand>()
@@ -87,12 +87,13 @@ public partial class App : Application, IAppEvents
             .AddSingleton<IBrushesProvider, BrushesProvider>()
             .AddSingleton<ILocalizationFromSettingsSynchronizerService, LocalizationFromSettingsSynchronizerService>()
             .AddSingleton<IShallowCopier, ShallowCopier>()
+            .AddSingleton<INcaHashService, NcaHashService>()
+            .AddSingleton<INcaItemIntegrityService, NcaItemIntegrityService>()
 
             .AddTransient<SettingsWindowViewModel>() // Important to let transient so that real actual settings are displayed when settings view is shown
             .AddTransient<ISaveFileRunnable, SaveFileRunnable>()
             .AddTransient<ISaveDirectoryRunnable, SaveDirectoryRunnable>()
-            .AddTransient<IVerifyNcasHashRunnable, VerifyNcasHashRunnable>()
-            .AddTransient<IVerifyNcasHeaderSignatureRunnable, VerifyNcasHeaderSignatureRunnable>()
+            .AddTransient<IVerifyNcasIntegrityRunnable, VerifyNcasIntegrityRunnable>()
             .AddTransient<IDownloadFileRunnable, DownloadFileRunnable>()
             .AddTransient<ISaveStorageRunnable, SaveStorageRunnable>()
             .AddTransient<IFilesRenamerRunnable, FilesRenamerRunnable>()

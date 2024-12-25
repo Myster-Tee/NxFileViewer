@@ -8,7 +8,7 @@ namespace Emignatik.NxFileViewer.Views.Converters;
 
 public class NacpLanguageConverter : ValueConverterBase<string, NacpLanguage>
 {
-    protected override string ConvertForView(NacpLanguage value, object parameter, CultureInfo culture)
+    protected override string ConvertForView(NacpLanguage value, object? parameter, CultureInfo culture)
     {
         return value switch
         {
@@ -32,7 +32,7 @@ public class NacpLanguageConverter : ValueConverterBase<string, NacpLanguage>
         };
     }
 
-    protected override NacpLanguage ConvertForViewModel(string? value, object parameter, CultureInfo culture)
+    protected override NacpLanguage ConvertForViewModel(string? value, object? parameter, CultureInfo culture)
     {
         throw new NotSupportedException();
     }
