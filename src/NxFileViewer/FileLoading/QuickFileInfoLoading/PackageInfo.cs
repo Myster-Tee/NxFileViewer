@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Emignatik.NxFileViewer.Utils;
 using Emignatik.NxFileViewer.Utils.LibHacExtensions;
+using LibHac.Common;
 using LibHac.Ncm;
 using LibHac.Ns;
 using LibHac.Tools.FsSystem.NcaUtils;
@@ -60,12 +61,12 @@ public class Content
     {
         get
         {
-            U8Span _displayVersion = new U8Span("0");
+            String _displayVersion=String.Empty;
             if (NacpData != null)
             {
                 _displayVersion = NacpData.DisplayVersionString;
             }
-            return _displayVersion.ToString();
+            return _displayVersion;
         }
     }
 
@@ -101,11 +102,13 @@ public class NacpData
             mask <<= 1;
         }
 
+        DisplayVersionString = _applicationControlProperty.DisplayVersionString.ToString();
         Titles = titles;
     }
 
     public IReadOnlyList<Title?> Titles { get; }
 
+    public string DisplayVersionString = String.Empty;
 }
 
 public class Title
