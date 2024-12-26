@@ -177,7 +177,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string Title_FileInfo_FileType { get; }
     string Title_FileInfo_Compression { get; }
     string Title_FileInfo_Integrity { get; }
-    string ToolTip_NcasIntegrity { get; }//TODO: a réécrire
+    string ToolTip_NcasIntegrity { get; }
 
     string AvailableContents { get; }
     string MultiContentPackageToolTip { get; }
