@@ -1,5 +1,6 @@
 ﻿using System;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
+using LibHac.Tools.FsSystem.NcaUtils;
 
 namespace Emignatik.NxFileViewer.Models.Overview;
 
@@ -26,7 +27,7 @@ public class CnmtContainer
     public MainItem? MainItem { get; set; }
 
     /// <summary>
-    /// True when Code Section is sparse, which means <see cref="MainItem"/> is normally null
+    /// True when <see cref="SectionItem"/> of type <see cref="NcaSectionType.Code"/> is sparse, which means <see cref="MainItem"/> is normally null
     /// </summary>
     public bool MainItemSectionIsSparse { get; set; }
 }

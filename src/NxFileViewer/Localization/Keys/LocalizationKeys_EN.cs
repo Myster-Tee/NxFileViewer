@@ -234,10 +234,10 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
                                            - {NcasIntegrity_Original}: All NCAs are original (signature and hash ok).
                                            - {NcasIntegrity_Incomplete}: All NCAs are original, but some are missing.
                                            - {NcasIntegrity_Modified}: At least one NCA is modified (signature is not ok, but hash is ok).
-                                           - {NcasIntegrity_Corrupted}: At least one NCA is corrupted (hash failed).
+                                           - {NcasIntegrity_Corrupted}: At least one NCA is corrupted (hash invalid).
                                            - {NcasIntegrity_Error}: An error occurred during the integrity check.
                                            
-                                           The detail of each NCA analysis can be found in the «Content» tab.
+                                           The detail of each analyzed NCA can be found in the «Content» tab.
                                            """;
 
     public string AvailableContents => "Contents:";

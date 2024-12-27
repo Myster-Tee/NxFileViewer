@@ -233,8 +233,8 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
                                             - {NcasIntegrity_InProgress}: Vérification de l'intégrité en cours.
                                             - {NcasIntegrity_Original}: Tous les NCAs sont originaux (signature et hash ok).
                                             - {NcasIntegrity_Incomplete}: Tous les NCAs sont originaux, mais certains sont manquants.
-                                            - {NcasIntegrity_Modified}: Au moins un NCA est modifié (signature ok, mais hash pas ok).
-                                            - {NcasIntegrity_Corrupted}: Au moins un NCA est corrompu (hash en échec).
+                                            - {NcasIntegrity_Modified}: Au moins un NCA est modifié (signature pas ok, mais hash ok).
+                                            - {NcasIntegrity_Corrupted}: Au moins un NCA est corrompu (hash incorrect).
                                             - {NcasIntegrity_Error}: Une erreur est survenue pendant la vérification de l'intégrité.
 
                                             Le détail de chaque NCA analysé peut être trouvé dans l'onglet «Contenu».
