@@ -189,8 +189,8 @@ public class RenamingOptions : NotifyPropertyChangedBase, IRenamingOptions
 {
     private string? _fileFilters = "*.nsp;*.nsz;*.xci;*.xcz";
     private bool _includeSubdirectories = true;
-    private string _applicationPattern = "{WAppTitle} [{TitleId:U}][v{PatchNum}].{Ext:L}";
-    private string _patchPattern = "{WAppTitle} [{TitleId:U}][v{PatchNum}].{Ext:L}";
+    private string _applicationPattern = "{WAppTitle} [{TitleId:U}][v{VerNum}]+[u{XCIUpdateVer}].{Ext:L}";
+    private string _patchPattern = "{WAppTitle} [{TitleId:U}][v{PatchNum}][u{DisplayVer}].{Ext:L}";
     private string _addonPattern = "{WAppTitle} - {WTitle} [{TitleId:U}][v{PatchNum}].{Ext:L}";
     private bool _isSimulation = true;
     private string _invalidFileNameCharsReplacement = "꞉";
