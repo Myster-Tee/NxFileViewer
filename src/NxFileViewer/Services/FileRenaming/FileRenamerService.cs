@@ -261,7 +261,6 @@ public class FileRenamerService : IFileRenamerService
                             break;
                         case PatternKeyword.TitleName:
                             var firstTitle = content.NacpData?.Titles.FirstOrDefault(title => title != null && !string.IsNullOrEmpty(title.Name));
-                            //var langId = content.NacpData?.Titles.TakeWhile(title => title != null && !string.IsNullOrEmpty(title.Name)).Count();
                             partValue = firstTitle != null ? firstTitle.Name : "NO_TITLE";
                             partValue = partValue.Replace(" –", " - ").Replace(" -  ", " - ").Replace("™", string.Empty).Replace("®", string.Empty).Replace("©", string.Empty);
                             break;
