@@ -244,6 +244,9 @@ public class FileRenamerService : IFileRenamerService
                         case PatternKeyword.VersionNumber:
                             partValue = content.Version.Version.ToString();
                             break;
+                        case PatternKeyword.VersionDisplay:
+                            partValue = content.NacpData?.DisplayVersion ?? "NO_VERSION";
+                            break;
                         case PatternKeyword.PatchNumber:
                             partValue = content.PatchNumber.ToString();
                             break;
@@ -255,7 +258,6 @@ public class FileRenamerService : IFileRenamerService
                             var onlineAppTitleInfo = await _cachedOnlineTitleInfoService.GetTitleInfoAsync(content.ApplicationTitleId);
                             partValue = onlineAppTitleInfo != null ? onlineAppTitleInfo.Name : "NO_TITLE";
                             break;
-
                         default:
                             throw new NotSupportedException($"Unknown application keyword «{dynamicText.Keyword}».");
                     }

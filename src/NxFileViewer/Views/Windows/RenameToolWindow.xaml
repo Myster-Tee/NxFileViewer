@@ -12,14 +12,14 @@
         mc:Ignorable="d"
         Style="{StaticResource WindowStyle}"
         Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_WindowTitle}" 
-        Height="400"
-        Width="380"
+        Height="600"
+        Width="600"
         d:DataContext="{d:DesignInstance windows:RenameToolWindowViewModel}">
 
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="1.4*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -63,7 +63,7 @@
                 <GroupBox Grid.Row="1" Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_GroupBoxNamingSettings}">
                     <StackPanel >
 
-                        <Expander>
+                        <Expander IsExpanded="True">
                             <Expander.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_Patterns}" Style="{StaticResource Title1}"/>

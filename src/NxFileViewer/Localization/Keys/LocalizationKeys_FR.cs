@@ -310,30 +310,35 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_AddonPattern => "Pattern d'add-on";
     public string RenamingTool_InputPath => "Chemin d'entrée";
     public string RenamingTool_FileFilters => "Filtres";
-    public string RenamingTool_ToolTip_Patterns => $"Mots clés:{Environment.NewLine}" +
-                                                   $"  • {{TitleId}}{Environment.NewLine}" +
-                                                   $"       - L'id du contenu.{Environment.NewLine}" +
-                                                   $"  • {{AppId}}{Environment.NewLine}" +
-                                                   $"       - L'id de l'{nameof(ContentMetaType.Application)} correspondante (pour des contenus de type {nameof(ContentMetaType.Application)}, cette valeur est égale à {{TitleId}}).{Environment.NewLine}" +
-                                                   $"  • {{PatchId}}:{Environment.NewLine}" +
-                                                   $"       - Si le contenu est une {nameof(ContentMetaType.Application)}, cette valeur est égale à l'id du contenu de {nameof(ContentMetaType.Patch)} correspondant, sinon zéro.{Environment.NewLine}" +
-                                                   $"  • {{PatchNum}}:{Environment.NewLine}" +
-                                                   $"       - Si le contenu est une {nameof(ContentMetaType.Application)}, cette valeur est normalement 0.{Environment.NewLine}" +
-                                                   $"       - Si le contenu est un {nameof(ContentMetaType.Patch)}, cette valeur correspond au numéro du patch.{Environment.NewLine}" +
-                                                   $"       - Si le contenu est un {nameof(ContentMetaType.AddOnContent)}, cette valeur correspond au numéro de patch de l'add-on.{Environment.NewLine}" +
-                                                   $"  • {{Title}}:{Environment.NewLine}" +
-                                                   $"       - Le premier titre parmi la liste des titres définis.{Environment.NewLine}" +
-                                                   $"       - Cette valeur n'existe que pour des contenus de type {nameof(ContentMetaType.Application)} ou {nameof(ContentMetaType.Patch)}, mais pas pour des contenus de type {nameof(ContentMetaType.AddOnContent)}.{Environment.NewLine}" +
-                                                   $"  • {{Ext}}:{Environment.NewLine}" +
-                                                   $"       - L'extension correspondant au type de fichier détecté.{Environment.NewLine}" +
-                                                   $"  • {{VerNum}}:{Environment.NewLine}" +
-                                                   $"       - Le numéro de version du contenu.{Environment.NewLine}" +
-                                                   $"  • {{WTitle}}:{Environment.NewLine}" +
-                                                   $"       - Le titre du contenu récupéré depuis Internet.{Environment.NewLine}" +
-                                                   $"  • {{WAppTitle}}: {Environment.NewLine}" +
-                                                   $"       - Le titre de l'{nameof(ContentMetaType.Application)} correspondante, récupéré depuis internet.{Environment.NewLine}" +
-                                                   $"{Environment.NewLine}" +
-                                                   $"Use \\{{ or \\}} to write the literal chars {{ or }}.";
+    public string RenamingTool_ToolTip_Patterns =>
+        $$"""
+         Mots clés:
+           • {TitleId}
+              - L'id du contenu.
+           • {AppId}
+              - L'id de l'{{nameof(ContentMetaType.Application)}} correspondante (pour des contenus de type {{nameof(ContentMetaType.Application)}}, cette valeur est égale à {TitleId}).
+           • {PatchId}:
+              - Si le contenu est une {{nameof(ContentMetaType.Application)}}, cette valeur est égale à l'id du contenu de {{nameof(ContentMetaType.Patch)}} correspondant, sinon zéro.
+           • {PatchNum}:
+              - Si le contenu est une {{nameof(ContentMetaType.Application)}}, cette valeur vaut généralement 0.
+              - Si le contenu est un {{nameof(ContentMetaType.Patch)}}, cette valeur correspond au numéro du patch.
+              - Si le contenu est un {{nameof(ContentMetaType.AddOnContent)}}, cette valeur correspond au numéro de patch de l'add-on.
+           • {Title}:
+              - Le premier titre parmi la liste des titres définis.
+              - Cette valeur n'existe que pour des contenus de type {{nameof(ContentMetaType.Application)}} ou {{nameof(ContentMetaType.Patch)}}, mais pas pour des contenus de type {{nameof(ContentMetaType.AddOnContent)}}.
+           • {Ext}:
+              - L'extension correspondant au type de fichier détecté.
+           • {VerNum}:
+              - Le numéro de version du contenu.
+           • {VerDsp}:
+              - La version affichée.
+           • {WTitle}:
+              - Le titre du contenu récupéré depuis Internet.
+           • {WAppTitle}: 
+              - Le titre de l'{{nameof(ContentMetaType.Application)}} correspondante, récupéré depuis Internet.
+
+         Utilisez \{ ou \} pour écrire littéralement les caractères { ou }.
+         """;
 
     public string RenamingTool_ToolTip_BasePattern => $"Le pattern à utiliser pour des contenus de type {nameof(ContentMetaType.Application)}.";
     public string RenamingTool_ToolTip_PatchPattern => $"Le pattern à utiliser pour des contenus de type {nameof(ContentMetaType.Patch)}.";

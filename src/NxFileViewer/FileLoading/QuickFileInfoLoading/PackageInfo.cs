@@ -60,11 +60,9 @@ public class Content
 
 public class NacpData
 {
-    private readonly ApplicationControlProperty _applicationControlProperty;
-
     public NacpData(ApplicationControlProperty applicationControlProperty)
     {
-        _applicationControlProperty = applicationControlProperty;
+        DisplayVersion = applicationControlProperty.DisplayVersionString.ToString();
 
         var mask = 1;
 
@@ -73,9 +71,9 @@ public class NacpData
         for (var i = 0; i < 16; i++)
         {
 
-            if ((_applicationControlProperty.SupportedLanguageFlag & mask) == mask)
+            if ((applicationControlProperty.SupportedLanguageFlag & mask) == mask)
             {
-                titles[i] = new Title(_applicationControlProperty.Title[i]);
+                titles[i] = new Title(applicationControlProperty.Title[i]);
             }
             else
             {
@@ -87,6 +85,8 @@ public class NacpData
 
         Titles = titles;
     }
+
+    public string DisplayVersion { get; }
 
     public IReadOnlyList<Title?> Titles { get; }
 

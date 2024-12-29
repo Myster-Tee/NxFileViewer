@@ -56,14 +56,20 @@ public enum PatternKeyword
     /// The content version number.
     /// </summary>
     [SerializedValue("VerNum")]
-    VersionNumber,   
-    
+    VersionNumber,
+
+    /// <summary>
+    /// The content version displayed.
+    /// </summary>
+    [SerializedValue("VerDsp")]
+    VersionDisplay,
+
     /// <summary>
     /// The title name retrieved from the online API, based on the content Title Id.
     /// </summary>
     [SerializedValue("WTitle")]
-    OnlineTitleName,   
-    
+    OnlineTitleName,
+
     /// <summary>
     /// The title name retrieved from the online API, based on the content Application Title Id.
     /// </summary>
