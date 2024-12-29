@@ -17,8 +17,18 @@ public class DynamicTextPatternPart : PatternPart
         Keyword = keyword;
         StringOperator = stringOperator;
     }
-}
 
+    public override string Serialize()
+    {
+        var kw = SerializedValueAttributeHelper.GetSerializedValue(Keyword);
+        if (StringOperator == StringOperator.Untouched)
+            return $"{{{kw}}}";
+
+        var opr = SerializedValueAttributeHelper.GetSerializedValue(StringOperator);
+        return $"{{{kw}:{opr}}}";
+    }
+
+}
 
 
 public enum StringOperator

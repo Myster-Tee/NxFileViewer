@@ -24,7 +24,7 @@ public static class SerializedValueAttributeHelper
         }
     }
 
-    private static string? GetSerializedValue<T>(T enumValue) where T : struct, Enum
+    public static string? GetSerializedValue<T>(T enumValue) where T : struct, Enum
     {
         var memberInfo = enumValue.GetType().GetMember(enumValue.ToString()).First();
 

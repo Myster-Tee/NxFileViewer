@@ -8,17 +8,17 @@ public interface INamingSettings
     /// <summary>
     /// Pattern for a package with a single content of type «Application»
     /// </summary>
-    public IReadOnlyList<PatternPart> ApplicationPattern { get; }
+    public IPattern ApplicationPattern { get; }
 
     /// <summary>
     /// Pattern for a package with a single content of type «Patch»
     /// </summary>
-    public IReadOnlyList<PatternPart> PatchPattern { get; }
+    public IPattern PatchPattern { get; }
 
     /// <summary>
     /// Pattern for a package with a single content of type «Addon»
     /// </summary>
-    public IReadOnlyList<PatternPart> AddonPattern { get; }
+    public IPattern AddonPattern { get; }
 
     /// <summary>
     /// Get the string to use for replacing invalid Windows chars
@@ -34,4 +34,12 @@ public interface INamingSettings
     /// Get the string to use for replacing white space chars
     /// </summary>
     string? WhiteSpaceCharsReplacement { get; }
+}
+
+/// <summary>
+/// Represents a naming Pattern, composed of <see cref="PatternPart"/>
+/// </summary>
+public interface IPattern : IReadOnlyList<PatternPart>
+{
+    string Serialize();
 }

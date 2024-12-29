@@ -312,31 +312,42 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_FileFilters => "Filtres";
     public string RenamingTool_ToolTip_Patterns =>
         $$"""
-         Mots clés:
-           • {TitleId}
+         Syntaxe d'un mot clé:
+            {<MotClé>[:<Format>]}
+
+         Le format est facultatif, et peut valoir:
+            - U: Majuscule
+            - L: Minuscule
+         
+         Exemples:
+            {Title} => Le titre original
+            {Title:U} => Le titre en majuscule
+         
+         Liste des mots clés:
+           • TitleId:
               - L'id du contenu.
-           • {AppId}
+           • AppId:
               - L'id de l'{{nameof(ContentMetaType.Application)}} correspondante (pour des contenus de type {{nameof(ContentMetaType.Application)}}, cette valeur est égale à {TitleId}).
-           • {PatchId}:
+           • PatchId:
               - Si le contenu est une {{nameof(ContentMetaType.Application)}}, cette valeur est égale à l'id du contenu de {{nameof(ContentMetaType.Patch)}} correspondant, sinon zéro.
-           • {PatchNum}:
+           • PatchNum:
               - Si le contenu est une {{nameof(ContentMetaType.Application)}}, cette valeur vaut généralement 0.
               - Si le contenu est un {{nameof(ContentMetaType.Patch)}}, cette valeur correspond au numéro du patch.
               - Si le contenu est un {{nameof(ContentMetaType.AddOnContent)}}, cette valeur correspond au numéro de patch de l'add-on.
-           • {Title}:
+           • Title:
               - Le premier titre parmi la liste des titres définis.
               - Cette valeur n'existe que pour des contenus de type {{nameof(ContentMetaType.Application)}} ou {{nameof(ContentMetaType.Patch)}}, mais pas pour des contenus de type {{nameof(ContentMetaType.AddOnContent)}}.
-           • {Ext}:
+           • Ext:
               - L'extension correspondant au type de fichier détecté.
-           • {VerNum}:
+           • VerNum:
               - Le numéro de version du contenu.
-           • {VerDsp}:
+           • VerDsp:
               - La version affichée.
-           • {WTitle}:
+           • WTitle:
               - Le titre du contenu récupéré depuis Internet.
-           • {WAppTitle}: 
+           • WAppTitle: 
               - Le titre de l'{{nameof(ContentMetaType.Application)}} correspondante, récupéré depuis Internet.
-
+         
          Utilisez \{ ou \} pour écrire littéralement les caractères { ou }.
          """;
 

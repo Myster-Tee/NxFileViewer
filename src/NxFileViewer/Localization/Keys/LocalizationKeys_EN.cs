@@ -312,31 +312,42 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_FileFilters => "Filters";
     public string RenamingTool_ToolTip_Patterns =>
         $$"""
-         Allowed keywords:
-           • {TitleId}
+         Keyword syntax: 
+            {<Keyword>[:<Format>]}
+         
+         Format is optional and can be:
+         - U: Upper-case
+         - L: Lower-case
+         
+         Examples:
+           {Title} => The original title
+           {Title:U} => The upper-case title
+         
+         Supported keywords:
+           • TitleId:
               - The content id.
-           • {AppId}
+           • AppId:
               - The id of the corresponding {{nameof(ContentMetaType.Application)}} (for {{nameof(ContentMetaType.Application)}} contents, this value is equal to the {TitleId}).
-           • {PatchId}:
+           • PatchId:
               - If content is an {{nameof(ContentMetaType.Application)}}, this value is equal to the id of the corresponding {{nameof(ContentMetaType.Patch)}} content, otherwise zero.
-           • {PatchNum}:
+           • PatchNum:
               - If content is an {{nameof(ContentMetaType.Application)}}, value is generally 0.
               - If content is a {{nameof(ContentMetaType.Patch)}}, value corresponds to the patch number.
               - If content is an {{nameof(ContentMetaType.AddOnContent)}}, value corresponds to the add-on patch number.
-           • {Title}:
+           • Title:
               - The first title among the list of declared titles.
               - This value exists only for contents of type {{nameof(ContentMetaType.Application)}} or {{nameof(ContentMetaType.Patch)}}, but not for {{nameof(ContentMetaType.AddOnContent)}}.
-           • {Ext}:
+           • Ext:
               - The extension corresponding to the detected file type.
-           • {VerNum}:
+           • VerNum:
               - The content version number.
-           • {VerDsp}:
+           • VerDsp:
               - The displayed version.
-           • {WTitle}:
+           • WTitle:
               - The content title retrieved from the Internet.
-           • {WAppTitle}: 
+           • WAppTitle: 
               - The title of the corresponding {{nameof(ContentMetaType.Application)}}, retrieved from the Internet.
-
+         
          Use \{ or \} to write the literal chars { or }.
          """;
     public string RenamingTool_ToolTip_BasePattern => $"The pattern to use for contents of type {nameof(ContentMetaType.Application)}.";

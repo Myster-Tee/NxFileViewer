@@ -8,4 +8,9 @@ public class StaticTextPatternPart : PatternPart
     {
         Text = text;
     }
+
+    public override string Serialize()
+    {
+        return Text;
+    }
 }

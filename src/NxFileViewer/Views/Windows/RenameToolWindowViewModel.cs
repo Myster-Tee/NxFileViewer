@@ -60,8 +60,6 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
         set
         {
             _appSettings.RenamingOptions.ApplicationPattern = value;
-
-            UpdateApplicationPatternParts();
             NotifyPropertyChanged();
         }
     }
@@ -82,7 +80,6 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
         set
         {
             _appSettings.RenamingOptions.PatchPattern = value;
-            UpdatePatchPatternParts();
             NotifyPropertyChanged();
         }
     }
@@ -103,7 +100,6 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
         set
         {
             _appSettings.RenamingOptions.AddonPattern = value;
-            UpdateAddonPatternParts();
             NotifyPropertyChanged();
         }
     }
@@ -120,12 +116,21 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
 
     private void OnRenamingOptionsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if(e.PropertyName == nameof(IRenamingOptions.ApplicationPattern))
+        if (e.PropertyName == nameof(IRenamingOptions.ApplicationPattern))
+        {
+            UpdateApplicationPatternParts();
             NotifyPropertyChanged(nameof(ApplicationPattern));
-        else if(e.PropertyName == nameof(IRenamingOptions.PatchPattern))
-            NotifyPropertyChanged(nameof(PatchPattern));     
-        else if(e.PropertyName == nameof(IRenamingOptions.AddonPattern))
+        }
+        else if (e.PropertyName == nameof(IRenamingOptions.PatchPattern))
+        {
+            UpdatePatchPatternParts();
+            NotifyPropertyChanged(nameof(PatchPattern));
+        }
+        else if (e.PropertyName == nameof(IRenamingOptions.AddonPattern))
+        {
+            UpdateAddonPatternParts();
             NotifyPropertyChanged(nameof(AddonPattern));
+        }
     }
 
     private void UpdateApplicationPatternParts()

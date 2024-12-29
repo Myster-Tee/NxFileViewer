@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Input;
@@ -7,7 +6,6 @@ using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
-using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM.Commands;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,9 +19,9 @@ public class RenameFilesCommand : CommandBase, IRenameFilesCommand
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger _logger;
 
-    private List<PatternPart>? _applicationPatternParts;
-    private List<PatternPart>? _patchPatternParts;
-    private List<PatternPart>? _addonPatternParts;
+    private Pattern? _applicationPatternParts;
+    private Pattern? _patchPatternParts;
+    private Pattern? _addonPatternParts;
     private IBackgroundTaskRunner? _backgroundTaskRunner;
 
     public RenameFilesCommand(IAppSettings appSettings, IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
@@ -35,7 +33,7 @@ public class RenameFilesCommand : CommandBase, IRenameFilesCommand
         _appSettings.RenamingOptions.PropertyChanged += OnRenamingOptionsPropertyChanged;
     }
 
-    public List<PatternPart>? ApplicationPatternParts
+    public Pattern? ApplicationPatternParts
     {
         get => _applicationPatternParts;
         set
@@ -46,7 +44,7 @@ public class RenameFilesCommand : CommandBase, IRenameFilesCommand
         }
     }
 
-    public List<PatternPart>? PatchPatternParts
+    public Pattern? PatchPatternParts
     {
         get => _patchPatternParts;
         set
@@ -57,7 +55,7 @@ public class RenameFilesCommand : CommandBase, IRenameFilesCommand
         }
     }
 
-    public List<PatternPart>? AddonPatternParts
+    public Pattern? AddonPatternParts
     {
         get => _addonPatternParts;
         set
@@ -211,11 +209,11 @@ public class RenameFilesCommand : CommandBase, IRenameFilesCommand
 
 public interface IRenameFilesCommand : ICommand, INotifyPropertyChanged
 {
-    List<PatternPart>? ApplicationPatternParts { get; set; }
+    Pattern? ApplicationPatternParts { get; set; }
 
-    List<PatternPart>? PatchPatternParts { get; set; }
+    Pattern? PatchPatternParts { get; set; }
 
-    List<PatternPart>? AddonPatternParts { get; set; }
+    Pattern? AddonPatternParts { get; set; }
 
     string InputPath { get; set; }
 

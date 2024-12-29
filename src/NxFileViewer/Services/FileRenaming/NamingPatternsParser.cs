@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Emignatik.NxFileViewer.Services.FileRenaming.Exceptions;
+using Emignatik.NxFileViewer.Services.FileRenaming.Models;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;
 using Emignatik.NxFileViewer.Tools.DelimitedTextParsing;
 
@@ -11,26 +12,33 @@ public class NamingPatternsParser : INamingPatternsParser
 
     private readonly DelimitedTextParser _keywordsParser = new('{', '}', '\\');
 
-    public List<PatternPart> ParseApplicationPattern(string pattern)
+    public Pattern ParseApplicationPattern(string pattern)
     {
         var allowedApplicationKeywords = PatternKeywordHelper.GetAllowedApplicationKeywords();
 
-        return ParsePatternsInternal(pattern, allowedApplicationKeywords, PatternType.Application).ToList();
+        return ParsePatternInternal(pattern, allowedApplicationKeywords, PatternType.Application);
     }
 
-    public List<PatternPart> ParsePatchPattern(string pattern)
+    public Pattern ParsePatchPattern(string pattern)
     {
         var allowedPatchKeywords = PatternKeywordHelper.GetAllowedPatchKeywords();
-        return ParsePatternsInternal(pattern, allowedPatchKeywords, PatternType.Patch).ToList();
+        return ParsePatternInternal(pattern, allowedPatchKeywords, PatternType.Patch);
     }
 
-    public List<PatternPart> ParseAddonPattern(string pattern)
+    public Pattern ParseAddonPattern(string pattern)
     {
         var allowedAddonKeywords = PatternKeywordHelper.GetAllowedAddonKeywords();
-        return ParsePatternsInternal(pattern, allowedAddonKeywords, PatternType.Addon).ToList();
+        return ParsePatternInternal(pattern, allowedAddonKeywords, PatternType.Addon);
     }
 
-    private IEnumerable<PatternPart> ParsePatternsInternal(string pattern, IReadOnlyList<PatternKeyword> allowedKeywords, PatternType patternType)
+    private Pattern ParsePatternInternal(string patternStr, IReadOnlyList<PatternKeyword> allowedKeywords, PatternType patternType)
+    {
+        var pattern = new Pattern();
+        pattern.AddRange(ParsePatternPartsInternal(patternStr, allowedKeywords, patternType));
+        return pattern;
+    }
+
+    private IEnumerable<PatternPart> ParsePatternPartsInternal(string pattern, IReadOnlyList<PatternKeyword> allowedKeywords, PatternType patternType)
     {
         if (string.IsNullOrWhiteSpace(pattern))
             throw new EmptyPatternException();

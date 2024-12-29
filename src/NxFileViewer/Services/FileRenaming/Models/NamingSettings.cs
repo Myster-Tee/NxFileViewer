@@ -1,21 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;
 
 namespace Emignatik.NxFileViewer.Services.FileRenaming.Models;
 
 public class NamingSettings : INamingSettings
 {
-    IReadOnlyList<PatternPart> INamingSettings.ApplicationPattern => ApplicationPattern;
+    IPattern INamingSettings.ApplicationPattern => ApplicationPattern;
 
-    public List<PatternPart> ApplicationPattern { get; set; } = new();
+    public Pattern ApplicationPattern { get; set; } = new();
 
-    IReadOnlyList<PatternPart> INamingSettings.PatchPattern => PatchPattern;
+    IPattern INamingSettings.PatchPattern => PatchPattern;
 
-    public List<PatternPart> PatchPattern { get; set; } = new();
+    public Pattern PatchPattern { get; set; } = new();
 
-    IReadOnlyList<PatternPart> INamingSettings.AddonPattern => AddonPattern;
+    IPattern INamingSettings.AddonPattern => AddonPattern;
 
-    public List<PatternPart> AddonPattern { get; set; } = new();
+    public Pattern AddonPattern { get; set; } = new();
 
     public string? InvalidFileNameCharsReplacement { get; set; }
 
@@ -23,4 +24,20 @@ public class NamingSettings : INamingSettings
 
     public string? WhiteSpaceCharsReplacement { get; set; }
 
+}
+
+public class Pattern : List<PatternPart>, IPattern
+{
+    public override string ToString()
+    {
+        return this.Serialize();
+    }
+
+    public string Serialize()
+    {
+        var sb = new StringBuilder();
+        foreach (var part in this)
+            sb.Append(part.Serialize());
+        return sb.ToString();
+    }
 }
