@@ -7,12 +7,12 @@ namespace Emignatik.NxFileViewer.Commands;
 
 public class CloseFileCommand : CommandBase, ICloseFileCommand
 {
-    private readonly IOpenedFileService _openedFileService;
+    private readonly IFileOpeningService _fileOpeningService;
 
-    public CloseFileCommand(IOpenedFileService openedFileService)
+    public CloseFileCommand(IFileOpeningService fileOpeningService)
     {
-        _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
-        _openedFileService.OpenedFileChanged += (sender, args) =>
+        _fileOpeningService = fileOpeningService ?? throw new ArgumentNullException(nameof(fileOpeningService));
+        _fileOpeningService.OpenedFileChanged += (_, _) =>
         {
             TriggerCanExecuteChanged();
         };
@@ -20,14 +20,12 @@ public class CloseFileCommand : CommandBase, ICloseFileCommand
 
     public override bool CanExecute(object? parameter)
     {
-        return _openedFileService.OpenedFile != null;
+        return _fileOpeningService.OpenedFile != null;
     }
 
     public override void Execute(object? parameter)
     {
-        _openedFileService.OpenedFile = null;
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
+        _fileOpeningService.SafeClose();
     }
 }
 

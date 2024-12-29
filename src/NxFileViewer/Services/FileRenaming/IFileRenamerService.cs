@@ -17,6 +17,7 @@ public interface IFileRenamerService
     /// <param name="inputDirectory"></param>
     /// <param name="fileFilters"></param>
     /// <param name="includeSubdirectories"></param>
+    /// <param name="automaticallyCloseOpenedFile"></param>
     /// <param name="namingSettings"></param>
     /// <param name="isSimulation"></param>
     /// <param name="logger"></param>
@@ -28,12 +29,13 @@ public interface IFileRenamerService
     /// <exception cref="EmptyPatternException"></exception>
     /// <exception cref="SuperPackageNotSupportedException"></exception>
     /// <exception cref="KeywordNotAllowedException"></exception>
-    Task<IList<RenamingResult>> RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken);
+    Task<IList<RenamingResult>> RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, bool automaticallyCloseOpenedFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken);
 
     /// <summary>
     /// Rename the specified file
     /// </summary>
     /// <param name="inputFile"></param>
+    /// <param name="automaticallyCloseOpenedFile"></param>
     /// <param name="namingSettings"></param>
     /// <param name="isSimulation"></param>
     /// <param name="logger"></param>
@@ -44,7 +46,7 @@ public interface IFileRenamerService
     /// <exception cref="EmptyPatternException"></exception>
     /// <exception cref="SuperPackageNotSupportedException"></exception>
     /// <exception cref="KeywordNotAllowedException"></exception>
-    Task<RenamingResult> RenameFileAsync(string inputFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, CancellationToken cancellationToken);
+    Task<RenamingResult> RenameFileAsync(string inputFile, bool automaticallyCloseOpenedFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, CancellationToken cancellationToken);
 }
 
 public class RenamingResult

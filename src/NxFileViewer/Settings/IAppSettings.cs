@@ -44,6 +44,7 @@ public interface IAppSettings : INotifyPropertyChanged
 
 public interface IRenamingOptions : INotifyPropertyChanged
 {
+    bool AutoCloseOpenedFile { get; set; }
 
     string LastRenamePath { get; set; }
 
@@ -64,4 +65,5 @@ public interface IRenamingOptions : INotifyPropertyChanged
     bool ReplaceWhiteSpaceChars { get; set; }
 
     string WhiteSpaceCharsReplacement { get; set; }
+
 }

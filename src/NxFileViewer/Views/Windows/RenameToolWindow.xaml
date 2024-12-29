@@ -44,18 +44,22 @@
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_FileFilters}" Style="{StaticResource Title2}" />
-                            <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding Path=RenameCommand.FileFilters}" VerticalAlignment="Center" />
+                            <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding Path=RenameCommand.FileFilters}" VerticalAlignment="Center" MinWidth="120" />
                             <CheckBox Grid.Row="1" Grid.Column="1" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.RenamingTool_IncludeSubDirectories}" 
                               IsChecked="{Binding Path=RenameCommand.IncludeSubdirectories}"
-                              HorizontalAlignment="Center" VerticalAlignment="Center" />
+                              HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{StaticResource Control.Default.Margin}" />
+                            <CheckBox Grid.Row="1" Grid.Column="2" Content="{Binding Current.Keys.RenamingTool_AutoCloseOpenedFile, Source={x:Static loc:LocalizationManager.Instance}}" 
+                                IsChecked="{Binding RenameCommand.AutoCloseOpenedFile}"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{StaticResource Control.Default.Margin}" />
                         </Grid>
                     </StackPanel>
                 </GroupBox>

@@ -9,15 +9,15 @@ namespace Emignatik.NxFileViewer.Commands;
 
 public class OpenLastFileCommand : CommandBase, IOpenLastFileCommand
 {
-    private readonly IFileOpenerService _fileOpenerService;
+    private readonly IFileOpeningService _fileOpeningService;
     private readonly IAppSettings _appSettings;
 
-    public OpenLastFileCommand(IFileOpenerService fileOpenerService, IAppSettings appSettings)
+    public OpenLastFileCommand(IFileOpeningService fileOpeningService, IAppSettings appSettings)
     {
-        _fileOpenerService = fileOpenerService ?? throw new ArgumentNullException(nameof(fileOpenerService));
+        _fileOpeningService = fileOpeningService ?? throw new ArgumentNullException(nameof(fileOpeningService));
         _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
 
-        _appSettings.PropertyChanged += (sender, args) =>
+        _appSettings.PropertyChanged += (_, args) =>
         {
             if (args.PropertyName == nameof(IAppSettings.LastOpenedFile))
                 TriggerCanExecuteChanged();
@@ -33,7 +33,7 @@ public class OpenLastFileCommand : CommandBase, IOpenLastFileCommand
     public override void Execute(object? parameter)
     {
         var lastOpenedFile = _appSettings.LastOpenedFile;
-        _fileOpenerService.SafeOpenFile(lastOpenedFile);
+        _fileOpeningService.SafeOpenFile(lastOpenedFile);
     }
 }
 

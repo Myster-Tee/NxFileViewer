@@ -46,8 +46,7 @@ public partial class App : Application, IAppEvents
             .AddSingleton<ILoggerFactory, LoggerFactory>()
 
             .AddSingleton<IKeySetProviderService, KeySetProviderService>()
-            .AddSingleton<IFileOpenerService, FileOpenerService>()
-            .AddSingleton<IOpenedFileService, OpenedFileService>()
+            .AddSingleton<IFileOpeningService, FileOpeningService>()
             .AddSingleton<ISelectedItemService, SelectedItemService>()
             .AddSingleton<IPromptService, PromptService>()
             .AddSingleton<IPackageInfoLoader, PackageInfoLoader>()
@@ -173,9 +172,9 @@ public partial class App : Application, IAppEvents
             keySetProviderService.Reset(); // To force reloading with the downloaded keys file
         }
 
-        var fileOpenerService = ServiceProvider.GetRequiredService<IFileOpenerService>();
+        var fileOpeningService = ServiceProvider.GetRequiredService<IFileOpeningService>();
         if (cmdLineArgs.Count > 0)
-            await fileOpenerService.SafeOpenFile(cmdLineArgs[0]);
+            await fileOpeningService.SafeOpenFile(cmdLineArgs[0]);
     }
 
     private void OnLocalizationStringFormatException(object? sender, FormatExceptionHandlerArgs args)

@@ -11,7 +11,7 @@
         Style="{StaticResource WindowStyle}"
         Title="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Title}" 
         Width="400"
-        Height="420"
+        Height="440"
         d:DataContext="{d:DesignInstance windows:SettingsWindowViewModel}"
         WindowStartupLocation="CenterOwner">
 

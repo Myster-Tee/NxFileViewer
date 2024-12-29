@@ -11,20 +11,20 @@ namespace Emignatik.NxFileViewer.Commands;
 
 public class VerifyNcasIntegrityCommand : CommandBase, IVerifyNcasIntegrityCommand
 {
-    private readonly IOpenedFileService _openedFileService;
+    private readonly IFileOpeningService _fileOpeningService;
     private readonly IMainBackgroundTaskRunnerService _backgroundTaskRunnerService;
     private readonly IServiceProvider _serviceProvider;
     private readonly IAppSettings _appSettings;
 
 
-    public VerifyNcasIntegrityCommand(IOpenedFileService openedFileService, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, IServiceProvider serviceProvider, IAppSettings appSettings)
+    public VerifyNcasIntegrityCommand(IFileOpeningService fileOpeningService, IMainBackgroundTaskRunnerService backgroundTaskRunnerService, IServiceProvider serviceProvider, IAppSettings appSettings)
     {
-        _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
+        _fileOpeningService = fileOpeningService ?? throw new ArgumentNullException(nameof(fileOpeningService));
         _backgroundTaskRunnerService = backgroundTaskRunnerService ?? throw new ArgumentNullException(nameof(backgroundTaskRunnerService));
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
 
-        _openedFileService.OpenedFileChanged += (_, _) =>
+        _fileOpeningService.OpenedFileChanged += (_, _) =>
         {
             TriggerCanExecuteChanged();
         };
@@ -38,13 +38,13 @@ public class VerifyNcasIntegrityCommand : CommandBase, IVerifyNcasIntegrityComma
 
     public override bool CanExecute(object? parameter)
     {
-        var openedFile = _openedFileService.OpenedFile;
+        var openedFile = _fileOpeningService.OpenedFile;
         return openedFile != null && !_backgroundTaskRunnerService.IsRunning;
     }
 
     public override void Execute(object? parameter)
     {
-        var openedFile = _openedFileService.OpenedFile;
+        var openedFile = _fileOpeningService.OpenedFile;
         if (openedFile == null)
             return;
 

@@ -265,6 +265,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string RenamingTool_ReplaceWhiteSpaceChars { get; }
     string RenamingTool_ReplaceWhiteSpaceCharsWith { get; }
     string RenamingTool_Simulation { get; }
+    string RenamingTool_AutoCloseOpenedFile { get; }
     string RenamingTool_IncludeSubDirectories { get; }
     string RenamingTool_ContentTypeNotSupported { get; }
     string RenamingTool_SuperPackageNotSupported { get; }

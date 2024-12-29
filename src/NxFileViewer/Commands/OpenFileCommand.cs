@@ -12,13 +12,13 @@ namespace Emignatik.NxFileViewer.Commands;
 
 public class OpenFileCommand : CommandBase, IOpenFileCommand
 {
-    private readonly IFileOpenerService _fileOpenerService;
+    private readonly IFileOpeningService _fileOpeningService;
     private readonly IAppSettings _appSettings;
 
-    public OpenFileCommand(IFileOpenerService fileOpenerService, IAppSettings appSettings)
+    public OpenFileCommand(IFileOpeningService fileOpeningService, IAppSettings appSettings)
     {
-        _fileOpenerService = fileOpenerService ?? throw new ArgumentNullException(nameof(fileOpenerService));
-        _appSettings = appSettings;
+        _fileOpeningService = fileOpeningService ?? throw new ArgumentNullException(nameof(fileOpeningService));
+        _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
     }
 
     public override void Execute(object? parameter)
@@ -66,7 +66,7 @@ public class OpenFileCommand : CommandBase, IOpenFileCommand
 
         var filePath = openFileDialog.FileName;
 
-        _fileOpenerService.SafeOpenFile(filePath);
+        _fileOpeningService.SafeOpenFile(filePath);
     }
 }
 

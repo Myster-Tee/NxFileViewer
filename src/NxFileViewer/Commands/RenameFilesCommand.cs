@@ -68,6 +68,12 @@ public class RenameFilesCommand : CommandBase, IRenameFilesCommand
         }
     }
 
+    public bool AutoCloseOpenedFile
+    {
+        get => _appSettings.RenamingOptions.AutoCloseOpenedFile;
+        set => _appSettings.RenamingOptions.AutoCloseOpenedFile = value;
+    }
+
     public string InputPath
     {
         get => _appSettings.RenamingOptions.LastRenamePath;
@@ -146,12 +152,12 @@ public class RenameFilesCommand : CommandBase, IRenameFilesCommand
             if (File.Exists(inputPath))
             {
                 runnable = _serviceProvider.GetRequiredService<IFileRenamerRunnable>()
-                    .Setup(inputPath, namingPatterns, IsSimulation, Logger);
+                    .Setup(namingPatterns, AutoCloseOpenedFile, inputPath, IsSimulation, Logger);
             }
             else
             {
                 runnable = _serviceProvider.GetRequiredService<IFilesRenamerRunnable>()
-                    .Setup(inputPath, namingPatterns, FileFilters, IncludeSubdirectories, IsSimulation, Logger);
+                    .Setup(namingPatterns, AutoCloseOpenedFile, inputPath, FileFilters, IncludeSubdirectories, IsSimulation, Logger);
             }
 
             await _backgroundTaskRunner!.RunAsync(runnable);
@@ -180,7 +186,7 @@ public class RenameFilesCommand : CommandBase, IRenameFilesCommand
                 break;
             case nameof(IRenamingOptions.WhiteSpaceCharsReplacement):
                 NotifyPropertyChanged(nameof(WhiteSpaceCharsReplacement));
-                break;          
+                break;
             case nameof(IRenamingOptions.ReplaceWhiteSpaceChars):
                 NotifyPropertyChanged(nameof(ReplaceWhiteSpaceChars));
                 break;
@@ -218,6 +224,8 @@ public interface IRenameFilesCommand : ICommand, INotifyPropertyChanged
     IBackgroundTaskRunner? BackgroundTaskRunner { get; set; }
 
     public bool IncludeSubdirectories { get; set; }
+
+    public bool AutoCloseOpenedFile { get; set; }
 
     bool IsSimulation { get; set; }
 

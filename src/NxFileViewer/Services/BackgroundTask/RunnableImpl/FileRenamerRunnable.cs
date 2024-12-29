@@ -7,16 +7,17 @@ using Microsoft.Extensions.Logging;
 namespace Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
 
 
-public class FilesRenamerRunnable : IFilesRenamerRunnable
+public class FileRenamerRunnable : IFileRenamerRunnable
 {
 
     private readonly IFileRenamerService _fileRenamerService;
     private RenameSettings? _renameSettings;
 
     public bool SupportsCancellation => true;
-    public bool SupportProgress => true;
 
-    public FilesRenamerRunnable(IFileRenamerService fileRenamerService)
+    public bool SupportProgress => false;
+
+    public FileRenamerRunnable(IFileRenamerService fileRenamerService)
     {
         _fileRenamerService = fileRenamerService ?? throw new ArgumentNullException(nameof(fileRenamerService));
     }
@@ -26,29 +27,26 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
         if (_renameSettings == null)
             throw new InvalidOperationException($"{nameof(Setup)} method should be invoked first.");
 
-        _fileRenamerService.RenameFromDirectoryAsync(
-            _renameSettings.InputDirectory,
-            _renameSettings.FileFilters,
-            _renameSettings.IncludeSubdirectories,
+        _fileRenamerService.RenameFileAsync(
+            _renameSettings.InputPath,
+            _renameSettings.AutomaticallyCloseOpenedFile,
             _renameSettings.NamingSettings,
             _renameSettings.Simulation,
             _renameSettings.Logger,
-            progressReporter,
             cancellationToken
         ).Wait(cancellationToken);
     }
 
-    public IFilesRenamerRunnable Setup(string inputDirectory, INamingSettings namingSettings, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger)
+    public IFileRenamerRunnable Setup(INamingSettings namingSettings, bool automaticallyCloseOpenedFile, string inputDirectory, bool simulation, ILogger? logger)
     {
         if (inputDirectory == null) throw new ArgumentNullException(nameof(inputDirectory));
         if (namingSettings == null) throw new ArgumentNullException(nameof(namingSettings));
-        if (fileFilters == null) throw new ArgumentNullException(nameof(fileFilters));
+
         _renameSettings = new RenameSettings
         {
-            IncludeSubdirectories = includeSubdirectories,
-            FileFilters = fileFilters,
+            AutomaticallyCloseOpenedFile = automaticallyCloseOpenedFile,
             NamingSettings = namingSettings,
-            InputDirectory = inputDirectory,
+            InputPath = inputDirectory,
             Simulation = simulation,
             Logger = logger,
         };
@@ -58,17 +56,16 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
 
     private class RenameSettings
     {
-        public bool IncludeSubdirectories { get; init; }
-        public string? FileFilters { get; init; }
+        public bool AutomaticallyCloseOpenedFile { get; init; }
         public INamingSettings NamingSettings { get; init; } = null!;
-        public string InputDirectory { get; init; } = null!;
+        public string InputPath { get; init; } = null!;
         public bool Simulation { get; init; }
         public ILogger? Logger { get; init; }
     }
 }
 
-public interface IFilesRenamerRunnable : IRunnable
+public interface IFileRenamerRunnable : IRunnable
 {
-    IFilesRenamerRunnable Setup(string inputDirectory, INamingSettings namingSettings, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger);
+    IFileRenamerRunnable Setup(INamingSettings namingSettings, bool automaticallyCloseOpenedFile, string inputFile, bool simulation, ILogger? logger);
 }
 

@@ -353,6 +353,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_ReplaceWhiteSpaceChars => "Replace white space chars";
     public string RenamingTool_ReplaceWhiteSpaceCharsWith => "Replace white space chars with";
     public string RenamingTool_Simulation => "Simulation";
+    public string RenamingTool_AutoCloseOpenedFile => "Auto close opened file";
     public string RenamingTool_IncludeSubDirectories => "Include subdirectories";
     public string RenamingTool_ContentTypeNotSupported => "Content type «{0}» not supported.";
     public string RenamingTool_SuperPackageNotSupported => "Super package not supported.";

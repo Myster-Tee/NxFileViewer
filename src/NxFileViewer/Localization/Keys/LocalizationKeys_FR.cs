@@ -354,6 +354,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_ReplaceWhiteSpaceChars => "Remplacer les espaces blancs";
     public string RenamingTool_ReplaceWhiteSpaceCharsWith => "Remplacer les espaces blancs avec";
     public string RenamingTool_Simulation => "Simulation";
+    public string RenamingTool_AutoCloseOpenedFile => "Fermer automatiquement le fichier ouvert";
     public string RenamingTool_IncludeSubDirectories => "Inclure les sous répertoires";
     public string RenamingTool_ContentTypeNotSupported => "Type de contenu «{0}» non supporté.";
     public string RenamingTool_SuperPackageNotSupported => "Super package non supporté.";

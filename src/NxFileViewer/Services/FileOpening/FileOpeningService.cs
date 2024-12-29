@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows;
 using Emignatik.NxFileViewer.FileLoading;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Models;
@@ -10,17 +11,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Emignatik.NxFileViewer.Services.FileOpening;
 
-public class FileOpenerService : IFileOpenerService
+public class FileOpeningService : IFileOpeningService
 {
-    private readonly IOpenedFileService _openedFileService;
     private readonly IAppSettings _appSettings;
     private readonly IFileLoader _fileLoader;
     private readonly IMainBackgroundTaskRunnerService _backgroundTaskRunnerService;
     private readonly ILogger _logger;
 
-    public FileOpenerService(IOpenedFileService openedFileService, ILoggerFactory loggerFactory, IAppSettings appSettings, IFileLoader fileLoader, IMainBackgroundTaskRunnerService backgroundTaskRunnerService)
+    public FileOpeningService(ILoggerFactory loggerFactory, IAppSettings appSettings, IFileLoader fileLoader, IMainBackgroundTaskRunnerService backgroundTaskRunnerService)
     {
-        _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
         _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
         _fileLoader = fileLoader ?? throw new ArgumentNullException(nameof(fileLoader));
         _backgroundTaskRunnerService = backgroundTaskRunnerService ?? throw new ArgumentNullException(nameof(backgroundTaskRunnerService));
@@ -44,9 +43,9 @@ public class FileOpenerService : IFileOpenerService
                 SupportsCancellation = false
             };
 
-            var nxFile = await _backgroundTaskRunnerService.RunAsync(runnableRelay);
+            _openedFile = await _backgroundTaskRunnerService.RunAsync(runnableRelay);
 
-            _openedFileService.OpenedFile = nxFile;
+            NotifyOpenedFileChanged(_openedFile);
         }
         catch (FileNotSupportedException ex)
         {
@@ -55,6 +54,40 @@ public class FileOpenerService : IFileOpenerService
         catch (Exception ex)
         {
             _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.LoadingError_Failed.SafeFormat(filePath, ex.Message), ex);
+        }
+    }
+
+    public void SafeClose()
+    {
+        _openedFile?.Dispose();
+        _openedFile = null;
+
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+
+        NotifyOpenedFileChanged(null);
+    }
+
+    public event OpenedFileChangedHandler? OpenedFileChanged;
+
+    private NxFile? _openedFile;
+
+    public NxFile? OpenedFile => _openedFile;
+
+    private void NotifyOpenedFileChanged(NxFile? newFile)
+    {
+        var dispatcher = Application.Current.Dispatcher;
+
+        if (!dispatcher.CheckAccess())
+        {
+            dispatcher.InvokeAsync(() =>
+            {
+                NotifyOpenedFileChanged(newFile);
+            });
+        }
+        else
+        {
+            OpenedFileChanged?.Invoke(this, new OpenedFileChangedHandlerArgs(newFile));
         }
     }
 }

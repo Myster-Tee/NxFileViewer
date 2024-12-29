@@ -14,19 +14,19 @@ namespace Emignatik.NxFileViewer.Commands;
 
 public class OpenTitleWebPageCommand : CommandBase, IOpenTitleWebPageCommand
 {
-    private readonly IOpenedFileService _openedFileService;
+    private readonly IFileOpeningService _fileOpeningService;
     private readonly IOnlineTitlePageOpenerService _onlineTitlePageOpenerService;
     private readonly ILogger _logger;
 
     private CnmtItem? _cnmtItem;
 
-    public OpenTitleWebPageCommand(IOpenedFileService openedFileService, ILoggerFactory loggerFactory, IOnlineTitlePageOpenerService onlineTitlePageOpenerService)
+    public OpenTitleWebPageCommand(IFileOpeningService fileOpeningService, ILoggerFactory loggerFactory, IOnlineTitlePageOpenerService onlineTitlePageOpenerService)
     {
-        _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
+        _fileOpeningService = fileOpeningService ?? throw new ArgumentNullException(nameof(fileOpeningService));
         _onlineTitlePageOpenerService = onlineTitlePageOpenerService ?? throw new ArgumentNullException(nameof(onlineTitlePageOpenerService));
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
 
-        _openedFileService.OpenedFileChanged += (_, _) => // (_, _) == An ass ?
+        _fileOpeningService.OpenedFileChanged += (_, _) => // (_, _) == An ass ?
         {
             UpdateCnmtItem();
         };
@@ -61,7 +61,7 @@ public class OpenTitleWebPageCommand : CommandBase, IOpenTitleWebPageCommand
 
     private void UpdateCnmtItem()
     {
-        CnmtItem = GetCnmtItem(_openedFileService.OpenedFile);
+        CnmtItem = GetCnmtItem(_fileOpeningService.OpenedFile);
     }
 
     private static CnmtItem? GetCnmtItem(NxFile? nxFile)

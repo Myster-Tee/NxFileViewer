@@ -197,6 +197,17 @@ public class RenamingOptions : NotifyPropertyChangedBase, IRenamingOptions
     private bool _replaceWhiteSpaceChars = false;
     private string _whiteSpaceCharsReplacement = "_";
     private string _lastRenamePath = "";
+    private bool _autoCloseOpenedFile = true;
+
+    public bool AutoCloseOpenedFile
+    {
+        get => _autoCloseOpenedFile;
+        set
+        {
+            _autoCloseOpenedFile = value;
+            NotifyPropertyChanged();
+        }
+    }
 
     public string LastRenamePath
     {
@@ -297,5 +308,5 @@ public class RenamingOptions : NotifyPropertyChangedBase, IRenamingOptions
             NotifyPropertyChanged();
         }
     }
-}
 
+}

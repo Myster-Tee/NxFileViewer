@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Emignatik.NxFileViewer.FileLoading.QuickFileInfoLoading;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
+using Emignatik.NxFileViewer.Services.FileOpening;
 using Emignatik.NxFileViewer.Services.FileRenaming.Exceptions;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;
@@ -22,16 +23,18 @@ public class FileRenamerService : IFileRenamerService
 {
     private readonly IPackageInfoLoader _packageInfoLoader;
     private readonly ICachedOnlineTitleInfoService _cachedOnlineTitleInfoService;
+    private readonly IFileOpeningService _fileOpeningService;
 
-    public FileRenamerService(IPackageInfoLoader packageInfoLoader, ICachedOnlineTitleInfoService cachedOnlineTitleInfoService)
+    public FileRenamerService(IPackageInfoLoader packageInfoLoader, ICachedOnlineTitleInfoService cachedOnlineTitleInfoService, IFileOpeningService fileOpeningService)
     {
         _packageInfoLoader = packageInfoLoader ?? throw new ArgumentNullException(nameof(packageInfoLoader));
         _cachedOnlineTitleInfoService = cachedOnlineTitleInfoService ?? throw new ArgumentNullException(nameof(cachedOnlineTitleInfoService));
+        _fileOpeningService = fileOpeningService ?? throw new ArgumentNullException(nameof(fileOpeningService));
     }
 
-    public async Task<IList<RenamingResult>> RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
+    public async Task<IList<RenamingResult>> RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, bool automaticallyCloseOpenedFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
     {
-        if(string.IsNullOrWhiteSpace(inputDirectory))
+        if (string.IsNullOrWhiteSpace(inputDirectory))
             throw new EmptyDirectoryException();
 
         ValidateNamingSettings(namingSettings);
@@ -59,7 +62,7 @@ public class FileRenamerService : IFileRenamerService
             var matchingFile = matchingFiles[index];
             progressReporter.SetText(matchingFile.Name);
 
-            var renamingResult = await RenameFileAsyncInternalSafe(matchingFile, namingSettings, isSimulation, logger, cancellationToken);
+            var renamingResult = await RenameFileAsyncInternalSafe(matchingFile, namingSettings, isSimulation, logger, cancellationToken, automaticallyCloseOpenedFile);
             renamingResults.Add(renamingResult);
 
             progressReporter.SetPercentage((index + 1) / (double)matchingFiles.Length);
@@ -68,10 +71,10 @@ public class FileRenamerService : IFileRenamerService
         return renamingResults;
     }
 
-    public async Task<RenamingResult> RenameFileAsync(string inputFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, CancellationToken cancellationToken)
+    public async Task<RenamingResult> RenameFileAsync(string inputFile, bool automaticallyCloseOpenedFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, CancellationToken cancellationToken)
     {
         ValidateNamingSettings(namingSettings);
-        var renamingResult = await RenameFileAsyncInternalSafe(new FileInfo(inputFile), namingSettings, isSimulation, logger, cancellationToken);
+        var renamingResult = await RenameFileAsyncInternalSafe(new FileInfo(inputFile), namingSettings, isSimulation, logger, cancellationToken, automaticallyCloseOpenedFile);
 
         return renamingResult;
     }
@@ -117,7 +120,7 @@ public class FileRenamerService : IFileRenamerService
         }
     }
 
-    private async Task<RenamingResult> RenameFileAsyncInternalSafe(FileInfo inputFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, CancellationToken cancellationToken)
+    private async Task<RenamingResult> RenameFileAsyncInternalSafe(FileInfo inputFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, CancellationToken cancellationToken, bool automaticallyCloseOpenedFile)
     {
         var oldFileName = inputFile.Name;
         var logPrefix = isSimulation ? $"{LocalizationManager.Instance.Current.Keys.RenamingTool_LogSimulationMode}" : "";
@@ -125,12 +128,26 @@ public class FileRenamerService : IFileRenamerService
         try
         {
             var newFileName = await ComputeFileName(inputFile.FullName, namingSettings, cancellationToken);
-
             var shouldBeRenamed = !string.Equals(newFileName, oldFileName);
             if (!isSimulation && shouldBeRenamed)
             {
+                var reopen = false;
+                if (automaticallyCloseOpenedFile && _fileOpeningService.OpenedFile?.FilePath == inputFile.FullName)
+                {
+                    // Close the opened file about to be renamed
+                    _fileOpeningService.SafeClose();
+                    reopen = true;
+                }
+
                 var destFileName = Path.Combine(inputFile.DirectoryName!, newFileName);
+                // ======================== //
+                // ==> Rename the file <=== //
                 inputFile.MoveTo(destFileName, false);
+                // ==> Rename the file <=== //
+                // ======================== //
+
+                if (reopen)
+                    _ = _fileOpeningService.SafeOpenFile(destFileName);
             }
 
             if (shouldBeRenamed)

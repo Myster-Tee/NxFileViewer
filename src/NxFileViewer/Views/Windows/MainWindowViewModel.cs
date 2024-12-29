@@ -18,18 +18,17 @@ namespace Emignatik.NxFileViewer.Views.Windows;
 public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
 {
     private readonly ILogger _logger;
-    private readonly IFileOpenerService _fileOpenerService;
     private readonly IKeySetProviderService _keySetProviderService;
 
     private OpenedFileViewModel? _openedFile;
     private readonly string _appNameAndVersion;
     private string _title = "";
-    private readonly IOpenedFileService _openedFileService;
+    private readonly IFileOpeningService _fileOpeningService;
     private bool _errorAnimationEnabled;
 
     public MainWindowViewModel(
         ILoggerFactory loggerFactory,
-        IOpenedFileService openedFileService,
+        IFileOpeningService fileOpeningService,
         IOpenFileCommand openFileCommand,
         IOpenLastFileCommand openLastFileCommand,
         ICloseFileCommand closeFileCommand,
@@ -38,7 +37,6 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
         IVerifyNcasIntegrityCommand verifyNcasIntegrityCommand,
         ILoadKeysCommand loadKeysCommand,
         IOpenTitleWebPageCommand openTitleWebPageCommand,
-        IFileOpenerService fileOpenerService,
         IServiceProvider serviceProvider,
         ILogSource logSource,
         IMainBackgroundTaskRunnerService backgroundTaskRunnerService,
@@ -46,9 +44,8 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
         IKeySetProviderService keySetProviderService)
     {
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
-        _fileOpenerService = fileOpenerService ?? throw new ArgumentNullException(nameof(fileOpenerService));
         _keySetProviderService = keySetProviderService ?? throw new ArgumentNullException(nameof(keySetProviderService));
-        _openedFileService = openedFileService ?? throw new ArgumentNullException(nameof(openedFileService));
+        _fileOpeningService = fileOpeningService ?? throw new ArgumentNullException(nameof(fileOpeningService));
         OpenFileCommand = openFileCommand ?? throw new ArgumentNullException(nameof(openFileCommand));
         ExitAppCommand = exitAppCommand ?? throw new ArgumentNullException(nameof(exitAppCommand));
         ShowSettingsWindowCommand = showSettingsWindowCommand ?? throw new ArgumentNullException(nameof(showSettingsWindowCommand));
@@ -67,7 +64,7 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
         _appNameAndVersion = $"{assemblyName.Name} v{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Revision}";
 
         UpdateTitle();
-        _openedFileService.OpenedFileChanged += OnOpenedFileChanged;
+        _fileOpeningService.OpenedFileChanged += OnFileOpeningChanged;
         _keySetProviderService.PropertyChanged += OnKeySetProviderPropertyChanged;
         LogSource.Log += OnLog;
     }
@@ -136,7 +133,7 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
         }
     }
 
-    private void OnOpenedFileChanged(object sender, OpenedFileChangedHandlerArgs args)
+    private void OnFileOpeningChanged(object sender, OpenedFileChangedHandlerArgs args)
     {
         var newFile = args.NewFile;
         OpenedFile = newFile != null ? new OpenedFileViewModel(newFile, ServiceProvider) : null;
@@ -157,13 +154,13 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
         {
             if (files.Length > 1)
                 _logger.LogWarning(LocalizationManager.Instance.Current.Keys.MultipleFilesDragAndDropNotSupported);
-            _fileOpenerService.SafeOpenFile(files.First());
+            _fileOpeningService.SafeOpenFile(files.First());
         }
     }
 
     private void UpdateTitle()
     {
-        var openedFile = _openedFileService.OpenedFile;
+        var openedFile = _fileOpeningService.OpenedFile;
 
         if (openedFile == null)
             Title = _appNameAndVersion;
