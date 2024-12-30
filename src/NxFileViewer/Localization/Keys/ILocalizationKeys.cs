@@ -53,7 +53,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string SettingsView_Button_Cancel { get; }
     string SettingsView_Button_Reset { get; }
     string SettingsView_GroupBoxKeys { get; }
-    string SettingsView_Title_UsedKeysFilePath { get; }
+    string SettingsView_Title_KeysEffectiveFilePath { get; }
     string SettingsView_Title_KeysCustomFilePath { get; }
     string SettingsView_Title_KeysDownloadUrl { get; }
     string SettingsView_ToolTip_Keys { get; }

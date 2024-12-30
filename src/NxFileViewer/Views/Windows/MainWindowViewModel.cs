@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Emignatik.NxFileViewer.Commands;
@@ -8,6 +9,7 @@ using Emignatik.NxFileViewer.Logging;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.FileOpening;
 using Emignatik.NxFileViewer.Services.KeysManagement;
+using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions.DragAndDrop;
 using Emignatik.NxFileViewer.Views.UserControls;
@@ -19,6 +21,7 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
 {
     private readonly ILogger _logger;
     private readonly IKeySetProviderService _keySetProviderService;
+    private readonly IAppSettings _appSettings;
 
     private OpenedFileViewModel? _openedFile;
     private readonly string _appNameAndVersion;
@@ -41,10 +44,12 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
         ILogSource logSource,
         IMainBackgroundTaskRunnerService backgroundTaskRunnerService,
         IShowRenameToolWindowCommand showRenameToolWindowCommand,
-        IKeySetProviderService keySetProviderService)
+        IKeySetProviderService keySetProviderService,
+        IAppSettings appSettings)
     {
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         _keySetProviderService = keySetProviderService ?? throw new ArgumentNullException(nameof(keySetProviderService));
+        _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
         _fileOpeningService = fileOpeningService ?? throw new ArgumentNullException(nameof(fileOpeningService));
         OpenFileCommand = openFileCommand ?? throw new ArgumentNullException(nameof(openFileCommand));
         ExitAppCommand = exitAppCommand ?? throw new ArgumentNullException(nameof(exitAppCommand));
@@ -150,18 +155,28 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
 
     public void OnFilesDropped(string[] files)
     {
-        if (files.Length >= 1)
-        {
-            if (files.Length > 1)
-                _logger.LogWarning(LocalizationManager.Instance.Current.Keys.MultipleFilesDragAndDropNotSupported);
-            _fileOpeningService.SafeOpenFile(files.First());
-        }
+        if (files.Length < 1)
+            return;
+
+        if (files.Length > 1)
+            _logger.LogWarning(LocalizationManager.Instance.Current.Keys.MultipleFilesDragAndDropNotSupported);
+
+        var filePath = files.First();
+        var fileName = Path.GetFileName(filePath);
+        if (string.Equals(fileName, IKeySetProviderService.DEFAULT_PROD_KEYS_FILE_NAME, StringComparison.OrdinalIgnoreCase))
+            _appSettings.ProdKeysFilePath = filePath;
+        else if (string.Equals(fileName, IKeySetProviderService.DEFAULT_TITLE_KEYS_FILE_NAME, StringComparison.OrdinalIgnoreCase))
+            _appSettings.TitleKeysFilePath = filePath;
+        else if (string.Equals(fileName, IKeySetProviderService.DEFAULT_CONSOLE_KEYS_FILE_NAME, StringComparison.OrdinalIgnoreCase))
+            _appSettings.ConsoleKeysFilePath = filePath;
+        else
+            _fileOpeningService.SafeOpenFile(filePath);
+
     }
 
     private void UpdateTitle()
     {
         var openedFile = _fileOpeningService.OpenedFile;
-
         if (openedFile == null)
             Title = _appNameAndVersion;
         else

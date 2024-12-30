@@ -57,7 +57,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_Button_Cancel => "Cancel";
     public string SettingsView_Button_Reset => "Reset";
     public string SettingsView_GroupBoxKeys => "Keys";
-    public string SettingsView_Title_UsedKeysFilePath => "Used path";
+    public string SettingsView_Title_KeysEffectiveFilePath => "Effective path";
     public string SettingsView_Title_KeysCustomFilePath => "Custom path";
     public string SettingsView_Title_KeysDownloadUrl => "Download URL";
     public string SettingsView_ToolTip_Keys => """
