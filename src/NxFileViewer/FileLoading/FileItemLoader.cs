@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Models.TreeItems;
@@ -144,8 +145,13 @@ public class FileItemLoader : IFileItemLoader
                 Ticket ticket;
                 try
                 {
-                    using var asStream = file.AsStream();
-                    ticket = new Ticket(asStream);
+                    // According to https://github.com/Thealexbarney/LibHac/pull/304, in order to avoid reading issues with Sha256PartitionFileSystem,
+                    // we need to copy the whole ticket file to a MemoryStream before reading it (same related issue: https://github.com/Myster-Tee/NxFileViewer/issues/32)
+                    using var ms = new MemoryStream();
+                    file.AsStream().CopyTo(ms);
+                    ms.Position = 0;
+
+                    ticket = new Ticket(ms);
                 }
                 catch (Exception ex)
                 {
