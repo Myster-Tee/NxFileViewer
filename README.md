@@ -9,7 +9,7 @@ Download latest version [here](https://github.com/Myster-Tee/NxFileViewer/releas
 ## Features
 
 - Based on [LibHac](https://github.com/Thealexbarney/LibHac)
-- Supported files: NSP, NSZ*, XCI, XCZ*
+- Supported files: NSP, NSZ, XCI, XCZ
 - Supports Super NSP/XCI
 - Browse files content structure
 - Export files
