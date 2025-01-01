@@ -22,6 +22,7 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
     private string _lastUsedDir = "";
     private bool _allowNczBlocklessCompressionOpening = true;
     private bool _acceptMissingDeltaFragments = true;
+    private bool _injectTicketKeys = true;
 
     public string AppLanguage
     {
@@ -140,6 +141,16 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
         set
         {
             _alwaysReloadKeysBeforeOpen = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public bool InjectTicketKeys
+    {
+        get => _injectTicketKeys;
+        set
+        {
+            _injectTicketKeys = value;
             NotifyPropertyChanged();
         }
     }

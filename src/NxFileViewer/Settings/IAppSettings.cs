@@ -31,6 +31,8 @@ public interface IAppSettings : INotifyPropertyChanged
 
     bool AlwaysReloadKeysBeforeOpen { get; set; }
 
+    bool InjectTicketKeys { get; set; }
+
     string TitlePageUrl { get; set; }
 
     string TitleInfoApiUrl { get; set; }

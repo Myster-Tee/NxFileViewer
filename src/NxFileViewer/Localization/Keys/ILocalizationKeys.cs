@@ -62,6 +62,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string SettingsView_LogLevel { get; }
     string SettingsView_ToolTip_LogLevel { get; }
     string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen { get; }
+    string SettingsView_CheckBox_InjectTicketKeys { get; }
     string SettingsView_Title_Language { get; }
 
     string SettingsView_Title_NczOptions { get; }

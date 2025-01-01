@@ -165,38 +165,42 @@ public class FileItemLoader : IFileItemLoader
 
                 var ticketItem = new TicketItem(ticket, partitionFileEntry, parentItem);
 
-                try
+                if (_appSettings.InjectTicketKeys)
                 {
-                    var rightsId = new RightsId(ticket.RightsId);
-                    var accessKey = new AccessKey(ticket.TitleKeyBlock);
-
-                    ticketItem.RightsId = rightsId;
-                    ticketItem.AccessKey = accessKey;
-
-                    if (parentItem.KeySet.ExternalKeySet.Get(rightsId, out var existingAccessKey) == Result.Success)
+                    try
                     {
-                        // Here RightID key is already defined
-                        if (existingAccessKey != accessKey)
+
+                        var rightsId = new RightsId(ticket.RightsId);
+                        var accessKey = new AccessKey(ticket.TitleKeyBlock);
+
+                        ticketItem.RightsId = rightsId;
+                        ticketItem.AccessKey = accessKey;
+
+                        if (parentItem.KeySet.ExternalKeySet.Get(rightsId, out var existingAccessKey) == Result.Success)
                         {
-                            // Replaces the RightID key with the one defined in the ticket
-                            parentItem.KeySet.ExternalKeySet.Remove(rightsId);
-                            parentItem.KeySet.ExternalKeySet.Add(rightsId, accessKey).ThrowIfFailure();
-                            _logger.LogWarning(LocalizationManager.Instance.Current.Keys.LoadingWarning_TitleIdKeyReplaced.SafeFormat(rightsId.ToString(), accessKey.ToString(), fileName, existingAccessKey));
+                            // Here RightID key is already defined
+                            if (existingAccessKey != accessKey)
+                            {
+                                // Replaces the RightID key with the one defined in the ticket
+                                parentItem.KeySet.ExternalKeySet.Remove(rightsId);
+                                parentItem.KeySet.ExternalKeySet.Add(rightsId, accessKey).ThrowIfFailure();
+                                _logger.LogWarning(LocalizationManager.Instance.Current.Keys.LoadingWarning_TitleIdKeyReplaced.SafeFormat(rightsId.ToString(), accessKey.ToString(), fileName, existingAccessKey));
+                            }
+                            else
+                            {
+                                _logger.LogDebug(LocalizationManager.Instance.Current.Keys.LoadingDebug_TitleIdKeyAlreadyExists.SafeFormat(rightsId.ToString(), accessKey.ToString(), fileName));
+                            }
                         }
                         else
                         {
-                            _logger.LogDebug(LocalizationManager.Instance.Current.Keys.LoadingDebug_TitleIdKeyAlreadyExists.SafeFormat(rightsId.ToString(), accessKey.ToString(), fileName));
+                            parentItem.KeySet.ExternalKeySet.Add(rightsId, accessKey).ThrowIfFailure();
+                            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.LoadingInfo_TitleIdKeySuccessfullyInjected.SafeFormat(rightsId.ToString(), accessKey.ToString(), fileName));
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        parentItem.KeySet.ExternalKeySet.Add(rightsId, accessKey).ThrowIfFailure();
-                        _logger.LogInformation(LocalizationManager.Instance.Current.Keys.LoadingInfo_TitleIdKeySuccessfullyInjected.SafeFormat(rightsId.ToString(), accessKey.ToString(), fileName));
+                        _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadTitleIdKey.SafeFormat(fileName, ex.Message));
                     }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, LocalizationManager.Instance.Current.Keys.LoadingError_FailedToLoadTitleIdKey.SafeFormat(fileName, ex.Message));
                 }
             }
 

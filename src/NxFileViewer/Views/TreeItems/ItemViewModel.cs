@@ -31,7 +31,6 @@ public class ItemViewModel : ViewModelBase, IItemViewModel
         var itemViewModelBuilder = serviceProvider.GetRequiredService<IItemViewModelBuilder>();
 
         Children = _item.ChildItems
-            .OrderBy(itemTmp => itemTmp.ChildItems.Count > 0 ? 0 : 1)
             .Select(itemViewModelBuilder.Build)
             .ToList();
 

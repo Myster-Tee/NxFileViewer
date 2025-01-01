@@ -93,6 +93,7 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_LogLevel => "Log level";
     public string SettingsView_ToolTip_LogLevel => "The log level specifies the minimum level to log.";
     public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Always reload keys before opening a file";
+    public string SettingsView_CheckBox_InjectTicketKeys => "Inject keys from ticket files (*.tik)";
     public string SettingsView_Title_Language => "Language";
     public string SettingsView_Title_NczOptions => "NSZ/XCZ settings";
 
