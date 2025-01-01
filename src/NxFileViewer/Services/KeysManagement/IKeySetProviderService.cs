@@ -9,7 +9,6 @@ namespace Emignatik.NxFileViewer.Services.KeysManagement;
 public interface IKeySetProviderService : INotifyPropertyChanged
 {
     public const string DEFAULT_PROD_KEYS_FILE_NAME = "prod.keys";
-    public const string DEFAULT_CONSOLE_KEYS_FILE_NAME = "console.keys";
     public const string DEFAULT_TITLE_KEYS_FILE_NAME = "title.keys";
 
     /// <summary>
@@ -31,11 +30,6 @@ public interface IKeySetProviderService : INotifyPropertyChanged
     /// Get the path of the actual «title.keys» file or null if none is found
     /// </summary>
     public string? ActualTitleKeysFilePath { get; }
-
-    /// <summary>
-    /// Get the path of the actual «console.keys» file or null if none is found
-    /// </summary>
-    public string? ActualConsoleKeysFilePath { get; }
 
     /// <summary>
     /// Returns the KeySet

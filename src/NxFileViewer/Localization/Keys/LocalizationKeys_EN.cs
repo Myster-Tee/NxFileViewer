@@ -90,14 +90,6 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
                                                     The keys file will be downloaded to the current application's directory.
                                                     """;
 
-    public string SettingsView_ToolTip_ConsoleKeys => """
-                                                      You can optionally specify a file containing console-unique keys.
-                                                      The program will search this file in the following locations:
-                                                          1. the path defined by this setting
-                                                          2. the current program's directory
-                                                          3. the «%UserProfile%\\.switch» directory
-                                                      """;
-
     public string SettingsView_LogLevel => "Log level";
     public string SettingsView_ToolTip_LogLevel => "The log level specifies the minimum level to log.";
     public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Always reload keys before opening a file";
@@ -128,7 +120,6 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_ToolTip_DownloadKeys => "Download from specified URL.";
 
     public string BrowseKeysFile_ProdTitle => "Select \"prod\" keys file";
-    public string BrowseKeysFile_ConsoleTitle => "Select \"console\" keys file";
     public string BrowseKeysFile_TitleTitle => "Select \"title\" keys file";
     public string BrowseKeysFile_Filter => "Keys files (*.keys)|*.keys|All files (*.*)|*.*";
 

@@ -167,8 +167,6 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
             _appSettings.ProdKeysFilePath = filePath;
         else if (string.Equals(fileName, IKeySetProviderService.DEFAULT_TITLE_KEYS_FILE_NAME, StringComparison.OrdinalIgnoreCase))
             _appSettings.TitleKeysFilePath = filePath;
-        else if (string.Equals(fileName, IKeySetProviderService.DEFAULT_CONSOLE_KEYS_FILE_NAME, StringComparison.OrdinalIgnoreCase))
-            _appSettings.ConsoleKeysFilePath = filePath;
         else
             _fileOpeningService.SafeOpenFile(filePath);
 

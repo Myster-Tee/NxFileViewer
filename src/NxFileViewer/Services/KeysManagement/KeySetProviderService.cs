@@ -22,7 +22,6 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
     private readonly ILogger _logger;
     private string? _actualProdKeysFilePath;
     private string? _actualTitleKeysFilePath;
-    private string? _actualConsoleKeysFilePath;
 
     public KeySetProviderService(IAppSettings appSettings, ILoggerFactory loggerFactory)
     {
@@ -61,16 +60,6 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
         }
     }
 
-    public string? ActualConsoleKeysFilePath
-    {
-        get => _actualConsoleKeysFilePath;
-        private set
-        {
-            _actualConsoleKeysFilePath = value;
-            NotifyPropertyChanged();
-        }
-    }
-
     public KeySet GetKeySet(bool forceReload = false)
     {
         lock (_lock)
@@ -87,9 +76,8 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
 
     private void OnSettingChanged(object? sender, PropertyChangedEventArgs args)
     {
-        if (args.PropertyName == nameof(IAppSettings.ProdKeysFilePath)
-            || args.PropertyName == nameof(IAppSettings.TitleKeysFilePath)
-            || args.PropertyName == nameof(IAppSettings.ConsoleKeysFilePath))
+        if (args.PropertyName == nameof(IAppSettings.ProdKeysFilePath) ||
+            args.PropertyName == nameof(IAppSettings.TitleKeysFilePath))
             Reset();
 
     }
@@ -99,7 +87,6 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
         UnloadCurrentKeySet();
         UpdateActualProdKeysFilePath();
         UpdateActualTitleKeysFilePath();
-        UpdateActualConsoleKeysFilePath();
     }
 
     private void UnloadCurrentKeySet()
@@ -120,18 +107,15 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
         {
             var actualProdKeysFilePath = ActualProdKeysFilePath;
             var actualTitleKeysFilePath = ActualTitleKeysFilePath;
-            var actualConsoleKeysFilePath = ActualConsoleKeysFilePath;
 
             _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysLoading_Starting_Log);
 
             _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DEFAULT_PROD_KEYS_FILE_NAME, actualProdKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
             _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DEFAULT_TITLE_KEYS_FILE_NAME, actualTitleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
-            _logger.LogInformation(LocalizationManager.Instance.Current.Keys.KeysFileUsed.SafeFormat(IKeySetProviderService.DEFAULT_CONSOLE_KEYS_FILE_NAME, actualConsoleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile));
-
 
             var keySet = KeySet.CreateDefaultKeySet();
 
-            ExternalKeyReader.ReadKeyFile(keySet, filename: actualProdKeysFilePath, titleKeysFilename: actualTitleKeysFilePath, consoleKeysFilename: actualConsoleKeysFilePath,
+            ExternalKeyReader.ReadKeyFile(keySet, filename: actualProdKeysFilePath, titleKeysFilename: actualTitleKeysFilePath, consoleKeysFilename: null,
                 new LibHacProgressReportRelay(
                     _ =>
                     {
@@ -167,11 +151,6 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
     private void UpdateActualTitleKeysFilePath()
     {
         ActualTitleKeysFilePath = FindKeysFile(_appSettings.TitleKeysFilePath, IKeySetProviderService.DEFAULT_TITLE_KEYS_FILE_NAME);
-    }
-
-    private void UpdateActualConsoleKeysFilePath()
-    {
-        ActualConsoleKeysFilePath = FindKeysFile(_appSettings.ConsoleKeysFilePath, IKeySetProviderService.DEFAULT_CONSOLE_KEYS_FILE_NAME);
     }
 
     private string? FindKeysFile(string? keysFilePathRawFromSettings, string keysFileName)

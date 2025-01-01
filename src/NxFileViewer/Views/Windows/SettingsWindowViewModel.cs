@@ -41,7 +41,6 @@ public class SettingsWindowViewModel : WindowViewModelBase
         _fileLocationOpenerService = fileLocationOpenerService ?? throw new ArgumentNullException(nameof(fileLocationOpenerService));
 
         BrowseProdKeysCommand = new RelayCommand(BrowseProdKeys);
-        BrowseConsoleKeysCommand = new RelayCommand(BrowseConsoleKeys);
         BrowseTitleKeysCommand = new RelayCommand(BrowseTitleKeys);
         ApplySettingsCommand = new RelayCommand(ApplySettings);
         CancelSettingsCommand = new RelayCommand(CancelSettings);
@@ -50,7 +49,6 @@ public class SettingsWindowViewModel : WindowViewModelBase
         DownloadTitleKeysCommand = new RelayCommand(DownloadTitleKeys, CanDownloadTitleKeys);
         EditProdKeysCommand = new RelayCommand(OpenProdKeysLocation, CanOpenProdKeysLocation);
         EditTitleKeysCommand = new RelayCommand(OpenTitleKeysLocation, CanOpenTitleKeysLocation);
-        EditConsoleKeysCommand = new RelayCommand(OpenConsoleKeysLocation, CanOpenConsoleKeysLocation);
 
         InitializeFromSettings(appSettingsManager.Clone());
 
@@ -69,8 +67,6 @@ public class SettingsWindowViewModel : WindowViewModelBase
                 NotifyPropertyChanged(nameof(ActualProdKeysFilePath));
             else if (args.PropertyName == nameof(IKeySetProviderService.ActualTitleKeysFilePath))
                 NotifyPropertyChanged(nameof(ActualTitleKeysFilePath));
-            else if (args.PropertyName == nameof(IKeySetProviderService.ActualConsoleKeysFilePath))
-                NotifyPropertyChanged(nameof(ActualConsoleKeysFilePath));
         };
     }
 
@@ -86,8 +82,6 @@ public class SettingsWindowViewModel : WindowViewModelBase
     }
 
     public ICommand BrowseProdKeysCommand { get; }
-
-    public ICommand BrowseConsoleKeysCommand { get; }
 
     public ICommand BrowseTitleKeysCommand { get; }
 
@@ -105,16 +99,12 @@ public class SettingsWindowViewModel : WindowViewModelBase
 
     public RelayCommand EditTitleKeysCommand { get; }
 
-    public RelayCommand EditConsoleKeysCommand { get; }
-
 
     public IEnumerable<LogLevel> LogLevels => Enum.GetValues<LogLevel>();
 
     public string ActualProdKeysFilePath => _keySetProviderService.ActualProdKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile;
 
     public string ActualTitleKeysFilePath => _keySetProviderService.ActualTitleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile;
-
-    public string ActualConsoleKeysFilePath => _keySetProviderService.ActualConsoleKeysFilePath ?? LocalizationManager.Instance.Current.Keys.NoneKeysFile;
 
     public IEnumerable<ILocalization<ILocalizationKeys>> AvailableLanguages => LocalizationManager.Instance.AvailableLocalizations;
 
@@ -143,15 +133,6 @@ public class SettingsWindowViewModel : WindowViewModelBase
         if (BrowseKeysFilePath(clonedSettings.ProdKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ProdTitle, out var selectedFilePath))
         {
             clonedSettings.ProdKeysFilePath = selectedFilePath;
-        }
-    }
-
-    private void BrowseConsoleKeys()
-    {
-        var clonedSettings = EditedSettings;
-        if (BrowseKeysFilePath(clonedSettings.ConsoleKeysFilePath, LocalizationManager.Instance.Current.Keys.BrowseKeysFile_ConsoleTitle, out var selectedFilePath))
-        {
-            clonedSettings.ConsoleKeysFilePath = selectedFilePath;
         }
     }
 
@@ -213,15 +194,6 @@ public class SettingsWindowViewModel : WindowViewModelBase
         _fileLocationOpenerService.OpenFileLocationSafe(ActualTitleKeysFilePath);
     }
 
-    private bool CanOpenConsoleKeysLocation()
-    {
-        return SafeCheckFileExists(ActualConsoleKeysFilePath);
-    }
-
-    private void OpenConsoleKeysLocation()
-    {
-        _fileLocationOpenerService.OpenFileLocationSafe(ActualConsoleKeysFilePath);
-    }
 
     private static bool SafeCheckFileExists(string? filePath)
     {

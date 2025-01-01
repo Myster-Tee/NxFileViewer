@@ -58,7 +58,6 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string SettingsView_Title_KeysDownloadUrl { get; }
     string SettingsView_ToolTip_Keys { get; }
     string SettingsView_ToolTip_ProdKeys { get; }
-    string SettingsView_ToolTip_ConsoleKeys { get; }
     string SettingsView_ToolTip_TitleKeys { get; }
     string SettingsView_LogLevel { get; }
     string SettingsView_ToolTip_LogLevel { get; }
@@ -79,7 +78,6 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string SettingsView_ToolTip_DownloadKeys { get; }
 
     string BrowseKeysFile_ProdTitle { get; }
-    string BrowseKeysFile_ConsoleTitle { get; }
     string BrowseKeysFile_TitleTitle { get; }
     string BrowseKeysFile_Filter { get; }
 

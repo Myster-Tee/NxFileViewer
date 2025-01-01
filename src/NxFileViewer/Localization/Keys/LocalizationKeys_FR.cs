@@ -91,14 +91,6 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
                                                     Le fichier de clés sera téléchargé dans le répertoire courant de l'application.
                                                     """;
 
-    public string SettingsView_ToolTip_ConsoleKeys => """
-                                                      Vous pouvez optionnellement spécifier un fichier contenant les clés uniques de votre console (ne partagez jamais ces clés).
-                                                      Le programme cherchera les fichiers aux emplacements suivants:
-                                                          1. le chemin défini par ce paramètre
-                                                          2. le répertoire courant du programme
-                                                          3. le dossier «%UserProfile%\\.switch»
-                                                      """;
-
     public string SettingsView_LogLevel => "Niveau de log";
     public string SettingsView_ToolTip_LogLevel => "Le niveau de log indique à partir de quel niveau les messages sont logués.";
     public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Toujours recharger les clés avant l'ouverture d'un fichier";
@@ -128,7 +120,6 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_ToolTip_DownloadKeys => "Télécharger à partir de l'URL spécifiée.";
 
     public string BrowseKeysFile_ProdTitle => "Sélectionnez les clés \"prod\"";
-    public string BrowseKeysFile_ConsoleTitle => "Sélectionnez les clés \"console\"";
     public string BrowseKeysFile_TitleTitle => "Sélectionnez les clés \"title\"";
     public string BrowseKeysFile_Filter => "Fichier de clés (*.keys)|*.keys|Tous les fichiers (*.*)|*.*";
 

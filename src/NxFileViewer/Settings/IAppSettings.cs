@@ -23,8 +23,6 @@ public interface IAppSettings : INotifyPropertyChanged
 
     string TitleKeysDownloadUrl { get; set; }
 
-    string ConsoleKeysFilePath { get; set; }
-
     bool OpenBlocklessCompressionNCZ { get; set; }
 
     bool IgnoreMissingDeltaFragments { get; set; }

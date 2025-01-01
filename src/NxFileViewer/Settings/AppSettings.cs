@@ -11,7 +11,6 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
     private string _lastRenamePath = "";
     private string _lastOpenedFile = "";
     private string _prodKeysFilePath = "";
-    private string _consoleKeysFilePath = "";
     private string _titleKeysFilePath = "";
     private LogLevel _logLevel = LogLevel.Information;
     private string _prodKeysDownloadUrl = "";
@@ -70,16 +69,6 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
         set
         {
             _prodKeysFilePath = value;
-            NotifyPropertyChanged();
-        }
-    }
-
-    public string ConsoleKeysFilePath
-    {
-        get => _consoleKeysFilePath;
-        set
-        {
-            _consoleKeysFilePath = value;
             NotifyPropertyChanged();
         }
     }
