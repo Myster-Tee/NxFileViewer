@@ -66,7 +66,7 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
 
         var assemblyName = Assembly.GetExecutingAssembly().GetName();
         var assemblyVersion = (assemblyName.Version ?? new Version());
-        _appNameAndVersion = $"{assemblyName.Name} v{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Revision}";
+        _appNameAndVersion = $"{assemblyName.Name} v{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}";
 
         UpdateTitle();
         _fileOpeningService.OpenedFileChanged += OnFileOpeningChanged;
