@@ -61,90 +61,90 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_Title_KeysCustomFilePath => "Benutzerdefinierter Pfad";
     public string SettingsView_Title_KeysDownloadUrl => "Download URL";
     public string SettingsView_ToolTip_Keys => """
-                                               Keys are mandatory to open encrypted Nintendo Switch files (XCI, NSP, ...).
-                                               Each official Nintendo Switch file is encrypted with keys specific to the Switch firmware version it was built for.
+                                               Keys sind erforderlich, um verschlüsselte Nintendo-Switch-Dateien (XCI, NSP, ...) zu öffnen.
+                                               Jede offizielle Nintendo-Switch-Datei ist mit Keys verschlüsselt, die spezifisch für die Switch-Firmware-Version sind, für die sie erstellt wurde.
 
-                                               In order to open any Nintendo Switch file without any error, always ensure to have an up-to-date "prod.keys" file with all the keys of all existing firmwares.
+                                               Um jede Nintendo-Switch-Datei ohne Fehler zu öffnen, stelle sicher, dass du stets eine aktuelle "prod.keys"-Datei mit den Keys aller bestehenden Firmware-Versionen hast.
                                                
-                                               File should contain one key per line, in form of «KEY_NAME = HEXADECIMAL_VALUE».
+                                               Die Datei sollte einen Key pro Zeile enthalten, in der Form «KEY_NAME = HEXADECIMAL_WERT».
                                                """;
     public string SettingsView_ToolTip_ProdKeys => """
-                                                   This file contains common keys used by all Switch devices. This file is required for opening encrypted title contents.
-                                                   The program will search this file in the following order:
-                                                       1. the path defined by this setting
-                                                       2. the current program's directory
-                                                       3. the «%UserProfile%\\.switch» directory
+                                                   Diese Datei enthält allgemeine Keys, die von allen Switch-Geräten verwendet werden. Sie wird benötigt, um verschlüsselte Titelinhalte zu öffnen.
+                                                   Das Programm sucht diese Datei in folgender Reihenfolge:
+                                                       1. Im Pfad, der durch diese Einstellung definiert ist
+                                                       2. Im Verzeichnis des aktuellen Programms
+                                                       3. Im Verzeichnis «%UserProfile%\\.switch»
                                                    
-                                                   At startup, the program can automatically download the keys file when none is found on the system.
-                                                   The keys file will be downloaded to the current application's directory.
+                                                   Beim Start kann das Programm die Keydatei automatisch herunterladen, falls keine auf dem System gefunden wird.
+												   Die Keydatei wird im Verzeichnis der aktuellen Anwendung gespeichert.
                                                    """;
 
     public string SettingsView_ToolTip_TitleKeys => """
-                                                    You can optionally specify a file containing game-specific keys.
-                                                    The program will search this file in the following locations:
-                                                        1. the path defined by this setting
-                                                        2. the current program's directory
-                                                        3. the «%UserProfile%\\.switch» directory
+                                                    Du kannst optional eine Datei angeben, die spielbezogene Keys enthält.
+                                                    Das Programm sucht diese Datei in folgender Reihenfolge:
+                                                        1. Im Pfad, der durch diese Einstellung definiert ist
+                                                        2. Im Verzeichnis des aktuellen Programms
+                                                        3. Im Verzeichnis «%UserProfile%\\.switch»
                                                     
-                                                    At startup, the program can automatically download the keys file when none is found on the system.
-                                                    The keys file will be downloaded to the current application's directory.
+                                                    Beim Start kann das Programm die Keydatei automatisch herunterladen, falls keine auf dem System gefunden wird.
+                                                    Die Keydatei wird im Verzeichnis der aktuellen Anwendung gespeichert.
                                                     """;
 
-    public string SettingsView_LogLevel => "Log level";
-    public string SettingsView_ToolTip_LogLevel => "The log level specifies the minimum level to log.";
-    public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Always reload keys before opening a file";
-    public string SettingsView_CheckBox_InjectTicketKeys => "Inject keys from ticket files (*.tik)";
+    public string SettingsView_LogLevel => "Protokollierungsgrad ";
+    public string SettingsView_ToolTip_LogLevel => "Der Protokollierungsgrad gibt die minimale Ebene an, die protokolliert werden soll.";
+    public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Keys immer neu laden bevor eine Datei geöffnet wird.";
+    public string SettingsView_CheckBox_InjectTicketKeys => "Keys aus Ticket-Dateien (*.tik) injizieren";
     public string SettingsView_Title_Language => "Sprache";
     public string SettingsView_Title_NczOptions => "NSZ/XCZ Einstellungen";
 
     public string SettingsView_ToolTip_NczBlockLessCompression => """
-                                                                  NSZ or XCZ file are composed of NCZ files which are NCA compressed files.
-                                                                  NCZ files can be compressed without using the block compression method, which makes efficient random read access impossible.
-                                                                  Thus, if the file is large and a small part needs to be read towards the end, it will be necessary to decompress the entire stream to reach the desired part.
-                                                                  Large files can therefore take a long time to open.
-                                                                  Prefer the use of block compression for large files.
-                                                                  Note that if you choose not to allow the opening of blockless compressed NCZ files, it will not affect the integrity check features.
+                                                                  NSZ- oder XCZ-Dateien bestehen aus NCZ-Dateien, die NCA-komprimierte Dateien sind.
+																  NCZ-Dateien können ohne die Blockkomprimierungsmethode komprimiert werden, was effizienten zufälligen Lesezugriff unmöglich macht.
+																  Daher ist es bei großen Dateien, bei denen ein kleiner Teil am Ende gelesen werden muss, notwendig, den gesamten Stream zu dekomprimieren, um den gewünschten Teil zu erreichen.
+																  Große Dateien können daher lange zum Öffnen benötigen.
+																  Verwende vorzugsweise die Blockkomprimierung für große Dateien.
+																  Beachte, dass es, wenn du das Öffnen von blocklos komprimierten NCZ-Dateien nicht zulässt, keine Auswirkungen auf die Integritätsprüffunktionen hat.
                                                                   """;
 
-    public string SettingsView_CheckBox_NczOpenBlocklessCompression => "Open NCZ compressed without block";
+    public string SettingsView_CheckBox_NczOpenBlocklessCompression => "Öffne NCZ-komprimierte Dateien ohne Blockkompression.";
     public string SettingsView_Title_Integrity => "Integrität";
-    public string SettingsView_CheckBox_IgnoreMissingDeltaFragments => "Ignore missing delta fragments";
+    public string SettingsView_CheckBox_IgnoreMissingDeltaFragments => "Fehlende Delta-Fragmente ignorieren";
     public string SettingsView_ToolTip_IgnoreMissingDeltaFragments => $"""
-                                                                      Patch files can contain full update files and incremental update files (known as {ContentType.DeltaFragment}).
-                                                                      Those fragments are not mandatory to update an application and are sometimes intentionally removed.
-                                                                      Check this option if you want to ignore missing {ContentType.DeltaFragment} while checking integrity.
+                                                                      Patch-Dateien können vollständige Update-Dateien und inkrementelle Update-Dateien (bekannt als {ContentType.DeltaFragment}) enthalten.
+																	  Diese Fragmente sind nicht zwingend erforderlich, um eine Anwendung zu aktualisieren, und werden manchmal absichtlich entfernt.
+																	  Aktiviere diese Option, wenn du fehlende {ContentType.DeltaFragment} bei der Integritätsprüfung ignorieren möchtest.
                                                                       """;
 
-    public string SettingsView_Miscellaneous => "Misc.";
-    public string SettingsView_ToolTip_OpenKeysLocation => "Open keys file location.";
+    public string SettingsView_Miscellaneous => "Sonstiges";
+    public string SettingsView_ToolTip_OpenKeysLocation => "Keydateipfad öffnen";
     public string SettingsView_ToolTip_BrowseKeys => "Suchen...";
     public string SettingsView_ToolTip_DownloadKeys => "Von bestimmter URL herunterladen.";
 
-    public string BrowseKeysFile_ProdTitle => "Wähle \"prod\" Keys Datei";
-    public string BrowseKeysFile_TitleTitle => "Wähle \"title\" Keys Datei";
-    public string BrowseKeysFile_Filter => "Keys Dateien (*.keys)|*.keys|Alle Dateien (*.*)|*.*";
+    public string BrowseKeysFile_ProdTitle => "Wähle \"prod\" Keydatei";
+    public string BrowseKeysFile_TitleTitle => "Wähle \"title\" Keydatei";
+    public string BrowseKeysFile_Filter => "Keydateien (*.keys)|*.keys|Alle Dateien (*.*)|*.*";
 
-    public string SuspiciousFileExtension => "File extension «{0}» seems invalid, «{1}» or «{2}» was expected.";
-    public string DragMeAFile => "Drag me any supported file here :)";
-    public string MultipleFilesDragAndDropNotSupported => "Multiple files drag and drop not supported, only the first file will be opened.";
+    public string SuspiciousFileExtension => "Dateierweiterung «{0}» scheint ungültig zu sein, «{1}» oder «{2}» wurde erwartet.";
+    public string DragMeAFile => "Ziehe eine unterstützte Datei hierher :)";
+    public string MultipleFilesDragAndDropNotSupported => "Mehrere Dateien per Drag & Drop werden nicht unterstützt, nur die erste Datei wird geöffnet.";
 
     public string CnmtOverview_Title => "Paketinformationen";
     public string CnmtOverview_TitleId => "TitelID";
     public string CnmtOverview_ContentType => "Typ";
     public string CnmtOverview_TitleVersion => "Version";
-    public string CnmtOverview_MinimumSystemVersion => "Minimum system version";
-    public string CnmtOverview_BuildID => "Build ID";
-    public string CnmtOverview_BuildID_NotAvailableBecauseSectionIsSparse => "Not available (content sparse)";
+    public string CnmtOverview_MinimumSystemVersion => "Minimale Systemversion";
+    public string CnmtOverview_BuildID => "BuildID";
+    public string CnmtOverview_BuildID_NotAvailableBecauseSectionIsSparse => "Nicht verfügbar (Inhalt spärlich)";
     public string CnmtOverview_IsDemo => "Demo";
 
     public string ContextMenu_SaveImage => "Speichern...";
-    public string CopyTitleImageError => "Failed to copy title image: {0}";
-    public string SaveTitleImageError => "Failed to save title image: {0}";
+    public string CopyTitleImageError => "Fehler beim Kopieren der Spieldatei: {0}";
+    public string SaveTitleImageError => "Konnte die Spieldatei nicht speichern: {0}";
 
     public string SaveDialog_Title => "Speichern unter";
-    public string SaveDialog_ImageFilter => "Image";
+    public string SaveDialog_ImageFilter => "Spieldatei";
     public string SaveDialog_AnyFileFilter => "Datei";
-    public string SaveFile_Error => "Failed to save file: {0}";
+    public string SaveFile_Error => "Fehler beim speichern der Datei: {0}";
 
     public string ContextMenu_CopyImage => "Kopieren";
 
@@ -153,227 +153,227 @@ public class LocalizationKeys_EN : LocalizationKeysBase, ILocalizationKeys
     public string GroupBoxStructure => "Struktur";
     public string GroupBoxProperties => "Eigenschaften";
 
-    public string ContextMenu_ShowItemErrors => "Show errors...";
-    public string ContextMenu_SaveSectionItem => "Save section content...";
-    public string ContextMenu_SaveDirectoryItem => "Save directory...";
-    public string ContextMenu_SaveFileItem => "Save file...";
-    public string ContextMenu_SavePartitionFileItem => "Save partition file...";
-    public string ContextMenu_SaveNcaFileRaw => "Save NCA raw...";
-    public string ContextMenu_SaveNcaFilePlaintext => "Save NCA plaintext...";
+    public string ContextMenu_ShowItemErrors => "Zeige Fehler...";
+    public string ContextMenu_SaveSectionItem => "Sektion speichern...";
+    public string ContextMenu_SaveDirectoryItem => "Verzeichnis speichern...";
+    public string ContextMenu_SaveFileItem => "Datei speichern...";
+    public string ContextMenu_SavePartitionFileItem => "Partitionsdatei speichern...";
+    public string ContextMenu_SaveNcaFileRaw => "NCA RAW speichern...";
+    public string ContextMenu_SaveNcaFilePlaintext => "NCA Klartext speichern...";
 
-    public string SettingsLoadingError => "Failed to load settings: {0}";
-    public string SettingsSavingError => "Failed to save settings: {0}";
+    public string SettingsLoadingError => "Einstellungen konnten nicht geladen werden: {0}";
+    public string SettingsSavingError => "Einstellungen konnten nicht gespeichert werden: {0}";
 
-    public string LoadingError_Failed => "Failed to load file «{0}»: {1}";
-    public string LoadingError_FailedToCheckIfXciPartitionExists => "Failed to check if XCI partition exists: {0}";
-    public string LoadingError_FailedToOpenXciPartition => "Failed to open XCI partition: {0}";
-    public string LoadingError_FailedToLoadXciContent => "Failed to load XCI content: {0}";
-    public string LoadingError_FailedToOpenPartitionFile => "Failed to open partition file: {0}";
-    public string LoadingError_FailedToLoadNcaFile => "Failed to load NCA file: {0}";
-    public string LoadingError_FailedToLoadPartitionFileSystemContent => "Failed to load partition file system content: {0}";
-    public string LoadingError_FailedToCheckIfSectionCanBeOpened => "Failed to check if section can be opened: {0}";
-    public string LoadingError_FailedToOpenNcaSectionFileSystem => "Failed to open content of NCA section «{0}»: {1}";
-    public string LoadingError_FailedToLoadSectionContent => "Failed to load section content: {0}";
-    public string LoadingError_FailedToGetFileSystemDirectoryEntries => "Failed to get file system directory entries: {0}";
-    public string LoadingError_FailedToOpenNacpFile => "Failed to open NACP file: {0}";
-    public string LoadingError_FailedToLoadNacpFile => "Failed to load NACP file: {0}";
-    public string LoadingError_FailedToOpenCnmtFile => "Failed to open CNMT file: {0}";
-    public string LoadingError_FailedToLoadCnmtFile => "Failed to load CNMT file: {0}";
-    public string LoadingError_FailedToLoadNcaContent => "Failed to load NCA content: {0}";
-    public string LoadingError_FailedToLoadDirectoryContent => "Failed to load directory content: {0}";
-    public string LoadingError_FailedToLoadIcon_Log => "Failed to load icon: {0}";
-    public string LoadingError_NcaFileMissing_Log => "NCA entry «{0}» of type «{1}» missing.";
-    public string LoadingError_NoCnmtFound_Log => "No CNMT entry found!";
-    public string LoadingError_NacpFileMissing_Log => "NACP file «{0}» not found!";
-    public string LoadingError_NcaMissingSection_Log => "NCA of content type «{0}» is missing section of type «{0}».";
-    public string LoadingError_MainFileMissing_Log => "File «{0}» not found!";
-    public string LoadingError_IconMissing_Log => "Expected icon file «{0}» missing.";
-    public string LoadingError_XciSecurePartitionNotFound_Log => "XCI secure partition not found!";
-    public string LoadingError_FailedToGetNcaSectionFsHeader => "Failed to get NCA file system header of section «{0}»: {1}";
-    public string LoadingError_FailedToOpenMainFile => "Failed to open Main file: {0}";
-    public string LoadingError_FailedToLoadMainFile => "Failed to load Main file: {0}";
-    public string LoadingError_FailedToLoadTicketFile => "Failed to load ticket file: {0}";
-    public string LoadingError_FailedToLoadTitleIdKey => "Failed to load Title ID key from ticket file «{0}»: {1}";
-    public string LoadingError_NczBlocklessCompressionDisabled => "Opening of NCZ with blockless compression is disabled in the settings.";
+    public string LoadingError_Failed => "Fehler beim laden der Datei «{0}»: {1}";
+    public string LoadingError_FailedToCheckIfXciPartitionExists => "Fehler beim Überprüfen, ob die XCI Partition existiert: {0}";
+    public string LoadingError_FailedToOpenXciPartition => "XCI Partition konnte nicht geöffnet werden: {0}";
+    public string LoadingError_FailedToLoadXciContent => "XCI Partition konnte nicht geladen werden: {0}";
+    public string LoadingError_FailedToOpenPartitionFile => "Fehler beim öffnen der Partitionsdatei: {0}";
+    public string LoadingError_FailedToLoadNcaFile => "NCA Datei konnt nicht geladen werden: {0}";
+    public string LoadingError_FailedToLoadPartitionFileSystemContent => "Fehler beim Laden der Inhalte des Partition-Dateisystems: {0}";
+    public string LoadingError_FailedToCheckIfSectionCanBeOpened => "Fehler beim Überprüfen, ob die Sektion geöffnet werden kann.: {0}";
+    public string LoadingError_FailedToOpenNcaSectionFileSystem => "NCA Sektionsinhalt konnte nicht geladen werden «{0}»: {1}";
+    public string LoadingError_FailedToLoadSectionContent => "Sektionsinhalt konnte nicht geladen werden: {0}";
+    public string LoadingError_FailedToGetFileSystemDirectoryEntries => "Fehler beim Abrufen der Verzeichniseinträge des Dateisystems: {0}";
+    public string LoadingError_FailedToOpenNacpFile => "Fehler beim öffnen der NACP Datei: {0}";
+    public string LoadingError_FailedToLoadNacpFile => "Fehler beim laden der NACP Datei: {0}";
+    public string LoadingError_FailedToOpenCnmtFile => "Fehler beim öffnen der CNMT Datei: {0}";
+    public string LoadingError_FailedToLoadCnmtFile => "Fehler beim laden der CNMT Datei: {0}";
+    public string LoadingError_FailedToLoadNcaContent => "Fehler beim laden des NCA Inhalts: {0}";
+    public string LoadingError_FailedToLoadDirectoryContent => "Fehler beim Laden des Verzeichnisinhalts: {0}";
+    public string LoadingError_FailedToLoadIcon_Log => "Fehler beim laden des Icons: {0}";
+    public string LoadingError_NcaFileMissing_Log => "NCA-Eintrag «{0}» vom Typ «{1}» fehlt.";
+    public string LoadingError_NoCnmtFound_Log => "Kein CNMT Eintrag gefunden!";
+    public string LoadingError_NacpFileMissing_Log => "NACP Datei «{0}» nicht gefunden!";
+    public string LoadingError_NcaMissingSection_Log => "NCA mit Inhalts-Typ «{0}» fehlt eine Sektion vom Typ «{0}».";
+    public string LoadingError_MainFileMissing_Log => "Datei «{0}» nicht gefunden!";
+    public string LoadingError_IconMissing_Log => "Erwartete Icondatei «{0}» fehlt.";
+    public string LoadingError_XciSecurePartitionNotFound_Log => "Sichere Partition der XCI nicht gefunden!";
+    public string LoadingError_FailedToGetNcaSectionFsHeader => "Fehler beim Abrufen des NCA-Dateisystem-Headers von Sektion «{0}»: {1}";
+    public string LoadingError_FailedToOpenMainFile => "Fehler beim öffnen der Hauptdatei: {0}";
+    public string LoadingError_FailedToLoadMainFile => "Fehler beim laden der Hauptdatei: {0}";
+    public string LoadingError_FailedToLoadTicketFile => "Fehler beim laden der Ticket Datei: {0}";
+    public string LoadingError_FailedToLoadTitleIdKey => "Failed to load TitleID key from ticket file «{0}»: {1}";
+    public string LoadingError_NczBlocklessCompressionDisabled => "Das Öffnen von NCZ Dateien ohne Blockkompression ist in den Einstellungen deaktiviert.";
 
-    public string LoadingInfo_TitleIdKeySuccessfullyInjected => "Title ID key «{0}={1}» found in ticket file «{2}» successfully added to the set of keys.";
-    public string LoadingWarning_TitleIdKeyReplaced => "Title ID key «{0}={1}» found in ticket file «{2}» has been used as replacement of the existing title ID key «{0}={2}» found in the set of keys.";
-    public string LoadingDebug_TitleIdKeyAlreadyExists => "Title ID key «{0}={1}» found in ticket file «{2}» was already registered in the set of keys.";
+    public string LoadingInfo_TitleIdKeySuccessfullyInjected => "TitleID Key «{0}={1}» aus der Ticket-Datei «{2}» wurde erfolgreich zu den Keys hinzugefügt.";
+    public string LoadingWarning_TitleIdKeyReplaced => "TitleID Key «{0}={1}» aus der Ticket-Datei «{2}» wurde als Ersatz für den bestehenden TitleID Key «{0}={2}» in den Keys verwendet.";
+    public string LoadingDebug_TitleIdKeyAlreadyExists => "TitleID Key «{0}={1}» aus der Ticket-Datei «{2}» war bereits in den Keys vorhanden.";
 
-    public string KeysFileUsed => "«{0}» file used: {1}";
-    public string NoneKeysFile => "[none]";
+    public string KeysFileUsed => "Die Datei «{0}» wurde verwendet: {1}";
+    public string NoneKeysFile => "[keine]";
 
-    public string Status_DownloadingFile => "Downloading file «{0}»...";
-    public string Log_DownloadingFileFromUrl => "Downloading «{0}» from URL «{1}»...";
-    public string Log_FileSuccessfullyDownloaded => "File «{0}» successfully downloaded.";
-    public string Log_FailedToDownloadFileFromUrl => "Failed to download «{0}» from URL «{1}»: {2}";
+    public string Status_DownloadingFile => "Lade Datei «{0}» herunter...";
+    public string Log_DownloadingFileFromUrl => "Lade «{0}» von der URL «{1}» herunter...";
+    public string Log_FileSuccessfullyDownloaded => "Datei «{0}» wurde erfolgreich heruntergeladen.";
+    public string Log_FailedToDownloadFileFromUrl => "Fehler beim Herunterladen von «{0}» von der URL «{1}»: {2}";
 
-    public string ToolTip_PatchNumber => "Patch number {0}";
+    public string ToolTip_PatchNumber => "Patchnummer {0}";
     public string Log_OpeningFile => "=====> {0} <=====";
-    public string MainModuleIdTooltip => "Also known as «Build ID» (or BID).";
-    public string ATaskIsAlreadyRunning => "A task is already running...";
+    public string MainModuleIdTooltip => "Auch bekannt als «BuildID» (oder BID).";
+    public string ATaskIsAlreadyRunning => "Ein Task wird bereits ausgeführt...";
     public string FileInfo_Title => "Datei";
     public string Title_FileInfo_FileType => "Typ";
     public string Title_FileInfo_Compression => "Komprimierung";
     public string Title_FileInfo_Integrity => "Integrität";
     public string ToolTip_NcasIntegrity => $"""
-                                           Integrity check consists in verifying the integrity of each NCA (or NCZ).
-                                           
-                                           Integrity result can be any of the following:
-                                           - {NcasIntegrity_NoNca}: No NCA file found.
-                                           - {NcasIntegrity_Unchecked}: Integrity not checked.
-                                           - {NcasIntegrity_InProgress}: Integrity check in progress.
-                                           - {NcasIntegrity_Original}: All NCAs are original (signature and hash ok).
-                                           - {NcasIntegrity_Incomplete}: All NCAs are original, but some are missing.
-                                           - {NcasIntegrity_Modified}: At least one NCA is modified (signature is not ok, but hash is ok).
-                                           - {NcasIntegrity_Corrupted}: At least one NCA is corrupted (hash invalid).
-                                           - {NcasIntegrity_Error}: An error occurred during the integrity check.
-                                           
-                                           The detail of each analyzed NCA can be found in the «Content» tab.
+                                           Die Integritätsprüfung besteht darin, die Integrität jeder NCA (oder NCZ) zu überprüfen.
+										   
+										   Das Ergebnis der Integritätsprüfung kann wie folgt aussehen:
+										   {NcasIntegrity_NoNca}: Keine NCA-Datei gefunden.
+										   {NcasIntegrity_Unchecked}: Integrität nicht geprüft.
+										   {NcasIntegrity_InProgress}: Integritätsprüfung läuft.
+										   {NcasIntegrity_Original}: Alle NCAs sind original (Signatur und Hash in Ordnung).
+										   {NcasIntegrity_Incomplete}: Alle NCAs sind original, aber einige fehlen.
+										   {NcasIntegrity_Modified}: Mindestens eine NCA ist modifiziert (Signatur nicht in Ordnung, aber Hash in Ordnung).
+										   {NcasIntegrity_Corrupted}: Mindestens eine NCA ist beschädigt (Hash ungültig).
+										   {NcasIntegrity_Error}: Ein Fehler ist während der Integritätsprüfung aufgetreten.
+										   
+										   Details zu jeder analysierten NCA findest du im Tab «Inhalt».
                                            """;
 
     public string AvailableContents => "Inhalt:";
-    public string MultiContentPackageToolTip => "Current package contains multiple contents («{0}» detected).";
+    public string MultiContentPackageToolTip => "Das aktuelle Paket enthält mehrere Inhalte («{0}» erkannt).";
 
-    public string NcasIntegrity_Error_NcaMissing => "Integrity of NCA «{0}» can't be verified, NCA missing.";
-    public string NcasIntegrity_Error_Log => "Failed to verify NCAs integrity: {0}";
-    public string NcaIntegrity_GetOriginalNcaError => "Failed to get original NCA: {0}";
-    public string NcaIntegrity_GetOriginalNcaError_Log => "Failed to get original NCA from NCA «{0}»: {1}";
+    public string NcasIntegrity_Error_NcaMissing => "Die Integrität der NCA «{0}» kann nicht überprüft werden, NCA fehlt.";
+    public string NcasIntegrity_Error_Log => "Fehler bei der Überprüfung der NCA-Integrität: {0}";
+    public string NcaIntegrity_GetOriginalNcaError => "Fehler beim Abrufen der originalen NCA: {0}";
+    public string NcaIntegrity_GetOriginalNcaError_Log => "Fehler beim Abrufen der originalen NCA aus der NCA «{0}»: {1}";
 
-    public string NcaHeaderSignature_Valid_Log => "Header signature of NCA «{0}» is valid.";
-    public string NcaHeaderSignature_Invalid => "NCA header signature verification failed with status «{0}».";
-    public string NcaHeaderSignature_Invalid_Log => "Header signature verification of NCA «{0}» failed with status «{1}».";
-    public string NcaHeaderSignature_Error => "Failed to verify NCA header signature: {0}.";
-    public string NcaHeaderSignature_Error_log => "Failed to verify signature of NCA header «{0}»: {1}";
+    public string NcaHeaderSignature_Valid_Log => "Die Header-Signatur der NCA «{0}» ist gültig.";
+    public string NcaHeaderSignature_Invalid => "Die Überprüfung der NCA-Header-Signatur ist mit dem Status «{0}» fehlgeschlagen.";
+    public string NcaHeaderSignature_Invalid_Log => "Die Überprüfung der Header-Signatur der NCA «{0}» ist mit dem Status «{1}» fehlgeschlagen.";
+    public string NcaHeaderSignature_Error => "Fehler bei der Überprüfung der NCA-Header-Signatur: {0}.";
+    public string NcaHeaderSignature_Error_log => "Fehler bei der Überprüfung der Signatur des NCA-Headers «{0}»: {1}";
 
-    public string NcaHash_VerificationStart_Log => ">>> NCAs hash verification starting...";
-    public string NcaHash_VerificationEnd_Log => ">>> NCAs hash verification finished.";
-    public string NcaHash_NcaItem_CantExtractHashFromName => "Failed to extract expected hash from NCA name.";
-    public string NcaHash_CantExtractHashFromName_Log => "Failed to extract expected hash from NCA name «{0}».";
-    public string NcaHash_Valid_Log => "Hash of NCA «{0}» is valid.";
-    public string NcaHash_NcaItem_Invalid => "Hash is not valid.";
-    public string NcaHash_Invalid_Log => "Hash of NCA «{0}» is not valid.";
-    public string NcaHash_NcaItem_Exception => "Failed to verify hash: {0}";
-    public string NcaHash_Exception_Log => "Failed to verify hash of NCA «{0}»: {1}";
-    public string NcaHash_ProgressText => "Hashing NCA {0}/{1}...";
+    public string NcaHash_VerificationStart_Log => ">>> Die Hash-Überprüfung der NCAs wird gestartet...";
+    public string NcaHash_VerificationEnd_Log => ">>> Die Hash-Überprüfung der NCAs ist abgeschlossen.";
+    public string NcaHash_NcaItem_CantExtractHashFromName => "Fehler beim Extrahieren des erwarteten Hashs aus dem NCA-Namen.";
+    public string NcaHash_CantExtractHashFromName_Log => "Fehler beim Extrahieren des erwarteten Hashs aus dem NCA-Namen «{0}».";
+    public string NcaHash_Valid_Log => "Der Hash der NCA «{0}» ist gültig.";
+    public string NcaHash_NcaItem_Invalid => "Hash ist ungültig.";
+    public string NcaHash_Invalid_Log => "Der Hash der NCA «{0}» ist ungültig.";
+    public string NcaHash_NcaItem_Exception => "Fehler bei der Überprüfung des Hashs: {0}";
+    public string NcaHash_Exception_Log => "Fehler bei der Überprüfung des Hashs der NCA «{0}»: {1}";
+    public string NcaHash_ProgressText => "Hashing der NCA {0}/{1}...";
 
     public string CancelAction => "Abbrechen";
     public string Status_Ready => "Bereit.";
     public string LoadingFile_PleaseWait => "Lade, bitte warten...";
 
-    public string NcasIntegrity_NoNca => "No NCA";
-    public string NcasIntegrity_Unchecked => "Unchecked";
-    public string NcasIntegrity_InProgress => "In progress";
+    public string NcasIntegrity_NoNca => "Kein NCA";
+    public string NcasIntegrity_Unchecked => "Nicht überprüft";
+    public string NcasIntegrity_InProgress => "In Bearbeitung";
     public string NcasIntegrity_Original => "Original";
-    public string NcasIntegrity_Incomplete => "Incomplete";
-    public string NcasIntegrity_Modified => "Modified";
-    public string NcasIntegrity_Corrupted => "Corrupted";
-    public string NcasIntegrity_Error => "Error";
-    public string NcasIntegrity_Unknown => "Unknown";
+    public string NcasIntegrity_Incomplete => "Unvollständig";
+    public string NcasIntegrity_Modified => "Modifiziert";
+    public string NcasIntegrity_Corrupted => "Korrupt";
+    public string NcasIntegrity_Error => "Fehler";
+    public string NcasIntegrity_Unknown => "Unbekannt";
 
-    public string Status_SavingFile => "Saving file «{0}»...";
+    public string Status_SavingFile => "Speichere Datei «{0}»...";
 
-    public string KeysLoading_Starting_Log => ">>> Loading Keys...";
-    public string KeysLoading_Successful_Log => ">>> Keys successfully loaded.";
-    public string KeysLoading_Error => "Failed to load keys: {0}.";
-    public string WarnNoProdKeysFileFound => "No «prod.keys» file found.";
-    public string InvalidSetting_KeysFileNotFound => "Keys file «{0}» defined in the settings doesn't exist.";
-    public string InvalidSetting_BufferSizeInvalid => "Buffer size «{0}» defined in the settings is not valid, value should be strictly greater than 0.";
-    public string InvalidSetting_LanguageNotFound => "Language «{0}» defined in the settings doesn't exist.";
+    public string KeysLoading_Starting_Log => ">>> Lade Keys...";
+    public string KeysLoading_Successful_Log => ">>> Keys erfolgreich geladen.";
+    public string KeysLoading_Error => "Keys konnten nicht geladen werden: {0}.";
+    public string WarnNoProdKeysFileFound => "Keine «prod.keys» Datei gefunden.";
+    public string InvalidSetting_KeysFileNotFound => "In den Einstellungen definierte Keydatei «{0}» existiert nicht.";
+    public string InvalidSetting_BufferSizeInvalid => "In den Einstellungen definierte Puffergröße «{0}» ist ungültig, Wert sollte größer 0 sein.";
+    public string InvalidSetting_LanguageNotFound => "In den Einstellungen definierte Sprache «{0}» existiert nicht.";
 
-    public string ToolTip_KeyMissing => "Key «{0}» of type «{1}» is missing.";
+    public string ToolTip_KeyMissing => "Key «{0}» vom Typ «{1}» fehlt.";
 
     public string MenuItem_CopyTextToClipboard => "Kopieren";
-    public string ContextMenu_OpenFileLocation => "Open location...";
-    public string OpenFileLocation_Failed_Log => "Failed to open location of file «{0}»: {1}";
-    public string SettingsView_TitlePageUrl => "Title page URL";
-    public string OpenTitleWebPage_Failed => "Failed to open title Web page: {0}";
+    public string ContextMenu_OpenFileLocation => "Verzeichnis öffnen...";
+    public string OpenFileLocation_Failed_Log => "Fehler beim Öffnen des Speicherorts der Datei «{0}»: {1}";
+    public string SettingsView_TitlePageUrl => "Titel Seiten-URL";
+    public string OpenTitleWebPage_Failed => "Fehler beim Öffnen der Titel Webseite: {0}";
 
-    public string Log_DownloadFileCanceled => "Download canceled.";
-    public string Log_SaveToDirCanceled => "Directory saving canceled.";
-    public string Log_SaveFileCanceled => "File saving canceled.";
-    public string Log_SaveStorageCanceled => "Storage saving canceled.";
-    public string Log_NcasIntegrityCanceled => "NCAs integrity canceled.";
+    public string Log_DownloadFileCanceled => "Herunterladen abgebrochen.";
+    public string Log_SaveToDirCanceled => "Speichern des Verzeichnisses abgebrochen.";
+    public string Log_SaveFileCanceled => "Speichern der Datei abgebrochen.";
+    public string Log_SaveStorageCanceled => "Speicherung des Speichers abgebrochen.";
+    public string Log_NcasIntegrityCanceled => "Integritätsprüfung der NCAs abgebrochen.";
 
-    public string RenamingTool_WindowTitle => "Renaming tool";
-    public string RenamingTool_Patterns => "Patterns";
-    public string RenamingTool_ApplicationPattern => "Application pattern";
-    public string RenamingTool_PatchPattern => "Patch pattern";
-    public string RenamingTool_AddonPattern => "Add-on pattern";
-    public string RenamingTool_InputPath => "Input path";
-    public string RenamingTool_FileFilters => "Filters";
+    public string RenamingTool_WindowTitle => "Umbenennungswerkzeug";
+    public string RenamingTool_Patterns => "Muster";
+    public string RenamingTool_ApplicationPattern => "Anwendungsmuster";
+    public string RenamingTool_PatchPattern => "Patch Muster";
+    public string RenamingTool_AddonPattern => "Add-on Muster";
+    public string RenamingTool_InputPath => "Eingabepfad";
+    public string RenamingTool_FileFilters => "Filter";
     public string RenamingTool_ToolTip_Patterns =>
         $$"""
-         Keyword syntax: 
+         Schlüsselwort-Syntax: 
             {<Keyword>[:<Format>]}
          
-         Format is optional and can be:
-         - U: Upper-case
-         - L: Lower-case
+         Das Format ist optional und kann sein:
+         - U: Großbuchstaben
+         - L: Kleinbuchstaben
          
-         Examples:
-           {Title} => The original title
-           {Title:U} => The upper-case title
+         Beispiele:
+           {Title} => Der original Titel
+           {Title:U} => Der Titel in Großbuchstaben
          
-         Supported keywords:
-           • TitleId:
-              - The content id.
-           • AppId:
-              - The id of the corresponding {{nameof(ContentMetaType.Application)}} (for {{nameof(ContentMetaType.Application)}} contents, this value is equal to the {TitleId}).
+         Unterstützte Schlüsselwörter:
+           • TitleID:
+              - Die Inhalts-ID.
+           • AppID:
+              - Die ID der entsprechenden {{nameof(ContentMetaType.Application)}} (für {{nameof(ContentMetaType.Application)}} Inhalte ist dieser Wert gleich der {TitleID}).
            • PatchId:
-              - If content is an {{nameof(ContentMetaType.Application)}}, this value is equal to the id of the corresponding {{nameof(ContentMetaType.Patch)}} content, otherwise zero.
+              - Wenn der Inhalt eine {{nameof(ContentMetaType.Application)}} ist, entspricht dieser Wert der ID des entsprechenden {{nameof(ContentMetaType.Patch)}} Inhalts, andernfalls ist der Wert null.
            • PatchNum:
-              - If content is an {{nameof(ContentMetaType.Application)}}, value is generally 0.
-              - If content is a {{nameof(ContentMetaType.Patch)}}, value corresponds to the patch number.
-              - If content is an {{nameof(ContentMetaType.AddOnContent)}}, value corresponds to the add-on patch number.
+              - Wenn der Inhalt eine {{nameof(ContentMetaType.Application)}} ist, ist der Wert in der Regel 0.
+              - Wenn der Inhalt ein {{nameof(ContentMetaType.Patch)}} ist, entspricht der Wert der Patch-Nummer.
+              - Wenn der Inhalt ein {{nameof(ContentMetaType.AddOnContent)}} ist, entspricht der Wert der Add-On-Patch-Nummer.
            • Title:
-              - The first title among the list of declared titles.
-              - This value exists only for contents of type {{nameof(ContentMetaType.Application)}} or {{nameof(ContentMetaType.Patch)}}, but not for {{nameof(ContentMetaType.AddOnContent)}}.
+              - Der erste Titel aus der Liste der deklarierten Titel.
+              - Dieser Wert existiert nur für Inhalte vom Typ {{nameof(ContentMetaType.Application)}} oder {{nameof(ContentMetaType.Patch)}}, jedoch nicht für {{nameof(ContentMetaType.AddOnContent)}}.
            • Ext:
-              - The extension corresponding to the detected file type.
+              - Die Erweiterung, die dem erkannten Dateityp entspricht.
            • VerNum:
-              - The content version number.
+              - Die Versionsnummer des Inhalts.
            • VerDsp:
-              - The displayed version.
+              - Die angezeigte Version.
            • WTitle:
-              - The content title retrieved from the Internet.
+              - Der Titel des Inhalts, der aus dem Internet abgerufen wurde.
            • WAppTitle: 
-              - The title of the corresponding {{nameof(ContentMetaType.Application)}}, retrieved from the Internet.
+              - Der Titel der entsprechenden {{nameof(ContentMetaType.Application)}}, der aus dem Internet abgerufen wurde.
          
-         Use \{ or \} to write the literal chars { or }.
+         Verwende  \{ oder \}, um die Zeichen { oder } zu schreiben.
          """;
-    public string RenamingTool_ToolTip_BasePattern => $"The pattern to use for contents of type {nameof(ContentMetaType.Application)}.";
-    public string RenamingTool_ToolTip_PatchPattern => $"The pattern to use for contents of type {nameof(ContentMetaType.Patch)}.";
-    public string RenamingTool_ToolTip_AddonPattern => $"The pattern to use for contents of type {nameof(ContentMetaType.AddOnContent)}.";
+    public string RenamingTool_ToolTip_BasePattern => $"Das Muster, das für Inhalte des Typs {nameof(ContentMetaType.Application)} verwendet werden soll.";
+    public string RenamingTool_ToolTip_PatchPattern => $"Das Muster, das für Inhalte des Typs {nameof(ContentMetaType.Patch)} verwendet werden soll.";
+    public string RenamingTool_ToolTip_AddonPattern => $"Das Muster, das für Inhalte des Typs {nameof(ContentMetaType.AddOnContent)} verwendet werden soll.";
     public string RenamingTool_Button_Cancel => "Abbrechen";
     public string RenamingTool_Button_Rename => "Umbenennen";
-    public string RenamingTool_GroupBoxInput => "Input";
-    public string RenamingTool_GroupBoxNamingSettings => "Naming settings";
-    public string RenamingTool_BrowseDirTitle => "Select a directory";
-    public string RenamingTool_GroupBoxOutput => "Output";
-    public string RenamingTool_Miscellaneous => "Miscellaneous";
-    public string RenamingTool_InvalidWindowsCharReplacement => "Replace unauthorized Windows characters with";
-    public string RenamingTool_ReplaceWhiteSpaceChars => "Replace white space chars";
-    public string RenamingTool_ReplaceWhiteSpaceCharsWith => "Replace white space chars with";
+    public string RenamingTool_GroupBoxInput => "Eingabe";
+    public string RenamingTool_GroupBoxNamingSettings => "Benennungseinstellungen";
+    public string RenamingTool_BrowseDirTitle => "Verzeichnis auswählen";
+    public string RenamingTool_GroupBoxOutput => "Ausgabe";
+    public string RenamingTool_Miscellaneous => "Sonstiges";
+    public string RenamingTool_InvalidWindowsCharReplacement => "Ersetze unzulässige Windows-Zeichen durch";
+    public string RenamingTool_ReplaceWhiteSpaceChars => "Ersetze Leerzeichen-Zeichen";
+    public string RenamingTool_ReplaceWhiteSpaceCharsWith => "Ersetze Leerzeichen-Zeichen durch";
     public string RenamingTool_Simulation => "Simulation";
-    public string RenamingTool_AutoCloseOpenedFile => "Auto close opened file";
-    public string RenamingTool_IncludeSubDirectories => "Include subdirectories";
-    public string RenamingTool_ContentTypeNotSupported => "Content type «{0}» not supported.";
-    public string RenamingTool_SuperPackageNotSupported => "Super package not supported.";
-    public string RenamingTool_LogNbFilesToRename => ">>> {0} file(s) to rename...";
+    public string RenamingTool_AutoCloseOpenedFile => "Geöffnete Datei automatisch schließen";
+    public string RenamingTool_IncludeSubDirectories => "Unterverzeichnisse einbeziehen";
+    public string RenamingTool_ContentTypeNotSupported => "Inhaltstyp «{0}» wird nicht unterstützt.";
+    public string RenamingTool_SuperPackageNotSupported => "Super-Paket wird nicht unterstützt.";
+    public string RenamingTool_LogNbFilesToRename => ">>> {0} Datei(en) zum Umbenennen...";
     public string RenamingTool_LogSimulationMode => $"[SIMULATION] ";
-    public string RenamingTool_LogFileRenamed => $"• {{0}}File renamed from{Environment.NewLine}\t«{{1}}» to{Environment.NewLine}\t«{{2}}».";
-    public string RenamingTool_LogFileAlreadyNamedProperly => "• {0}«{1}» already named correctly.";
-    public string RenamingTool_LogFailedToRenameFile => "• {0}«{1}»Renaming failed: {2}";
-    public string RenamingTool_LogRenamingFailed => "Renaming failed: {0}";
-    public string RenamingTool_BadInvalidFileNameCharReplacement => "The replacement string «{0}» (for invalid file name chars), can't contain invalid char «{1}».";
+    public string RenamingTool_LogFileRenamed => $"• {{0}}Datei wurde umbenannt von{Environment.NewLine}\t«{{1}}» zu{Environment.NewLine}\t«{{2}}».";
+    public string RenamingTool_LogFileAlreadyNamedProperly => "• {0}«{1}» ist bereits korrekt benannt.";
+    public string RenamingTool_LogFailedToRenameFile => "• {0}«{1}»Umbenennen fehlgeschlagen: {2}";
+    public string RenamingTool_LogRenamingFailed => "Umbenennen fehlgeschlagen: {0}";
+    public string RenamingTool_BadInvalidFileNameCharReplacement => "Die Ersetzungszeichenfolge «{0}» (für ungültige Dateinamenzeichen) darf das ungültige Zeichen «{1}» nicht enthalten.";
 
-    public string Exception_UnexpectedDelimiter => "Unexpected delimiter {0} found at position {1}, use {2}{0} instead.";
-    public string Exception_EndDelimiterMissing => "End delimiter {0} is missing.";
-    public string FileRenaming_PatternKeywordUnknown => "Keyword «{0}» is unknown, allowed keywords are «{1}».";
-    public string FileRenaming_EmptyPatternNotAllowed => "Pattern can't be empty.";
-    public string FileRenaming_PatternKeywordNotAllowed => "Keyword «{0}» not allowed for patters of type «{1}».";
-    public string FileRenaming_StringOperatorUnknown => "Operator «{0}» is not recognized, allowed operators are «{1}».";
-    public string FileRenaming_EmptyDirectoryNotAllowed => "Input directory can't be empty.";
+    public string Exception_UnexpectedDelimiter => "Unerwarteter Trenner {0} an Position {1} gefunden, verwende stattdessen {2}{0}.";
+    public string Exception_EndDelimiterMissing => "End-Trenner {0} fehlt.";
+    public string FileRenaming_PatternKeywordUnknown => "Schlüsselwort «{0}» ist unbekannt, erlaubte Schlüsselwörter sind «{1}».";
+    public string FileRenaming_EmptyPatternNotAllowed => "Muster darf nicht leer sein.";
+    public string FileRenaming_PatternKeywordNotAllowed => "Schlüsselwort «{0}» ist für Muster vom Typ «{1}» nicht erlaubt.";
+    public string FileRenaming_StringOperatorUnknown => "Operator «{0}» wird nicht erkannt, erlaubte Operatoren sind «{1}».";
+    public string FileRenaming_EmptyDirectoryNotAllowed => "Eingabeverzeichnis darf nicht leer sein.";
     public string Window_Tip_Title => "Hinweis";
 }
