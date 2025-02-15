@@ -64,7 +64,7 @@ public class LocalizationKeys_ES : LocalizationKeysBase, ILocalizationKeys
                                                Las llaves son necesarias para poder abrir archivos del formato Nintendo Switch encriptados (XCI, NSP, ...).
                                                Cada archivo oficial con formato Nintendo Switch está encriptado con las llaves específicas del firmware con que fueron construidos.
 
-                                               Asegúrese de contar con el archivo de llaves «prod.keys» más actualizado, para poder abrir archivos con el forma Nintendo Switch sin errores.
+                                               Asegúrese de contar con el archivo de llaves «prod.keys» más actualizado, para poder abrir archivos con el formato Nintendo Switch sin errores.
                                                
                                                El archivo deberá contener una llave por línea, con el formato «NOMBRE_LLAVE = VALOR_HEXADECIMAL».
                                                """;
@@ -312,8 +312,8 @@ public class LocalizationKeys_ES : LocalizationKeysBase, ILocalizationKeys
          - L: Minúsculas
          
          Ejemplos:
-           {Título} => Título original
-           {Título:U} => Título en mayúsculas
+           {Title} => Título original
+           {Title:U} => Título en mayúsculas
          
          Llaves soportadas:
            • TitleId:
