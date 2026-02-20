@@ -46,7 +46,6 @@ public class FileOverviewLoader : IFileOverviewLoader
 
         public FileOverview CreateXciOverview(XciItem xciItem)
         {
-            // NOTE: the secure partition of an XCI is equivalent to an NSP
             var securePartitionItem = xciItem.ChildItems.FirstOrDefault(partition => partition.XciPartitionType == XciPartitionType.Secure);
 
             var fileOverview = new FileOverview(xciItem);
@@ -73,14 +72,11 @@ public class FileOverviewLoader : IFileOverviewLoader
             return fileOverview;
         }
 
-
         private IEnumerable<CnmtContainer> BuildCnmtContainers(PartitionFileSystemItemBase partitionItem)
         {
-
-            // Find all Cnmt (kind of manifest containing contents information such a base title, a patch, etc.)
             var cnmtItems = partitionItem.FindAllCnmtItems().ToArray();
 
-            if (cnmtItems.Length <= 0) 
+            if (cnmtItems.Length <= 0)
                 _logger.LogError(LocalizationManager.Instance.Current.Keys.LoadingError_NoCnmtFound_Log);
 
             foreach (var cnmtItem in cnmtItems)
@@ -91,7 +87,6 @@ public class FileOverviewLoader : IFileOverviewLoader
                 {
                     var referencedNcaItem = cnmtEntryItem.FindReferencedNcaItem();
 
-                    // Search for the NCA referenced by CNMT
                     if (referencedNcaItem == null)
                     {
                         _logger.LogError(LocalizationManager.Instance.Current.Keys.LoadingError_NcaFileMissing_Log.SafeFormat(cnmtEntryItem.NcaId, cnmtEntryItem.NcaContentType));
@@ -109,7 +104,6 @@ public class FileOverviewLoader : IFileOverviewLoader
 
                     if (cnmtEntryItem.NcaContentType == ContentType.Program)
                     {
-                        // Search for corresponding Program (Code) section
                         var programSection = referencedNcaItem.ChildItems.FirstOrDefault(section => section.NcaSectionType == NcaSectionType.Code);
 
                         if (programSection == null)
@@ -133,13 +127,11 @@ public class FileOverviewLoader : IFileOverviewLoader
                                 cnmtContainer.MainItem = null;
                             }
                         }
-
                     }
                 }
 
                 yield return cnmtContainer;
             }
-
         }
 
         private NacpContainer LoadContentDetails(NacpItem nacpItem)
@@ -148,6 +140,7 @@ public class FileOverviewLoader : IFileOverviewLoader
 
             var nacp = nacpItem.Nacp;
 
+            // ── Legacy languages (indices 0–15) from LibHac's ApplicationControlProperty ────
             var language = -1;
             foreach (ref var applicationTitle in nacp.Title.Items)
             {
@@ -157,8 +150,15 @@ public class FileOverviewLoader : IFileOverviewLoader
                     continue;
 
                 var titleInfo = new TitleInfo(ref applicationTitle, (NacpLanguage)language);
-
                 titleInfo.Icon = LoadExpectedIcon(nacpItem.ContainerSectionItem, titleInfo.Language);
+                contentDetails.Titles.Add(titleInfo);
+            }
+
+            // ── Extended languages (indices 16+) from compressed NACP title block ──────────
+            foreach (var (lang, titleEntry) in nacpItem.ExtendedTitleEntries)
+            {
+                var titleInfo = new TitleInfo(titleEntry, lang);
+                titleInfo.Icon = LoadExpectedIcon(nacpItem.ContainerSectionItem, lang);
                 contentDetails.Titles.Add(titleInfo);
             }
 
@@ -200,7 +200,5 @@ public class FileOverviewLoader : IFileOverviewLoader
                 return null;
             }
         }
-
     }
-
 }

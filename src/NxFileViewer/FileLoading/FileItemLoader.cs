@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Emignatik.NxFileViewer.Localization;
+using Emignatik.NxFileViewer.Models.Overview;
 using Emignatik.NxFileViewer.Models.TreeItems;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 using Emignatik.NxFileViewer.Services.KeysManagement;
@@ -400,10 +401,28 @@ public class FileItemLoader : IFileItemLoader
                     }
 
                     ApplicationControlProperty nacp;
+                    IReadOnlyDictionary<NacpLanguage, NacpTitleEntry> extendedTitleEntries;
                     try
                     {
+                        nacpFile.GetSize(out long nacpFileSize).ThrowIfFailure();
+                        byte[] rawBytes = new byte[nacpFileSize];
+                        nacpFile.Read(out _, 0, rawBytes, ReadOption.None).ThrowIfFailure();
+
+                        byte[] nacpBytes;
+                        try
+                        {
+                            nacpBytes = NacpTitleBlockDecompressor.DecompressIfNeeded(rawBytes);
+                        }
+                        catch (InvalidDataException)
+                        {
+                            nacpBytes = rawBytes;
+                        }
+
+                        extendedTitleEntries = NacpTitleBlockDecompressor.GetExtendedTitleEntries(rawBytes);
+
                         var blitStruct = new BlitStruct<ApplicationControlProperty>(1);
-                        nacpFile.Read(out _, 0, blitStruct.ByteSpan).ThrowIfFailure();
+                        int copyLen = Math.Min(nacpBytes.Length, blitStruct.ByteSpan.Length);
+                        nacpBytes.AsSpan(0, copyLen).CopyTo(blitStruct.ByteSpan);
                         nacp = blitStruct.Value;
                     }
                     catch (Exception ex)
@@ -416,7 +435,7 @@ public class FileItemLoader : IFileItemLoader
                         continue;
                     }
 
-                    _ = new NacpItem(nacp, parentItem, directoryEntry);
+                    _ = new NacpItem(nacp, parentItem, directoryEntry, extendedTitleEntries);
                 }
                 // CNMT File
                 else if (parentItem.ParentItem.ContentType == NcaContentType.Meta && entryName.EndsWith(".cnmt", StringComparison.OrdinalIgnoreCase) && directoryEntry.Type == DirectoryEntryType.File)

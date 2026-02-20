@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using Emignatik.NxFileViewer.Models.Overview;
 using Emignatik.NxFileViewer.Utils;
+using Emignatik.NxFileViewer.Utils.LibHacExtensions;
 using LibHac.Ns;
 using LibHac.Tools.Fs;
 
@@ -9,19 +12,33 @@ public class NacpItem : DirectoryEntryItem
 {
     public const string NACP_FILE_NAME = "control.nacp";
 
-    public NacpItem(ApplicationControlProperty nacp, SectionItem parentItem, DirectoryEntryEx directoryEntry) : base(parentItem, directoryEntry)
+    public NacpItem(
+        ApplicationControlProperty nacp,
+        SectionItem parentItem,
+        DirectoryEntryEx directoryEntry,
+        IReadOnlyDictionary<NacpLanguage, NacpTitleEntry>? extendedTitleEntries = null)
+        : base(parentItem, directoryEntry)
     {
         Nacp = nacp;
         ParentItem = parentItem ?? throw new ArgumentNullException(nameof(parentItem));
         AddOnContentBaseId = Nacp.AddOnContentBaseId.ToStrId();
         PresenceGroupId = Nacp.PresenceGroupId.ToStrId();
         SaveDataOwnerId = Nacp.SaveDataOwnerId.ToStrId();
+        ExtendedTitleEntries = extendedTitleEntries
+            ?? new Dictionary<NacpLanguage, NacpTitleEntry>();
     }
-
 
     public new SectionItem ParentItem { get; }
 
     public ApplicationControlProperty Nacp { get; }
+
+    /// <summary>
+    /// Title entries for languages beyond the 16 supported by LibHac's
+    /// <c>ApplicationControlProperty</c> struct (Polish, Thai, etc.).
+    /// Only languages with a non-empty name are present.
+    /// Keyed by the <see cref="NacpLanguage"/> value (index 16+).
+    /// </summary>
+    public IReadOnlyDictionary<NacpLanguage, NacpTitleEntry> ExtendedTitleEntries { get; }
 
     public override string Format => nameof(Nacp);
 
@@ -32,7 +49,7 @@ public class NacpItem : DirectoryEntryItem
     public ApplicationControlProperty.AddOnContentRegistrationTypeValue AddOnContentRegistrationType => Nacp.AddOnContentRegistrationType;
 
     public ApplicationControlProperty.AttributeFlagValue Attribute => Nacp.AttributeFlag;
-    
+
     public ApplicationControlProperty.ParentalControlFlagValue ParentalControl => Nacp.ParentalControlFlag;
 
     public ApplicationControlProperty.ScreenshotValue Screenshot => Nacp.Screenshot;
@@ -46,7 +63,7 @@ public class NacpItem : DirectoryEntryItem
     public string PresenceGroupId { get; }
 
     public string DisplayVersion => Nacp.DisplayVersionString.ToString();
-    
+
     public string AddOnContentBaseId { get; }
 
     public string SaveDataOwnerId { get; }
@@ -58,9 +75,8 @@ public class NacpItem : DirectoryEntryItem
     public ApplicationControlProperty.LogoHandlingValue LogoHandling => Nacp.LogoHandling;
 
     public ApplicationControlProperty.StartupUserAccountOptionFlagValue StartupUserAccountOption => Nacp.StartupUserAccountOption;
-    
-    public string Isbn => Nacp.IsbnString.ToString();
-    
-    public string BcatPassphrase => Nacp.BcatPassphraseString.ToString();
 
+    public string Isbn => Nacp.IsbnString.ToString();
+
+    public string BcatPassphrase => Nacp.BcatPassphraseString.ToString();
 }
