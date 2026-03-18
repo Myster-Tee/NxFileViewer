@@ -17,8 +17,8 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
     private string _titleKeysDownloadUrl = "";
     private bool _alwaysReloadKeysBeforeOpen = false;
 
-    private string _titlePageUrl = "https://tinfoil.media/Title/{TitleId}";
-    private string _titleInfoApiUrl = "https://tinfoil.media/api/title/{TitleId}";
+    private string _titlePageUrl = "https://tinfoil.io/Title/{TitleId}";
+    private string _titleInfoApiUrl = "https://tinfoil.io/api/title/{TitleId}";
     private string _lastUsedDir = "";
     private bool _allowNczBlocklessCompressionOpening = true;
     private bool _acceptMissingDeltaFragments = true;
