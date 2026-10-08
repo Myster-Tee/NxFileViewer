@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Input;
+using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
 using Emignatik.NxFileViewer.Services.BackgroundTask.RunnableImpl;
@@ -97,6 +98,8 @@ public class RenameFilesCommand : CommandBase, IRenameFilesCommand
     }
 
     public ILogger? Logger { get; set; }
+    public event Action? Started;
+    public event Action<RenamingResult>? ResultReported;
 
     public string InvalidWindowsCharsReplacement
     {
@@ -134,10 +137,12 @@ public class RenameFilesCommand : CommandBase, IRenameFilesCommand
     {
         try
         {
+            Started?.Invoke();
             var inputPath = InputPath;
 
             var namingPatterns = new NamingSettings
             {
+                TargetDirectory = _appSettings.RenamingOptions.TargetDirectory,
                 ApplicationPattern = ApplicationPatternParts!,
                 PatchPattern = PatchPatternParts!,
                 AddonPattern = AddonPatternParts!,
@@ -150,12 +155,14 @@ public class RenameFilesCommand : CommandBase, IRenameFilesCommand
             if (File.Exists(inputPath))
             {
                 runnable = _serviceProvider.GetRequiredService<IFileRenamerRunnable>()
-                    .Setup(namingPatterns, AutoCloseOpenedFile, inputPath, IsSimulation, Logger);
+                    .Setup(namingPatterns, AutoCloseOpenedFile, inputPath, IsSimulation, Logger ?? _logger);
+                ((IFileRenamerRunnable)runnable).ResultReported = result => ResultReported?.Invoke(result);
             }
             else
             {
                 runnable = _serviceProvider.GetRequiredService<IFilesRenamerRunnable>()
-                    .Setup(namingPatterns, AutoCloseOpenedFile, inputPath, FileFilters, IncludeSubdirectories, IsSimulation, Logger);
+                    .Setup(namingPatterns, AutoCloseOpenedFile, inputPath, FileFilters, IncludeSubdirectories, IsSimulation, Logger ?? _logger);
+                ((IFilesRenamerRunnable)runnable).ResultReported = result => ResultReported?.Invoke(result);
             }
 
             await _backgroundTaskRunner!.RunAsync(runnable);
@@ -209,6 +216,8 @@ public class RenameFilesCommand : CommandBase, IRenameFilesCommand
 
 public interface IRenameFilesCommand : ICommand, INotifyPropertyChanged
 {
+    event Action? Started;
+    event Action<RenamingResult>? ResultReported;
     Pattern? ApplicationPatternParts { get; set; }
 
     Pattern? PatchPatternParts { get; set; }

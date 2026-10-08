@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using Emignatik.NxFileViewer.Localization;
@@ -17,19 +17,26 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
 
     private readonly object _lock = new();
     private readonly IAppSettings _appSettings;
+    private readonly string _applicationDirectory;
+    private readonly string? _userHomeDirectory;
     private KeySet? _keySet = null;
 
     private readonly ILogger _logger;
     private string? _actualProdKeysFilePath;
     private string? _actualTitleKeysFilePath;
+    private KeyFileValidationResult _prodKeysValidation = KeyFileValidator.ValidateProdKeys(null);
+    private KeyFileValidationResult _titleKeysValidation = KeyFileValidator.ValidateTitleKeys(null);
 
-    public KeySetProviderService(IAppSettings appSettings, ILoggerFactory loggerFactory)
+    public KeySetProviderService(IAppSettings appSettings, ILoggerFactory loggerFactory,
+        string? applicationDirectory = null, string? userHomeDirectory = null)
     {
         _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
         _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+        _applicationDirectory = applicationDirectory ?? PathHelper.CurrentAppDir;
+        _userHomeDirectory = userHomeDirectory ?? PathHelper.HomeUserDir;
 
-        AppDirProdKeysFilePath = Path.Combine(PathHelper.CurrentAppDir, IKeySetProviderService.DEFAULT_PROD_KEYS_FILE_NAME);
-        AppDirTitleKeysFilePath = Path.Combine(PathHelper.CurrentAppDir, IKeySetProviderService.DEFAULT_TITLE_KEYS_FILE_NAME);
+        AppDirProdKeysFilePath = Path.Combine(_applicationDirectory, IKeySetProviderService.DEFAULT_PROD_KEYS_FILE_NAME);
+        AppDirTitleKeysFilePath = Path.Combine(_applicationDirectory, IKeySetProviderService.DEFAULT_TITLE_KEYS_FILE_NAME);
 
         Reset();
 
@@ -60,12 +67,32 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
         }
     }
 
+    public KeyFileValidationResult ProdKeysValidation
+    {
+        get => _prodKeysValidation;
+        private set
+        {
+            _prodKeysValidation = value;
+            NotifyPropertyChanged();
+        }
+    }
+
+    public KeyFileValidationResult TitleKeysValidation
+    {
+        get => _titleKeysValidation;
+        private set
+        {
+            _titleKeysValidation = value;
+            NotifyPropertyChanged();
+        }
+    }
+
     public KeySet GetKeySet(bool forceReload = false)
     {
         lock (_lock)
         {
             if (forceReload)
-                UnloadCurrentKeySet();
+                Reset();
             else if (_keySet != null)
                 return _keySet;
 
@@ -84,9 +111,36 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
 
     public void Reset()
     {
-        UnloadCurrentKeySet();
-        UpdateActualProdKeysFilePath();
-        UpdateActualTitleKeysFilePath();
+        lock (_lock)
+        {
+            UnloadCurrentKeySet();
+            UpdateActualProdKeysFilePath();
+            UpdateActualTitleKeysFilePath();
+            ValidateKeyFiles();
+        }
+    }
+
+    private void ValidateKeyFiles()
+    {
+        try
+        {
+            ProdKeysValidation = KeyFileValidator.ValidateProdKeys(ActualProdKeysFilePath);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Unable to validate prod.keys.");
+            ProdKeysValidation = new KeyFileValidationResult(true, 0, [], [], [0]);
+        }
+
+        try
+        {
+            TitleKeysValidation = KeyFileValidator.ValidateTitleKeys(ActualTitleKeysFilePath);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Unable to validate title.keys.");
+            TitleKeysValidation = new KeyFileValidationResult(true, 0, [], [], [0]);
+        }
     }
 
     private void UnloadCurrentKeySet()
@@ -98,7 +152,7 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
     }
 
     /// <summary>
-    /// Loads the KeySet with 
+    /// Loads the KeySet with
     /// </summary>
     /// <returns></returns>
     private KeySet LoadKeySet()
@@ -123,7 +177,7 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
                     },
                     message =>
                     {
-                        _logger.LogWarning(message);
+                        KeyReaderMessageLogger.Log(_logger, message, LocalizationManager.Instance.Current.Keys.KeysLoading_UnusedKey_Log);
                     })
             );
 
@@ -168,12 +222,12 @@ public class KeySetProviderService : NotifyPropertyChangedBase, IKeySetProviderS
         }
 
         // 2. Try to load from the current app dir
-        var appDirKeysFilePath = Path.Combine(PathHelper.CurrentAppDir, keysFileName);
+        var appDirKeysFilePath = Path.Combine(_applicationDirectory, keysFileName);
         if (File.Exists(appDirKeysFilePath))
             return appDirKeysFilePath;
 
         // 3. Check from "userHomeDir/.switch" directory
-        var homeUserDir = PathHelper.HomeUserDir;
+        var homeUserDir = _userHomeDirectory;
         if (homeUserDir != null)
         {
             var homeDirKeysFilePath = Path.Combine(homeUserDir, ".switch", keysFileName).ToFullPath();

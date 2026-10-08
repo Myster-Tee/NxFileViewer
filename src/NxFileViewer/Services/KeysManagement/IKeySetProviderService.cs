@@ -31,6 +31,12 @@ public interface IKeySetProviderService : INotifyPropertyChanged
     /// </summary>
     public string? ActualTitleKeysFilePath { get; }
 
+    /// <summary>Validation state of the currently selected prod.keys file.</summary>
+    KeyFileValidationResult ProdKeysValidation { get; }
+
+    /// <summary>Validation state of the currently selected title.keys file.</summary>
+    KeyFileValidationResult TitleKeysValidation { get; }
+
     /// <summary>
     /// Returns the KeySet
     /// </summary>

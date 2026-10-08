@@ -26,6 +26,9 @@ public class CnmtContainer
     /// </summary>
     public MainItem? MainItem { get; set; }
 
+    /// <summary>The parsed main.npdm from the program NCA, when available.</summary>
+    public NpdmItem? NpdmItem { get; set; }
+
     /// <summary>
     /// True when <see cref="SectionItem"/> of type <see cref="NcaSectionType.Code"/> is sparse, which means <see cref="MainItem"/> is normally null
     /// </summary>

@@ -8,6 +8,7 @@ using LibHac.Tools.FsSystem;
 using LibHac.Tools.Ncm;
 using System.Collections.Generic;
 using System;
+using System.IO;
 using System.Linq;
 using LibHac.Fs.Fsa;
 
@@ -39,7 +40,6 @@ public static class IFileSystemExtension
         return new Nca(keySet, new FileStorage(ncaFile));
     }
 
-
     public static IEnumerable<Cnmt> LoadCnmts(this IFileSystem fileSystem, KeySet keySet)
     {
         foreach (var cnmtFileEntry in fileSystem.FindCnmtEntries())
@@ -48,31 +48,26 @@ public static class IFileSystemExtension
 
             var nca = new Nca(keySet, new FileStorage(ncaFile));
 
-            if (nca.Header.ContentType != NcaContentType.Meta)// NOTE: this test is normally not necessary because CNMT are always of type NcaContentType.Meta
+            if (nca.Header.ContentType != NcaContentType.Meta)
                 continue;
-
 
             var cnmtEntries = nca.FindEntriesAmongSections("*.cnmt");
 
             foreach (var (sectionFileSystem, cnmtEntry) in cnmtEntries)
             {
                 var cnmtFile = sectionFileSystem.LoadFile(cnmtEntry);
-
                 var cnmt = new Cnmt(cnmtFile.AsStream());
-
                 yield return cnmt;
-
             }
         }
     }
 
     /// <summary>
     /// Loads control.nacp file contained in the specified NCA.
+    /// Transparently handles the compressed title block format introduced in newer Switch firmware,
+    /// where the flag byte at offset 0x3215 signals that the first 0x3000 bytes hold a
+    /// raw-DEFLATE-compressed blob rather than plain NacpLanguageEntry structs.
     /// </summary>
-    /// <param name="fileSystem"></param>
-    /// <param name="ncaId">The ID of the NCA of ContentType <see cref="ContentType.Control"/></param>
-    /// <param name="keySet"></param>
-    /// <returns></returns>
     public static ApplicationControlProperty? LoadNacp(this IFileSystem fileSystem, string ncaId, KeySet keySet)
     {
         var nca = fileSystem.LoadNca(ncaId, keySet);
@@ -87,12 +82,42 @@ public static class IFileSystemExtension
 
         var nacpFile = sectionFileSystem.LoadFile(nacpEntry);
 
+        // ── Read raw bytes ────────────────────────────────────────────────────────────────────
+        // We can't read directly into blitStruct.ByteSpan because we may need to decompress
+        // the title block first.  Read into a temporary buffer instead.
+        nacpFile.GetSize(out long nacpFileSize).ThrowIfFailure();
+
+        byte[] rawBytes = new byte[nacpFileSize];
+        nacpFile.Read(out _, 0, rawBytes, ReadOption.None).ThrowIfFailure();
+
+        // ── Decompress title block if the new firmware format flag is set ─────────────────────
+        // New format: flag byte at 0x3215 != 0 means the first 0x3000 bytes contain
+        //   u16 LE  compressed_size
+        //   u8[]    compressed_data[compressed_size]   (raw DEFLATE, wbits = -15)
+        // Legacy format: first 0x3000 bytes are 16 × NacpLanguageEntry structs verbatim.
+        // DecompressIfNeeded returns a buffer with the same layout as the legacy format so that
+        // LibHac's ApplicationControlProperty struct can be populated without any further changes.
+        byte[] nacpBytes;
+        try
+        {
+            nacpBytes = NacpTitleBlockDecompressor.DecompressIfNeeded(rawBytes);
+        }
+        catch (InvalidDataException)
+        {
+            // Decompression failed — fall back to raw bytes so callers can still read metadata.
+            nacpBytes = rawBytes;
+        }
+
+        // ── Populate LibHac struct ────────────────────────────────────────────────────────────
         var blitStruct = new BlitStruct<ApplicationControlProperty>(1);
-        nacpFile.Read(out _, 0, blitStruct.ByteSpan).ThrowIfFailure();
+
+        // Copy only as many bytes as the struct can hold (handles both exact-size and oversized
+        // decompressed buffers safely).
+        int copyLen = Math.Min(nacpBytes.Length, blitStruct.ByteSpan.Length);
+        nacpBytes.AsSpan(0, copyLen).CopyTo(blitStruct.ByteSpan);
 
         return blitStruct.Value;
     }
-
 
     public static IFile LoadFile(this IFileSystem fileSystem, DirectoryEntryEx directoryEntryEx, OpenMode openMode = OpenMode.Read)
     {

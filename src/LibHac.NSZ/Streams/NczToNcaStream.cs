@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using LibHac.NSZ.Utils;
 
 namespace LibHac.NSZ.Streams;
@@ -93,7 +93,7 @@ public class NczToNcaStream : Stream
             _actualNcaPosition += bh.Write(_headerBytes.AsSpan((int)_actualNcaPosition));
         }
 
-        if (bh.CanWrite)
+        if (bh.CanWrite && _actualNcaPosition < Length)
         {
 
             // Buffer not yet filled and position fall in compressed part
@@ -125,7 +125,7 @@ public class NczToNcaStream : Stream
         if (!IsPositionAllowed(newPosition, out var message))
             throw new IOException($"Seek operation leads to an invalid position: {message}");
 
-        return _actualNcaPosition;
+        return _actualNcaPosition = newPosition;
     }
 
     public override void SetLength(long value)
@@ -147,7 +147,7 @@ public class NczToNcaStream : Stream
             return false;
         }
 
-        if (position >= Length)
+        if (position > Length)
         {
             message = $"Position can't be greater or equal to stream length.";
             return false;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -54,22 +54,22 @@ public static class ItemExtension
         if (item == null)
             yield break;
 
-        var remainingItemsToVisit = new List<IItem>();
+        var remainingItemsToVisit = new Queue<IItem>();
 
         if (includeItem)
-            remainingItemsToVisit.Add(item);
+            remainingItemsToVisit.Enqueue(item);
         else
-            remainingItemsToVisit.AddRange(item.ChildItems);
+            foreach (var child in item.ChildItems) remainingItemsToVisit.Enqueue(child);
 
         while (remainingItemsToVisit.Count > 0)
         {
-            var itemTmp = remainingItemsToVisit[0];
-            remainingItemsToVisit.RemoveAt(0);
+            var itemTmp = remainingItemsToVisit.Dequeue();
+
 
             if (itemTmp is T t)
                 yield return t;
 
-            remainingItemsToVisit.AddRange(itemTmp.ChildItems);
+            foreach (var child in itemTmp.ChildItems) remainingItemsToVisit.Enqueue(child);
         }
     }
 

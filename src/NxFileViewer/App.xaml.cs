@@ -1,4 +1,5 @@
-﻿using System;
+using Emignatik.NxFileViewer.Services.Updates;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -16,10 +17,12 @@ using Emignatik.NxFileViewer.Services.FileOpening;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.GlobalEvents;
 using Emignatik.NxFileViewer.Services.Integrity;
+using Emignatik.NxFileViewer.Services.Nsz;
 using Emignatik.NxFileViewer.Services.KeysManagement;
 using Emignatik.NxFileViewer.Services.OnlineServices;
 using Emignatik.NxFileViewer.Services.Prompting;
 using Emignatik.NxFileViewer.Services.Selection;
+using Emignatik.NxFileViewer.Services.WindowPlacement;
 using Emignatik.NxFileViewer.Settings;
 using Emignatik.NxFileViewer.Styling.Theme;
 using Emignatik.NxFileViewer.Tools;
@@ -47,12 +50,23 @@ public partial class App : Application, IAppEvents
 
             .AddSingleton<IKeySetProviderService, KeySetProviderService>()
             .AddSingleton<IFileOpeningService, FileOpeningService>()
+            .AddSingleton<NszPluginManager>()
+            .AddSingleton<INszPlugin, NszCliPlugin>()
+            .AddSingleton<IConversionVerifier, ConversionVerifier>()
+            .AddSingleton<PackageConversionService>()
+            .AddSingleton<UpdateCenterViewModel>()
+            .AddSingleton<ComponentUpdateChecker>()
+            .AddSingleton<ViewerUpdateService>()
+            .AddSingleton<ViewerUpdateActions>()
+            .AddSingleton<NszActions>()
             .AddSingleton<ISelectedItemService, SelectedItemService>()
             .AddSingleton<IPromptService, PromptService>()
             .AddSingleton<IPackageInfoLoader, PackageInfoLoader>()
             .AddSingleton<IFileRenamerService, FileRenamerService>()
             .AddSingleton<IFileLocationOpenerService, FileLocationOpenerService>()
-            .AddSingleton<IOnlineTitleInfoService, OnlineTitleInfoService>()
+            .AddSingleton<OnlineTitleInfoService>()
+            .AddSingleton<IOnlineTitleInfoService>(sp => sp.GetRequiredService<OnlineTitleInfoService>())
+            .AddSingleton<ITitleDbUpdater>(sp => sp.GetRequiredService<OnlineTitleInfoService>())
             .AddSingleton<ICachedOnlineTitleInfoService, CachedOnlineTitleInfoService>()
             .AddSingleton<IOnlineTitlePageOpenerService, OnlineTitlePageOpenerService>()
             .AddSingleton<MainBackgroundTaskRunnerService>()
@@ -64,6 +78,7 @@ public partial class App : Application, IAppEvents
             .AddSingleton<ICloseFileCommand, CloseFileCommand>()
             .AddSingleton<IShowSettingsWindowCommand, ShowSettingsWindowCommand>()
             .AddSingleton<IVerifyNcasIntegrityCommand, VerifyNcasIntegrityCommand>()
+            .AddSingleton<IShowBatchIntegrityWindowCommand, ShowBatchIntegrityWindowCommand>()
             .AddSingleton<IShowItemErrorsWindowCommand, ShowItemErrorsWindowCommand>()
             .AddSingleton<ISaveTitleImageCommand, SaveTitleImageCommand>()
             .AddSingleton<ICopyImageCommand, CopyImageCommand>()
@@ -75,7 +90,12 @@ public partial class App : Application, IAppEvents
             .AddSingleton<INamingPatternsParser, NamingPatternsParser>()
             .AddSingleton<IPackageTypeAnalyzer, PackageTypeAnalyzer>()
             .AddSingleton<MainWindowViewModel>()
+            .AddSingleton<Emignatik.NxFileViewer.Services.Nand.NandCliPlugin>()
+            .AddSingleton<Emignatik.NxFileViewer.Services.Nand.NandPluginManager>()
+            .AddSingleton<Emignatik.NxFileViewer.Services.Nand.NandPluginActions>()
+            .AddSingleton<NandViewModel>()
             .AddSingleton<RenameToolWindowViewModel>()
+            .AddTransient<BatchIntegrityWindowViewModel>()
             .AddSingleton<AppSettings>()
             .AddSingleton<IAppSettings>(provider => provider.GetRequiredService<AppSettings>())
             .AddSingleton<IAppSettingsManager, AppSettingsManager>()
@@ -84,6 +104,8 @@ public partial class App : Application, IAppEvents
             .AddSingleton<IItemViewModelBuilder, ItemViewModelBuilder>()
             .AddSingleton<IFileLoader, FileLoader>()
             .AddSingleton<IBrushesProvider, BrushesProvider>()
+            .AddSingleton<IThemeService, ThemeService>()
+            .AddSingleton<IWindowPlacementService, WindowPlacementService>()
             .AddSingleton<ILocalizationFromSettingsSynchronizerService, LocalizationFromSettingsSynchronizerService>()
             .AddSingleton<IShallowCopier, ShallowCopier>()
             .AddSingleton<INcaHashService, NcaHashService>()
@@ -93,6 +115,7 @@ public partial class App : Application, IAppEvents
             .AddTransient<ISaveFileRunnable, SaveFileRunnable>()
             .AddTransient<ISaveDirectoryRunnable, SaveDirectoryRunnable>()
             .AddTransient<IVerifyNcasIntegrityRunnable, VerifyNcasIntegrityRunnable>()
+            .AddTransient<IVerifyDirectoryIntegrityRunnable, VerifyDirectoryIntegrityRunnable>()
             .AddTransient<IDownloadFileRunnable, DownloadFileRunnable>()
             .AddTransient<ISaveStorageRunnable, SaveStorageRunnable>()
             .AddTransient<IFilesRenamerRunnable, FilesRenamerRunnable>()
@@ -123,9 +146,17 @@ public partial class App : Application, IAppEvents
 
         // Loads the application settings
         ServiceProvider.GetRequiredService<IAppSettingsManager>().LoadSafe();
+        KeyDownloads.MigrateLegacyHost(ServiceProvider.GetRequiredService<IAppSettings>());
+        var titleSettings = ServiceProvider.GetRequiredService<IAppSettings>();
+        if (titleSettings.TitlePageUrl == "https://tinfoil.io/Title/{TitleId}")
+            titleSettings.TitlePageUrl = "https://tinfoil.media/Title/{TitleId}";
+        if (titleSettings.TitleInfoProvider == TitleInfoProvider.Tinfoil && titleSettings.TitleInfoApiUrl == "https://tinfoil.io/api/title/{TitleId}")
+            titleSettings.TitleInfoApiUrl = "https://tinfoil.media/api/title/{TitleId}";
+        ServiceProvider.GetRequiredService<AppLoggerProvider>().ConfigureRetention();
 
         // Initialize localization
         ServiceProvider.GetRequiredService<ILocalizationFromSettingsSynchronizerService>().Initialize();
+        ServiceProvider.GetRequiredService<IThemeService>().Initialize();
 
         LocalizationStringExtension.FormatException += OnLocalizationStringFormatException;
 
@@ -135,10 +166,13 @@ public partial class App : Application, IAppEvents
             DataContext = mainWindowViewModel
         };
         mainWindowViewModel.Window = mainWindow;
+        ServiceProvider.GetRequiredService<IThemeService>().RegisterWindow(mainWindow);
+        ServiceProvider.GetRequiredService<IWindowPlacementService>().Track(mainWindow);
 
         void MainWindowLoaded(object sender, RoutedEventArgs args)
         {
             mainWindow.Loaded -= MainWindowLoaded;
+            _ = ServiceProvider.GetRequiredService<ViewerUpdateActions>().CheckAsync(true);
             Initialize(e.Args);
         }
         mainWindow.Loaded += MainWindowLoaded;
@@ -157,24 +191,37 @@ public partial class App : Application, IAppEvents
 
         if (keySetProviderService.ActualProdKeysFilePath == null && !string.IsNullOrWhiteSpace(prodKeysDownloadUrl))
         {
-            var downloadFileRunnable = ServiceProvider.GetRequiredService<IDownloadFileRunnable>();
-            downloadFileRunnable.Setup(prodKeysDownloadUrl, keySetProviderService.AppDirProdKeysFilePath);
-            await backgroundTaskService.RunAsync(downloadFileRunnable);
-            keySetProviderService.Reset(); // To force reloading with the downloaded keys file
+            await DownloadMissingKeys(prodKeysDownloadUrl, appSettings.ProdKeysFilePath, keySetProviderService.AppDirProdKeysFilePath);
         }
 
         var titleKeysDownloadUrl = appSettings.TitleKeysDownloadUrl;
         if (keySetProviderService.ActualTitleKeysFilePath == null && !string.IsNullOrWhiteSpace(titleKeysDownloadUrl))
         {
-            var downloadFileRunnable = ServiceProvider.GetRequiredService<IDownloadFileRunnable>();
-            downloadFileRunnable.Setup(titleKeysDownloadUrl, keySetProviderService.AppDirTitleKeysFilePath);
-            await backgroundTaskService.RunAsync(downloadFileRunnable);
-            keySetProviderService.Reset(); // To force reloading with the downloaded keys file
+            await DownloadMissingKeys(titleKeysDownloadUrl, appSettings.TitleKeysFilePath, keySetProviderService.AppDirTitleKeysFilePath);
         }
 
         var fileOpeningService = ServiceProvider.GetRequiredService<IFileOpeningService>();
         if (cmdLineArgs.Count > 0)
             await fileOpeningService.SafeOpenFile(cmdLineArgs[0]);
+
+        async System.Threading.Tasks.Task DownloadMissingKeys(string template, string customPath, string programPath)
+        {
+            try
+            {
+                var url = KeyDownloads.ResolveUrl(template, appSettings.KeysDownloadHost);
+                var destination = KeyDownloads.Destination(customPath, programPath);
+                await backgroundTaskService.RunAsync(new RunnableRelay((progress, token) =>
+                {
+                    progress.SetText(LocalizationManager.Instance.Current.Keys.Status_DownloadingFile.SafeFormat(System.IO.Path.GetFileName(destination)));
+                    _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_DownloadingFileFromUrl.SafeFormat(destination, url));
+                    KeyDownloads.DownloadAsync(ServiceProvider.GetRequiredService<IHttpDownloader>(), url, destination, token).GetAwaiter().GetResult();
+                    _logger.LogInformation(LocalizationManager.Instance.Current.Keys.Log_FileSuccessfullyDownloaded.SafeFormat(destination));
+                }) { SupportsCancellation = true });
+            }
+            catch (OperationCanceledException) { }
+            catch (Exception ex) { _logger.LogWarning(ex, "Unable to download missing key file."); }
+            finally { keySetProviderService.Reset(); }
+        }
     }
 
     private void OnLocalizationStringFormatException(object? sender, FormatExceptionHandlerArgs args)
@@ -190,6 +237,9 @@ public partial class App : Application, IAppEvents
     {
         base.OnExit(e);
         NotifyAppShuttingDown();
+        var removed = Emignatik.NxFileViewer.Services.EmptyDirectoryCleanup.Clean(AppContext.BaseDirectory);
+        if (removed > 0) _logger.LogInformation("Removed {Count} empty program subdirectories on exit.", removed);
+        ServiceProvider.GetRequiredService<IAppLoggerProvider>().Dispose();
     }
 
     protected virtual void NotifyAppShuttingDown()

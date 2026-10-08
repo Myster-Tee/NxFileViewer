@@ -48,7 +48,9 @@ public class VerifyNcasIntegrityRunnable : IVerifyNcasIntegrityRunnable
         _logger.LogInformation(LocalizationManager.Instance.Current.Keys.NcaHash_VerificationStart_Log);
         try
         {
-            Verify(progressReporter, _fileOverview, cancellationToken).Wait(cancellationToken);
+            // Wait until the asynchronous hash operation has actually observed cancellation.
+            // This is important for batch mode, which disposes each package after this call returns.
+            Verify(progressReporter, _fileOverview, cancellationToken).GetAwaiter().GetResult();
         }
         finally
         {
@@ -62,6 +64,8 @@ public class VerifyNcasIntegrityRunnable : IVerifyNcasIntegrityRunnable
         // Build the list NCA items to process
         var atLeastOneNcaMissing = false;
         var ncaItemsToProcess = new List<(NcaItem, byte[]?)>();
+        if (fileOverview.RootItem is StandaloneNcaFileItem standalone)
+            ncaItemsToProcess.Add((standalone.NcaItem, null));
         foreach (var cnmtItem in fileOverview.CnmtContainers.Select(container => container.CnmtItem))
         {
             // Add the NCA of the CNMT (which is not referenced by the CNMT content entries)

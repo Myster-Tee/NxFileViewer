@@ -82,7 +82,9 @@
             <converters:NullOrEmptyStringToVisibilityConverter x:Key="StringNullOrEmptyToCollapsedVisibilityConverter" />
 
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styling/Theme/DefaultTheme.xaml" />
+                <ResourceDictionary Source="Styling/Theme/Shared.xaml" />
+                <ResourceDictionary Source="Styling/Theme/LightTheme.xaml" />
+                <ResourceDictionary Source="Styling/CommonControlsStyle.xaml" />
 
                 <ResourceDictionary Source="Styling/TextBoxStyle.xaml" />
                 <ResourceDictionary Source="Styling/TextBlockStyle.xaml" />

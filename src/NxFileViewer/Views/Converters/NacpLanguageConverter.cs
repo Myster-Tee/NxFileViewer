@@ -12,23 +12,41 @@ public class NacpLanguageConverter : ValueConverterBase<string, NacpLanguage>
     {
         return value switch
         {
-            NacpLanguage.AmericanEnglish => LocalizationManager.Instance.Current.Keys.Lng_AmericanEnglish,
-            NacpLanguage.BritishEnglish => LocalizationManager.Instance.Current.Keys.Lng_BritishEnglish,
-            NacpLanguage.Japanese => LocalizationManager.Instance.Current.Keys.Lng_Japanese,
-            NacpLanguage.French => LocalizationManager.Instance.Current.Keys.Lng_French,
-            NacpLanguage.German => LocalizationManager.Instance.Current.Keys.Lng_German,
+            NacpLanguage.AmericanEnglish      => LocalizationManager.Instance.Current.Keys.Lng_AmericanEnglish,
+            NacpLanguage.BritishEnglish       => LocalizationManager.Instance.Current.Keys.Lng_BritishEnglish,
+            NacpLanguage.Japanese             => LocalizationManager.Instance.Current.Keys.Lng_Japanese,
+            NacpLanguage.French               => LocalizationManager.Instance.Current.Keys.Lng_French,
+            NacpLanguage.German               => LocalizationManager.Instance.Current.Keys.Lng_German,
             NacpLanguage.LatinAmericanSpanish => LocalizationManager.Instance.Current.Keys.Lng_LatinAmericanSpanish,
-            NacpLanguage.Spanish => LocalizationManager.Instance.Current.Keys.Lng_Spanish,
-            NacpLanguage.Italian => LocalizationManager.Instance.Current.Keys.Lng_Italian,
-            NacpLanguage.Dutch => LocalizationManager.Instance.Current.Keys.Lng_Dutch,
-            NacpLanguage.CanadianFrench => LocalizationManager.Instance.Current.Keys.Lng_CanadianFrench,
-            NacpLanguage.Portuguese => LocalizationManager.Instance.Current.Keys.Lng_Portuguese,
-            NacpLanguage.Russian => LocalizationManager.Instance.Current.Keys.Lng_Russian,
-            NacpLanguage.Korean => LocalizationManager.Instance.Current.Keys.Lng_Korean,
-            NacpLanguage.TraditionalChinese => LocalizationManager.Instance.Current.Keys.Lng_TraditionalChinese,
-            NacpLanguage.SimplifiedChinese => LocalizationManager.Instance.Current.Keys.Lng_SimplifiedChinese,
-            NacpLanguage.BrazilianPortuguese => LocalizationManager.Instance.Current.Keys.Lng_BrazilianPortuguese,
-            _ => LocalizationManager.Instance.Current.Keys.Lng_Unknown
+            NacpLanguage.Spanish              => LocalizationManager.Instance.Current.Keys.Lng_Spanish,
+            NacpLanguage.Italian              => LocalizationManager.Instance.Current.Keys.Lng_Italian,
+            NacpLanguage.Dutch                => LocalizationManager.Instance.Current.Keys.Lng_Dutch,
+            NacpLanguage.CanadianFrench       => LocalizationManager.Instance.Current.Keys.Lng_CanadianFrench,
+            NacpLanguage.Portuguese           => LocalizationManager.Instance.Current.Keys.Lng_Portuguese,
+            NacpLanguage.Russian              => LocalizationManager.Instance.Current.Keys.Lng_Russian,
+            NacpLanguage.Korean               => LocalizationManager.Instance.Current.Keys.Lng_Korean,
+            NacpLanguage.TraditionalChinese   => LocalizationManager.Instance.Current.Keys.Lng_TraditionalChinese,
+            NacpLanguage.SimplifiedChinese    => LocalizationManager.Instance.Current.Keys.Lng_SimplifiedChinese,
+            NacpLanguage.BrazilianPortuguese  => LocalizationManager.Instance.Current.Keys.Lng_BrazilianPortuguese,
+
+            // Extended languages — no localization keys yet, use readable name directly
+            NacpLanguage.Polish               => "Polish",
+            NacpLanguage.Thai                 => "Thai",
+            NacpLanguage.Indonesian           => "Indonesian",
+            NacpLanguage.Romanian             => "Romanian",
+            NacpLanguage.Vietnamese           => "Vietnamese",
+            NacpLanguage.Arabic               => "Arabic",
+            NacpLanguage.Ukrainian            => "Ukrainian",
+            NacpLanguage.Czech                => "Czech",
+            NacpLanguage.Slovak               => "Slovak",
+            NacpLanguage.Greek                => "Greek",
+            NacpLanguage.Hungarian            => "Hungarian",
+            NacpLanguage.Norwegian            => "Norwegian",
+            NacpLanguage.Finnish              => "Finnish",
+            NacpLanguage.Swedish              => "Swedish",
+            NacpLanguage.Danish               => "Danish",
+
+            _                                 => LocalizationManager.Instance.Current.Keys.Lng_Unknown
         };
     }
 

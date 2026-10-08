@@ -42,6 +42,8 @@ public class NczBlockDecompressionStream : Stream
     public override int Read(byte[] buffer, int offset, int count)
     {
         var bh = new BufferHelper(buffer, offset, count);
+        if (!bh.CanWrite)
+            return 0;
         do
         {
             if (!TryReadBlockFromPosition(_position, out var blockBuffer))
@@ -90,7 +92,9 @@ public class NczBlockDecompressionStream : Stream
             return true;
 
         // Search for the block corresponding to the current position
-        blockInfo = _blocks.FirstOrDefault(cb => cb.ContainsDecompressedOffset(position));
+        var blockIndex = position >> _nczBlockCompressionHeader.BlockSizeExponent;
+        blockInfo = position >= 0 && position < Length && blockIndex < _blocks.Length
+            ? _blocks[(int)blockIndex] : null;
         if (blockInfo == null)
         {
             blockBuffer = null;
@@ -105,12 +109,23 @@ public class NczBlockDecompressionStream : Stream
         int nbRead;
         if (blockInfo.IsCompressed)
         {
-            using var decompressionStream = new DecompressionStream(_nczStream);
+            // NSZ #191: a decoder must never consume bytes belonging to the next block.
+            using var compressedBlock = new BlockReadStream(_nczStream, blockInfo.CompressedBlockSize);
+            using var decompressionStream = new DecompressionStream(compressedBlock, leaveOpen: true);
             nbRead = decompressionStream.FillBuffer(blockBuffer, 0, blockBuffer.Length);
+            if (decompressionStream.ReadByte() != -1)
+                throw new NczFormatException("Decompressed block exceeds its declared size.");
         }
         else
         {
-            nbRead = _nczStream.Read(blockBuffer);
+            nbRead = 0;
+            while (nbRead < blockBuffer.Length)
+            {
+                var read = _nczStream.Read(blockBuffer.AsSpan(nbRead));
+                if (read == 0)
+                    break;
+                nbRead += read;
+            }
         }
 
         if (nbRead != blockInfo.DecompressedBlockSize)
@@ -164,6 +179,27 @@ public class NczBlockDecompressionStream : Stream
         get => _blocksCacheManager.MaxSize;
         set => _blocksCacheManager.MaxSize = value;
     }
+
+    private sealed class BlockReadStream(Stream source, long length) : Stream
+    {
+        private long _remaining = length;
+        public override int Read(byte[] buffer, int offset, int count) => Read(buffer.AsSpan(offset, count));
+        public override int Read(Span<byte> buffer)
+        {
+            var read = source.Read(buffer[..(int)Math.Min(buffer.Length, _remaining)]);
+            _remaining -= read;
+            return read;
+        }
+        public override bool CanRead => true;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+        public override void Flush() { }
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+    }
 }
 
 
@@ -183,6 +219,10 @@ public static class BlocksBuilder
         if (blockSizeExponent < 14 || blockSizeExponent > 32)
             throw new NczFormatException($"Block size exponent must be between 14 and 32, found {blockSizeExponent}.");
         var decompressedBlockSize = 1L << blockSizeExponent;
+        var size = nczBlockCompressionHeader.DecompressedSize;
+        var expectedBlocks = size / decompressedBlockSize + (size % decompressedBlockSize == 0 ? 0 : 1);
+        if (size < 0 || expectedBlocks != nczBlockCompressionHeader.CompressedBlockSizes.Length)
+            throw new NczFormatException("NCZ block count doesn't match decompressed size.");
 
         if (decompressedBlockSize < 1)
             throw new NczFormatException($"Decompressed block size can't be less than 1, found {decompressedBlockSize}.");
@@ -213,6 +253,9 @@ public static class BlocksBuilder
                     throw new NczFormatException($"Decompressed block end offset {decompressedOffsetEnd} fall outside of decompressed data size {nczBlockCompressionHeader.DecompressedSize}.");
             }
 
+            if (compressedBlockSize > decompressedBlockSize)
+                throw new NczFormatException("Compressed block size exceeds decompressed block size.");
+
             var blockInfo = new BlockInfo
             {
                 BlockIndex = index,
@@ -220,6 +263,7 @@ public static class BlocksBuilder
                 DecompressedOffsetEnd = decompressedOffsetEnd,
                 DecompressedBlockSize = decompressedBlockSize,
                 CompressedOffsetStart = compressedOffset,
+                CompressedBlockSize = compressedBlockSize,
                 IsCompressed = compressedBlockSize < decompressedBlockSize,
             };
 
@@ -261,6 +305,8 @@ public class BlockInfo
     /// The offset at which starts this block, relative to the beginning of the compressed data (<see cref="NczHeader.CompressionStartOffset"/>)
     /// </summary>
     public long CompressedOffsetStart { get; init; }
+
+    public int CompressedBlockSize { get; init; }
 
     /// <summary>
     /// True if block is compressed, false otherwise
@@ -341,6 +387,8 @@ public class BlocksCacheManager
             throw new ArgumentNullException(nameof(blockInfo));
         if (blockBuffer == null)
             throw new ArgumentNullException(nameof(blockBuffer));
+        if (_maxSize == 0)
+            return false;
 
         if (_cachedBlocks.Any(a => ReferenceEquals(a.Item1, blockInfo)))
             // Block already cached

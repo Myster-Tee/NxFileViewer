@@ -1,5 +1,8 @@
-﻿using System;
+using System;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.Windows;
+using Emignatik.NxFileViewer.Services.FileRenaming.Models;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Logging;
@@ -32,10 +35,16 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
         BackgroundTask = backgroundTaskRunner ?? throw new ArgumentNullException(nameof(backgroundTaskRunner));
         RenameCommand = renameFilesCommand ?? throw new ArgumentNullException(nameof(renameFilesCommand));
         RenameCommand.BackgroundTaskRunner = BackgroundTask;
-        RenameCommand.Logger = _loggerSource;
+        RenameCommand.Started += () => Results.Clear();
+        RenameCommand.ResultReported += result => Application.Current.Dispatcher.Invoke(() => Results.Add(result));
 
         CancelCommand = new RelayCommand(Cancel);
         BrowseInputDirectoryCommand = new RelayCommand(BrowseInputDirectory);
+        BrowseTargetDirectoryCommand = new RelayCommand(() =>
+        {
+            var selected = _promptService.PromptSelectDir(LocalizationManager.Instance.Current.Keys.RenamingTool_TargetDirectory);
+            if (selected != null) TargetDirectory = selected;
+        });
 
         _appSettings.RenamingOptions.PropertyChanged += OnRenamingOptionsPropertyChanged;
 
@@ -43,6 +52,8 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
         UpdatePatchPatternParts();
         UpdateAddonPatternParts();
     }
+
+    public ObservableCollection<RenamingResult> Results { get; } = new();
 
     public IBackgroundTaskRunner BackgroundTask { get; }
 
@@ -53,6 +64,12 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
     public RelayCommand CancelCommand { get; }
 
     public RelayCommand BrowseInputDirectoryCommand { get; }
+    public RelayCommand BrowseTargetDirectoryCommand { get; }
+    public string TargetDirectory
+    {
+        get => _appSettings.RenamingOptions.TargetDirectory;
+        set { _appSettings.RenamingOptions.TargetDirectory = value; NotifyPropertyChanged(); }
+    }
 
     public string ApplicationPattern
     {
@@ -116,6 +133,8 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
 
     private void OnRenamingOptionsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName == nameof(IRenamingOptions.TargetDirectory))
+            NotifyPropertyChanged(nameof(TargetDirectory));
         if (e.PropertyName == nameof(IRenamingOptions.ApplicationPattern))
         {
             UpdateApplicationPatternParts();
@@ -183,9 +202,11 @@ public class RenameToolWindowViewModel : WindowViewModelBase, IFilesDropped
             RenameCommand.InputPath = selectedDir;
     }
 
+    public Action? EditingCompleted { get; set; }
+
     private void Cancel()
     {
-        this.Window?.Close();
+        EditingCompleted?.Invoke();
     }
 
     public void OnFilesDropped(string[] files)

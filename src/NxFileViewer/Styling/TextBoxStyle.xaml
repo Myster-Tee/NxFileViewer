@@ -1,7 +1,11 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style TargetType="TextBox">
+        <Setter Property="Background" Value="{DynamicResource TextBox.Static.Background}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBox.Static.Foreground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextBox.Static.Border}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource TextBox.Static.Foreground}" />
     </Style>
 
     <Style TargetType="TextBox" x:Key="ReadOnlyTextBox" BasedOn="{StaticResource {x:Type TextBox}}">

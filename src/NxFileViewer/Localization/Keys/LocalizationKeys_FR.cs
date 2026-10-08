@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Emignatik.NxFileViewer.Utils.MVVM.Localization;
 using LibHac.Ncm;
 
@@ -6,22 +6,196 @@ namespace Emignatik.NxFileViewer.Localization.Keys;
 
 public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
 {
+    public string Nand_Detected => "Signatures NAND détectées. Intégrité non vérifiée.";
+    public string Nand_NameCandidate => "Candidat NAND identifié par le nom du fichier. Consultez les informations NAND pour confirmer et obtenir les détails.";
+    public string Nand_Installed => "Plugin NxNandManager installé";
+    public string Nand_CustomUpdate => "Effacez puis appliquez le chemin EXE personnalisé pour utiliser les téléchargements gérés.";
+    public string Nand_Updating => "Téléchargement et vérification de NxNandManager…";
+    public string Nand_Open => "Ouvrir un dump NAND…";
+    public string Nand_Info => "Informations NAND";
+    public string Nand_Export => "Exporter la partition…";
+    public string Nand_SettingsTip => "Laissez le chemin EXE vide pour les téléchargements gérés dans Paramètres → Updates → Plugins → NxNandManager. Un EXE personnalisé reste inchangé.";
+    public string Nand_BisKeys => "Fichier de clés BIS (facultatif ; vide = prod.keys actif de NxFileViewer)";
+    public string Nand_Tip => "Ouvrez un dump NAND (premier fichier pour un dump fractionné). L’export copie la partition telle quelle, sans déchiffrement. Configurez NxNandManager dans Paramètres → Plugins.";
+    public string Nand_NewTarget => "Choisissez un nouveau fichier local. Les fichiers existants ne peuvent pas être remplacés.";
+    public string Nand_SourceMissing => "Le fichier source NAND est absent ou n’est pas local.";
+    public string Nand_NotInstalled => "NxNandManager non installé. Installez-le dans Paramètres → Updates → Plugins.";
+    public string Nand_KeysMissing => "Le fichier de clés BIS configuré est introuvable.";
+    public string Nand_ExportFailed => "NxNandManager n’a pas produit de fichier de partition non vide.";
+    public string Nand_ExportDone => "Partition exportée.";
+    public string Nand_Cancelled => "Annulé ou délai de la requête d’informations dépassé.";
+    public string DataUpdate_Firmware => "Références firmware";
+    public string DataUpdate_Title => "Mises à jour";
+    public string DataUpdate_Titles => "Actualiser TitleDB";
+    public string BatchNaming_Unchecked => "Non vérifié";
+    public string DataUpdate_LocalFirmwareVersion => "Références locales jusqu'au firmware {0}.";
+    public string DataUpdate_NoLocalFirmware => "Aucune référence locale de firmware installée.";
+    public string DataUpdate_TitleCatalogDate => "TitleDB {0} : cache local actualisé le {1}.";
+    public string DataUpdate_TitleCatalogMissing => "TitleDB {0} : aucun catalogue local.";
+    public string DataUpdate_OnlineFirmwareVersion => "Références en ligne jusqu'au firmware {0}.";
+    public string Keys_ExistingValidation => "Fichier existant :";
+    public string Keys_IncomingValidation => "Nouveau fichier :";
+    public string Keys_ReplaceDownloaded => "Utiliser les clés téléchargées et remplacer le fichier existant ?";
+    public string Keys_SaveTicketKeys => "Enregistrer les clés de ticket manquantes dans title.keys";
+    public string Keys_TicketConflict => "Conflit de clé de ticket pour {0} dans {1} : entrée existante conservée.";
+    public string Keys_TicketSaved => "Clé de ticket pour {0} enregistrée dans {1}.";
+    public string Tinfoil_StabilityHint => "Tinfoil peut être temporairement indisponible ou instable. En cas d echec, réessayez plus tard ou choisissez une autre source.";
+    public string DataUpdate_TitleTip => "Actualise GitHub TitleDB pour la région enregistrée et US dans le dossier du programme. Le fournisseur sélectionné reste inchangé.";
+    public string DataUpdate_FirmwareTip => "Les vérifications téléchargent les références sans cache permanent. Seul le bouton séparé enregistre le paquet hors ligne et sauvegarde les anciennes références.";
+    public string DataUpdate_CheckFirmware => "Vérifier les références en ligne";
+    public string DataUpdate_SaveFirmware => "Actualiser les références hors ligne";
+    public string DataUpdate_Working => "Actualisation…";
+    public string DataUpdate_TitlesDone => "TitleDB {0} actualisée : {1} entrées avec US.";
+    public string DataUpdate_FirmwareSaved => "Références hors ligne actualisées : {0} fichiers.";
+    public string DataUpdate_FirmwareChecked => "Références en ligne vérifiées : {0} fichiers, rien enregistré.";
+    public string Update_Title => "Mises à jour du programme";
+    public string Update_IncludePrereleases => "Inclure les préversions dans les mises à jour du programme";
+    public string Update_Prerelease => "Préversion";
+    public string Update_Auto => "Rechercher les mises à jour au démarrage";
+    public string Update_Check => "Rechercher les mises à jour";
+    public string Update_Install => "Télécharger et installer";
+    public string Update_Checking => "Recherche de mises à jour…";
+    public string Update_Current => "Aucune version publiée plus récente.";
+    public string Component_UpdateAvailable => "Mise à jour disponible.";
+    public string Component_NotInstalled => "Non installé.";
+    public string Component_CustomVersion => "Version personnalisée : vérification automatique indisponible.";
+    public string Update_Available => "La version {0} est disponible.";
+    public string Update_Failed => "Échec de la mise à jour.";
+    public string Update_Confirm => "Télécharger et installer la version {0} ? NxFileViewer redémarrera. Les clés, paramètres et plugins sont conservés.";
+    public string Update_Downloading => "Téléchargement et vérification…";
+    public string Update_Installing => "Installation…";
+    public string Update_Cancelled => "Mise à jour annulée.";
+    public string Nsz_Mode => "Mode de compression";
+    public string Nsz_ModeAuto => "Automatique (NSZ : solid, XCZ : blocs)";
+    public string Nsz_ModeSolid => "Solid / sans blocs";
+    public string Nsz_ModeBlock => "Compression par blocs";
+    public string Nsz_BlockSize => "Taille des blocs";
+    public string Nsz_ModeTip => "Solid compresse un peu mieux. Les blocs permettent des lectures rapides en arrière et aléatoires. Ces options concernent uniquement la compression.";
+    public string Workspace_Plugins => "Plugins";
+    public string Workspace_Home => "Accueil";
+    public string Workspace_File => "Vérification de fichier";
+    public string Workspace_Menu => "Menu principal";
+    public string Nsz_Replace => "Remplacer";
+    public string Nsz_Number => "Enregistrer avec un numéro";
+    public string TitlePage_Custom => "Personnalisée";
+    public string Info_WithRuntime => "Avec .NET intégré";
+    public string Info_WithoutRuntime => "Sans .NET intégré — nécessite .NET 8 Desktop Runtime";
+    public string Info_Description => "NxFileViewer affiche et vérifie les fichiers Nintendo Switch : NSP, NSZ, XCI, XCZ, NCA, ZIP et 7z, le firmware et la conversion NSZ.";
+    public string Info_Shortcuts => "Raccourcis clavier";
+    public string BatchHistory_Show => "Afficher";
+    public string BatchHistory_Title => "5 dernières vérifications";
+    public string BatchHistory_Resume => "Reprendre";
+    public string Dialog_Yes => "Oui";
+    public string Dialog_No => "Non";
+    public string Nsz_Cancel => "Annuler";
+    public string Nsz_DeleteSourcePrompt => "Supprimer les sources après conversion et vérification réussies ? Elles sont conservées en cas d’échec.";
+    public string Nsz_SourceDeleted => "Source supprimée";
+    public string Nsz_SourceDeleteFailed => "Impossible de supprimer la source";
+    public string Nsz_Compress => "Compresser et vérifier…";
+    public string Nsz_Decompress => "Décompresser et vérifier…";
+    public string Nsz_CompressValid => "Compresser les fichiers valides…";
+    public string Nsz_DecompressValid => "Décompresser les fichiers valides…";
+    public string Nsz_Update => "Installer / mettre à jour le plugin…";
+    public string Nsz_Rollback => "Utiliser la version précédente";
+    public string Nsz_SelectDestination => "Choisir le dossier de destination";
+    public string Nsz_PythonRuntimeFailed => "NSZ ne peut pas charger sa DLL Python intégrée. Le démarrage échoue avant la vérification des clés ou fichiers. Choisissez une autre CLI NSZ fonctionnelle dans Paramètres → Plugin nicoboss/nsz.";
+    public string Nsz_NotInstalled => "Plugin nicoboss/nsz non installé.";
+    public string Nsz_Updating => "Mise à jour du plugin NSZ…";
+    public string Nsz_SourceSize => "Taille originale (octets)";
+    public string Nsz_OutputSize => "Taille finale (octets)";
+    public string Nsz_Verified => "Résultat vérifié";
+    public string Nsz_Summary => "{0} convertis et vérifiés ; {1} échecs ; {2} non traités. Les originaux sont conservés.";
+    public string Nsz_SettingsTip => "Chemin facultatif de la CLI NSZ. Laisser vide pour gérer automatiquement les versions officielles. Source et résultat sont vérifiés ; les originaux sont conservés.";
+    public string Nsz_CheckUpdates => "Rechercher les mises à jour stables avant conversion";
+    public string Nsz_Level => "Niveau de compression (1–22)";
+    public string Nsz_OutputExists => "Le fichier cible existe déjà :";
+    public string Nsz_SourceInvalid => "Échec de vérification de la source :";
+    public string Nsz_OutputInvalid => "Échec de vérification du résultat :";
+    public string Nsz_OutputMissing => "NSZ n’a pas créé le fichier attendu.";
+    public string Nsz_KeysMissing => "Aucun fichier prod.keys chargé.";
+    public string Nsz_Incompatible => "Cette CLI NSZ ne prend pas en charge les options requises.";
+    public string Nsz_OfflineFallback => "Mise à jour indisponible ; utilisation de la version NSZ installée.";
+    public string Firmware_NoReferences => "Empreintes indisponibles : GitHub inaccessible et références locales absentes ou invalides.";
+    public string Firmware_LoadingOnline => "Chargement des empreintes depuis GitHub…";
+    public string Firmware_OnlineSource => "Source : GitHub (chargée pour cette vérification).";
+    public string Firmware_OfflineSource => "GitHub indisponible. Empreintes fournies utilisées ; des firmwares récents peuvent manquer.";
+    public string Firmware_BrowseZip => "Choisir un ZIP / 7z…";
+    public string Firmware_NcaMatches => "Cette NCA figure dans les versions suivantes :";
+    public string Firmware_Versions => "Version(s) du firmware";
+    public string Firmware_Title => "Vérification du firmware";
+    public string Firmware_Unknown => "Aucune référence de firmware correspondante.";
+    public string Firmware_Summary => "{0}/{1} fichiers valides ; manquants : {2}, modifiés : {3}, supplémentaires : {4}, doublons : {5}.";
+    public string Firmware_Missing => "Manquant";
+    public string Firmware_Changed => "Modifié (taille/SHA-256)";
+    public string Firmware_Renamed => "Nom incorrect (contenu identique)";
+    public string Firmware_RenamedSummary => "Noms incorrects : {0}.";
+    public string Firmware_Extra => "NCA supplémentaire";
+    public string Firmware_Duplicate => "Nom en double";
+
     public override bool IsFallback => true;
     public override string DisplayName => "Français";
     public override string CultureName => "fr-FR";
     public override string LanguageAuto => "Automatique";
 
     public string FileNotSupported_Log => "Fichier «{0}» non supporté.";
-    public string OpenFile_Filter => "Fichiers Nintendo Switch (*.nsp;*.nsz;*.xci;*.xcz)|*.nsp;*.nsz;*.xci;*.xcz|Tous les fichiers (*.*)|*.*";
-    public string MenuItem_File => "_Fichier";
-    public string MenuItem_Open => "_Ouvrir...";
+    public string OpenFile_Filter => "Fichiers Nintendo Switch (*.nsp;*.nsz;*.xci;*.xcz;*.nca;*.zip;*.7z;*.bin;*.img;*.00)|*.nsp;*.nsz;*.xci;*.xcz;*.nca;*.zip;*.7z;*.bin;*.img;*.00|Paquets de jeux Switch (*.nsp;*.nsz;*.xci;*.xcz)|*.nsp;*.nsz;*.xci;*.xcz|Archives (*.zip;*.7z)|*.zip;*.7z|Fichiers de contenu Switch (*.nca)|*.nca|Images NAND et dumps fractionnés (*.bin;*.img;*.00)|*.bin;*.img;*.00|Tous les fichiers (*.*)|*.*";
+    public string MenuItem_File => "Fichier";
+    public string MenuItem_Open => "Ouvrir...";
     public string MenuItem_OpenLast => "Ouvrir le _dernier";
-    public string MenuItem_Close => "_Fermer";
+    public string MenuItem_Close => "Fermer";
     public string MenuItem_Exit => "Q_uitter";
-    public string MenuItem_Tools => "_Outils";
+    public string MenuItem_Tools => "Outils";
     public string MenuItem_CheckIntegrity => "Vérifier l'_intégrité";
-    public string MenuItem_Options => "_Options";
-    public string MenuItem_Settings => "_Paramètres";
+    public string MenuItem_CheckDirectoryIntegrity => "Vérifier l’intégrité du dossier…";
+    public string BatchNaming_Title => "Nommage";
+    public string BatchNaming_Matches => "Conforme";
+    public string BatchNaming_Differs => "Non conforme";
+    public string BatchNaming_Check => "Vérifier les noms";
+    public string BatchNaming_RenameAll => "Renommer les fichiers non conformes";
+    public string BatchNaming_Error => "Erreur de nommage";
+    public string BatchIntegrity_Title => "Vérification d’intégrité par lot";
+    public string BatchIntegrity_SelectDirectory => "Sélectionner le dossier des fichiers Switch";
+    public string BatchIntegrity_Browse => "Parcourir…";
+    public string BatchIntegrity_IncludeSubdirectories => "Inclure les sous-dossiers";
+    public string BatchTable_Columns => "Colonnes…";
+    public string BatchTable_Search => "Rechercher";
+    public string BatchTable_All => "Tous";
+    public string BatchTable_ResetFilters => "Réinitialiser les filtres";
+    public string BatchTable_ResetSort => "Réinitialiser le tri";
+    public string BatchIntegrity_File => "Fichier";
+    public string BatchIntegrity_Path => "Chemin";
+    public string BatchIntegrity_Error => "Erreur";
+    public string BatchIntegrity_NszDataCorrupted => "Le flux de données NSZ/NCZ compressé est endommagé ou incomplet (échec de la décompression Zstandard).";
+    public string BatchIntegrity_IntegrityFailed => "La vérification d'intégrité n'a pas pu être terminée. Consultez le journal pour plus de détails.";
+    public string PackageStructure_Filesystem => "Système de fichiers";
+    public string Signature_Title => "Signature NCA";
+    public string Signature_Passed => "Réussie";
+    public string Signature_NotPassed => "Échouée";
+    public string Signature_Unchecked => "Non vérifiée";
+    public string ToolTip_PackageStructure => "Structure selon Nx Game Info :\nScene (XCI) : partitions Update, Normal et Secure.\nConverti (XCI) : uniquement Secure ; typique de NSP → XCI.\nScene (NSP) : legalinfo.xml, nacp.xml, programinfo.xml et cardspec.xml ; typique des releases BBB.\nHomebrew (NSP) : authoringtoolinfo.xml présent.\nCDN (NSP) : certificat (.cert) et ticket (.tik) ; typique des dumps eShop CDN.\nConverti (NSP) : sans certificat ni ticket ; typique de XCI → NSP.\nSystème de fichiers : titres NAX0 installés sur une carte SD Switch.\nIncomplet : contenus NCA uniquement. NSZ/XCZ suivent les règles du paquet correspondant ; NCZ compte comme NCA.";
+    public string ToolTip_NcaSignature => "Réussie : signatures NCA valides, attendues pour les titres officiels.\nÉchouée : au moins une signature NCA invalide ; possible pour les homebrews, anormal pour les titres officiels.\nNon vérifiée : vérification NCA non terminée. Lancez le contrôle d’intégrité.\nCette indication concerne les en-têtes NCA ; ACID est une signature NPDM distincte.";
+    public string ToolTip_Permission => "Sûr : aucun accès aux services de fichiers ou bit 0x8000000000000000 absent.\nNon sûr : accès aux services de fichiers et bit 0x8000000000000000 présent (EraseMmc).\nDangereux : accès aux services de fichiers et masque 0xffffffffffffffff (toutes les permissions).\nNon sûr/Dangereux ne devrait concerner que les homebrews. Disponible uniquement pour les jeux de base et mises à jour. Ce classement ne constitue pas une évaluation complète de sécurité.";
+    public string ToolTip_AcidSignature => "Signature de la section ACID de main.npdm, indépendante de la signature de l’en-tête NCA.";
+    public string PackageStructure_Title => "Structure du paquet";
+    public string PackageStructure_Scene => "Version Scene";
+    public string PackageStructure_Cdn => "Copie CDN";
+    public string PackageStructure_Converted => "Converti";
+    public string PackageStructure_Homebrew => "Homebrew";
+    public string PackageStructure_Incomplete => "Incomplet";
+    public string PackageStructure_Unknown => "Inconnu";
+    public string FileInfo_FileSize => "Taille du fichier";
+    public string FileInfo_CompressionRatio => "Taux de compression";
+    public string FileInfo_Uncompressed => "décompressé";
+    public string FileInfo_SystemUpdate => "Mise à jour système incluse (XCI)";
+    public string BatchIntegrity_Export => "Exporter CSV…";
+    public string BatchIntegrity_Start => "Démarrer";
+    public string BatchIntegrity_OpenSelected => "Ouvrir dans la vérification de fichier";
+    public string BatchIntegrity_MoveSelected => "Déplacer…";
+    public string BatchIntegrity_MoveValid => "Déplacer les fichiers valides…";
+    public string BatchIntegrity_SelectMoveDestination => "Sélectionner la destination des fichiers valides";
+    public string BatchIntegrity_Moving => "Déplacement";
+    public string MenuItem_Options => "Options";
+    public string MenuItem_Settings => "Paramètres";
     public string MenuItem_ReloadKeys => "Recharger les clés";
     public string MenuItem_OpenTitleWebPage => "Ouvrir la page Web du titre...";
     public string MenuItem_ShowRenameToolWindow => "Outil de renommage...";
@@ -33,6 +207,15 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string AvailableLanguages => "Langues";
     public string AppTitle => "Titre";
     public string Publisher => "Editeur";
+    public string Security_Title => "Sécurité du programme";
+    public string Security_Level => "Évaluation";
+    public string Security_FileSystemPermissions => "Autorisations du système de fichiers";
+    public string Security_AcidSignature => "Signature ACID";
+    public string Security_Safe => "Sûr";
+    public string Security_Unsafe => "Non sûr";
+    public string Security_Dangerous => "Dangereux";
+    public string Security_Unavailable => "Indisponible";
+    public string Security_Details => "Services autorisés ({0}) : {1}";
 
     public string Lng_AmericanEnglish => "Americain";
     public string Lng_BritishEnglish => "Anglais";
@@ -60,12 +243,24 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string SettingsView_Title_KeysEffectiveFilePath => "Chemin effectif";
     public string SettingsView_Title_KeysCustomFilePath => "Chemin personnalisé";
     public string SettingsView_Title_KeysDownloadUrl => "URL de téléchargement";
+    public string KeysValidation_MissingFile => "Aucun fichier trouvé.";
+    public string KeysValidation_ValidEntries => "Valide ({0} entrées).";
+    public string KeysValidation_MissingMasterKeys => "Clés principales manquantes : {0}.";
+    public string CnmtOverview_BaseTitleId => "ID du titre de base";
+    public string CnmtOverview_MasterKey => "Clé principale requise";
+    public string CnmtOverview_MinimumApplicationVersion => "Version minimale de l'application (DLC)";
+    public string CnmtOverview_Distribution => "Distribution";
+    public string KeysValidation_InvalidMasterKeys => "Clés principales non valides : {0}.";
+    public string KeysValidation_InvalidLines => "Lignes mal formées : {0}.";
+    public string KeysValidation_EmptyFile => "Le fichier ne contient aucune entrée valide.";
+    public string KeysValidation_FirmwareEstimate => "Révision valide la plus élevée : {0} — prend en charge les contenus jusqu'au firmware {1}.";
+    public string KeysValidation_UnsupportedMasterKeys => "Nouvelle révision de clé principale détectée : {0}. Cette version du programme ne peut pas encore la valider ni l'associer à un firmware ; une mise à jour est nécessaire.";
     public string SettingsView_ToolTip_Keys => """
                                                Les clés sont obligatoires pour pouvoir ouvrir des fichiers Nintendo Switch chiffrés (XCI, NSP, ...).
                                                Chaque fichier Nintendo Switch officiel est chiffré avec des clés spéciques à la version du firmware pour lequel il a été construit.
 
                                                Afin de pouvoir ouvrir n'importe quel fichier sans erreur, veuillez vous assurer de toujours posséder un fichier "prod.keys" contenant l'ensemble de toutes les clés de tous les firmwares existants.
-                                               
+
                                                Les fichiers de clé doivent contenir une clé par ligne, sous la forme «NOM_CLE = VALEUR_HEXADECIMAL»."
                                                """;
 
@@ -75,7 +270,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
                                                        1. le chemin défini par ce paramètre
                                                        2. le répertoire courant du programme
                                                        3. le dossier «%UserProfile%\\.switch»
-                                                   
+
                                                    Au démarrage, le programme peut automatiquement télécharger le fichier de clés quand aucun n'est trouvé sur le système.
                                                    Le fichier de clés sera téléchargé dans le répertoire courant de l'application.
                                                    """;
@@ -86,16 +281,18 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
                                                         1. le chemin défini par ce paramètre
                                                         2. le répertoire courant du programme
                                                         3. le dossier «%UserProfile%\\.switch»
-                                                    
+
                                                     Au démarrage, le programme peut automatiquement télécharger le fichier de clés quand aucun n'est trouvé sur le système.
                                                     Le fichier de clés sera téléchargé dans le répertoire courant de l'application.
                                                     """;
 
+    public string SettingsView_LogFileRetention => "Conserver les journaux (1–100 lancements)";
     public string SettingsView_LogLevel => "Niveau de log";
     public string SettingsView_ToolTip_LogLevel => "Le niveau de log indique à partir de quel niveau les messages sont logués.";
     public string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen => "Toujours recharger les clés avant l'ouverture d'un fichier";
     public string SettingsView_CheckBox_InjectTicketKeys => "Injecter les clés depuis les fichiers ticket (*.tik)";
     public string SettingsView_Title_Language => "Langue";
+    public string SettingsView_Title_Theme => "Thème";
     public string SettingsView_Title_NczOptions => "Paramètres NSZ/XCZ";
     public string SettingsView_ToolTip_NczBlockLessCompression => """
                                                                   Les fichiers NSZ ou XCZ sont composés de fichiers NCZ qui sont des fichiers NCA compressés.
@@ -122,7 +319,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
 
     public string BrowseKeysFile_ProdTitle => "Sélectionnez les clés \"prod\"";
     public string BrowseKeysFile_TitleTitle => "Sélectionnez les clés \"title\"";
-    public string BrowseKeysFile_Filter => "Fichier de clés (*.keys)|*.keys|Tous les fichiers (*.*)|*.*";
+    public string BrowseKeysFile_Filter => "Fichier de clés (*.keys)|*.keys|Paquets de jeux Switch (*.nsp;*.nsz;*.xci;*.xcz)|*.nsp;*.nsz;*.xci;*.xcz|Archives (*.zip;*.7z)|*.zip;*.7z|Fichiers de contenu Switch (*.nca)|*.nca|Images NAND et dumps fractionnés (*.bin;*.img;*.00)|*.bin;*.img;*.00|Tous les fichiers (*.*)|*.*";
 
     public string SuspiciousFileExtension => "L'extension du fichier «{0}» semble invalide, «{1}» ou «{2}» était attendu.";
     public string DragMeAFile => "Glisse moi un petit fichier supporté par ici :)";
@@ -192,6 +389,8 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string LoadingError_FailedToGetNcaSectionFsHeader => "Echec de récupération de l'entête du système de fichier NCA pour la section «{0}»: {1}";
     public string LoadingError_FailedToOpenMainFile => "Echec d'ouverture du fichier Main: {0}";
     public string LoadingError_FailedToLoadMainFile => "Echec de chargement du fichier Main: {0}";
+    public string LoadingError_FailedToOpenNpdmFile => "Echec d'ouverture de main.npdm : {0}";
+    public string LoadingError_FailedToLoadNpdmFile => "Echec de l'analyse de main.npdm : {0}";
     public string LoadingError_FailedToLoadTicketFile => "Echec de chargement du fichier ticket: {0}";
     public string LoadingError_FailedToLoadTitleIdKey => "Echec de chargement de la clé du Title ID à partir du fichier ticket «{0}»: {1}";
     public string LoadingError_NczBlocklessCompressionDisabled => "L'ouverture de NCZ sans compression par bloc est désactivé dans les paramètres.";
@@ -234,7 +433,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
 
     public string AvailableContents => "Contenus:";
     public string MultiContentPackageToolTip => "Le package contient plusieurs contenus («{0}» détecté).";
-        
+
     public string NcasIntegrity_Error_NcaMissing => "L'intégrité du NCA «{0}» ne peut être vérifiée, NCA manquant.";
     public string NcasIntegrity_Error_Log => "Echec de vérification de l'intégrité des NCAs: {0}";
     public string NcaIntegrity_GetOriginalNcaError => "Echec de récupération du NCA original: {0}";
@@ -275,6 +474,7 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
 
     public string KeysLoading_Starting_Log => ">>> Chargement des clés...";
     public string KeysLoading_Successful_Log => ">>> Clés chargées avec succès.";
+    public string KeysLoading_UnusedKey_Log => "Information : la clé supplémentaire «{0}» n’est pas utilisée par cette version du programme.";
     public string KeysLoading_Error => "Echec de chargement des clés: {0}.";
     public string WarnNoProdKeysFileFound => "Aucun fichier «prod.keys» trouvé.";
     public string InvalidSetting_KeysFileNotFound => "Le fichier de clé «{0}» défini dans les paramètres n'existe pas.";
@@ -287,6 +487,13 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string ContextMenu_OpenFileLocation => "Ouvrir l'emplacement...";
     public string OpenFileLocation_Failed_Log => "Echec d'ouverture de l'emplacement du fichier «{0}»: {1}";
     public string SettingsView_TitlePageUrl => "URL du titre";
+    public string SettingsView_TitleInfoApiUrl => "URL de l’API des titres";
+    public string SettingsView_TitleInfoProvider => "Source des noms de titres";
+    public string SettingsView_TitleDbRegion => "Région / langue TitleDB";
+    public string SettingsView_TitleDbCacheTip => "TitleDB est conservée localement et actualisée chaque jour. Le cache reste disponible en cas de panne. Les titres manquants sont aussi recherchés dans US.en.";
+    public string BatchIntegrity_FileType => "Type de fichier";
+    public string BatchIntegrity_PackageType => "Type de paquet";
+    public string BatchIntegrity_ShowOnlyErrors => "Afficher uniquement les fichiers défectueux";
     public string OpenTitleWebPage_Failed => "Echec d'ouverture de la page Web: {0}";
 
     public string Log_DownloadFileCanceled => "Téléchargement annulé.";
@@ -295,6 +502,14 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string Log_SaveStorageCanceled => "Sauvegarde du stockage annulé.";
     public string Log_NcasIntegrityCanceled => "Intégrité des NCAs annulé.";
 
+    public string RenamingTool_TargetDirectory => "Dossier cible (vide = dossier actuel)";
+    public string RenamingTool_FolderTip => "Utilisez / pour les dossiers, par exemple DLC/{WTitle}.{Ext:L}.";
+    public string RenamingTool_OldName => "Ancien nom";
+    public string RenamingTool_NewName => "Nouveau nom";
+    public string RenamingTool_StatusError => "Erreur";
+    public string RenamingTool_StatusUnchanged => "Inchangé";
+    public string RenamingTool_StatusSimulation => "Simulation";
+    public string RenamingTool_StatusRenamed => "Renommé";
     public string RenamingTool_WindowTitle => "Outil de renommage";
     public string RenamingTool_Patterns => "Patterns";
     public string RenamingTool_ApplicationPattern => "Pattern d'application";
@@ -304,17 +519,26 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string RenamingTool_FileFilters => "Filtres";
     public string RenamingTool_ToolTip_Patterns =>
         $$"""
+         Dossier cible et sous-dossiers:
+           Un dossier cible vide utilise le dossier actuel du fichier.
+           Séparez les sous-dossiers par /, par exemple:
+             DLC/{WTitle}.{Ext:L}
+             {WAppTitle}/DLC/{WTitle}.{Ext:L}
+           Utilisez uniquement des dossiers relatifs, sans chemin absolu ni .. .
+           La simulation affiche les chemins complets sans créer de dossiers.
+           Le renommage crée les dossiers manquants sans écraser les fichiers.
+
          Syntaxe d'un mot clé:
             {<MotClé>[:<Format>]}
 
          Le format est facultatif, et peut valoir:
             - U: Majuscule
             - L: Minuscule
-         
+
          Exemples:
             {Title} => Le titre original
             {Title:U} => Le titre en majuscule
-         
+
          Liste des mots clés:
            • TitleId:
               - L'id du contenu.
@@ -337,9 +561,9 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
               - La version affichée.
            • WTitle:
               - Le titre du contenu récupéré depuis Internet.
-           • WAppTitle: 
+           • WAppTitle:
               - Le titre de l'{{nameof(ContentMetaType.Application)}} correspondante, récupéré depuis Internet.
-         
+
          Utilisez \{ ou \} pour écrire littéralement les caractères { ou }.
          """;
 
@@ -378,4 +602,25 @@ public class LocalizationKeys_FR : LocalizationKeysBase, ILocalizationKeys
     public string FileRenaming_StringOperatorUnknown => "L'opérateur «{0}» n'est pas reconnu, les opérateurs autorisés sont «{1}».";
     public string FileRenaming_EmptyDirectoryNotAllowed => "Le répertoire d'entrée ne peut être vide.";
     public string Window_Tip_Title => "Astuce";
+    public string Nsz_Installed => "Plugin NSZ installé";
+    public string Nsz_CustomExecutable => "Exécutable personnalisé";
+    public string Settings_Program => "Programme";
+    public string Nsz_PhaseSource => "Vérifier la source";
+    public string Nsz_PhaseOutput => "Vérifier le résultat";
+    public string Nsz_PhasePublish => "Enregistrer le résultat";
+    public string Batch_IncludeArchives => "Inclure ZIP / 7z";
+    public string Batch_Scan => "Analyser les fichiers";
+    public string Batch_VerifyAll => "Vérifier tous les fichiers";
+    public string File_MissingKeys => "Clés requises manquantes. Le contenu ne peut pas être entièrement lu. Vérifiez prod.keys / title.keys.";
+    public string File_CopyMissingKeys => "Copier les noms des clés manquantes";
+    public string Keys_ProgramFolder => "Dossier du programme";
+    public string Keys_SharedFolder => "Profil utilisateur (.switch)";
+    public string Keys_InUse => "Utilisé";
+    public string Keys_DownloadAll => "Télécharger les clés";
+    public string Keys_DownloadHost => "IP / nom d’hôte du téléchargement";
+    public string Keys_DownloadHostTip => "{IP} dans les URL est remplacé par cette adresse. Destination : chemin personnalisé si défini, sinon dossier du programme.";
+    public string Keys_CopyToSwitch => @"Copier les clés actuelles vers %USERPROFILE%\.switch";
+    public string Keys_ReplaceShared => "Remplacer les clés existantes ? Les fichiers sources seront conservés.";
+    public string Keys_SharedCopied => "Clés disponibles dans le dossier partagé .switch.";
+    public string Batch_ScanAndVerify => "Analyser les fichiers et vérifier leur intégrité";
 }

@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Threading;
 using Emignatik.NxFileViewer.Models.TreeItems;
 using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 using LibHac.Common.Keys;
@@ -25,6 +26,10 @@ public interface IFileItemLoader
     /// <param name="nspFilePath"></param>
     /// <returns></returns>
     NspItem LoadNsp(string nspFilePath);
+    StandaloneNcaFileItem LoadNca(string filePath);
+    NspItem LoadNsp(string path, CancellationToken token) { token.ThrowIfCancellationRequested(); return LoadNsp(path); }
+    XciItem LoadXci(string path, CancellationToken token) { token.ThrowIfCancellationRequested(); return LoadXci(path); }
+    StandaloneNcaFileItem LoadNca(string path, CancellationToken token) { token.ThrowIfCancellationRequested(); return LoadNca(path); }
 }
 
 public delegate void MissingKeyExceptionHandler(object sender, MissingKeyExceptionHandlerArgs args);

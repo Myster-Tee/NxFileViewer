@@ -54,11 +54,18 @@ public class ItemViewModelBuilder : IItemViewModelBuilder
             case MainItem mainItem:
                 itemViewModel = new MainItemViewModel(mainItem, _serviceProvider);
                 break;
+            case NpdmItem npdmItem:
+                itemViewModel = new NpdmItemViewModel(npdmItem, _serviceProvider);
+                break;
             case DirectoryEntryItem directoryEntryItem:
                 itemViewModel = new DirectoryEntryItemViewModel(directoryEntryItem, _serviceProvider);
                 break;
             case CnmtContentEntryItem cnmtContentEntryItem:
                 itemViewModel = new CnmtContentEntryItemViewModel(cnmtContentEntryItem, _serviceProvider);
+                break;
+            case FirmwareFileItem:
+            case NandFileItem:
+                itemViewModel = new ItemViewModel(item, _serviceProvider);
                 break;
             default:
                 Debug.Fail($"{nameof(IItemViewModel)} implementation missing for item of type «{item.GetType().Name}».");

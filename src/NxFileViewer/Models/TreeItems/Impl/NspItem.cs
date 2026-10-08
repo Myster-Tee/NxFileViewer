@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Emignatik.NxFileViewer.Utils.LibHacExtensions;
 using LibHac.Common.Keys;
@@ -42,8 +42,12 @@ public class NspItem : PartitionFileSystemItemBase
     public static NspItem FromFile(string nspFilePath, KeySet keySet)
     {
         var localStorage = new LocalStorage(nspFilePath, FileAccess.Read);
-        var partitionFileSystem = localStorage.LoadPartition();
-        var nspItem = new NspItem(partitionFileSystem, System.IO.Path.GetFileName(nspFilePath), keySet, localStorage);
-        return nspItem;
+        try
+        {
+            var partitionFileSystem = localStorage.LoadPartition();
+            var nspItem = new NspItem(partitionFileSystem, System.IO.Path.GetFileName(nspFilePath), keySet, localStorage);
+            return nspItem;
+        }
+        catch { localStorage.Dispose(); throw; }
     }
 }

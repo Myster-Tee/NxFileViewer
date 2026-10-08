@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -11,7 +11,7 @@
     <Company>NxFileViewer</Company>
     <Product>NxFileViewer</Product>
     <Authors>NxFileViewer</Authors>
-    <Version>3.0.2</Version>
+    <Version>4.0.0</Version>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageIcon>Icon.ico</PackageIcon>
     <Description>Browse content of Nintendo Switch files</Description>
@@ -47,9 +47,10 @@
   <ItemGroup>
     <PackageReference Include="LibHac" Version="0.19.0" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.11" />
+    <PackageReference Include="SharpCompress" Version="0.50.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -100,4 +101,13 @@
     </Page>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\..\fw\hashes\*.json" Link="fw\hashes\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" ExcludeFromSingleFile="true" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Services\Updates\InstallUpdate.ps1" LogicalName="ViewerUpdate.InstallUpdate.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <AssemblyMetadata Include="ViewerSelfContained" Value="$(SelfContained)" />
+  </ItemGroup>
 </Project>

@@ -1,25 +1,25 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Emignatik.NxFileViewer.Styling.Theme
 {
+    /// <summary>
+    /// Provides the themed brushes used from the code behind.
+    /// The brushes are resolved on each access so that they always match the current theme.
+    /// </summary>
     public class BrushesProvider : IBrushesProvider
     {
-        public BrushesProvider()
+        public Brush FontBrushDefault => FindBrush("FontBrush.Default", Brushes.Black);
+
+        public Brush FontBrushSuccess => FindBrush("FontBrush.Success", Brushes.ForestGreen);
+
+        public Brush FontBrushWarning => FindBrush("FontBrush.Warning", Brushes.Orange);
+
+        public Brush FontBrushError => FindBrush("FontBrush.Error", Brushes.Red);
+
+        private static Brush FindBrush(string resourceKey, Brush fallbackBrush)
         {
-            FontBrushDefault = Application.Current.Resources["FontBrush.Normal"] as Brush ?? Brushes.Black;
-            FontBrushSuccess = Application.Current.Resources["FontBrush.Success"] as Brush ?? Brushes.Black;
-            FontBrushWarning = Application.Current.Resources["FontBrush.Warning"] as Brush ?? Brushes.Orange;
-            FontBrushError = Application.Current.Resources["FontBrush.Error"] as Brush ?? Brushes.Red;
+            return Application.Current?.TryFindResource(resourceKey) as Brush ?? fallbackBrush;
         }
-
-        public Brush FontBrushDefault { get; }
-
-        public Brush FontBrushSuccess { get; }
-
-        public Brush FontBrushWarning { get; }
-
-        public Brush FontBrushError { get; }
-
     }
 }

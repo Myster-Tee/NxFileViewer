@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;
 
 namespace Emignatik.NxFileViewer.Services.FileRenaming.Models;
 
 public interface INamingSettings
 {
+    string? TargetDirectory { get; }
     /// <summary>
     /// Pattern for a package with a single content of type «Application»
     /// </summary>

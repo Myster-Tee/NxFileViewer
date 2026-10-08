@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using LibHac.Common.Keys;
@@ -42,11 +42,15 @@ public class XciItem : ItemBase
     public static XciItem FromFile(string xciFilePath, KeySet keySet)
     {
         var fileStorage = new LocalStorage(xciFilePath, FileAccess.Read);
+        try
+        {
 
-        var xci = new Xci(keySet, fileStorage);
+            var xci = new Xci(keySet, fileStorage);
 
-        var xciItem = new XciItem(xci, System.IO.Path.GetFileName(xciFilePath), fileStorage, keySet);
+            var xciItem = new XciItem(xci, System.IO.Path.GetFileName(xciFilePath), fileStorage, keySet);
 
-        return xciItem;
+            return xciItem;
+        }
+        catch { fileStorage.Dispose(); throw; }
     }
 }

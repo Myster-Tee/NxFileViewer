@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.IO;
 using Emignatik.NxFileViewer.Models.Overview;
@@ -11,12 +11,19 @@ namespace Emignatik.NxFileViewer.Models;
 /// </summary>
 public class NxFile : IDisposable
 {
+    public Services.Nand.NandDetectionResult? NandResult { get; set; }
+    public string? NandPhysicalPath { get; set; }
+    public Services.Integrity.BatchIntegrityResult? FirmwareResult { get; set; }
+    public IDisposable? OwnedResource { get; set; }
+    public string? ArchivePath { get; set; }
+    public string? ArchiveEntry { get; set; }
+    public System.Collections.Generic.IReadOnlyList<string> ArchiveEntries { get; set; } = Array.Empty<string>();
     public NxFile(string filePath, IItem rootItem, FileOverview overview)
     {
         FilePath = filePath;
         RootItem = rootItem;
         Overview = overview;
-        FileName = Path.GetFileName(filePath);
+        FileName = Path.GetFileName(filePath.TrimEnd('/'));
     }
 
     /// <summary>
@@ -38,6 +45,7 @@ public class NxFile : IDisposable
 
     public void Dispose()
     {
-        RootItem.Dispose();
+        try { RootItem.Dispose(); }
+        finally { OwnedResource?.Dispose(); OwnedResource = null; }
     }
 }

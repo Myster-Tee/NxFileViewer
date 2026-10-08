@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models.PatternParts;
 
@@ -6,6 +6,7 @@ namespace Emignatik.NxFileViewer.Services.FileRenaming.Models;
 
 public class NamingSettings : INamingSettings
 {
+    public string? TargetDirectory { get; set; }
     IPattern INamingSettings.ApplicationPattern => ApplicationPattern;
 
     public Pattern ApplicationPattern { get; set; } = new();

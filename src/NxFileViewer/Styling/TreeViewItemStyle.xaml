@@ -35,8 +35,8 @@
                                                              SnapsToDevicePixels="True"
                                                              VerticalAlignment="Center"
                                                              RenderTransformOrigin="0.5,0.5"
-                                                             Fill="{StaticResource TreeViewItem.TreeArrow.Static.Fill}" 
-                                                             Stroke="{StaticResource TreeViewItem.TreeArrow.Static.Stroke}" />
+                                                             Fill="{DynamicResource TreeViewItem.TreeArrow.Static.Fill}" 
+                                                             Stroke="{DynamicResource TreeViewItem.TreeArrow.Static.Stroke}" />
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsChecked" Value="True">
@@ -53,8 +53,8 @@
                                                             <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" Value="True"/>
                                                             <Condition Binding="{Binding Path=HasErrorInDescendants, RelativeSource={RelativeSource FindAncestor, AncestorType=customControls:CustomTreeViewItem}}" Value="False"/>
                                                         </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.Stroke}"/>
-                                                        <Setter Property="Fill" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.Fill}"/>
+                                                        <Setter Property="Stroke" TargetName="ExpandPath" Value="{DynamicResource TreeViewItem.TreeArrow.Static.Checked.Stroke}"/>
+                                                        <Setter Property="Fill" TargetName="ExpandPath" Value="{DynamicResource TreeViewItem.TreeArrow.Static.Checked.Fill}"/>
                                                     </MultiDataTrigger>
 
                                                     <!-- Checked=False, ErrorInChild=True-->
@@ -73,12 +73,12 @@
                                                             <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" Value="True"/>
                                                             <Condition Binding="{Binding Path=HasErrorInDescendants, RelativeSource={RelativeSource FindAncestor, AncestorType=customControls:CustomTreeViewItem}}" Value="True"/>
                                                         </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.ErrorInDescendants.Stroke}"/>
-                                                        <Setter Property="Fill" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.Static.Checked.ErrorInDescendants.Fill}"/>
+                                                        <Setter Property="Stroke" TargetName="ExpandPath" Value="{DynamicResource TreeViewItem.TreeArrow.Static.Checked.ErrorInDescendants.Stroke}"/>
+                                                        <Setter Property="Fill" TargetName="ExpandPath" Value="{DynamicResource TreeViewItem.TreeArrow.Static.Checked.ErrorInDescendants.Fill}"/>
                                                     </MultiDataTrigger>
 
                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Fill" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Fill}" />
+                                                        <Setter Property="Fill" TargetName="ExpandPath" Value="{DynamicResource TreeViewItem.TreeArrow.MouseOver.Fill}" />
                                                     </Trigger>
 
                                                 </ControlTemplate.Triggers>
@@ -107,19 +107,19 @@
                             <Setter Property="Visibility" TargetName="Expander" Value="Hidden"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="true">
-                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource Item.Selected.Background}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource Item.Selected.Foreground}"/>
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsSelected" Value="true"/>
                                 <Condition Property="IsSelectionActive" Value="false"/>
                             </MultiTrigger.Conditions>
-                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}}"/>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource Item.MouseOver.Background}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource Item.Selected.Foreground}"/>
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource Control.Disabled.Foreground}"/>
                         </Trigger>
 
                     </ControlTemplate.Triggers>

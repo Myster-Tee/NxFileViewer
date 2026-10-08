@@ -29,7 +29,7 @@
             <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0" Text="!" Foreground="{StaticResource TreeViewItemIcon.Static.Error.Stroke}" Visibility="{Binding Path=HasErrors, Converter={StaticResource FalseToHiddenVisibilityConverter}}" />
+        <TextBlock Grid.Column="0" Text="!" Foreground="{DynamicResource TreeViewItemIcon.Static.Error.Stroke}" Visibility="{Binding Path=HasErrors, Converter={StaticResource FalseToHiddenVisibilityConverter}}" />
         <Grid Grid.Column="1">
             <!-- ContentControl for item icon -->
             <ContentControl MinWidth="16" MinHeight="16" ContentTemplateSelector="{StaticResource ItemIconDataTemplateSelector}" Content="{Binding}" VerticalAlignment="Center" Focusable="False" />

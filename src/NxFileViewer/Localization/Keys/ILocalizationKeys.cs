@@ -1,4 +1,4 @@
-﻿using Emignatik.NxFileViewer.Utils.MVVM.Localization;
+using Emignatik.NxFileViewer.Utils.MVVM.Localization;
 
 // ReSharper disable InconsistentNaming
 
@@ -6,6 +6,132 @@ namespace Emignatik.NxFileViewer.Localization.Keys;
 
 public interface ILocalizationKeys : ILocalizationKeysBase
 {
+    string Nand_Detected { get; }
+    string Nand_NameCandidate { get; }
+    string Nand_Installed { get; }
+    string Nand_Updating { get; }
+    string Nand_CustomUpdate { get; }
+    string Nand_Open { get; }
+    string Nand_Info { get; }
+    string Nand_Export { get; }
+    string Nand_SettingsTip { get; }
+    string Nand_BisKeys { get; }
+    string Nand_Tip { get; }
+    string Nand_NewTarget { get; }
+    string Nand_SourceMissing { get; }
+    string Nand_NotInstalled { get; }
+    string Nand_KeysMissing { get; }
+    string Nand_ExportFailed { get; }
+    string Nand_ExportDone { get; }
+    string Nand_Cancelled { get; }
+    string DataUpdate_Firmware { get; }
+    string DataUpdate_Title { get; }
+    string DataUpdate_Titles { get; }
+    string BatchNaming_Unchecked { get; }
+    string DataUpdate_LocalFirmwareVersion { get; }
+    string DataUpdate_NoLocalFirmware { get; }
+    string DataUpdate_TitleCatalogDate { get; }
+    string DataUpdate_TitleCatalogMissing { get; }
+    string DataUpdate_OnlineFirmwareVersion { get; }
+    string Keys_ExistingValidation { get; }
+    string Keys_IncomingValidation { get; }
+    string Keys_ReplaceDownloaded { get; }
+    string Keys_SaveTicketKeys { get; }
+    string Keys_TicketConflict { get; }
+    string Keys_TicketSaved { get; }
+    string Tinfoil_StabilityHint { get; }
+    string DataUpdate_TitleTip { get; }
+    string DataUpdate_FirmwareTip { get; }
+    string DataUpdate_CheckFirmware { get; }
+    string DataUpdate_SaveFirmware { get; }
+    string DataUpdate_Working { get; }
+    string DataUpdate_TitlesDone { get; }
+    string DataUpdate_FirmwareSaved { get; }
+    string DataUpdate_FirmwareChecked { get; }
+    string Update_Title { get; }
+    string Update_Auto { get; }
+    string Update_IncludePrereleases { get; }
+    string Update_Prerelease { get; }
+    string Update_Check { get; }
+    string Update_Install { get; }
+    string Update_Checking { get; }
+    string Update_Current { get; }
+    string Component_UpdateAvailable { get; }
+    string Component_NotInstalled { get; }
+    string Component_CustomVersion { get; }
+    string Update_Available { get; }
+    string Update_Failed { get; }
+    string Update_Confirm { get; }
+    string Update_Downloading { get; }
+    string Update_Installing { get; }
+    string Update_Cancelled { get; }
+    string Nsz_Mode { get; }
+    string Nsz_ModeAuto { get; }
+    string Nsz_ModeSolid { get; }
+    string Nsz_ModeBlock { get; }
+    string Nsz_BlockSize { get; }
+    string Nsz_ModeTip { get; }
+    string Workspace_Plugins { get; }
+    string Workspace_Home { get; }
+    string Workspace_File { get; }
+    string Workspace_Menu { get; }
+    string Nsz_Replace { get; }
+    string Nsz_Number { get; }
+    string TitlePage_Custom { get; }
+    string Info_WithRuntime { get; }
+    string Info_WithoutRuntime { get; }
+    string Info_Description { get; }
+    string Info_Shortcuts { get; }
+    string BatchHistory_Show { get; }
+    string BatchHistory_Title { get; }
+    string BatchHistory_Resume { get; }
+    string Dialog_Yes { get; }
+    string Dialog_No { get; }
+    string Nsz_Cancel { get; }
+    string Nsz_DeleteSourcePrompt { get; }
+    string Nsz_SourceDeleted { get; }
+    string Nsz_SourceDeleteFailed { get; }
+    string Nsz_Compress { get; }
+    string Nsz_Decompress { get; }
+    string Nsz_CompressValid { get; }
+    string Nsz_DecompressValid { get; }
+    string Nsz_Update { get; }
+    string Nsz_Rollback { get; }
+    string Nsz_SelectDestination { get; }
+    string Nsz_PythonRuntimeFailed { get; }
+    string Nsz_NotInstalled { get; }
+    string Nsz_Updating { get; }
+    string Nsz_SourceSize { get; }
+    string Nsz_OutputSize { get; }
+    string Nsz_Verified { get; }
+    string Nsz_Summary { get; }
+    string Nsz_SettingsTip { get; }
+    string Nsz_CheckUpdates { get; }
+    string Nsz_Level { get; }
+    string Nsz_OutputExists { get; }
+    string Nsz_SourceInvalid { get; }
+    string Nsz_OutputInvalid { get; }
+    string Nsz_OutputMissing { get; }
+    string Nsz_KeysMissing { get; }
+    string Nsz_Incompatible { get; }
+    string Nsz_OfflineFallback { get; }
+    string Firmware_NoReferences { get; }
+    string Firmware_LoadingOnline { get; }
+    string Firmware_OnlineSource { get; }
+    string Firmware_OfflineSource { get; }
+    string Firmware_BrowseZip { get; }
+    string Firmware_Title { get; }
+    string Firmware_NcaMatches { get; }
+    string Firmware_Versions { get; }
+    string Firmware_Unknown { get; }
+    string Firmware_Summary { get; }
+    string Firmware_Missing { get; }
+    string Firmware_Changed { get; }
+    string Firmware_Extra { get; }
+    string Firmware_Renamed { get; }
+    string Firmware_RenamedSummary { get; }
+    string Firmware_Duplicate { get; }
+
     string FileNotSupported_Log { get; }
     string OpenFile_Filter { get; }
 
@@ -16,6 +142,54 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string MenuItem_Exit { get; }
     string MenuItem_Tools { get; }
     string MenuItem_CheckIntegrity { get; }
+    string MenuItem_CheckDirectoryIntegrity { get; }
+    string BatchNaming_Title { get; }
+    string BatchNaming_Matches { get; }
+    string BatchNaming_Differs { get; }
+    string BatchNaming_Check { get; }
+    string BatchNaming_RenameAll { get; }
+    string BatchNaming_Error { get; }
+    string BatchIntegrity_Title { get; }
+    string BatchIntegrity_SelectDirectory { get; }
+    string BatchIntegrity_Browse { get; }
+    string BatchIntegrity_IncludeSubdirectories { get; }
+    string BatchTable_Columns { get; }
+    string BatchTable_Search { get; }
+    string BatchTable_All { get; }
+    string BatchTable_ResetFilters { get; }
+    string BatchTable_ResetSort { get; }
+    string BatchIntegrity_File { get; }
+    string BatchIntegrity_Path { get; }
+    string BatchIntegrity_Error { get; }
+    string BatchIntegrity_NszDataCorrupted { get; }
+    string BatchIntegrity_IntegrityFailed { get; }
+    string PackageStructure_Filesystem { get; }
+    string Signature_Title { get; }
+    string Signature_Passed { get; }
+    string Signature_NotPassed { get; }
+    string Signature_Unchecked { get; }
+    string ToolTip_PackageStructure { get; }
+    string ToolTip_NcaSignature { get; }
+    string ToolTip_Permission { get; }
+    string ToolTip_AcidSignature { get; }
+    string PackageStructure_Title { get; }
+    string PackageStructure_Scene { get; }
+    string PackageStructure_Cdn { get; }
+    string PackageStructure_Converted { get; }
+    string PackageStructure_Homebrew { get; }
+    string PackageStructure_Incomplete { get; }
+    string PackageStructure_Unknown { get; }
+    string FileInfo_FileSize { get; }
+    string FileInfo_CompressionRatio { get; }
+    string FileInfo_Uncompressed { get; }
+    string FileInfo_SystemUpdate { get; }
+    string BatchIntegrity_Export { get; }
+    string BatchIntegrity_Start { get; }
+    string BatchIntegrity_MoveValid { get; }
+    string BatchIntegrity_MoveSelected { get; }
+    string BatchIntegrity_OpenSelected { get; }
+    string BatchIntegrity_SelectMoveDestination { get; }
+    string BatchIntegrity_Moving { get; }
     string MenuItem_Options { get; }
     string MenuItem_Settings { get; }
     string MenuItem_ReloadKeys { get; }
@@ -29,6 +203,15 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string AvailableLanguages { get; }
     string AppTitle { get; }
     string Publisher { get; }
+    string Security_Title { get; }
+    string Security_Level { get; }
+    string Security_FileSystemPermissions { get; }
+    string Security_AcidSignature { get; }
+    string Security_Safe { get; }
+    string Security_Unsafe { get; }
+    string Security_Dangerous { get; }
+    string Security_Unavailable { get; }
+    string Security_Details { get; }
 
     string Lng_AmericanEnglish { get; }
     string Lng_BritishEnglish { get; }
@@ -56,14 +239,28 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string SettingsView_Title_KeysEffectiveFilePath { get; }
     string SettingsView_Title_KeysCustomFilePath { get; }
     string SettingsView_Title_KeysDownloadUrl { get; }
+    string KeysValidation_MissingFile { get; }
+    string KeysValidation_ValidEntries { get; }
+    string KeysValidation_MissingMasterKeys { get; }
+    string CnmtOverview_BaseTitleId { get; }
+    string CnmtOverview_MasterKey { get; }
+    string CnmtOverview_MinimumApplicationVersion { get; }
+    string CnmtOverview_Distribution { get; }
+    string KeysValidation_InvalidMasterKeys { get; }
+    string KeysValidation_InvalidLines { get; }
+    string KeysValidation_EmptyFile { get; }
+    string KeysValidation_FirmwareEstimate { get; }
+    string KeysValidation_UnsupportedMasterKeys { get; }
     string SettingsView_ToolTip_Keys { get; }
     string SettingsView_ToolTip_ProdKeys { get; }
     string SettingsView_ToolTip_TitleKeys { get; }
+    string SettingsView_LogFileRetention { get; }
     string SettingsView_LogLevel { get; }
     string SettingsView_ToolTip_LogLevel { get; }
     string SettingsView_CheckBox_AlwaysReloadKeysBeforeOpen { get; }
     string SettingsView_CheckBox_InjectTicketKeys { get; }
     string SettingsView_Title_Language { get; }
+    string SettingsView_Title_Theme { get; }
 
     string SettingsView_Title_NczOptions { get; }
     string SettingsView_ToolTip_NczBlockLessCompression { get; }
@@ -151,6 +348,8 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string LoadingError_FailedToGetNcaSectionFsHeader { get; }
     string LoadingError_FailedToOpenMainFile { get; }
     string LoadingError_FailedToLoadMainFile { get; }
+    string LoadingError_FailedToOpenNpdmFile { get; }
+    string LoadingError_FailedToLoadNpdmFile { get; }
     string LoadingError_FailedToLoadTicketFile { get; }
     string LoadingError_FailedToLoadTitleIdKey { get; }
     string LoadingError_NczBlocklessCompressionDisabled { get; }
@@ -221,6 +420,7 @@ public interface ILocalizationKeys : ILocalizationKeysBase
 
     string KeysLoading_Starting_Log { get; }
     string KeysLoading_Successful_Log { get; }
+    string KeysLoading_UnusedKey_Log { get; }
     string KeysLoading_Error { get; }
     string WarnNoProdKeysFileFound { get; }
     string InvalidSetting_KeysFileNotFound { get; }
@@ -234,6 +434,13 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string ContextMenu_OpenFileLocation { get; }
     string OpenFileLocation_Failed_Log { get; }
     string SettingsView_TitlePageUrl { get; }
+    string SettingsView_TitleInfoApiUrl { get; }
+    string SettingsView_TitleInfoProvider { get; }
+    string SettingsView_TitleDbRegion { get; }
+    string SettingsView_TitleDbCacheTip { get; }
+    string BatchIntegrity_FileType { get; }
+    string BatchIntegrity_PackageType { get; }
+    string BatchIntegrity_ShowOnlyErrors { get; }
     string OpenTitleWebPage_Failed { get; }
 
     string Log_DownloadFileCanceled { get; }
@@ -242,6 +449,14 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string Log_SaveStorageCanceled { get; }
     string Log_NcasIntegrityCanceled { get; }
 
+    string RenamingTool_TargetDirectory { get; }
+    string RenamingTool_FolderTip { get; }
+    string RenamingTool_OldName { get; }
+    string RenamingTool_NewName { get; }
+    string RenamingTool_StatusError { get; }
+    string RenamingTool_StatusUnchanged { get; }
+    string RenamingTool_StatusSimulation { get; }
+    string RenamingTool_StatusRenamed { get; }
     string RenamingTool_WindowTitle { get; }
     string RenamingTool_Patterns { get; }
     string RenamingTool_ApplicationPattern { get; }
@@ -286,4 +501,25 @@ public interface ILocalizationKeys : ILocalizationKeysBase
     string FileRenaming_EmptyDirectoryNotAllowed { get; }
 
     string Window_Tip_Title { get; }
+    string Nsz_Installed { get; }
+    string Nsz_CustomExecutable { get; }
+    string Settings_Program { get; }
+    string Nsz_PhaseSource { get; }
+    string Nsz_PhaseOutput { get; }
+    string Nsz_PhasePublish { get; }
+    string Batch_IncludeArchives { get; }
+    string Batch_Scan { get; }
+    string Batch_VerifyAll { get; }
+    string File_MissingKeys { get; }
+    string File_CopyMissingKeys { get; }
+    string Keys_ProgramFolder { get; }
+    string Keys_SharedFolder { get; }
+    string Keys_InUse { get; }
+    string Keys_DownloadAll { get; }
+    string Keys_DownloadHost { get; }
+    string Keys_DownloadHostTip { get; }
+    string Keys_CopyToSwitch { get; }
+    string Keys_ReplaceShared { get; }
+    string Keys_SharedCopied { get; }
+    string Batch_ScanAndVerify { get; }
 }

@@ -1,5 +1,6 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using Microsoft.Extensions.Logging;
+using Emignatik.NxFileViewer.Styling.Theme;
 
 namespace Emignatik.NxFileViewer.Settings;
 
@@ -8,8 +9,25 @@ namespace Emignatik.NxFileViewer.Settings;
 /// </summary>
 public interface IAppSettings : INotifyPropertyChanged
 {
+    string NandExecutablePath { get; set; }
+    string NandBisKeysPath { get; set; }
+    bool CheckViewerUpdatesOnStartup { get; set; }
+    bool IncludeViewerPrereleases { get; set; }
+    string NszExecutablePath { get; set; }
+    bool NszCheckUpdates { get; set; }
+    int NszCompressionLevel { get; set; }
+    NszCompressionMode NszCompressionMode { get; set; }
+    int NszBlockSizeExponent { get; set; }
 
+    bool EnableBatchHistory { get; set; }
+    int LogFileRetentionCount { get; set; }
     string AppLanguage { get; set; }
+
+    AppTheme Theme { get; set; }
+
+    bool RememberWindowPlacement { get; set; }
+
+    IWindowPlacementSettings MainWindowPlacement { get; }
 
     string LastUsedDir { get; set; }
 
@@ -18,6 +36,7 @@ public interface IAppSettings : INotifyPropertyChanged
     string ProdKeysFilePath { get; set; }
 
     string ProdKeysDownloadUrl { get; set; }
+    string KeysDownloadHost { get; set; }
 
     string TitleKeysFilePath { get; set; }
 
@@ -32,10 +51,14 @@ public interface IAppSettings : INotifyPropertyChanged
     bool AlwaysReloadKeysBeforeOpen { get; set; }
 
     bool InjectTicketKeys { get; set; }
+    bool SaveTicketKeys { get; set; }
 
     string TitlePageUrl { get; set; }
 
     string TitleInfoApiUrl { get; set; }
+    TitleInfoProvider TitleInfoProvider { get; set; }
+    string TitleDbRegion { get; set; }
+    string NLibApiUrl { get; set; }
 
     IRenamingOptions RenamingOptions { get; }
 
@@ -47,6 +70,7 @@ public interface IRenamingOptions : INotifyPropertyChanged
     bool AutoCloseOpenedFile { get; set; }
 
     string LastRenamePath { get; set; }
+    string TargetDirectory { get; set; }
 
     string? FileFilters { get; set; }
 
@@ -66,4 +90,14 @@ public interface IRenamingOptions : INotifyPropertyChanged
 
     string WhiteSpaceCharsReplacement { get; set; }
 
+}
+
+public interface IWindowPlacementSettings : INotifyPropertyChanged
+{
+    int Left { get; set; }
+    int Top { get; set; }
+    int Width { get; set; }
+    int Height { get; set; }
+    bool IsMaximized { get; set; }
+    bool IsDefined { get; }
 }

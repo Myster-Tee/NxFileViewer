@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Emignatik.NxFileViewer.Services.BackgroundTask;
@@ -29,7 +30,7 @@ public interface IFileRenamerService
     /// <exception cref="EmptyPatternException"></exception>
     /// <exception cref="SuperPackageNotSupportedException"></exception>
     /// <exception cref="KeywordNotAllowedException"></exception>
-    Task<IList<RenamingResult>> RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, bool automaticallyCloseOpenedFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken);
+    Task<IList<RenamingResult>> RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, bool automaticallyCloseOpenedFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken, Action<RenamingResult>? resultReported = null);
 
     /// <summary>
     /// Rename the specified file
@@ -51,6 +52,34 @@ public interface IFileRenamerService
 
 public class RenamingResult
 {
+    public string Status => Exception != null ? Localization.LocalizationManager.Instance.Current.Keys.RenamingTool_StatusError
+        : !IsRenamed ? Localization.LocalizationManager.Instance.Current.Keys.RenamingTool_StatusUnchanged
+        : IsSimulation ? Localization.LocalizationManager.Instance.Current.Keys.RenamingTool_StatusSimulation
+        : Localization.LocalizationManager.Instance.Current.Keys.RenamingTool_StatusRenamed;
+
+    public string? SourceDirectory { get; set; }
+    public string? TargetDirectory { get; set; }
+    public string OldPathDisplay => FormatPath(OldFilePath, SourceDirectory, "QUELL::");
+    public string NewPathDisplay
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(SourceDirectory)) return NewFilePath ?? "";
+            var sameRoot = string.IsNullOrWhiteSpace(TargetDirectory) ||
+                string.Equals(Path.TrimEndingDirectorySeparator(Path.GetFullPath(TargetDirectory)),
+                    Path.TrimEndingDirectorySeparator(Path.GetFullPath(SourceDirectory!)), StringComparison.OrdinalIgnoreCase);
+            return FormatPath(NewFilePath, sameRoot ? SourceDirectory : TargetDirectory, sameRoot ? "QUELL::" : "ZIEL::");
+        }
+    }
+
+    private static string FormatPath(string? path, string? root, string prefix)
+    {
+        if (string.IsNullOrEmpty(path)) return "";
+        return string.IsNullOrWhiteSpace(root) ? path : prefix + Path.GetRelativePath(root, path);
+    }
+
+    public string OldFilePath { get; set; } = "";
+    public string? NewFilePath { get; set; }
     public string OldFileName { get; set; } = "";
 
     public string? NewFileName { get; set; }

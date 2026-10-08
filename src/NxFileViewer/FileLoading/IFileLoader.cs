@@ -10,5 +10,10 @@ public interface IFileLoader
     /// <returns></returns>
     /// <exception cref="FileNotSupportedException" />
     public NxFile Load(string filePath);
+    public NxFile Load(string filePath, System.Threading.CancellationToken token)
+    {
+        token.ThrowIfCancellationRequested();
+        return Load(filePath);
+    }
 
 }

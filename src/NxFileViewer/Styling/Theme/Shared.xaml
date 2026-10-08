@@ -1,0 +1,11 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Theme independent resources (margins, thicknesses).
+         This dictionary is never swapped when the theme changes, which is why it
+         can safely be referenced with StaticResource. -->
+
+    <Thickness x:Key="ScrollViewer.Border.Thickness">1</Thickness>
+    <Thickness x:Key="Control.Default.Margin">2,0</Thickness>
+
+</ResourceDictionary>

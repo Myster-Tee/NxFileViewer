@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -32,7 +32,7 @@ public class FileRenamerService : IFileRenamerService
         _fileOpeningService = fileOpeningService ?? throw new ArgumentNullException(nameof(fileOpeningService));
     }
 
-    public async Task<IList<RenamingResult>> RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, bool automaticallyCloseOpenedFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken)
+    public async Task<IList<RenamingResult>> RenameFromDirectoryAsync(string inputDirectory, string? fileFilters, bool includeSubdirectories, bool automaticallyCloseOpenedFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, IProgressReporter progressReporter, CancellationToken cancellationToken, Action<RenamingResult>? resultReported = null)
     {
         if (string.IsNullOrWhiteSpace(inputDirectory))
             throw new EmptyDirectoryException();
@@ -63,7 +63,10 @@ public class FileRenamerService : IFileRenamerService
             progressReporter.SetText(matchingFile.Name);
 
             var renamingResult = await RenameFileAsyncInternalSafe(matchingFile, namingSettings, isSimulation, logger, cancellationToken, automaticallyCloseOpenedFile);
+            renamingResult.SourceDirectory = Path.GetFullPath(inputDirectory);
+            renamingResult.TargetDirectory = namingSettings.TargetDirectory;
             renamingResults.Add(renamingResult);
+            resultReported?.Invoke(renamingResult);
 
             progressReporter.SetPercentage((index + 1) / (double)matchingFiles.Length);
         }
@@ -76,6 +79,8 @@ public class FileRenamerService : IFileRenamerService
         ValidateNamingSettings(namingSettings);
         var renamingResult = await RenameFileAsyncInternalSafe(new FileInfo(inputFile), namingSettings, isSimulation, logger, cancellationToken, automaticallyCloseOpenedFile);
 
+        renamingResult.SourceDirectory = Path.GetDirectoryName(Path.GetFullPath(inputFile));
+        renamingResult.TargetDirectory = namingSettings.TargetDirectory;
         return renamingResult;
     }
 
@@ -123,12 +128,19 @@ public class FileRenamerService : IFileRenamerService
     private async Task<RenamingResult> RenameFileAsyncInternalSafe(FileInfo inputFile, INamingSettings namingSettings, bool isSimulation, ILogger? logger, CancellationToken cancellationToken, bool automaticallyCloseOpenedFile)
     {
         var oldFileName = inputFile.Name;
+        var oldFilePath = inputFile.FullName;
+        string? newFileName = null;
+        string? destinationPath = null;
         var logPrefix = isSimulation ? $"{LocalizationManager.Instance.Current.Keys.RenamingTool_LogSimulationMode}" : "";
 
         try
         {
-            var newFileName = await ComputeFileName(inputFile.FullName, namingSettings, cancellationToken);
-            var shouldBeRenamed = !string.Equals(newFileName, oldFileName);
+            newFileName = await ComputeFileName(inputFile.FullName, namingSettings, cancellationToken);
+            var root = Path.GetFullPath(string.IsNullOrWhiteSpace(namingSettings.TargetDirectory) ? inputFile.DirectoryName! : namingSettings.TargetDirectory);
+            destinationPath = Path.GetFullPath(Path.Combine(root, newFileName));
+            if (!destinationPath.StartsWith(Path.TrimEndingDirectorySeparator(root) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                throw new IOException("The destination must stay inside the target directory.");
+            var shouldBeRenamed = !string.Equals(destinationPath, inputFile.FullName, StringComparison.OrdinalIgnoreCase);
             if (!isSimulation && shouldBeRenamed)
             {
                 var reopen = false;
@@ -139,7 +151,9 @@ public class FileRenamerService : IFileRenamerService
                     reopen = true;
                 }
 
-                var destFileName = Path.Combine(inputFile.DirectoryName!, newFileName);
+                var destFileName = destinationPath;
+                if (File.Exists(destFileName)) throw new IOException("The destination file already exists.");
+                Directory.CreateDirectory(Path.GetDirectoryName(destFileName)!);
                 // ======================== //
                 // ==> Rename the file <=== //
                 inputFile.MoveTo(destFileName, false);
@@ -159,6 +173,8 @@ public class FileRenamerService : IFileRenamerService
             {
                 IsSimulation = isSimulation,
                 IsRenamed = shouldBeRenamed,
+                OldFilePath = oldFilePath,
+                NewFilePath = destinationPath,
                 OldFileName = oldFileName,
                 NewFileName = newFileName,
             };
@@ -171,8 +187,10 @@ public class FileRenamerService : IFileRenamerService
             {
                 IsSimulation = isSimulation,
                 IsRenamed = false,
+                OldFilePath = oldFilePath,
+                NewFilePath = destinationPath,
                 OldFileName = oldFileName,
-                NewFileName = null,
+                NewFileName = newFileName,
                 Exception = ex,
             };
         }
@@ -213,7 +231,7 @@ public class FileRenamerService : IFileRenamerService
             }
         }
 
-        var invalidFileNameChars = Path.GetInvalidFileNameChars();
+        var invalidFileNameChars = Path.GetInvalidFileNameChars().Where(c => c != '/' && c != '\\').ToArray();
         var invalidCharReplacement = namingSettings.InvalidFileNameCharsReplacement ?? "";
 
         foreach (var invalidFileNameChar in invalidFileNameChars)
@@ -221,7 +239,10 @@ public class FileRenamerService : IFileRenamerService
             newFileName = newFileName.Replace(invalidFileNameChar.ToString(), invalidCharReplacement);
         }
 
-        return newFileName;
+        var segments = newFileName.Replace('\\', '/').Split('/');
+        if (segments.Any(segment => string.IsNullOrWhiteSpace(segment) || segment is "." or ".." || segment.EndsWith('.') || segment.EndsWith(' ')))
+            throw new IOException("The pattern contains an invalid folder or file name.");
+        return Path.Combine(segments);
     }
 
     private async Task<string> ComputePackageFileName(Content content, AccuratePackageType accuratePackageType, IEnumerable<PatternPart> patternParts, CancellationToken cancellationToken)
@@ -269,14 +290,18 @@ public class FileRenamerService : IFileRenamerService
                             break;
                         case PatternKeyword.OnlineTitleName:
                             var onlineTitleInfo = await _cachedOnlineTitleInfoService.GetTitleInfoAsync(content.TitleId);
-                            partValue = onlineTitleInfo != null ? onlineTitleInfo.Name : "NO_TITLE";
+                            partValue = onlineTitleInfo != null
+                                ? FileNameTextNormalizer.RestoreMissingWordSeparators(onlineTitleInfo.Name)
+                                : content.NacpData?.Titles.FirstOrDefault(title => !string.IsNullOrWhiteSpace(title?.Name))?.Name ?? "NO_TITLE";
                             break;
                         case PatternKeyword.OnlineAppTitleName:
                             var onlineAppTitleInfo = await _cachedOnlineTitleInfoService.GetTitleInfoAsync(content.ApplicationTitleId);
-                            partValue = onlineAppTitleInfo != null ? onlineAppTitleInfo.Name : "NO_TITLE";
+                            partValue = onlineAppTitleInfo != null
+                                ? FileNameTextNormalizer.RestoreMissingWordSeparators(onlineAppTitleInfo.Name)
+                                : content.NacpData?.Titles.FirstOrDefault(title => !string.IsNullOrWhiteSpace(title?.Name))?.Name ?? "NO_TITLE";
                             break;
                         default:
-                            throw new NotSupportedException($"Unknown application keyword «{dynamicText.Keyword}».");
+                            throw new NotSupportedException($"Unknown application keyword Ã‚Â«{dynamicText.Keyword}Ã‚Â».");
                     }
 
                     switch (dynamicText.StringOperator)
@@ -290,14 +315,16 @@ public class FileRenamerService : IFileRenamerService
                             partValue = partValue.ToUpper();
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException($"Unknown operator «{dynamicText.StringOperator}».");
+                            throw new ArgumentOutOfRangeException($"Unknown operator Ã‚Â«{dynamicText.StringOperator}Ã‚Â».");
                     }
 
+                    // Metadata cannot introduce folders; only literal pattern separators do.
+                    partValue = partValue.Replace('/', '_').Replace('\\', '_');
                     newFileName += partValue;
 
                     break;
                 default:
-                    throw new NotSupportedException($"Unknown part of type «{patternPart.GetType().Name}».");
+                    throw new NotSupportedException($"Unknown part of type Ã‚Â«{patternPart.GetType().Name}Ã‚Â».");
             }
         }
 

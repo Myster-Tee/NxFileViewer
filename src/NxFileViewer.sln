@@ -14,10 +14,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots", "{B31909B9-EDA7-464A-B808-EDF829939B71}"
 	ProjectSection(SolutionItems) = preProject
-		..\screenshots\Content.png = ..\screenshots\Content.png
+		..\screenshots\Start.png = ..\screenshots\Start.png
 		..\screenshots\Overview.png = ..\screenshots\Overview.png
+		..\screenshots\Missing-Keys.png = ..\screenshots\Missing-Keys.png
+		..\screenshots\Content.png = ..\screenshots\Content.png
+		..\screenshots\Batch-Game-Overview.png = ..\screenshots\Batch-Game-Overview.png
+		..\screenshots\Batch-Context-Menu.png = ..\screenshots\Batch-Context-Menu.png
 		..\screenshots\Rename.png = ..\screenshots\Rename.png
-		..\screenshots\Settings.png = ..\screenshots\Settings.png
+		..\screenshots\Firmware-Verification.png = ..\screenshots\Firmware-Verification.png
+		..\screenshots\Firmware-Verification2.png = ..\screenshots\Firmware-Verification2.png
+		..\screenshots\Firmware-NCA-Identification.png = ..\screenshots\Firmware-NCA-Identification.png
+		..\screenshots\NAND-Information.png = ..\screenshots\NAND-Information.png
+		..\screenshots\Settings-Program.png = ..\screenshots\Settings-Program.png
+		..\screenshots\Settings-Keys.png = ..\screenshots\Settings-Keys.png
+		..\screenshots\Settings-Naming.png = ..\screenshots\Settings-Naming.png
+		..\screenshots\Settings-Updates.png = ..\screenshots\Settings-Updates.png
+		..\screenshots\Settings-Plugins.png = ..\screenshots\Settings-Plugins.png
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NxFileViewer.Test", "NxFileViewer.Test\NxFileViewer.Test.csproj", "{55B6DEB7-0DFB-4C7F-834D-09D7AFC60847}"

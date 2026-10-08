@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using Emignatik.NxFileViewer.Models;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Logging;
@@ -14,20 +16,38 @@ using Emignatik.NxFileViewer.Utils.MVVM;
 using Emignatik.NxFileViewer.Utils.MVVM.BindingExtensions.DragAndDrop;
 using Emignatik.NxFileViewer.Views.UserControls;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Emignatik.NxFileViewer.Services.Nsz;
 
 namespace Emignatik.NxFileViewer.Views.Windows;
 
 public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
 {
+    public bool HasBundledRuntime => Emignatik.NxFileViewer.Services.Updates.ViewerDistribution.IsSelfContained;
+    public string ProgramArchitecture => System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant();
     private readonly ILogger _logger;
     private readonly IKeySetProviderService _keySetProviderService;
     private readonly IAppSettings _appSettings;
 
     private OpenedFileViewModel? _openedFile;
+    private readonly ConditionalWeakTable<NxFile, OpenedFileViewModel> _openedViews = new();
     private readonly string _appNameAndVersion;
     private string _title = "";
     private readonly IFileOpeningService _fileOpeningService;
     private bool _errorAnimationEnabled;
+    private string? _selectedArchiveEntry;
+    public System.Collections.Generic.IReadOnlyList<string> ArchiveEntries => _fileOpeningService.OpenedFile?.ArchiveEntries ?? Array.Empty<string>();
+    public bool HasArchiveEntries => ArchiveEntries.Count > 0;
+    public string? SelectedArchiveEntry
+    {
+        get => _selectedArchiveEntry;
+        set
+        {
+            if (_selectedArchiveEntry == value || value == null || BackgroundTaskRunner.IsRunning) return;
+            var archive = _fileOpeningService.OpenedFile?.ArchivePath;
+            if (archive != null) _ = _fileOpeningService.SafeOpenFile(Emignatik.NxFileViewer.FileLoading.PackageZip.MemberPath(archive, value));
+        }
+    }
 
     public MainWindowViewModel(
         ILoggerFactory loggerFactory,
@@ -38,6 +58,7 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
         IExitAppCommand exitAppCommand,
         IShowSettingsWindowCommand showSettingsWindowCommand,
         IVerifyNcasIntegrityCommand verifyNcasIntegrityCommand,
+        IShowBatchIntegrityWindowCommand showBatchIntegrityWindowCommand,
         ILoadKeysCommand loadKeysCommand,
         IOpenTitleWebPageCommand openTitleWebPageCommand,
         IServiceProvider serviceProvider,
@@ -55,6 +76,7 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
         ExitAppCommand = exitAppCommand ?? throw new ArgumentNullException(nameof(exitAppCommand));
         ShowSettingsWindowCommand = showSettingsWindowCommand ?? throw new ArgumentNullException(nameof(showSettingsWindowCommand));
         VerifyNcasIntegrityCommand = verifyNcasIntegrityCommand ?? throw new ArgumentNullException(nameof(verifyNcasIntegrityCommand));
+        ShowBatchIntegrityWindowCommand = showBatchIntegrityWindowCommand ?? throw new ArgumentNullException(nameof(showBatchIntegrityWindowCommand));
         LoadKeysCommand = loadKeysCommand ?? throw new ArgumentNullException(nameof(loadKeysCommand));
         ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         LogSource = logSource ?? throw new ArgumentNullException(nameof(logSource));
@@ -66,7 +88,8 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
 
         var assemblyName = Assembly.GetExecutingAssembly().GetName();
         var assemblyVersion = (assemblyName.Version ?? new Version());
-        _appNameAndVersion = $"{assemblyName.Name} v{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}";
+        var displayVersion = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? $"{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}";
+        _appNameAndVersion = $"{assemblyName.Name} v{displayVersion}";
 
         UpdateTitle();
         _fileOpeningService.OpenedFileChanged += OnFileOpeningChanged;
@@ -75,6 +98,10 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
     }
 
     private IServiceProvider ServiceProvider { get; }
+    public Emignatik.NxFileViewer.Services.Updates.ViewerUpdateActions ViewerUpdates => ServiceProvider.GetRequiredService<Emignatik.NxFileViewer.Services.Updates.ViewerUpdateActions>();
+
+    public Emignatik.NxFileViewer.Services.Nand.NandPluginActions NandPlugin => ServiceProvider.GetRequiredService<Emignatik.NxFileViewer.Services.Nand.NandPluginActions>();
+    public NszActions Nsz => ServiceProvider.GetRequiredService<NszActions>();
 
     public IOpenFileCommand OpenFileCommand { get; }
 
@@ -83,6 +110,8 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
     public IShowSettingsWindowCommand ShowSettingsWindowCommand { get; }
 
     public IVerifyNcasIntegrityCommand VerifyNcasIntegrityCommand { get; }
+
+    public IShowBatchIntegrityWindowCommand ShowBatchIntegrityWindowCommand { get; }
 
     public ILoadKeysCommand LoadKeysCommand { get; }
 
@@ -95,6 +124,12 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
     public IShowRenameToolWindowCommand ShowRenameToolWindowCommand { get; }
 
     public bool NoProdKeysLoaded => _keySetProviderService.ActualProdKeysFilePath == null;
+
+    public bool HasProdKeysProblems => NoProdKeysLoaded || !_keySetProviderService.ProdKeysValidation.IsValid || _keySetProviderService.ProdKeysValidation.HasWarnings;
+
+    public string ProdKeysValidationSummary => SettingsWindowViewModel.BuildValidationSummary(_keySetProviderService.ProdKeysValidation);
+
+    public string ProgramVersion => _appNameAndVersion;
 
     public string Title
     {
@@ -141,8 +176,13 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
     private void OnFileOpeningChanged(object sender, OpenedFileChangedHandlerArgs args)
     {
         var newFile = args.NewFile;
-        OpenedFile = newFile != null ? new OpenedFileViewModel(newFile, ServiceProvider) : null;
+        OpenedFile = newFile != null ? _openedViews.GetValue(newFile, file => new OpenedFileViewModel(file, ServiceProvider)) : null;
+        _selectedArchiveEntry = newFile?.ArchiveEntry;
+        NotifyPropertyChanged(nameof(ArchiveEntries));
+        NotifyPropertyChanged(nameof(HasArchiveEntries));
+        NotifyPropertyChanged(nameof(SelectedArchiveEntry));
         UpdateTitle();
+        if (newFile != null) (System.Windows.Application.Current.MainWindow as MainWindow)?.Navigate(WorkspaceSection.File);
     }
 
     private void OnKeySetProviderPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -150,6 +190,12 @@ public class MainWindowViewModel : WindowViewModelBase, IFilesDropped
         if (e.PropertyName == nameof(IKeySetProviderService.ActualProdKeysFilePath))
         {
             NotifyPropertyChanged(nameof(NoProdKeysLoaded));
+        }
+        if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == nameof(IKeySetProviderService.ActualProdKeysFilePath) ||
+            e.PropertyName == nameof(IKeySetProviderService.ProdKeysValidation))
+        {
+            NotifyPropertyChanged(nameof(HasProdKeysProblems));
+            NotifyPropertyChanged(nameof(ProdKeysValidationSummary));
         }
     }
 

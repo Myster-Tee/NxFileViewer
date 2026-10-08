@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -7,7 +7,10 @@ using System.Windows.Media.Imaging;
 using Emignatik.NxFileViewer.Commands;
 using Emignatik.NxFileViewer.Localization;
 using Emignatik.NxFileViewer.Models.Overview;
+using Emignatik.NxFileViewer.Services.Security;
+using Emignatik.NxFileViewer.Styling.Theme;
 using Emignatik.NxFileViewer.Utils.MVVM;
+using Emignatik.NxFileViewer.Models.TreeItems.Impl;
 using LibHac.Ns;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,12 +22,16 @@ public class CnmtContainerViewModel : ViewModelBase
     private readonly CnmtContainer _cnmtContainer;
     private readonly int _containerNumber;
     private TitleInfoViewModel? _selectedTitle;
+    private readonly IBrushesProvider _brushesProvider;
 
     public CnmtContainerViewModel(CnmtContainer cnmtContainer, int containerNumber, IServiceProvider serviceProvider)
     {
         _containerNumber = containerNumber;
         _cnmtContainer = cnmtContainer ?? throw new ArgumentNullException(nameof(cnmtContainer));
         ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        _brushesProvider = serviceProvider.GetRequiredService<IBrushesProvider>();
+        ThemeObserver.Observe(serviceProvider.GetService<IThemeService>(), this,
+            static view => view.NotifyPropertyChanged(nameof(SecurityColor)));
 
         SaveSelectedImageCommand = serviceProvider.GetRequiredService<ISaveTitleImageCommand>();
         CopySelectedImageCommand = serviceProvider.GetRequiredService<ICopyImageCommand>();
@@ -50,6 +57,8 @@ public class CnmtContainerViewModel : ViewModelBase
     public ISaveTitleImageCommand SaveSelectedImageCommand { get; }
 
     public string TitleId => _cnmtContainer.CnmtItem.TitleId;
+
+    public string BaseTitleId => _cnmtContainer.CnmtItem.ApplicationTitleId;
 
     public ObservableCollection<TitleInfoViewModel> Titles { get; } = new();
 
@@ -90,6 +99,20 @@ public class CnmtContainerViewModel : ViewModelBase
     /// </summary>
     public string? MinimumSystemVersion => _cnmtContainer.CnmtItem.MinimumSystemVersion?.ToString();
 
+    public string? MinimumApplicationVersion => _cnmtContainer.CnmtItem.MinimumApplicationVersion?.ToString();
+
+    public string MasterKey
+    {
+        get
+        {
+            var keyGeneration = _cnmtContainer.CnmtItem.ParentItem.ParentItem.KeyGeneration;
+            var revision = Math.Max(keyGeneration, (byte)1) - 1;
+            return $"MasterKey {revision} (master_key_{revision:x2}, Key Generation {keyGeneration})";
+        }
+    }
+
+    public string Distribution => _cnmtContainer.CnmtItem.ParentItem.ParentItem.DistributionType.ToString();
+
     /// <summary>
     /// End user displayed version
     /// </summary>
@@ -115,6 +138,34 @@ public class CnmtContainerViewModel : ViewModelBase
                 return "";
         }
     }
+
+    public Visibility SecurityVisibility => _cnmtContainer.NpdmItem != null && _cnmtContainer.CnmtItem.ContentType is LibHac.Ncm.ContentMetaType.Application or LibHac.Ncm.ContentMetaType.Patch ? Visibility.Visible : Visibility.Collapsed;
+
+    public string SecurityLevel => _cnmtContainer.NpdmItem?.SecurityLevel switch
+    {
+        ProgramSecurityLevel.Safe => LocalizationManager.Instance.Current.Keys.Security_Safe,
+        ProgramSecurityLevel.Unsafe => LocalizationManager.Instance.Current.Keys.Security_Unsafe,
+        ProgramSecurityLevel.Dangerous => LocalizationManager.Instance.Current.Keys.Security_Dangerous,
+        _ => LocalizationManager.Instance.Current.Keys.Security_Unavailable,
+    };
+
+    public System.Windows.Media.Brush SecurityColor => _cnmtContainer.NpdmItem?.SecurityLevel switch
+    {
+        ProgramSecurityLevel.Safe => _brushesProvider.FontBrushSuccess,
+        ProgramSecurityLevel.Unsafe => _brushesProvider.FontBrushWarning,
+        ProgramSecurityLevel.Dangerous => _brushesProvider.FontBrushError,
+        _ => _brushesProvider.FontBrushDefault,
+    };
+
+    public string FileSystemPermissions => _cnmtContainer.NpdmItem is { } npdm
+        ? $"0x{npdm.FileSystemPermissions:x16}"
+        : "";
+
+    public string AcidSignatureValidity => _cnmtContainer.NpdmItem?.AcidSignatureValidity.ToString() ?? "";
+
+    public string SecurityDetails => _cnmtContainer.NpdmItem is { } npdm
+        ? LocalizationManager.Instance.Current.Keys.Security_Details.SafeFormat(npdm.Services.Count, string.Join(", ", npdm.Services))
+        : "";
 
     public Visibility PresentationGroupBoxVisibility => _cnmtContainer.NacpContainer == null ? Visibility.Collapsed : Visibility.Visible;
 

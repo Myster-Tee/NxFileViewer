@@ -39,13 +39,13 @@ public class VerifyNcasIntegrityCommand : CommandBase, IVerifyNcasIntegrityComma
     public override bool CanExecute(object? parameter)
     {
         var openedFile = _fileOpeningService.OpenedFile;
-        return openedFile != null && !_backgroundTaskRunnerService.IsRunning;
+        return openedFile != null && openedFile.NandResult == null && openedFile.RootItem is not Models.TreeItems.Impl.FirmwareFileItem && !_backgroundTaskRunnerService.IsRunning;
     }
 
     public override void Execute(object? parameter)
     {
         var openedFile = _fileOpeningService.OpenedFile;
-        if (openedFile == null)
+        if (openedFile == null || openedFile.NandResult != null || openedFile.RootItem is Models.TreeItems.Impl.FirmwareFileItem)
             return;
 
         var fileOverview = openedFile.Overview;

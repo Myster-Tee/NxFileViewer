@@ -1,70 +1,49 @@
 <#
-    PowerShell script for generating binaries assets
-
-    - Publish command
-        
-        PowerShell ./Publish.ps1
-
-
-    - To allow PowerShell script execution, run PowerShell as Administrator and run
-
-        Set-ExecutionPolicy Unrestricted
-
-    - To restore default policy, run the command
-
-        Set-ExecutionPolicy RemoteSigned
-
-    - Documentation
-
-        dotnet publish     :    https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-publish
-        runtime identifier :    https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
+    Builds standard and compressed self-contained x64/x86 application ZIPs and a separate optional firmware-hashes ZIP.
+    Usage: ./Publish.ps1 [-OutputDirectory Publish]
 #>
+param([string]$OutputDirectory = "Publish")
 
-$OutDirRoot="Publish"
+$ErrorActionPreference = "Stop"
 $AppName = "NxFileViewer"
-$ProjectPath="src/NxFileViewer/NxFileViewer.csproj"
-
-$AppVersion= Select-Xml -Path $ProjectPath -XPath "//Project/PropertyGroup/Version" | Select-Object -ExpandProperty Node | Select-Object -ExpandProperty InnerText
-Write-Host "${AppName} version read: ${AppVersion}"
-
-# Cleaning and initialize output folder
-if (Test-Path $OutDirRoot) {
-     Write-Host "Deleting output folder ""${OutDirRoot}""."
-    Remove-Item ${OutDirRoot} -Recurse -ErrorAction Stop
-}
-New-Item -ItemType Directory -Path "${OutDirRoot}"
-
-dotnet clean $ProjectPath
-
-$Releases =
-@(
-    @{
-        Suffix    = "x64"
-        Options = @( "-p:PublishSingleFile=true", "-c", "Release", "--no-self-contained", "-r", "win-x64" )
-    },
-    @{
-        Suffix    = "x86"
-        Options = @( "-p:PublishSingleFile=true", "-c", "Release", "--no-self-contained", "-r", "win-x86" )
+$ProjectPath = Join-Path $PSScriptRoot "src/NxFileViewer/NxFileViewer.csproj"
+$AppVersion = (Select-Xml -LiteralPath $ProjectPath -XPath "//Project/PropertyGroup/Version").Node.InnerText
+$OutDirRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot $OutputDirectory))
+New-Item -ItemType Directory -Path $OutDirRoot -Force | Out-Null
+# Isolated staging leaves existing extracted releases and user keys untouched.
+$StagingRoot = Join-Path $OutDirRoot (".publish-" + [Guid]::NewGuid().ToString("N"))
+New-Item -ItemType Directory -Path $StagingRoot | Out-Null
+try {
+    foreach ($Architecture in @("x64", "x86")) {
+        foreach ($WithRuntime in @($false, $true)) {
+            $Variant = if ($WithRuntime) { "_self-contained" } else { "" }
+            $ReleaseName = "${AppName}_v${AppVersion}${Variant}_${Architecture}"
+            $ReleaseDir = Join-Path $StagingRoot $ReleaseName
+            Write-Host "Publishing $ReleaseName"
+            dotnet publish $ProjectPath -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=$WithRuntime -c Release --self-contained $WithRuntime -r "win-$Architecture" -o $ReleaseDir
+            if ($LASTEXITCODE -ne 0) { throw "Publishing $Architecture failed ($LASTEXITCODE)." }
+            if (Test-Path -LiteralPath (Join-Path $ReleaseDir "fw/hashes")) {
+                throw "Firmware hashes must not be included in application archives."
+            }
+            Compress-Archive -LiteralPath $ReleaseDir -DestinationPath (Join-Path $OutDirRoot "$ReleaseName.zip") -Force
+        }
     }
 
-);
-
-Foreach($Release in $Releases) 
-{
-    $ReleaseName = "${AppName}_v${AppVersion}_$($Release.Suffix)"
-    $ZipFileName = "${ReleaseName}.zip"
-
-    Write-Host "============================================================================" -ForegroundColor Blue
-    Write-Host "> Publishing ${ZipFileName}" -ForegroundColor Blue
-
-    $ReleaseDir="${OutDirRoot}/${ReleaseName}/"
-    
-    # =============== #
-    # ===> Build <=== #
-    dotnet publish $ProjectPath $Release.Options -o $ReleaseDir
-    # ===> Build <=== #
-    # =============== #
-
-    Compress-Archive -Path $ReleaseDir -DestinationPath "$OutDirRoot/$ZipFileName"
-    Remove-Item $ReleaseDir -Recurse
+    # The add-on extracts to fw/hashes next to either architecture's executable.
+    $HashRoot = Join-Path $StagingRoot "firmware-hashes"
+    $HashDirectory = Join-Path $HashRoot "fw/hashes"
+    New-Item -ItemType Directory -Path $HashDirectory -Force | Out-Null
+    $HashFiles = @(Get-ChildItem -LiteralPath (Join-Path $PSScriptRoot "fw/hashes") -Filter "*.json" -File)
+    if ($HashFiles.Count -eq 0) { throw "No firmware hash references found." }
+    foreach ($HashFile in $HashFiles) {
+        Copy-Item -LiteralPath $HashFile.FullName -Destination $HashDirectory
+    }
+    Compress-Archive -LiteralPath (Join-Path $HashRoot "fw") -DestinationPath (Join-Path $OutDirRoot "${AppName}_v${AppVersion}_firmware-hashes.zip") -Force
+}
+finally {
+    $ResolvedStaging = [IO.Path]::GetFullPath($StagingRoot)
+    if ($ResolvedStaging.StartsWith($OutDirRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -and
+        [IO.Path]::GetFileName($ResolvedStaging).StartsWith(".publish-")) {
+        Remove-Item -LiteralPath $ResolvedStaging -Recurse -Force
+    }
 }

@@ -1,0 +1,71 @@
+<UserControl x:Class="Emignatik.NxFileViewer.Views.Windows.PluginSettingsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization"
+        xmlns:settings="clr-namespace:Emignatik.NxFileViewer.Settings">
+    <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="10">
+                    <GroupBox Header="NxNandManager" Margin="0,0,0,12">
+                        <StackPanel Margin="6">
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Nand_SettingsTip}"/>
+                            <DockPanel Margin="0,6,0,0">
+                                <Button DockPanel.Dock="Right" Content="…" Command="{Binding BrowseNandCommand}" Padding="8,2"/>
+                                <TextBox Text="{Binding EditedSettings.NandExecutablePath, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Nand_BisKeys}" Margin="0,8,0,0"/>
+                            <DockPanel Margin="0,6,0,0">
+                                <Button DockPanel.Dock="Right" Content="…" Command="{Binding BrowseBisKeysCommand}" Padding="8,2"/>
+                                <TextBox Text="{Binding EditedSettings.NandBisKeysPath, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="nicoboss/nsz">
+                        <StackPanel Margin="6">
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Nsz_SettingsTip}"/>
+                            <DockPanel Margin="0,6,0,0">
+                                <Button DockPanel.Dock="Right" Content="…" Command="{Binding BrowseNszCommand}" Padding="8,2"/>
+                                <TextBox Text="{Binding EditedSettings.NszExecutablePath, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <TextBlock Margin="0,10,0,0" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Nsz_Mode}"/>
+                            <ComboBox ItemsSource="{Binding NszModeOptions}" SelectedValuePath="Value" DisplayMemberPath="DisplayName"
+                                      SelectedValue="{Binding EditedSettings.NszCompressionMode}"/>
+                            <StackPanel Margin="0,6,0,0">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding EditedSettings.NszCompressionMode}" Value="{x:Static settings:NszCompressionMode.Block}">
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Nsz_BlockSize}"/>
+                                <ComboBox ItemsSource="{Binding NszBlockSizeOptions}" SelectedValuePath="Value" DisplayMemberPath="DisplayName"
+                                          SelectedValue="{Binding EditedSettings.NszBlockSizeExponent}"/>
+                            </StackPanel>
+                            <TextBlock Margin="0,6,0,0" TextWrapping="Wrap" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Nsz_ModeTip}"/>
+                            <TextBlock Margin="0,6,0,0" Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Nsz_Level}"/>
+                            <TextBox Text="{Binding EditedSettings.NszCompressionLevel, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+        <Grid Grid.Row="1" Margin="0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Reset}" Command="{Binding Path=ResetSettingsCommand}" Style="{StaticResource OkCancelButton}" />
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" >
+                <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Apply}" Command="{Binding Path=ApplySettingsCommand}" Style="{StaticResource OkCancelButton}" />
+                <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.SettingsView_Button_Cancel}" Command="{Binding Path=CancelSettingsCommand}" Style="{StaticResource OkCancelButton}"/>
+            </StackPanel>
+        </Grid>
+
+
+    </Grid>
+</UserControl>

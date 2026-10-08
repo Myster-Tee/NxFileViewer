@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Emignatik.NxFileViewer.Services.OnlineServices;
 
@@ -23,6 +23,7 @@ public class OnlineTitleInfo : IOnlineTitleInfo
     public object Playtime { get; set; } = null!;
 
     [JsonPropertyName("rating")]
+    [JsonConverter(typeof(OptionalRatingConverter))]
     public double Rating { get; set; }
 
 }

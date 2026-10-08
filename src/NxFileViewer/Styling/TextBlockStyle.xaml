@@ -11,7 +11,7 @@
 
     <Style x:Key="Title1" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Style.Setters>
-            <Setter Property="Foreground" Value="#3C3C3C" />
+            <Setter Property="Foreground" Value="{DynamicResource Title1.Foreground}" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="FontSize" Value="12" />
         </Style.Setters>
@@ -24,21 +24,21 @@
                     <Thickness Top="3" />
                 </Setter.Value>
             </Setter>
-            <Setter Property="Foreground" Value="DarkCyan" />
+            <Setter Property="Foreground" Value="{DynamicResource Title2.Foreground}" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="FontSize" Value="11" />
         </Style.Setters>
     </Style>
 
     <Style x:Key="WatermarkText" TargetType="TextBlock"  BasedOn="{StaticResource {x:Type TextBlock}}">
-        <Setter Property="Foreground" Value="#9C9C9C"/>
+        <Setter Property="Foreground" Value="{DynamicResource Watermark.Foreground}"/>
         <Setter Property="FontStyle" Value="Italic"/>
         <Setter Property="FontSize" Value="16"/>
     </Style>
 
     <Style x:Key="FieldError" TargetType="TextBlock"  BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="Text" Value="!" />
-        <Setter Property="Foreground" Value="{StaticResource FontBrush.Error}"/>
+        <Setter Property="Foreground" Value="{DynamicResource FontBrush.Error}"/>
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="FontWeight" Value="ExtraBold"/>
         <Setter Property="FontSize" Value="14"/>

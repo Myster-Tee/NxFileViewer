@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -24,13 +24,20 @@ public class BackgroundTaskRunner : NotifyPropertyChangedBase, IBackgroundTaskRu
     {
         _cancelCommand = new RelayCommand(OnCancel, CanCancel);
         Reset();
+        System.ComponentModel.PropertyChangedEventManager.AddHandler(LocalizationManager.Instance,
+            OnLocalizationChanged, nameof(LocalizationManager.Current));
+    }
+
+    private void OnLocalizationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs args)
+    {
+        if (!IsRunning) NotifyPropertyChanged(nameof(ProgressText));
     }
 
     public ICommand CancelCommand => _cancelCommand;
 
     public string? ProgressText
     {
-        get => _progressText;
+        get => IsRunning ? _progressText : LocalizationManager.Instance.Current.Keys.Status_Ready;
         private set
         {
             _progressText = value;

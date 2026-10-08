@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -19,7 +19,7 @@ public partial class LoggingView : UserControl
     public static readonly DependencyProperty LogSourceProperty = DependencyProperty.Register(
         "LogSource", typeof(ILogSource), typeof(LoggingView), new PropertyMetadata(default(ILogSource), OnChanged));
 
-    private readonly IBrushesProvider _brushesProvider;
+
 
     private static void OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -41,7 +41,8 @@ public partial class LoggingView : UserControl
     public LoggingView()
     {
         InitializeComponent();
-        _brushesProvider = App.ServiceProvider.GetRequiredService<IBrushesProvider>();
+        Loaded += (_, _) => RichTextBoxLog.ScrollToEnd();
+
     }
 
     private void OnLog(LogLevel logLevel, string message)
@@ -56,21 +57,13 @@ public partial class LoggingView : UserControl
             return;
         }
 
-        Brush brush;
-        if (logLevel >= LogLevel.Error)
-            brush = _brushesProvider.FontBrushError;
-        else if (logLevel >= LogLevel.Warning)
-            brush = _brushesProvider.FontBrushWarning;
-        else
-            brush = _brushesProvider.FontBrushDefault;
-
         var paragraph = new Paragraph();
-        var run = new Run(message)
-        {
-            Foreground = brush
-        };
+        var run = new Run(message);
+        run.SetResourceReference(TextElement.ForegroundProperty, logLevel >= LogLevel.Error ? "FontBrush.Error" :
+            logLevel >= LogLevel.Warning ? "FontBrush.Warning" : "FontBrush.Default");
         paragraph.Inlines.Add(run);
         RichTextBoxLog.Document.Blocks.Add(paragraph);
+        RichTextBoxLog.ScrollToEnd();
     }
 
     private void MenuItemClearLogClick(object sender, RoutedEventArgs e)

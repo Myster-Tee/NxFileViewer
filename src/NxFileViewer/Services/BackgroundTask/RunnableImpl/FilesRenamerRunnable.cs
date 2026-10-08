@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
@@ -12,6 +12,8 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
 
     private readonly IFileRenamerService _fileRenamerService;
     private RenameSettings? _renameSettings;
+
+    public Action<RenamingResult>? ResultReported { get; set; }
 
     public bool SupportsCancellation => true;
     public bool SupportProgress => true;
@@ -35,8 +37,9 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
             _renameSettings.Simulation,
             _renameSettings.Logger,
             progressReporter,
-            cancellationToken
-        ).Wait(cancellationToken);
+            cancellationToken,
+            ResultReported
+        ).GetAwaiter().GetResult();
     }
 
     public IFilesRenamerRunnable Setup(INamingSettings namingSettings, bool automaticallyCloseOpenedFile, string inputDirectory, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger)
@@ -72,6 +75,7 @@ public class FilesRenamerRunnable : IFilesRenamerRunnable
 
 public interface IFilesRenamerRunnable : IRunnable
 {
+    Action<RenamingResult>? ResultReported { get; set; }
     IFilesRenamerRunnable Setup(INamingSettings namingSettings, bool automaticallyCloseOpenedFile, string inputDirectory, string? fileFilters, bool includeSubdirectories, bool simulation, ILogger? logger);
 }
 

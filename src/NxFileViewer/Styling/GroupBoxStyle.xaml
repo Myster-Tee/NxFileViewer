@@ -3,7 +3,7 @@
                     xmlns:customControls="clr-namespace:Emignatik.NxFileViewer.Views.CustomControls">
 
     <Style TargetType="{x:Type GroupBox}">
-        <Setter Property="BorderBrush" Value="#535353"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource GroupBox.Static.Border}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Padding" Value="2"/>
@@ -51,7 +51,7 @@
 
     <Style TargetType="customControls:MaskableGroupBox">
 
-        <Setter Property="BorderBrush" Value="#535353"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource GroupBox.Static.Border}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Padding" Value="2"/>

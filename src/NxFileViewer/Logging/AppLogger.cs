@@ -29,6 +29,8 @@ public class AppLogger : ILogger
         var formattedMessage = formatter(state, exception);
 
         message += formattedMessage;
+        if (exception != null)
+            message += $"{Environment.NewLine}{exception}";
         _logHandler(logLevel, message);
     }
 

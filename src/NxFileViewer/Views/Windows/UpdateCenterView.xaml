@@ -1,0 +1,56 @@
+<UserControl x:Class="Emignatik.NxFileViewer.Views.Windows.UpdateCenterView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:windows="clr-namespace:Emignatik.NxFileViewer.Views.Windows"
+    xmlns:loc="clr-namespace:Emignatik.NxFileViewer.Localization">
+    <Grid Margin="10">
+        <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+                <WrapPanel Margin="0,0,0,10">
+                <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Update_Check}" Command="{Binding Viewer.CheckCommand}" Padding="12,5" Margin="0,0,8,0"/>
+                    <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Update_Install}" Command="{Binding Viewer.InstallCommand}" Padding="12,5"/>
+                </WrapPanel>
+                <TextBlock Text="{Binding Viewer.Status}" TextWrapping="Wrap" Margin="0,0,0,12"/>
+                <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Workspace_Plugins}"><StackPanel Margin="10">
+                    <GroupBox Header="NxNandManager"><StackPanel Margin="10">
+                        <TextBlock Text="{Binding Nand.Status}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                        <WrapPanel>
+                            <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Nsz_Update}" Command="{Binding Nand.UpdateCommand}" Padding="12,5" Margin="0,0,8,0"/>
+                            <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Nsz_Rollback}" Command="{Binding Nand.RollbackCommand}" Padding="12,5"/>
+                        </WrapPanel>
+                    </StackPanel></GroupBox>
+                    <GroupBox Header="nicoboss/nsz"><StackPanel Margin="10">
+                    <CheckBox Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Nsz_CheckUpdates}" IsChecked="{Binding DataContext.EditedSettings.NszCheckUpdates, RelativeSource={RelativeSource AncestorType={x:Type windows:SettingsWindow}}}" Margin="0,0,0,8"/>
+                    <TextBlock Text="{Binding Nsz.Status}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                    <WrapPanel>
+                        <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Nsz_Update}" Command="{Binding Nsz.UpdateCommand}" Padding="12,5" Margin="0,0,8,0"/>
+                        <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.Nsz_Rollback}" Command="{Binding Nsz.RollbackCommand}" Padding="12,5" Margin="0,0,8,0"/>
+                    </WrapPanel>
+                    </StackPanel></GroupBox>
+                </StackPanel></GroupBox>
+                <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DataUpdate_Titles}"><StackPanel Margin="10">
+                    <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DataUpdate_TitleTip}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                    <TextBlock Text="{Binding TitleCatalogSummary}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                    <TextBlock Text="{Binding TitleStatus}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                    <WrapPanel>
+                        <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DataUpdate_Titles}" Command="{Binding RefreshTitlesCommand}" Padding="12,5" Margin="0,0,8,0"/>
+                    </WrapPanel>
+                </StackPanel></GroupBox>
+                <GroupBox Header="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DataUpdate_Firmware}"><StackPanel Margin="10">
+                    <TextBlock Text="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DataUpdate_FirmwareTip}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                    <TextBlock Text="{Binding LocalFirmwareSummary}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                    <TextBlock Text="{Binding FirmwareStatus}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                    <WrapPanel>
+                        <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DataUpdate_CheckFirmware}" Command="{Binding CheckFirmwareCommand}" Padding="12,5" Margin="0,0,8,0"/>
+                        <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.DataUpdate_SaveFirmware}" Command="{Binding SaveFirmwareCommand}" Padding="12,5" Margin="0,0,8,0"/>
+                    </WrapPanel>
+                </StackPanel></GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Grid.Row="1" Margin="0,10,0,0">
+            <TextBlock Text="{Binding Background.ProgressText}" TextWrapping="Wrap"/>
+            <Button Content="{Binding Source={x:Static loc:LocalizationManager.Instance}, Path=Current.Keys.CancelAction}" Command="{Binding Background.CancelCommand}" HorizontalAlignment="Right" Padding="12,5"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

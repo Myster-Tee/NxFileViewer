@@ -1,144 +1,100 @@
-﻿using System.Diagnostics;
-using LibHac.NSZ.Utils;
 using ZstdSharp;
 
 namespace LibHac.NSZ.Streams;
 
 /// <summary>
-/// Stream to use for the raw decompression of NCZ compressed part, compressed without block compression.
-/// This stream implements random access read but with very poor performances.
+/// Lazily decompresses solid NCZ data once, retaining the decoded prefix on disk for random reads.
 /// </summary>
 public class NczBlocklessDecompressionStream : Stream
 {
     private readonly Stream _nczStream;
-    private readonly long _compressionStartOffset;
-    private DecompressionStream _decompressionStream;
-
-    /// <summary>
-    /// The requested position (<see cref="Position"/>) from which to read in the decompressed stream.
-    /// </summary>
-    private long _requestedPosition;
-
-    /// <summary>
-    /// The real position of the decompressed bytes with <see cref="_decompressionStream"/>.
-    /// </summary>
-    private long _realPosition;
-
-    private long _lastReadNczStreamPosition;
+    private readonly DecompressionStream _decoder;
+    private readonly byte[] _buffer = new byte[1024 * 1024];
+    private FileStream? _cache;
+    private long _compressedPosition;
+    private long _decodedLength;
+    private long _position;
+    private bool _disposed;
 
     public NczBlocklessDecompressionStream(NczHeader nczHeader, Stream nczStream)
     {
-        if (nczHeader == null)
-            throw new ArgumentNullException(nameof(nczHeader));
-
+        ArgumentNullException.ThrowIfNull(nczHeader);
         if (nczHeader.BlockCompressionHeader != null)
-            throw new ArgumentException($"Given {nameof(NczHeader)} specifies block compression and can't be decompressed using {GetType().Name}, use {nameof(NczBlockDecompressionStream)} instead.", nameof(nczHeader));
-
+            throw new ArgumentException("Use NczBlockDecompressionStream for block compression.", nameof(nczHeader));
         _nczStream = nczStream ?? throw new ArgumentNullException(nameof(nczStream));
-        _compressionStartOffset = nczHeader.CompressionStartOffset;
-
-        _decompressionStream = new DecompressionStream(_nczStream);
-        _lastReadNczStreamPosition = _compressionStartOffset;
-        _realPosition = 0;
-        _requestedPosition = 0;
-
+        _compressedPosition = nczHeader.CompressionStartOffset;
+        _nczStream.Position = _compressedPosition;
+        _decoder = new DecompressionStream(_nczStream, leaveOpen: true);
         Length = nczHeader.NcaSize - nczHeader.OriginalBytes.Length;
-    }
-
-    public override void Flush()
-    {
     }
 
     public override int Read(byte[] buffer, int offset, int count)
     {
-        if (!DecompressToExpectedPosition())
+        ArgumentNullException.ThrowIfNull(buffer);
+        return Read(buffer.AsSpan(offset, count));
+    }
+
+    public override int Read(Span<byte> buffer)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        var count = (int)Math.Min(buffer.Length, Length - _position);
+        if (count == 0)
             return 0;
 
-        var nbRead = _decompressionStream.FillBuffer(buffer, offset, count);
-
-        _realPosition += nbRead;
-        _requestedPosition = _realPosition;
-        _lastReadNczStreamPosition = _nczStream.Position;
-
-        return nbRead;
-    }
-
-    private bool DecompressToExpectedPosition()
-    {
-        // Test if expected position has been changed to somewhere before what we already decompressed
-        if (_requestedPosition < _realPosition)
+        // Create only on first read. DeleteOnClose also cleans up after failed reads.
+        if (_cache == null) Directory.CreateDirectory(Path.Combine(AppContext.BaseDirectory, "Temp", "NCZ"));
+        _cache ??= new FileStream(Path.Combine(AppContext.BaseDirectory, "Temp", "NCZ", Path.GetRandomFileName()),
+            FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None, 64 * 1024,
+            FileOptions.DeleteOnClose | FileOptions.RandomAccess);
+        var end = _position + count;
+        while (_decodedLength < end)
         {
-            // We need to restart decompression from the beginning
-            _decompressionStream.Dispose();
-            _decompressionStream = new DecompressionStream(_nczStream);
-            _nczStream.Position = _compressionStartOffset;
-            _realPosition = 0;
-        }
-        else
-        {
-            // Ensure NCZ stream position, in case it was changed from somewhere else
-            _nczStream.Position = _lastReadNczStreamPosition;
+            // Other NCZ readers may share the underlying stream.
+            _nczStream.Position = _compressedPosition;
+            var read = _decoder.Read(_buffer.AsSpan(0, (int)Math.Min(_buffer.Length, end - _decodedLength)));
+            _compressedPosition = _nczStream.Position;
+            if (read == 0)
+                throw new NczFormatException("Solid NCZ data ends before its declared decompressed size.");
+            _cache.Position = _decodedLength;
+            _cache.Write(_buffer, 0, read);
+            _decodedLength += read;
         }
 
-        var buff = new byte[1000000];
-        do
-        {
-            var remainingBytesToRead = (int)Math.Min(_requestedPosition - _realPosition, buff.Length);
-            if (remainingBytesToRead <= 0)
-                break;
-
-            // We waste CPU energy decompressing lost bytes, how sad...
-            var nbBytesRead = _decompressionStream.Read(buff.AsSpan(0, remainingBytesToRead));
-            if (nbBytesRead <= 0)
-                break;
-
-            _realPosition += nbBytesRead;
-        }
-        while (true);
-
-        var expectedPositionReached = _realPosition == _requestedPosition;
-        Debug.Assert(expectedPositionReached, $"For any consistent NCZ, {nameof(_requestedPosition)} should always be reachable.");
-        return expectedPositionReached;
+        _cache.Position = _position;
+        _cache.ReadExactly(buffer[..count]);
+        _position = end;
+        return count;
     }
 
-    public override long Seek(long offset, SeekOrigin origin)
-    {
-        throw new NotSupportedException();
-    }
-
-    public override void SetLength(long value)
-    {
-        throw new NotSupportedException();
-    }
-
-    public override void Write(byte[] buffer, int offset, int count)
-    {
-        throw new NotSupportedException();
-    }
-
-    public override bool CanRead => true;
-
-    public override bool CanSeek => false;
-
-    public override bool CanWrite => false;
-
-    public override long Length { get; }
-
-    /// <summary>
-    /// Get or set the position of the decompressed stream.
-    /// Position 0 corresponds to <see cref="NczHeader.CompressionStartOffset"/> in NCZ stream.
-    /// </summary>
     public override long Position
     {
-        get => _requestedPosition;
+        get => _position;
         set
         {
-            if (value < 0)
-                throw new ArgumentOutOfRangeException($"{nameof(Position)} can't be less than 0.");
-            if (value >= Length)
-                throw new ArgumentOutOfRangeException($"{nameof(Position)} can't be greater or equal to stream length.");
-
-            _requestedPosition = value;
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            if (value < 0 || value > Length)
+                throw new ArgumentOutOfRangeException(nameof(value));
+            _position = value;
         }
+    }
+
+    public override long Length { get; }
+    public override bool CanRead => !_disposed;
+    public override bool CanSeek => false;
+    public override bool CanWrite => false;
+    public override void Flush() { }
+    public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+    public override void SetLength(long value) => throw new NotSupportedException();
+    public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing && !_disposed)
+        {
+            _disposed = true;
+            try { _decoder.Dispose(); }
+            finally { _cache?.Dispose(); }
+        }
+        base.Dispose(disposing);
     }
 }

@@ -5,9 +5,9 @@
 
 
     <Style TargetType="customControls:GridSplitterEx">
-        <Setter Property="Background" Value="Gainsboro" />
+        <Setter Property="Background" Value="{DynamicResource GridSplitter.Static.Background}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="Foreground" Value="Gray" />
+        <Setter Property="Foreground" Value="{DynamicResource GridSplitter.Static.Foreground}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="customControls:GridSplitterEx">

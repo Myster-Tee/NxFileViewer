@@ -1,0 +1,69 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Build (win-x64 / win-x86)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish
+        shell: pwsh
+        run: ./Publish.ps1
+
+      - name: Upload x64 ZIP
+        uses: actions/upload-artifact@v7
+        with:
+          path: |
+            Publish/*_x64.zip
+            !Publish/*_self-contained_x64.zip
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload x86 ZIP
+        uses: actions/upload-artifact@v7
+        with:
+          path: |
+            Publish/*_x86.zip
+            !Publish/*_self-contained_x86.zip
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload x64 ZIP with .NET (compressed)
+        uses: actions/upload-artifact@v7
+        with:
+          path: Publish/*_self-contained_x64.zip
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload x86 ZIP with .NET (compressed)
+        uses: actions/upload-artifact@v7
+        with:
+          path: Publish/*_self-contained_x86.zip
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload optional firmware hashes ZIP
+        uses: actions/upload-artifact@v7
+        with:
+          path: Publish/*_firmware-hashes.zip
+          archive: false
+          if-no-files-found: error
+          retention-days: 7

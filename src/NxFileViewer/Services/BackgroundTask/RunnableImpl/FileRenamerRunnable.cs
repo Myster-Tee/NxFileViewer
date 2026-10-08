@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using Emignatik.NxFileViewer.Services.FileRenaming;
 using Emignatik.NxFileViewer.Services.FileRenaming.Models;
@@ -12,6 +12,8 @@ public class FileRenamerRunnable : IFileRenamerRunnable
 
     private readonly IFileRenamerService _fileRenamerService;
     private RenameSettings? _renameSettings;
+
+    public Action<RenamingResult>? ResultReported { get; set; }
 
     public bool SupportsCancellation => true;
 
@@ -27,14 +29,15 @@ public class FileRenamerRunnable : IFileRenamerRunnable
         if (_renameSettings == null)
             throw new InvalidOperationException($"{nameof(Setup)} method should be invoked first.");
 
-        _fileRenamerService.RenameFileAsync(
+        var result = _fileRenamerService.RenameFileAsync(
             _renameSettings.InputPath,
             _renameSettings.AutomaticallyCloseOpenedFile,
             _renameSettings.NamingSettings,
             _renameSettings.Simulation,
             _renameSettings.Logger,
             cancellationToken
-        ).Wait(cancellationToken);
+        ).GetAwaiter().GetResult();
+        ResultReported?.Invoke(result);
     }
 
     public IFileRenamerRunnable Setup(INamingSettings namingSettings, bool automaticallyCloseOpenedFile, string inputDirectory, bool simulation, ILogger? logger)
@@ -66,6 +69,7 @@ public class FileRenamerRunnable : IFileRenamerRunnable
 
 public interface IFileRenamerRunnable : IRunnable
 {
+    Action<RenamingResult>? ResultReported { get; set; }
     IFileRenamerRunnable Setup(INamingSettings namingSettings, bool automaticallyCloseOpenedFile, string inputFile, bool simulation, ILogger? logger);
 }
 
